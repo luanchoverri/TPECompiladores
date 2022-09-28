@@ -70,6 +70,7 @@ public class MatrizEstados {
         }
 
         return 21; //Otros simbolos
+
     }
 
 
