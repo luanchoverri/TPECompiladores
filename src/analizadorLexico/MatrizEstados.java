@@ -1,4 +1,4 @@
-package AnalizadorLexico;
+package analizadorLexico;
 
 public class MatrizEstados {
 

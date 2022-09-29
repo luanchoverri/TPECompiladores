@@ -1,15 +1,17 @@
-package AnalizadorLexico;
+package analizadorLexico;
 
 import java.util.HashMap;
 
 public class TablaSimbolos {
 
-    private HashMap<String, Atributo> registroTokens;
+    private HashMap<String, Token> registroTokens;
     private HashMap<String, Integer> idTokens;
 
 
 
     public TablaSimbolos(){
+
+
         //--- CARGA DE TOKENS ---//
         // Operadores aritméticos
         this.idTokens.put("+", (int) '+');
@@ -60,20 +62,19 @@ public class TablaSimbolos {
 
 
 
-    public int getIdToken(String tipoToken) {
-        return this.idTokens.get(tipoToken);
+    public int getIdToken(String tipo) {
+        return idTokens.get(tipo);
     }
-
 
     /**
      * En base al id de un token pasado por parámetro, determina su tipo.
-     * @param idToken
+     * @param id
      * @return
      */
-    public String getTipoToken(int idToken) {
+    public String getTipoToken(int id) {
         String tipo = "";
 
-        switch (idToken) {
+        switch (id) {
             case (int) '+':
             case (int) '-':
             case (int) '*':
@@ -125,5 +126,32 @@ public class TablaSimbolos {
         }
 
         return tipo;
+    }
+
+    public void addToken(String lexema, String tipo){
+        Token nuevo = new Token(lexema, tipo);
+        this.registroTokens.put(lexema, nuevo);
+        // que hacemos con la referencia?
+    }
+
+    public boolean esPalabraReservada(String palabra) {
+        switch (palabra) {
+            case "IF":
+            case "THEN":
+            case "ELSE":
+            case "ENDIF":
+            case "FUNC":
+            case "RETURN":
+            case "BREAK":
+            case "FUN":
+            case "OUT":
+            case "DISCARD":
+            case "WHEN":
+            case "FOR":
+            case "CONTINUE":
+                return true;
+            default:
+                return false;
+        }
     }
 }
