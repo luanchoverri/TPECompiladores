@@ -19,7 +19,7 @@ public class RangoEntero extends AccionSemanticaSimple {
             int intBuffer = Integer.parseInt(buffer);
 
         } catch (Exception e){
-            e.printStackTrace(); //fuera de rango
+            e.printStackTrace(); // fuera de rango (Quiere decir que no se pudo asignar a la variable)
         }
         this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken("i32"));
         this.tablaSimbolos.agregarRegistro(buffer, new Atributo(this.tablaSimbolos.getIdToken("i32")));

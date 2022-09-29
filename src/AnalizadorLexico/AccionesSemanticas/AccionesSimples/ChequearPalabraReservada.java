@@ -21,15 +21,24 @@ public class ChequearPalabraReservada extends AccionSemanticaSimple {
         this.tablaSimbolos = tablaSimbolos;
     }
 
+
+
+
+    /*
+    ------------------------------------------
+        Verifica si se encuentra en el buffer la palabra reservada, de ser asi, setea el id del token    
+        De lo contrario, era identificador por lo cual si el identificador excede los 25 chars, se trunca
+    ------------------------------------------
+     */
     @Override
     public boolean ejecutar(String buffer, char ultimoLeido) {
-        if (this.tablaSimbolos.isPalabraReservada(buffer)){
-            this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken(buffer));
+        if (this.tablaSimbolos.isPalabraReservada(buffer)){ // Retorna TRUE si existe la palabra reservada
+            this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken(buffer)); // Obtiene el ID de la palabra reservada
         } else { // era identificador
             if (buffer.length() > 25) {
                 Logger l = Logger.getLogger(ChequearPalabraReservada.class.getName());
-                l.setLevel(Level.WARNING);                  //TODO tal vez hay una mejor forma para tirar el warning
-                l.warning(String.format("Identifier %s is too long, max length is 25 characters",buffer));
+                l.setLevel(Level.WARNING);                  
+                l.warning(String.format("Warning: La longitud del identificador %s es mayor a 25 y fue truncado",buffer));
                 buffer = buffer.substring(0,24); // si el identificador tiene mas de 25 chars se trunca.
             }
             this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken("id"));
