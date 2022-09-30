@@ -11,14 +11,14 @@ public class MatrizAccionesSemanticas {
         this.matriz = new AccionSemantica[estado][simbolo];
     }
 
-    // -- MÉTODOS -- // 
+    // -- MÉTODOS -- //
 
     // Getter
     public AccionSemantica get(int estado, int simbolo) {
         return matriz[estado][simbolo];
     }
 
-    // Setter -> Setea una matriz completa a la ya existente    
+    // Setter -> Setea una matriz completa a la ya existente
     public void setMatrizAccionSemantica (AccionSemantica[][] matriz) {
         this.matriz = matriz;
     }
@@ -28,6 +28,3 @@ public class MatrizAccionesSemanticas {
         matriz[estado][simbolo] = accionSemantica;
     }
 }
-
-    
-
