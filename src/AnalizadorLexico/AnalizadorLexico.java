@@ -36,11 +36,56 @@
     
     public AnalizadorLexico(String archivoEntrada){
         this.archivoEntrada = archivoEntrada;
-        this.matrizAccionesSemanticas = new MatrizAccionesSemanticas();
+        this.matrizAccionesSemanticas = new MatrizAccionesSemanticas(ESTADOS, SIMBOLOS);
         this.matrizEstados = new MatrizEstados();
 
+        // -- Acciones semanticas SIMPLES --
 
+        // AS1 -> Inicializa el buffer
+        AccionSemanticaSimple AS1 = new InicializarBuffer(this);
+
+        // AS7 -> Agrega char leido al String (Buffer)
+        AccionSemanticaSimple AS7 = new AgregarChar(this);
+
+        // AS3 -> Devuelve el ID del Token de los simbolos (operadores aritmeticos, comparadores, etc)
+        AccionSemanticaSimple AS3 = new ObtenerIdToken(this, this.getTablaSimbolos());
+
+        // AS8 -> Controla si es palabra reservada
+        AccionSemanticaSimple AS8 = new ChequearPalabraReservada(this, this.getTablaSimbolos());
+
+        // AS10 -> Controla el rango de los enteros. Si esta en rango, lo agrega a la tabla de simbolos, sino, devuelve error (catch)
+        AccionSemanticaSimple AS10 = new RangoEntero(this, this.getTablaSimbolos());
+
+        // AS11 -> Controla el rango de los flotantes. Si esta en rango, lo agrega a la tabla de simbolos, sino, devuelve error (catch)
+        AccionSemanticaSimple AS11 = new RangoFlotante(this, this.getTablaSimbolos());
+
+        // -- Acciones semanticas COMPUESTAS --
+
+        AccionSemantica [][] matrizSemantica = {
+                /*            L       d     .     _     S     <     >     =     &     |     +     -     *     /     %    \n     ;     :     ,     (     )   otro  Bl,Tab  $
+                /*0*/        {null ,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null, null,  null,  null,  null,  null,  null,  null, null,  null,  null },
+                /*1*/        {null ,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null },
+                /*2*/        {null,  null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,  null},
+                /*3*/        {null ,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null },
+                /*4*/        {null,  null, null, null, null, null, null, null, null, null,  null,  null, null, null, null, null, null, null, null, null, null, null, null,  null},
+                /*5*/        {null ,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null },
+                /*6*/        {null,  null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,  null},
+                /*7*/        {null ,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null },
+                /*8*/        {null ,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null },
+                /*9*/        {null, null, null, null, null, null, null, null,  null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,  null},
+                /*10*/       {null, null, null, null, null, null, null, null, null,  null, null, null, null, null, null, null, null, null, null, null, null, null, null,  null},
+                /*11*/       {null ,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null },
+                /*12*/       {null ,  null,  null, null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null },
+                /*13*/       {null ,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null },
+                /*14*/       {null ,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  null, null, null,  null,  null,  null,  null,  null,  null,  null,  null },
+
+        };
+        this.matrizAccionesSemanticas.setMatrizAccionSemantica(matrizSemantica);
     }
+
+
+
+
     
     
     // -- Metodos --
