@@ -82,20 +82,20 @@ public class TablaSimbolos {
         }
     }
 
-    public int getIdToken(String tipoToken) {
-        return this.idTokens.get(tipoToken);
+    public int getIdToken(String lexema) {
+        return this.idTokens.get(lexema);
     }
 
 
     /**
      * En base al id de un token pasado por parámetro, determina su tipo.
-     * @param idToken
+     * @param id
      * @return
      */
-    public String getTipoToken(int idToken) {
+    public String getTipoToken(int id) {
         String tipo = "";
 
-        switch (idToken) {
+        switch (id) {
             case (int) '+':
             case (int) '-':
             case (int) '*':
@@ -152,4 +152,5 @@ public class TablaSimbolos {
     public void agregarRegistro(String lexema, Atributo atributos){
         this.registroTokens.put(lexema,atributos);
     }
+
 }
