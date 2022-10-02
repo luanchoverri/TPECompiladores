@@ -3,17 +3,24 @@ package AnalizadorLexico;
 public class Atributo {
 
     // Posee los tokens (id del token, etc)
-    
+
     private int idToken; // Id del token (Numero de identificacion)
     private String lexema; // Significado del Token
+    private int nroLinea;
+    private String tipo;
     
-    
-    // ... otros atributos
+
     
     // -- Constructor --
 
     public Atributo(int idToken) {
         this.idToken = idToken;
+    }
+    public Atributo(int idToken, String lexema, int nroLinea, String tipo){
+        this.idToken = idToken;
+        this.lexema = lexema;
+        this.nroLinea = nroLinea;
+        this.tipo = tipo;
     }
 
     // -- MÉTODOS -- // 

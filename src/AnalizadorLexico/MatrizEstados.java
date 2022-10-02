@@ -28,7 +28,7 @@ public class MatrizEstados {
 
     }
 
-    public int getEstado(int estado, int simbolo){
+    public int get(int estado, int simbolo){
         return matriz[estado][simbolo];
     }
 
