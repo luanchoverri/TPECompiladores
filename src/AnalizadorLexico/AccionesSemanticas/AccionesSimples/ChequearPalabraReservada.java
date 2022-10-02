@@ -2,8 +2,6 @@ package AnalizadorLexico.AccionesSemanticas.AccionesSimples;
 
 import AnalizadorLexico.AccionesSemanticas.AccionSemanticaSimple;
 import AnalizadorLexico.AnalizadorLexico;
-import AnalizadorLexico.TablaSimbolos;
-import AnalizadorLexico.Atributo;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,11 +12,12 @@ AS6
 ------------------------------------------
  */
 public class ChequearPalabraReservada extends AccionSemanticaSimple {
-    private TablaSimbolos tablaSimbolos;
 
-    public ChequearPalabraReservada(AnalizadorLexico analizadorLexico, TablaSimbolos tablaSimbolos){
+    private static final int LONGITUD_MAXIMA = 25;
+
+    public ChequearPalabraReservada(AnalizadorLexico analizadorLexico){
         super(analizadorLexico);
-        this.tablaSimbolos = tablaSimbolos;
+
     }
 
 
@@ -32,17 +31,24 @@ public class ChequearPalabraReservada extends AccionSemanticaSimple {
      */
     @Override
     public boolean ejecutar(String buffer, char ultimoLeido) {
-        if (this.tablaSimbolos.isPalabraReservada(buffer)){ // Retorna TRUE si existe la palabra reservada
-            this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken(buffer)); // Obtiene el ID de la palabra reservada
+
+        AnalizadorLexico lexico = this.getAnalizadorLexico();
+
+        if (lexico.isPalabraReservada(buffer)){ // Retorna TRUE si existe la palabra reservada
+            int idTokenReservada = lexico.getIdToken(buffer);
+            lexico.setTokenActual(idTokenReservada); // Obtiene el ID de la palabra reservada
         } else { // era identificador
-            if (buffer.length() > 25) {
+            if (buffer.length() > LONGITUD_MAXIMA) {
                 Logger l = Logger.getLogger(ChequearPalabraReservada.class.getName());
                 l.setLevel(Level.WARNING);                  
-                l.warning(String.format("Warning: La longitud del identificador %s es mayor a 25 y fue truncado",buffer));
-                buffer = buffer.substring(0,24); // si el identificador tiene mas de 25 chars se trunca.
+                l.warning(String.format("Warning: La longitud del identificador "+ buffer + " buffer es mayor a 25 y fue truncado"));
+                lexico.addErrorLexico("WARNING (Línea " + lexico.LINEA + "): el identificador " + buffer + " excede el rango y fue truncado") ;
+                buffer = buffer.substring(0, LONGITUD_MAXIMA-1); // si el identificador tiene mas de 25 chars se trunca.
             }
-            this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken("id"));
-            this.tablaSimbolos.agregarRegistro(buffer, new Atributo(this.tablaSimbolos.getIdToken("id")));
+            int idTokenIdentificador = lexico.getIdToken("id");
+            this.getAnalizadorLexico().setTokenActual(idTokenIdentificador);
+            lexico.agregarRegistro(buffer, idTokenIdentificador);
+
         }
         return true;
     }

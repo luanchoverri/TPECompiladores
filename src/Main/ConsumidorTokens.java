@@ -25,7 +25,7 @@ public class ConsumidorTokens {
 
                 AnalizadorLexico analizadorLexico = new AnalizadorLexico(archivoEntrada);
 
-                while (analizadorLexico.isCodigoLeido() == false)
+                while (!analizadorLexico.isCodigoLeido() )
                     analizadorLexico.procesarYylex();
                 ArrayList<Atributo> tokens = analizadorLexico.getListaTokens();
 
@@ -33,19 +33,21 @@ public class ConsumidorTokens {
                     System.out.println("!!! ---------------ANALIZADOR LÉXICO--------------- !!!");
                     System.out.println("|--- TOKENS ---|");
                     System.out.println("|--- No se detectaron tokens dentro del archivo. ! --|-");
-                }
-
-                for (Atributo token : tokens) {
+                }else{
                     System.out.println("(Info) ---------------ANALIZADOR LÉXICO--------------- (Info)");
-                    System.out.println("Tipo de token --> " + token.getIdToken()); // Devuelve el id con el tipo de token?
-                    System.out.println("Lexema --> " + token.getLexema());
+                    for (Atributo token : tokens) {
+
+                        System.out.println("Tipo de token --> " + token.getIdToken()); // Devuelve el id con el tipo de token?
+                        System.out.println("Lexema --> " + token.getLexema());
+                    }
                 }
 
-                System.out.println("!!! ---------------ANALIZADOR LÉXICO--------------- !!!");
+
+                System.out.println("!!! ____________________________________________________________ !!!");
                 System.out.println("ERRORES");
                 analizadorLexico.imprimirErrores();
 
-                System.out.println("(Tabla) ---------------ANALIZADOR LÉXICO--------------- (Tabla)");
+                System.out.println("(Tabla) ---------------TABLA DE SIMBOLOS--------------- (Tabla)");
                 System.out.println("|-- TABLA DE SIMBOLOS --|");
                 analizadorLexico.imprimirTablaSimbolos();
             }

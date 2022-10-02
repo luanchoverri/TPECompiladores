@@ -11,7 +11,10 @@ public class DevolverUltimoLeido extends AccionSemanticaSimple {
 
     @Override
     public boolean ejecutar(String buffer, char ultimoLeido) {
-        // TODO aca deberia hacer que el indice que marca donde leer en el string del archivo sea uno menos
+//
+//        buffer = buffer.substring(0, buffer.length() - 1);
+//        this.getAnalizadorLexico().setBuffer(buffer);
         return true;
+
     }
 }

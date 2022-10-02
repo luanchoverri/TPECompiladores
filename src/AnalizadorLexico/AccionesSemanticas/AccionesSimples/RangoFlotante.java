@@ -2,20 +2,20 @@ package AnalizadorLexico.AccionesSemanticas.AccionesSimples;
 
 import AnalizadorLexico.AccionesSemanticas.AccionSemanticaSimple;
 import AnalizadorLexico.AnalizadorLexico;
-import AnalizadorLexico.TablaSimbolos;
-import AnalizadorLexico.Atributo;
+
 
 public class RangoFlotante extends AccionSemanticaSimple {
 
-    TablaSimbolos tablaSimbolos;
 
-    public RangoFlotante(AnalizadorLexico analizadorLexico, TablaSimbolos tablaSimbolos){
+    public RangoFlotante(AnalizadorLexico analizadorLexico){
         super(analizadorLexico);
-        this.tablaSimbolos = tablaSimbolos;
+
     }
 
     @Override
     public boolean ejecutar(String buffer, char ultimoLeido) {
+        AnalizadorLexico lexico = this.getAnalizadorLexico();
+
         if (buffer.contains("F") && !buffer.endsWith("F")){
             buffer = buffer.replace("F","e");
             buffer += "f";
@@ -26,10 +26,13 @@ public class RangoFlotante extends AccionSemanticaSimple {
                 throw new Exception("out of range");
             }
         } catch (Exception e){
+            lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): la constante f32 " + buffer + " está fuera de rango.") ;
             e.printStackTrace(); //fuera de rango
         }
-        this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken("f32"));
-        this.tablaSimbolos.agregarRegistro(buffer, new Atributo(this.tablaSimbolos.getIdToken("f32")));
+
+        int idToken = lexico.getIdToken("f32");
+        lexico.setTokenActual(idToken);
+        lexico.agregarRegistro(buffer, idToken);
         return true;
     }
 }
