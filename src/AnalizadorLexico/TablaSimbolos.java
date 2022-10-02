@@ -1,17 +1,20 @@
 package AnalizadorLexico;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TablaSimbolos {
 
-    private HashMap<String, Atributo> registroTokens;
+    private ArrayList<Atributo> registroTokens;
     private HashMap<String, Integer> idTokens;
 
 
 
     public TablaSimbolos(){
 
-        this.registroTokens = new HashMap<>();
+        this.registroTokens = new ArrayList<Atributo>();
+        this.idTokens = new HashMap<>();
+
         //--- CARGA DE TOKENS ---//
         // Operadores aritméticos
         this.idTokens.put("+", (int) '+');
@@ -22,8 +25,11 @@ public class TablaSimbolos {
         // Símbolos de puntuación
         this.idTokens.put("(", (int) '(');
         this.idTokens.put(")", (int) ')');
+        this.idTokens.put("{", (int) '{');
+        this.idTokens.put("}", (int) '}');
         this.idTokens.put(",", (int) ',');
         this.idTokens.put(";", (int) ';');
+        this.idTokens.put(":", (int) ':');
 
 
         // Identificador y constante
@@ -83,6 +89,7 @@ public class TablaSimbolos {
     }
 
     public int getIdToken(String lexema) {
+        System.out.println("lexema " + lexema);
         return this.idTokens.get(lexema);
     }
 
@@ -104,8 +111,11 @@ public class TablaSimbolos {
                 break;
             case (int) '(':
             case (int) ')':
+            case (int) '{':
+            case (int) '}':
             case (int) ',':
             case (int) ';':
+            case (int) ':':
                 tipo = "LITERAL";
                 break;
             case 285:
@@ -149,8 +159,13 @@ public class TablaSimbolos {
         return tipo;
     }
 
-    public void agregarRegistro(String lexema, Atributo atributos){
-        this.registroTokens.put(lexema,atributos);
+    public void agregarRegistro(String lexema, int id){
+        Atributo registro = new Atributo(lexema, id);
+        this.registroTokens.add(registro);
+    }
+
+    public int size(){
+       return registroTokens.size();
     }
 
 }

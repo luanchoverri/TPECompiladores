@@ -13,13 +13,14 @@ public class ObtenerIdToken extends AccionSemanticaSimple {
 
     private TablaSimbolos tablaSimbolos;
 
-    public ObtenerIdToken(AnalizadorLexico analizadorLexico, TablaSimbolos tablaSimbolos){
+    public ObtenerIdToken(AnalizadorLexico analizadorLexico){
         super(analizadorLexico);
-        this.tablaSimbolos = tablaSimbolos;
+
     }
     @Override
     public boolean ejecutar(String buffer, char ultimoLeido) {
-        this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken(buffer));
+        int idToken = this.getAnalizadorLexico().getIdToken(buffer);
+        this.getAnalizadorLexico().setTokenActual(idToken);
         return true;
     }
 }

@@ -13,7 +13,8 @@ public class Atributo {
     
     // -- Constructor --
 
-    public Atributo(int idToken) {
+    public Atributo(String lexema, int idToken) {
+        this.lexema = lexema;
         this.idToken = idToken;
     }
     public Atributo(int idToken, String lexema, int nroLinea, String tipo){
@@ -44,5 +45,9 @@ public class Atributo {
     public void setIdToken(int idToken) {
         this.idToken = idToken;
     }
-    
+
+    @Override
+    public String toString() {
+        return " | TOKEN " + "id=" + idToken + " " + lexema + "  nroLinea=" + nroLinea + " tipo= " + tipo + "  |" ;
+    }
 }

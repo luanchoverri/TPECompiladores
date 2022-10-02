@@ -7,22 +7,27 @@ import AnalizadorLexico.Atributo;
 
 public class RangoEntero extends AccionSemanticaSimple {
 
-    private TablaSimbolos tablaSimbolos;
 
-    public RangoEntero(AnalizadorLexico analizadorLexico, TablaSimbolos tablaSimbolos){
+    public RangoEntero(AnalizadorLexico analizadorLexico){
         super(analizadorLexico);
-        this.tablaSimbolos = tablaSimbolos;
     }
     @Override
     public boolean ejecutar(String buffer, char ultimoLeido) {
+       AnalizadorLexico lexico = this.getAnalizadorLexico();
+
         try {
             int intBuffer = Integer.parseInt(buffer);
 
         } catch (Exception e){
+            lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): la constante i32 " + buffer + " está fuera de rango.") ;
             e.printStackTrace(); // fuera de rango (Quiere decir que no se pudo asignar a la variable)
+
         }
-        this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken("i32"));
-        this.tablaSimbolos.agregarRegistro(buffer, new Atributo(this.tablaSimbolos.getIdToken("i32")));
+
+        int idToken = lexico.getIdToken("i32");
+        lexico.setTokenActual(idToken);
+        lexico.agregarRegistro(buffer, idToken);
+
         return true;
     }
 }

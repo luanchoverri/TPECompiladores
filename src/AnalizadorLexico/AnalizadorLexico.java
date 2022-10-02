@@ -27,7 +27,6 @@ public class AnalizadorLexico {
     private int estadoActual;
     private int refTablaSimbolos;
     private int posArchivo;
-    private int idToken; // id token obtenido del buffer
     private boolean codigoLeido;
     private TablaSimbolos tablaSimbolos;
     private ArrayList<Atributo> tokensReconocidos; // Va procesando el codigo y acá guarda los tokens reconocidos
@@ -43,6 +42,12 @@ public class AnalizadorLexico {
         this.archivo = archivo;
         this.matrizAccionesSemanticas = new MatrizAccionesSemanticas(ESTADOS, SIMBOLOS);
         this.matrizEstados = new MatrizEstados();
+        this.tablaSimbolos = new TablaSimbolos();
+        this.errores = new ArrayList<String>();
+        this.tokensReconocidos = new ArrayList<Atributo>();
+        this.refTablaSimbolos = -1;
+        this.codigoLeido = false;
+
 
         // -- Acciones semanticas SIMPLES --
 
@@ -53,25 +58,25 @@ public class AnalizadorLexico {
         AccionSemantica AS2 = new AgregarChar(this);
 
         // AS3 -> Devuelve el ID del Token de los simbolos (operadores aritmeticos, comparadores, etc)
-        AccionSemantica AS3 = new ObtenerIdToken(this, this.getTablaSimbolos());
+        AccionSemantica AS3 = new ObtenerIdToken(this);
 
         // AS5 -> "Devuelve" al archivo el ultimo char leido
         AccionSemantica AS5 = new DevolverUltimoLeido(this); //TODO implementar
 
         // AS6 -> Controla si es palabra reservada
-        AccionSemantica AS6 = new ChequearPalabraReservada(this, this.getTablaSimbolos());
+        AccionSemantica AS6 = new ChequearPalabraReservada(this);
 
         // AS7 -> Controla el rango de los enteros. Si esta en rango, lo agrega a la tabla de simbolos, sino, devuelve error (catch)
-        AccionSemantica AS7 = new RangoEntero(this, this.getTablaSimbolos());
+        AccionSemantica AS7 = new RangoEntero(this);
 
         // AS8 -> Controla el rango de los flotantes. Si esta en rango, lo agrega a la tabla de simbolos, sino, devuelve error (catch)
-        AccionSemantica AS8 = new RangoFlotante(this, this.getTablaSimbolos());
+        AccionSemantica AS8 = new RangoFlotante(this);
 
         // AS9 -> Elimina el ultimo caracter del buffer
         AccionSemantica AS9 = new EliminarCaracterBuffer(this);
 
         // AS17 -> Obtiene el id token de Cadena y registra el lexema en la tabla de simbolos
-        AccionSemantica AS17 = new AgregarCadena(this, this.getTablaSimbolos());
+        AccionSemantica AS17 = new AgregarCadena(this);
 
 
         // -- Acciones semanticas COMPUESTAS --
@@ -130,12 +135,15 @@ public class AnalizadorLexico {
         this.buffer = buffer;
     }
 
-    public Integer getIdToken() {
-        return idToken;
+    public int getTokenActual() {
+        return tokenActual;
     }
 
-    public void setIdToken(Integer idToken) {
-        this.idToken = idToken;
+    public int getIdToken(String lexema) {
+        return tablaSimbolos.getIdToken(lexema);
+    }
+    public void setTokenActual(int idToken) {
+        this.tokenActual = idToken;
 
     }
 
@@ -144,7 +152,12 @@ public class AnalizadorLexico {
     }
 
     public boolean isCodigoLeido() {
-        return false;
+        return this.codigoLeido;
+    }
+
+    public void agregarRegistro(String lexema, int idToken) {
+        this.tablaSimbolos.agregarRegistro(lexema, idToken);
+        this.refTablaSimbolos = this.tablaSimbolos.size() - 1;
     }
 
     public int procesarYylex() {
@@ -169,11 +182,10 @@ public class AnalizadorLexico {
             accion = this.matrizAccionesSemanticas.get(this.estadoActual, columnaCaracter);
 
             // si hay una accion semantica valida entonces la ejecuta
-            if (accion != null) {
+            if (accion != null)
                 accion.ejecutar(this.buffer, caracter);
-                this.posArchivo += 1; // avanzamos a la posicion del siguiente caracter
-            }
 
+            this.posArchivo += 1; // avanzamos a la posicion del siguiente caracter
 
             // SI EL CARACTER ES UN SALTO DE LINEA
             if (caracter == '\n' && estadoActual!=2 && estadoActual!=3 && estadoActual!=6 && estadoActual!=11)
@@ -228,7 +240,7 @@ public class AnalizadorLexico {
         this.buffer = "";
         while (this.archivo.charAt(this.posArchivo) != ';' && this.archivo.charAt(this.posArchivo) != '\n'
                                                             && this.archivo.charAt(this.posArchivo) != 9 // DISTINTO DE TABULACION
-                                                         //   && this.archivo.charAt(this.posArchivo) != 32 // DISTINTO DE UN ESTACIO EN BLANCO (REVISAR)
+                                                          //  && this.archivo.charAt(this.posArchivo) != 32 // DISTINTO DE UN ESTACIO EN BLANCO (REVISAR)
                                                             && this.archivo.charAt(this.posArchivo) != '$' // DISTINTO DE FIN
                                                             && this.posArchivo < this.archivo.length()) {
             aux += this.archivo.charAt(this.posArchivo);
@@ -236,6 +248,10 @@ public class AnalizadorLexico {
         }
         this.estadoActual = 0;
         this.addErrorLexico("ERROR LÉXICO (Línea " + this.LINEA + "): \'" + aux + "\' es un token inválido, no reconocido por la matriz de transición de estados.");
+    }
+
+    public void addErrorLexico(String error) {
+        this.errores.add(error);
     }
 
     public boolean esFinDeArchivo() {
@@ -257,12 +273,33 @@ public class AnalizadorLexico {
     public ArrayList<Atributo> getListaTokens() {
         return this.tokensReconocidos;
     }
+ 
 
     public void imprimirErrores() {
+        System.out.println();
+        System.out.println("|--- ERRORES LÉXICOS: ---|");
+        if (this.errores.isEmpty())
+            System.out.println("Ejecución sin errores.");
+        else {
+            for (int i = 0; i < this.errores.size(); i++)
+                System.out.println(this.errores.get(i));
+        }
     }
 
     public void imprimirTablaSimbolos() {
+        System.out.println();
+        System.out.println("|--- TABLA SIMBOLOS: ---|");
+        if (this.tokensReconocidos.isEmpty())
+            System.out.println("no hay tokens");
+        else {
+            for(Atributo t : tokensReconocidos){
+                System.out.println(t.toString());
+            }
+        }
     }
 
 
+    public boolean isPalabraReservada(String buffer) {
+       return this.tablaSimbolos.isPalabraReservada(buffer);
+    }
 }
