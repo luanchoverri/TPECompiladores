@@ -24,7 +24,7 @@ public class RangoEntero extends AccionSemanticaSimple {
 
         }
 
-        int idToken = lexico.getIdToken("i32");
+        int idToken = lexico.getIdToken("cte");
         lexico.setTokenActual(idToken);
         lexico.agregarRegistro(buffer, idToken);
 

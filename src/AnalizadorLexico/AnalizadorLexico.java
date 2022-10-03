@@ -25,6 +25,8 @@ public class AnalizadorLexico {
     private String buffer; // va guardando lo que va pasando por el automata
     private int tokenActual;
     private int estadoActual;
+
+
     private int refTablaSimbolos;
     private int posArchivo;
     private boolean codigoLeido;
@@ -146,6 +148,13 @@ public class AnalizadorLexico {
         this.tokenActual = idToken;
 
     }
+    public int getRefTablaSimbolos() {
+        return refTablaSimbolos;
+    }
+
+    public void setRefTablaSimbolos(int refTablaSimbolos) {
+        this.refTablaSimbolos = refTablaSimbolos;
+    }
 
     public TablaSimbolos getTablaSimbolos() {
         return this.tablaSimbolos;
@@ -240,14 +249,14 @@ public class AnalizadorLexico {
         this.buffer = "";
         while (this.archivo.charAt(this.posArchivo) != ';' && this.archivo.charAt(this.posArchivo) != '\n'
                                                             && this.archivo.charAt(this.posArchivo) != 9 // DISTINTO DE TABULACION
-                                                          //  && this.archivo.charAt(this.posArchivo) != 32 // DISTINTO DE UN ESTACIO EN BLANCO (REVISAR)
+                                                            && this.archivo.charAt(this.posArchivo) != 32 // DISTINTO DE UN ESTACIO EN BLANCO (REVISAR)
                                                             && this.archivo.charAt(this.posArchivo) != '$' // DISTINTO DE FIN
                                                             && this.posArchivo < this.archivo.length()) {
             aux += this.archivo.charAt(this.posArchivo);
             this.posArchivo++;
         }
         this.estadoActual = 0;
-        this.addErrorLexico("ERROR LÉXICO (Línea " + this.LINEA + "): \'" + aux + "\' es un token inválido, no reconocido por la matriz de transición de estados.");
+    //    this.addErrorLexico("ERROR LÉXICO (Línea " + this.LINEA + "): \'" + aux + "\' es un token inválido, no reconocido por la matriz de transición de estados.");
     }
 
     public void addErrorLexico(String error) {
