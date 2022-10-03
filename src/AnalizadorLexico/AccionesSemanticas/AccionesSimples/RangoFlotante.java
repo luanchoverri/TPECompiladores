@@ -30,7 +30,7 @@ public class RangoFlotante extends AccionSemanticaSimple {
             e.printStackTrace(); //fuera de rango
         }
 
-        int idToken = lexico.getIdToken("f32");
+        int idToken = lexico.getIdToken("cte");
         lexico.setTokenActual(idToken);
         lexico.agregarRegistro(buffer, idToken);
         return true;
