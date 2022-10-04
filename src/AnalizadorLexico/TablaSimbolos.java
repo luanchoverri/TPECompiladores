@@ -39,7 +39,7 @@ public class TablaSimbolos {
         this.idTokens.put("if", 259);
         this.idTokens.put("then", 260);
         this.idTokens.put("else", 261);
-        this.idTokens.put("endif", 262);
+        this.idTokens.put("end_if", 262);
         this.idTokens.put("out", 263);
         this.idTokens.put("fun", 264);
         this.idTokens.put("return", 265);
@@ -51,20 +51,19 @@ public class TablaSimbolos {
         this.idTokens.put("f32",271);
 
         // Cadena de caracteres
-        this.idTokens.put("cadena", 280);
+        this.idTokens.put("cadena", 272);
 
         // Comparadores
         this.idTokens.put(">", (int) '>');
         this.idTokens.put("<", (int) '<');
-        this.idTokens.put("<=", 281);
-        this.idTokens.put(">=", 282);
-        this.idTokens.put("=", 283);
-        this.idTokens.put("=!", 284);
+        this.idTokens.put("<=", 273);
+        this.idTokens.put(">=", 274);
+        this.idTokens.put("=", (int) '=');
+        this.idTokens.put("=!", 275);
 
         // Operador de asignación
-        this.idTokens.put("=:", 285);
+        this.idTokens.put("=:", 276);
 
-        // Operadores lógicos ?
     }
 
     public boolean isPalabraReservada(String lexema){
@@ -72,7 +71,7 @@ public class TablaSimbolos {
             case "if":
             case "then":
             case "else":
-            case "endif":
+            case "end_if":
             case "out":
             case "fun":
             case "return":
