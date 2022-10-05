@@ -18,13 +18,14 @@
 
 //#line 2 "gramatica.y"
 
-package analizadorSintactico;
+package AnalizadorSintactico;
 
 import java.util.Vector;
 
-import analizadorLexico.AnalizadorLexico;
-import analizadorSintactico.AnalizadorSintactico;
-import analizadorLexico.RegistroSimbolo;
+import AnalizadorLexico.AnalizadorLexico;
+import AnalizadorSintactico.AnalizadorSintactico;
+import AnalizadorLexico.Atributo;
+import AnalizadorSintactico.ParserVal;
 
 //#line 27 "Parser.java"
 
