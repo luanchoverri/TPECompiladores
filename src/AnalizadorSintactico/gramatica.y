@@ -120,10 +120,10 @@ sentencia_if : if '(' condicion ')' then cuerpo_if endif ';'                    
              | if '(' condicion ')' then cuerpo_if else cuerpo_else endif error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de endIF."); }
              ;
 
-cuerpo_if :  bloque_sentencias
+cuerpo_if :  bloque_sentencias_ejecutables
           ;
 
-cuerpo_else : bloque_sentencias
+cuerpo_else : bloque_sentencias_ejecutables
             ;
 
 sentencia_when : when '(' condicion ')' then cuerpo_when ';'                      { sintactico.agregarAnalisis("Se reconoció una sentencia IF. (Línea " + AnalizadorLexico.LINEA + ")"); }
@@ -163,9 +163,9 @@ cuerpo_for : '{' bloque_sentencias_for '}' ';'
            ;
 
 sentencias_for : sentencias_ejecutables
-               | sentencias_declarativas
                | sentencia_break
                | sentencia_continue
+               | sentencias_declarativas error{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias declarativas adentro del for"); }
                ;
 
 expresion_for : encabezado_for cuerpo_for
