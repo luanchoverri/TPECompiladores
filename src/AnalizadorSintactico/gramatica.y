@@ -33,35 +33,31 @@ bloque_sentencias : '{' bloque '}'
                      ;
 
 bloque_sentencias_for : sentencias_for
-                        | bloque_sentencias_for sentencias_for
-                        ;
+                      | bloque_sentencias_for sentencias_for
+                      ;
 
 //TODO
 
 
-bloque_sentencias_ejecutables : sentencias_ejecutables
-                              | bloque_sentencias_ejecutables sentencias_ejecutables
-                              ;
 
-bloque_sentencias_declarativas : sentencias_declarativas
-                               | bloque_sentencias_declarativas sentencias_declarativas
-                               ;
 
 sentencias : sentencias_declarativas
            | sentencias_ejecutables
            ;
 
-tipo_fun : fun   {
-                        sintactico.setTipo("fun");
-                        $$.sval = new String("fun");
-                    }
-          ;
 
 sentencias_declarativas : tipo lista_de_variables ';'        { sintactico.agregarAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
                         | tipo lista_de_variables error      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA - 1) + "): falta ';' al final de la declaración de variable."); }
                         | tipo error                         { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA - 1) + "): falta el nombre de la variable"); }
                         | declaracion_func
                         ;
+
+sentencias_ejecutables : asignacion
+                       | salida
+                       | sentencia_if
+                       | expresion_for
+                       | sentencia_when
+                       ;
 
 lista_de_variables : id
                    | lista_de_variables ',' id
@@ -82,13 +78,7 @@ declaracion_func : encabezado_func parametro bloque return '(' expresion ')' ';'
                  | encabezado_func parametro return '(' expresion ')' ';' '}'
                  ;
 
-sentencias_ejecutables : asignacion
-                       | salida
-                       | sentencia_if
-                       | sentencia_while
-                       | expresion_for
-                       | sentencia_when //TODO
-                       ;
+
 
 op_asignacion : opasignacion    { $$.sval = new String("=:"); }
               ;
@@ -126,8 +116,7 @@ cuerpo_if :  bloque_sentencias
 cuerpo_else : bloque_sentencias
             ;
 
-sentencia_when : when '(' condicion ')' then cuerpo_when ';'                      { sintactico.agregarAnalisis("Se reconoció una sentencia IF. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             | when '(' condicion ')' then cuerpo_when';'     { sintactico.agregarAnalisis("Se reconoció una sentencia when. (Línea " + AnalizadorLexico.LINEA + ")"); }
+sentencia_when : when '(' condicion ')' then cuerpo_when ';'
              | when condicion error                                                 { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): la condición de when debe estar entre paréntesis."); }
              | when '(' condicion  then error                                       { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta paréntesis de cierre en la lista de parámetros."); }
              | when '(' condicion ')' cuerpo_when error                               { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
@@ -135,31 +124,30 @@ sentencia_when : when '(' condicion ')' then cuerpo_when ';'                    
 cuerpo_when : bloque_sentencias
             ;
 
-encabezado_for : for '(' asignacion ';' condicion ';' signo_for id ')'
-               | for  asignacion ';' condicion ';' signo_for id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir parentisis."); }
-               | for '(' asignacion ';' condicion ';' signo_for id error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar parentesis."); }
-               | for '(' asignacion  condicion ';' signo_for id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-               | for '(' asignacion ';' condicion ' signo_for id ')' error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-               | for '(' ';' condicion ';' '+' id ')' error           { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta asignacion "); }
-               | for '(' asignacion ';' ';' '+' id ')' error          { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta condicion "); }
-               | id ':' for '(' asignacion ';' condicion ';' signo_for id ')'
-               | ':' for '(' asignacion ';' condicion ';' signo_for id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la etiqueta"); }
-               | id for '(' asignacion ';' condicion ';' signo_for id ')' error     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ':'"); }
+encabezado_for : for '(' asignacion ';' condicion ';' signo id ')'
+               | for  asignacion ';' condicion ';' signo id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir parentisis."); }
+               | for '(' asignacion ';' condicion ';' signo id error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar parentesis."); }
+               | for '(' asignacion  condicion ';' signo id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
+               | for '(' asignacion ';' condicion  signo id ')' error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
+               | for '(' ';' condicion ';' signo id ')' error           { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta asignacion "); }
+               | for '(' asignacion ';' ';' signo id ')' error          { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta condicion "); }
+               | id ':' for '(' asignacion ';' condicion ';' signo id ')'
+               | ':' for '(' asignacion ';' condicion ';' signo id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la etiqueta"); }
+               | id for '(' asignacion ';' condicion ';' signo id ')' error     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ':'"); }
                ;
 
-signo_for : '+'
-          | '-'
-          ;
+
+signo : '+'
+      | '-'
+      ;
 
 cuerpo_for : '{' bloque_sentencias_for '}' ';'
-           | sentencias_for ';'
-           | bloque_sentencias_for '}' ';'      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir llave "); }
-           | '{' bloque_sentencias_for ';'      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar llave "); }
-           | '{' bloque_sentencias_for '}'      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-           | sentencias_for                     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
+           | bloque_sentencias_for '}' ';'  error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir llave "); }
+           | '{' bloque_sentencias_for ';'  error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar llave "); }
+           | '{' bloque_sentencias_for '}'  error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
            | '{' bloque_sentencias_for '}' else cte ';'
-           | '{' bloque_sentencias_for '}' else ';'     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la constante "); }
-           | '{' bloque_sentencias_for '}' cte ';'     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta el else. "); }
+           | '{' bloque_sentencias_for '}' else ';' error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la constante "); }
+           | '{' bloque_sentencias_for '}' cte ';'  error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta el else. "); }
            ;
 
 sentencias_for : sentencias_ejecutables
@@ -185,12 +173,13 @@ sentencia_continue : continue ';'
                    | continue ':' id error      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' "); }
                    ;
 
-expresion_relacional : expresion
-                     | expresion_relacional comparador expresion
+condicion : expresion_relacional
+          ;
+
+expresion_relacional : expresion comparador expresion
                      ;
 
-expresion : expresion '+' termino
-          | expresion '-' termino
+expresion : '(' expresion ')' signo termino
           | termino
           ;
 
@@ -207,7 +196,7 @@ factor : id
 comparador : '<'            { $$.sval = new String("<"); }
            | '>'            { $$.sval = new String(">"); }
            | menorigual     { $$.sval = new String("<="); }
-           | menorigual     { $$.sval = new String(">="); }
+           | mayorigual     { $$.sval = new String(">="); }
            | '='            { $$.sval = new String("="); }
            | distinto       { $$.sval = new String("=!"); }
            ;
