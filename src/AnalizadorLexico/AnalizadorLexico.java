@@ -19,7 +19,7 @@ public class AnalizadorLexico {
     public static final int SIMBOLOS = 23;      // Cantidad de símbolos aceptados por el compilador.
     public static int LINEA = 1;
 
-    // -- VARIABLES -- // 
+    // -- VARIABLES -- //
 
     private String archivo;
     private String buffer; // va guardando lo que va pasando por el automata
@@ -34,7 +34,7 @@ public class AnalizadorLexico {
     private ArrayList<Atributo> tokensReconocidos; // Va procesando el codigo y acá guarda los tokens reconocidos
     private ArrayList<String> errores; // ArrayList para almacenar los errores encontrados junto con el numero de linea (Implementar?) !!!!!!!!!!!!!!
 
-    // -- MATRICES -- // 
+    // -- MATRICES -- //
     private MatrizAccionesSemanticas matrizAccionesSemanticas;  // Matriz de acciones semánticas.
     private MatrizEstados matrizEstados;
 
@@ -107,7 +107,7 @@ public class AnalizadorLexico {
 
         AccionSemantica[][] matrizSemantica = {
                 /*            L       d     .     _     F     <     >     =     +     -     *     /     '    \n     ;     :     ,     (     )     {     }   otro    !  Bl,Tab  $
-                /*0*/        {AS10, AS10, AS10, null, AS10, AS10, AS10, null, AS15, AS15, AS15, AS15, AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
+                /*0*/        {AS10, AS10, AS10, null, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15, AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
                 /*1*/        {null, AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 /*2*/        {AS12, AS2, AS2, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, null},
                 /*3*/        {AS11, AS2, AS11, AS11, AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
@@ -282,7 +282,7 @@ public class AnalizadorLexico {
     public ArrayList<Atributo> getListaTokens() {
         return this.tokensReconocidos;
     }
- 
+
 
     public void imprimirErrores() {
         System.out.println();

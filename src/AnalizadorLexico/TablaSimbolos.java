@@ -117,7 +117,7 @@ public class TablaSimbolos {
             case (int) ':':
                 tipo = "LITERAL";
                 break;
-            case 285:
+            case 276:
                 tipo = "ASIGNACION";
                 break;
             case 257:
@@ -138,17 +138,18 @@ public class TablaSimbolos {
             case 268:
             case 269:
             case 270:
+            case 271:
                 tipo = "PALABRA RESERVADA";
                 break;
-            case 280:
+            case 272:
                 tipo = "CADENA DE CARACTERES";
                 break;
             case (int) '<':
             case (int) '>':
-            case 281:
-            case 282:
-            case 283:
-            case 284:
+            case (int) '=':
+            case 273:
+            case 274:
+            case 275:
                 tipo = "COMPARADOR";
                 break;
             default:
