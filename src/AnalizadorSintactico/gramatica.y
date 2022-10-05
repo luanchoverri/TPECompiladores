@@ -135,22 +135,21 @@ sentencia_when : when '(' condicion ')' then cuerpo_when ';'                    
 cuerpo_when : bloque_sentencias
             ;
 
-encabezado_for : for '(' asignacion ';' condicion ';' '+' id ')'
-               | for  asignacion ';' condicion ';' '+' id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir parentisis."); }
-               | for '(' asignacion ';' condicion ';' '+' id error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar parentesis."); }
-               | for '(' asignacion  condicion ';' '+' id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-               | for '(' asignacion ';' condicion ' '+' id ')' error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
+encabezado_for : for '(' asignacion ';' condicion ';' signo_for id ')'
+               | for  asignacion ';' condicion ';' signo_for id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir parentisis."); }
+               | for '(' asignacion ';' condicion ';' signo_for id error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar parentesis."); }
+               | for '(' asignacion  condicion ';' signo_for id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
+               | for '(' asignacion ';' condicion ' signo_for id ')' error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
                | for '(' ';' condicion ';' '+' id ')' error           { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta asignacion "); }
                | for '(' asignacion ';' ';' '+' id ')' error          { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta condicion "); }
-               | for '(' asignacion ';' condicion ';' '-' ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta id "); }
-               | for  asignacion ';' condicion ';' '-' id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir parentisis."); }
-               | for '(' asignacion ';' condicion ';' '-' id error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar parentesis."); }
-               | for '(' asignacion  condicion ';' '-' id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-               | for '(' asignacion ';' condicion ' '-' id ')' error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-               | for '(' ';' condicion ';' '-' id ')' error           { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta asignacion "); }
-               | for '(' asignacion ';' ';' '-' id ')' error          { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta condicion "); }
-               | for '(' asignacion ';' condicion ';' '-' ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta id "); }
+               | id ':' for '(' asignacion ';' condicion ';' signo_for id ')'
+               | ':' for '(' asignacion ';' condicion ';' signo_for id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la etiqueta"); }
+               | id for '(' asignacion ';' condicion ';' signo_for id ')' error     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ':'"); }
                ;
+
+signo_for : '+'
+          | '-'
+          ;
 
 cuerpo_for : '{' bloque_sentencias_for '}' ';'
            | sentencias_for ';'
@@ -180,6 +179,10 @@ sentencia_break : break ';'
 
 sentencia_continue : continue ';'
                    | continue error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de continue."); }
+                   | continue ':' id ';'
+                   | continue ':' ';' error     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta etiqueta"); }
+                   | continue id ';' error      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ':'."); }
+                   | continue ':' id error      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' "); }
                    ;
 
 expresion_relacional : expresion
