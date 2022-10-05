@@ -1,5 +1,15 @@
 package AnalizadorSintactico;
 
+
+import AnalizadorLexico.AnalizadorLexico;
+
 public class AnalizadorSintactico {
-    String prueba;
+
+    private AnalizadorLexico analizadorLexico;
+    private Parser parser;
+
+
+    public void addErrorSintactico(String s) {
+    }
 }
+
