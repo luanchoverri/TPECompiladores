@@ -106,22 +106,22 @@ public class AnalizadorLexico {
 
 
         AccionSemantica[][] matrizSemantica = {
-                /*            L       d     .     _     F     <     >     =     +     -     *     /     '    \n     ;     :     ,     (     )     {     }   otro    !  Bl,Tab  $
-                /*0*/        {AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15, AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
-                /*1*/        {null, AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                /*2*/        {AS12, AS2, AS2, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, null},
-                /*3*/        {AS11, AS2, AS11, AS11, AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
-                /*4*/        {null, AS2, null, null, null, null, null, null, AS2, AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                /*5*/        {null, AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                /*6*/        {AS11, AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
+                /*            L       d     .     _     F     <     >     =     +     -     *     /     '    \n     ;     :     ,     (     )     {     }   otro   !   Bl,Tab  $
+                /*0*/        {AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15,  AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
+                /*1*/        {null,  AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                /*2*/        {AS12,  AS2,  AS2, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, null},
+                /*3*/        {AS11,  AS2, AS11, AS11,  AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
+                /*4*/        {null,  AS2, null, null, null, null, null, null,  AS2,  AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                /*5*/        {null,  AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                /*6*/        {AS11,  AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
                 /*7*/        {AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, null},
                 /*8*/        {AS13, AS13, AS13, AS13, AS13, null, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, null},
                 /*9*/        {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 /*10*/       {AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, null},
-                /*11*/       {AS2, AS2, AS16, AS2, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, null},
-                /*12*/       {AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS17, null, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, null},
-                /*13*/       {AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, null, AS9, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, null},
-                /*14*/       {AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS17, null, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, null},
+                /*11*/       { AS2,  AS2, AS16,  AS2, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, null},
+                /*12*/       { AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, AS17, null,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null},
+                /*13*/       { AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null,  AS9,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null},
+                /*14*/       { AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, AS17, null,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null},
 
         };
         this.matrizAccionesSemanticas.setMatrizAccionSemantica(matrizSemantica);
