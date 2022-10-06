@@ -107,7 +107,7 @@ public class AnalizadorLexico {
 
         AccionSemantica[][] matrizSemantica = {
                 /*            L       d     .     _     F     <     >     =     +     -     *     /     '    \n     ;     :     ,     (     )     {     }   otro    !  Bl,Tab  $
-                /*0*/        {AS10, AS10, AS10, null, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15, AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
+                /*0*/        {AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15, AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
                 /*1*/        {null, AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 /*2*/        {AS12, AS2, AS2, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, null},
                 /*3*/        {AS11, AS2, AS11, AS11, AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
@@ -196,10 +196,6 @@ public class AnalizadorLexico {
 
             this.posArchivo += 1; // avanzamos a la posicion del siguiente caracter
 
-            // SI EL CARACTER ES UN SALTO DE LINEA
-            if (caracter == '\n' && estadoActual!=2 && estadoActual!=3 && estadoActual!=6 && estadoActual!=11)
-                LINEA++;
-
             // SI EL CARACTER ES FIN DE ARCHIVO
             if (caracter == '$') {
                 if (esFinDeArchivo()) // actualiza las variables y corta
@@ -222,9 +218,14 @@ public class AnalizadorLexico {
             int estadoSiguiente = this.matrizEstados.get(this.estadoActual, columnaCaracter);
             estadoActual = estadoSiguiente;
 
+
             // SI EL SIGUIENTE ESTADO ES INVALIDO
             if (this.estadoActual == -1)
                 this.sincronizarAnalisis(caracter); // TRATO EL ERROR
+
+            // SI EL CARACTER ES UN SALTO DE LINEA
+            if (caracter == '\n' && estadoActual!=2 && estadoActual!=3 && estadoActual!=6 && estadoActual!=11)
+                LINEA++;
 
         } // VUELVE AL WHILE
 
@@ -306,7 +307,6 @@ public class AnalizadorLexico {
             }
         }
     }
-
 
     public boolean isPalabraReservada(String buffer) {
        return this.tablaSimbolos.isPalabraReservada(buffer);
