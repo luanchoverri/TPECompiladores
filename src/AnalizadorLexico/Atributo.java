@@ -50,4 +50,7 @@ public class Atributo {
     public String toString() {
         return " | TOKEN " + "id=" + idToken + " " + lexema + "  nroLinea=" + nroLinea + " tipo= " + tipo + "  |" ;
     }
+    public String getTipoToken() {
+        return null;
+    }
 }

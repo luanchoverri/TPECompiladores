@@ -39,6 +39,7 @@ public class ChequearPalabraReservada extends AccionSemanticaSimple {
                 if (lexico.isPalabraReservada(buffer)){ // Retorna TRUE si existe la palabra reservada (Era identificador)
                     int idTokenReservada = lexico.getIdToken(buffer);
                     lexico.setTokenActual(idTokenReservada); // Obtiene el ID de la palabra reservada
+                    return true;
                 }else{
                     if (this.isIdentificador(buffer)){
                         if (buffer.length() > LONGITUD_MAXIMA) {

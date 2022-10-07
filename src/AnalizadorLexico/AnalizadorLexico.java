@@ -105,9 +105,9 @@ public class AnalizadorLexico {
         AccionSemantica AS16 = new AccionSemanticaCompuesta(new ArrayList<>(List.of(AS5, AS6)), this);
 
 
-        AccionSemantica[][] matrizSemantica = {
+        AccionSemantica[][] matrizSemantica = { // Revisar los fin de archivo ($) en cada estado del automata por si se debe invocar una accion semantica
                 /*            L       d     .     _     F     <     >     =     +     -     *     /     '    \n     ;     :     ,     (     )     {     }   otro   !   Bl,Tab  $
-                /*0*/        {AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15,  AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
+                /*0*/        {AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15,  AS1, null, AS15, AS15, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
                 /*1*/        {null,  AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 /*2*/        {AS12,  AS2,  AS2, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, null},
                 /*3*/        {AS11,  AS2, AS11, AS11,  AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
@@ -118,7 +118,7 @@ public class AnalizadorLexico {
                 /*8*/        {AS13, AS13, AS13, AS13, AS13, null, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, null},
                 /*9*/        {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 /*10*/       {AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, null},
-                /*11*/       { AS2,  AS2, AS16,  AS2, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, null},
+                /*11*/       { AS2,  AS2, AS16,  AS2, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16},
                 /*12*/       { AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, AS17, null,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null},
                 /*13*/       { AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null,  AS9,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null},
                 /*14*/       { AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, AS17, null,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null},
@@ -214,6 +214,10 @@ public class AnalizadorLexico {
                 }
             }
 
+            // SI EL CARACTER ES UN SALTO DE LINEA
+            if (caracter == '\n' && estadoActual!=2 && estadoActual!=3 && estadoActual!=6 && estadoActual!=11)
+                LINEA++;
+
             // CONSIGO EL SIGUIENTE ESTADO
             int estadoSiguiente = this.matrizEstados.get(this.estadoActual, columnaCaracter);
             estadoActual = estadoSiguiente;
@@ -223,9 +227,7 @@ public class AnalizadorLexico {
             if (this.estadoActual == -1)
                 this.sincronizarAnalisis(caracter); // TRATO EL ERROR
 
-            // SI EL CARACTER ES UN SALTO DE LINEA
-            if (caracter == '\n' && estadoActual!=2 && estadoActual!=3 && estadoActual!=6 && estadoActual!=11)
-                LINEA++;
+
 
         } // VUELVE AL WHILE
 
@@ -234,6 +236,9 @@ public class AnalizadorLexico {
         if (this.tokenActual != 0 && this.tokenActual != -1) {
             String tipo = tablaSimbolos.getTipoToken(this.tokenActual);
             Atributo token = new Atributo(this.tokenActual, this.buffer, this.LINEA, tipo);
+            if (tipo == "IDENTIFICADOR"){
+                posArchivo--;
+            }
             this.tokensReconocidos.add(token);
         }
 
