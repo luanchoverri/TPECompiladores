@@ -1,8 +1,0 @@
-program
-    i32 y;
-    fun f(i32 x): i32
-    {
-       i32 p =: 25;
-       p =: x;
- 	 return (p);
-    }

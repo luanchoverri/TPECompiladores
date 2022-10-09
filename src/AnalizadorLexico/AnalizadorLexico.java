@@ -107,7 +107,7 @@ public class AnalizadorLexico {
 
         AccionSemantica[][] matrizSemantica = {
                 /*            L       d     .     _     F     <     >     =     +     -     *     /     '    \n     ;     :     ,     (     )     {     }   otro    !  Bl,Tab  $
-                /*0*/        {AS10, AS10, AS10, null, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15, AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
+                /*0*/        {AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15, AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
                 /*1*/        {null, AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 /*2*/        {AS12, AS2, AS2, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, null},
                 /*3*/        {AS11, AS2, AS11, AS11, AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
@@ -137,6 +137,9 @@ public class AnalizadorLexico {
         this.buffer = buffer;
     }
 
+    public void setPosArchivo(int pos) {
+        posArchivo = pos;
+    }
     public int getTokenActual() {
         return tokenActual;
     }
@@ -311,4 +314,6 @@ public class AnalizadorLexico {
     public boolean isPalabraReservada(String buffer) {
        return this.tablaSimbolos.isPalabraReservada(buffer);
     }
+
+
 }

@@ -168,4 +168,7 @@ public class TablaSimbolos {
        return registroTokens.size();
     }
 
+    public boolean isEmpty() {
+        return registroTokens.isEmpty();
+    }
 }

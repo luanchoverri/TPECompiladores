@@ -8,16 +8,16 @@ public class Atributo {
     private String lexema; // Significado del Token
     private int nroLinea;
     private String tipo;
-    
 
-    
+
     // -- Constructor --
 
     public Atributo(String lexema, int idToken) {
         this.lexema = lexema;
         this.idToken = idToken;
     }
-    public Atributo(int idToken, String lexema, int nroLinea, String tipo){
+
+    public Atributo(int idToken, String lexema, int nroLinea, String tipo) {
         this.idToken = idToken;
         this.lexema = lexema;
         this.nroLinea = nroLinea;
@@ -36,18 +36,27 @@ public class Atributo {
         return this.lexema;
     }
 
+    public String getTipo() {
+        return this.tipo;
+    }
+
+
     // Setters
 
     public void setLexema(String lexema) {
         this.lexema = lexema;
-    }    
+    }
 
     public void setIdToken(int idToken) {
         this.idToken = idToken;
     }
 
+
     @Override
     public String toString() {
-        return " | TOKEN " + "id=" + idToken + " " + lexema + "  nroLinea=" + nroLinea + " tipo= " + tipo + "  |" ;
+        return " | TOKEN " + "id=" + idToken + " " + lexema + "  nroLinea=" + nroLinea + " tipo= " + tipo + "  |";
     }
+
+
 }
+

@@ -45,11 +45,18 @@ public class ChequearPalabraReservada extends AccionSemanticaSimple {
                 lexico.addErrorLexico("WARNING (Línea " + lexico.LINEA + "): el identificador " + buffer + " excede el rango y fue truncado") ;
                 buffer = buffer.substring(0, LONGITUD_MAXIMA-1); // si el identificador tiene mas de 25 chars se trunca.
             }
+            if(!controlaIdentificador(buffer)){
+                lexico.addErrorLexico("ERROR (Línea " + lexico.LINEA + "): el identificador " + buffer + " no está bien escrito ") ;
+            }
             int idTokenIdentificador = lexico.getIdToken("id");
             this.getAnalizadorLexico().setTokenActual(idTokenIdentificador);
             lexico.agregarRegistro(buffer, idTokenIdentificador);
 
         }
         return true;
+    }
+
+    private boolean controlaIdentificador(String id) {
+        return Character.isLetter(id.charAt(0));
     }
 }

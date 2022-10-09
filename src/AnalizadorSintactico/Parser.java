@@ -21,11 +21,9 @@
 package AnalizadorSintactico;
 
 import java.util.Vector;
-
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorSintactico.AnalizadorSintactico;
 import AnalizadorLexico.Atributo;
-import AnalizadorSintactico.ParserVal;
 
 //#line 27 "Parser.java"
 
@@ -35,7 +33,7 @@ import AnalizadorSintactico.ParserVal;
 public class Parser
 {
 
-boolean yydebug;        //do I want debug output?
+boolean yydebug = true;        //do I want debug output?
 int yynerrs;            //number of errors so far
 int yyerrflag;          //was there an error?
 int yychar;             //the current working character
@@ -646,7 +644,7 @@ public int yylex() {
 }
 
 public void yyerror(String string) {
-	//sintactico.addErrorSintactico("par: " + string);
+	sintactico.addErrorSintactico("par: " + string);
 }
 
 
@@ -858,23 +856,23 @@ case 41:
 break;
 case 44:
 //#line 97 "gramatica.y"
-{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
+{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
 break;
 case 45:
 //#line 98 "gramatica.y"
-{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): cierre erróneo de la lista de parámetros de out."); }
+{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): cierre erróneo de la lista de parámetros de out."); }
 break;
 case 46:
 //#line 99 "gramatica.y"
-{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): los parámetros de out deben estar entre paréntesis."); }
+{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): los parámetros de out deben estar entre paréntesis."); }
 break;
 case 47:
 //#line 100 "gramatica.y"
-{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): se esperaba out, se encontró '('."); }
+{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): se esperaba out, se encontró '('."); }
 break;
 case 48:
 //#line 101 "gramatica.y"
-{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): falta declarar una cadena para PRINT."); }
+{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta declarar una cadena para PRINT."); }
 break;
 case 49:
 //#line 105 "gramatica.y"

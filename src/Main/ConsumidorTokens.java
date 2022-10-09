@@ -1,13 +1,14 @@
 package Main;
 
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
+import AnalizadorLexico.*;
+import AnalizadorSintactico.*;
 
-import AnalizadorLexico.AnalizadorLexico;
-import AnalizadorLexico.Atributo;
 
 public class ConsumidorTokens {
     public static void main(String[] args) {
@@ -19,15 +20,17 @@ public class ConsumidorTokens {
             System.out.println("|--- Ingrese la ruta del archivo a analizar: ---|");
 
             try (// Utilizamos la clase Scanner
-            Scanner scanner = new Scanner(System.in)) {
+                 Scanner scanner = new Scanner(System.in)) {
                 String path = scanner.next();
                 String archivoEntrada = Files.readString(Paths.get(path));
 
-                AnalizadorLexico analizadorLexico = new AnalizadorLexico(archivoEntrada);
 
-                while (!analizadorLexico.isCodigoLeido() )
-                    analizadorLexico.procesarYylex();
-                ArrayList<Atributo> tokens = analizadorLexico.getListaTokens();
+                AnalizadorLexico lexico = new AnalizadorLexico(archivoEntrada);
+
+                while (!lexico.isCodigoLeido() )
+                    lexico.procesarYylex();
+
+                ArrayList<Atributo> tokens = lexico.getListaTokens();
 
                 if (tokens.isEmpty()) { // Si esta vacio, no se detectan tokens
                     System.out.println("!!! ---------------ANALIZADOR LÉXICO--------------- !!!");
@@ -42,14 +45,13 @@ public class ConsumidorTokens {
                     }
                 }
 
-
                 System.out.println("!!! ____________________________________________________________ !!!");
                 System.out.println("ERRORES");
-                analizadorLexico.imprimirErrores();
+                lexico.imprimirErrores();
 
                 System.out.println("(Tabla) ---------------TABLA DE SIMBOLOS--------------- (Tabla)");
                 System.out.println("|-- TABLA DE SIMBOLOS --|");
-                analizadorLexico.imprimirTablaSimbolos();
+                lexico.imprimirTablaSimbolos();
             }
         } catch(IOException e) {
             System.out.println("ERROR: El archivo que se indica en la ruta ingresada no existe.");

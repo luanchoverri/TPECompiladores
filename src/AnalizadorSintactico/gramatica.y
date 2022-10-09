@@ -94,11 +94,11 @@ asignacion : id op_asignacion expresion ';'
            ;
 
 salida : out '(' cadena ')' ';'
-       | out '(' cadena ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
-       | out '(' cadena error ';'   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): cierre erróneo de la lista de parámetros de out."); }
-       | out cadena error ';'       { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): los parámetros de out deben estar entre paréntesis."); }
-       | '(' cadena error             { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): se esperaba out, se encontró '('."); }
-       | out '(' ')' error ';'      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + analizadorLexico.LINEA + "): falta declarar una cadena para PRINT."); }
+       | out '(' cadena ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
+       | out '(' cadena error ';'   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): cierre erróneo de la lista de parámetros de out."); }
+       | out cadena error ';'       { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): los parámetros de out deben estar entre paréntesis."); }
+       | '(' cadena error             { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): se esperaba out, se encontró '('."); }
+       | out '(' ')' error ';'      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta declarar una cadena para PRINT."); }
        ;
 
 
