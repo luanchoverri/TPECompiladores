@@ -34,7 +34,7 @@ public class RangoFlotante extends AccionSemanticaSimple {
                 throw new Exception("FUERA DE RANGO"); // genero la excepcion
             }
         } catch (Throwable e){
-            lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): la constante f32 " + buffer + " está fuera de rango.") ;
+            lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): la constante f32 con valor -> " + buffer + " está fuera de rango.") ;
         }
 
         int idToken = lexico.getIdToken("cte");

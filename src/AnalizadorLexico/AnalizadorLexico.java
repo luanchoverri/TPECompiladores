@@ -41,7 +41,7 @@ public class AnalizadorLexico {
     // -- Constructor --
 
     public AnalizadorLexico(String archivo) {
-        this.archivo = archivo;
+        this.archivo = archivo + '$';
         this.matrizAccionesSemanticas = new MatrizAccionesSemanticas(ESTADOS, SIMBOLOS);
         this.matrizEstados = new MatrizEstados();
         this.tablaSimbolos = new TablaSimbolos();
@@ -204,7 +204,7 @@ public class AnalizadorLexico {
                     // Si no cerró la cadena y venía el EoF
                     if (this.posArchivo == this.archivo.length())
                         if (this.estadoActual == 12) {
-                         //   this.addErrorLexico("ERROR LÉXICO (Línea " + this.LINEA + "): cadena o comentario mal cerrados");
+                            this.addErrorLexico("ERROR LÉXICO (Línea " + this.LINEA + "): cadena o comentario mal cerrados");
                             this.tokenActual = 0;
                             this.posArchivo = 0;
                             this.LINEA = 1;
@@ -236,7 +236,7 @@ public class AnalizadorLexico {
         if (this.tokenActual != 0 && this.tokenActual != -1) {
             String tipo = tablaSimbolos.getTipoToken(this.tokenActual);
             Atributo token = new Atributo(this.tokenActual, this.buffer, this.LINEA, tipo);
-            if (tipo == "IDENTIFICADOR"){
+            if (tipo == "IDENTIFICADOR" || tipo == "PALABRA RESERVADA" || tipo == "CONSTANTE"){
                 posArchivo--;
             }
             this.tokensReconocidos.add(token);
