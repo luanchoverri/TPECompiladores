@@ -10,57 +10,56 @@ import AnalizadorLexico.Atributo;
 
 %}
 
-%token id cte IF then ELSE endIF out fun RETURN BREAK i32 when FOR CONTINUE f32 cadena menorigual mayorigual distinto opasignacion
+%token id cte IF then ELSE end_if out fun RETURN BREAK i32 when FOR CONTINUE f32 cadena menorigual mayorigual distinto opasignacion
 %start programa
 
 %%
 
-
-programa : id bloque_sentencias ';'
-         | id  ';'
-         | id bloque_sentencias error      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' ."); }
-         ;
-
-bloque : sentencias
-       | bloque sentencias
-       ;
+// TODO CONST
+// TODO CORREGIR WHEN
+// TODO CORREGIR ELSE DESP DEL FOR PARA QUE SI O SI VENGA DE UN ETIQUETADO
 
 
-bloque_sentencias : '{' bloque '}'
-                     | '{' '}'
-                     | sentencias
-                     | bloque '}'  error     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir el bloque."); }
-                     | '{' bloque  error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): bloque mal cerrado."); }
-                     ;
+programa : encabezado_prog bloque_sentencias
+	 ;
+
+
+encabezado_prog : id
+                ;
+
+bloque_sentencias : bloque_sentencias '{' sentencia '}'
+		  | '{' sentencia '}'
+		  | '{' sentencia    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar el bloque.");}
+		  |  sentencia '}'   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir el bloque.");}
+		  ;
+
+
 
 bloque_sentencias_FOR : sentencias_FOR
                       | bloque_sentencias_FOR sentencias_FOR
                       ;
 
 
-bloque_sentencias_ejecutables : sentencias_ejecutables
-                              | bloque_sentencias_ejecutables sentencias_ejecutables
-                              ;
 
-
-
-sentencias : sentencias_declarativas
-           | sentencias_ejecutables
+sentencia : declarativas
+           | ejecutables
+           | sentencia declarativas
+           | sentencia ejecutables
            ;
 
 
-sentencias_declarativas : tipo lista_de_variables ';'        { sintactico.agregarAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
-                        | tipo lista_de_variables error      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA - 1) + "): falta ';' al final de la declaración de variable."); }
-                        | tipo error                         { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA - 1) + "): falta el nombre de la variable"); }
-                        | declaracion_func
-                        ;
+declarativas : tipo lista_de_variables ';'        { sintactico.agregarAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | tipo lista_de_variables error      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA) + "): falta ';' al final de la declaración de variable."); }
+             | tipo error                         { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA) + "): falta el nombre de la variable"); }
+             | declaracion_func
+             ;
 
-sentencias_ejecutables : asignacion
-                       | salida
-                       | sentencia_IF
-                       | expresion_FOR
-                       | sentencia_when
-                       ;
+ejecutables : asignacion
+            | salida
+            | sentencia_IF
+            | expresion_FOR
+            | sentencia_when
+            ;
 
 lista_de_variables : id
                    | lista_de_variables ',' id
@@ -77,7 +76,7 @@ parametro : tipo id ')' ':' tipo '{'
           | ')' ':' tipo '{'
           ;
 
-declaracion_func : encabezado_func parametro bloque RETURN '(' expresion ')' ';' '}'
+declaracion_func : encabezado_func parametro bloque_sentencias RETURN '(' expresion ')' ';' '}'
                  | encabezado_func parametro RETURN '(' expresion ')' ';' '}'
                  ;
 
@@ -87,9 +86,10 @@ op_asignacion : opasignacion    { $$.sval = new String("=:"); }
               ;
 
 asignacion : id op_asignacion expresion ';'
-           | id op_asignacion expresion error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA - 1) + "): falta ';' luego de la asignación."); }
+           | id op_asignacion expresion error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la asignación."); }
+           | id ':' '=' expresion		 { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): error en el op de asignacion"); }
            | id expresion error                { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta el operador de asignación."); }
-           | id op_asignacion error            { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA - 1) + "): falta ';' luego de la asignación."); }
+           | id op_asignacion error            { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la asignación."); }
            | id expresion_FOR
            ;
 
@@ -102,64 +102,69 @@ salida : out '(' cadena ')' ';'
        ;
 
 
-sentencia_IF : IF '(' condicion ')' then cuerpo_IF endIF ';'                      { sintactico.agregarAnalisis("Se reconoció una sentencia IF. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             | IF '(' condicion ')' then cuerpo_IF ELSE cuerpo_ELSE endIF ';'     { sintactico.agregarAnalisis("Se reconoció una sentencia IF. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             | IF condicion error                                                 { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): la condición de IF debe estar entre paréntesis."); }
-             | IF '(' condicion  then error                                       { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta paréntesis de cierre en la lista de parámetros."); }
-             | IF '(' condicion ')' cuerpo_IF error                               { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
-             | IF '(' condicion ')' then cuerpo_IF error ';'                      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cierre de endIF."); }
-             | IF '(' condicion ')' then cuerpo_IF endIF error                    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de endIF."); }
-             | IF '(' condicion ')' then cuerpo_IF ELSE cuerpo_ELSE error ';'     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cierre de endIF."); }
-             | IF '(' condicion ')' then cuerpo_IF ELSE cuerpo_ELSE endIF error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de endIF."); }
+sentencia_IF : IF condicion_if then cuerpo_IF end_if ';'                      { sintactico.agregarAnalisis("Se reconoció una sentencia IF. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | IF condicion_if then cuerpo_IF ELSE cuerpo_ELSE end_if ';'     { sintactico.agregarAnalisis("Se reconoció una sentencia IF. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | IF condicion_if cuerpo_IF error                               { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+             | IF condicion_if then cuerpo_IF error ';'                      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cierre de end_if."); }
+             | IF condicion_if then cuerpo_IF end_if error                    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             | IF condicion_if then cuerpo_IF ELSE cuerpo_ELSE error ';'     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cierre de end_if."); }
+             | IF condicion_if then cuerpo_IF ELSE cuerpo_ELSE end_if error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
              ;
 
-cuerpo_IF :  bloque_sentencias_ejecutables
+cuerpo_IF :  '{' bloque_sentencias_FOR'}'
+	  |   sentencias_FOR
           ;
 
-cuerpo_ELSE : bloque_sentencias_ejecutables
+cuerpo_ELSE : '{' bloque_sentencias_FOR'}'
+	    | sentencias_FOR
             ;
 
-sentencia_when : when '(' condicion ')' then cuerpo_when ';'
-             | when condicion error                                                 { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): la condición de when debe estar entre paréntesis."); }
-             | when '(' condicion  then error                                       { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta paréntesis de cierre en la lista de parámetros."); }
-             | when '(' condicion ')' cuerpo_when error                               { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+sentencia_when : when '(' condicion_for ')' then cuerpo_when ';'
+             | when condicion_for                                        { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): la condición de when debe estar entre paréntesis."); }
+             | when '(' condicion_for  then error                        { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta paréntesis de cierre en la lista de parámetros."); }
+             | when '(' condicion_for ')' cuerpo_when error              { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
 
+/* CORREGIR WHEN */
 cuerpo_when : bloque_sentencias
             ;
 
-encabezado_FOR : FOR '(' asignacion ';' condicion ';' signo id ')'
-               | FOR  asignacion ';' condicion ';' signo id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir parentisis."); }
-               | FOR '(' asignacion ';' condicion ';' signo id error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar parentesis."); }
-               | FOR '(' asignacion  condicion ';' signo id ')' error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-               | FOR '(' asignacion ';' condicion  signo id ')' error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-               | FOR '(' ';' condicion ';' signo id ')' error           { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta asignacion "); }
-               | FOR '(' asignacion ';' ';' signo id ')' error          { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta condicion "); }
-               | id ':' FOR '(' asignacion ';' condicion ';' signo id ')'
-               | ':' FOR '(' asignacion ';' condicion ';' signo id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la etiqueta"); }
-               | id FOR '(' asignacion ';' condicion ';' signo id ')' error     { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ':'"); }
+encabezado_FOR : 	FOR '(' asignacion ';' condicion_for ';' signo id ')'
+               | 	FOR     asignacion ';' condicion_for ';' signo id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir parentisis."); }
+               | 	FOR '(' asignacion ';' condicion_for ';' signo id     error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar parentesis."); }
+               | 	FOR '(' asignacion     condicion_for ';' signo id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
+               | 	FOR '(' asignacion ';' condicion_for  	 signo id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
+               | 	FOR '(' 	   ';' condicion_for ';' signo id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta asignacion "); }
+               | 	FOR '(' asignacion ';'		     ';' signo id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta condicion "); }
+               | id ':' FOR '(' asignacion ';' condicion_for ';' signo id ')'
+               |    ':' FOR '(' asignacion ';' condicion_for ';' signo id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la etiqueta"); }
+               | id 	FOR '(' asignacion ';' condicion_for ';' signo id ')' error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ':'"); }
                ;
 
+condicion_for :  id comparador cte
+	      ;
 
 signo : '+'
       | '-'
       ;
 
 cuerpo_FOR : '{' bloque_sentencias_FOR '}' ';'
-           | bloque_sentencias_FOR '}' ';'  error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir llave "); }
-           | '{' bloque_sentencias_FOR ';'  error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar llave "); }
-           | '{' bloque_sentencias_FOR '}'  error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-           | '{' bloque_sentencias_FOR '}' ELSE cte ';'
-           | '{' bloque_sentencias_FOR '}' ELSE ';' error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la constante "); }
-           | '{' bloque_sentencias_FOR '}' cte ';'  error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta el ELSE. "); }
+           | 	 bloque_sentencias_FOR '}' ';'  error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta abrir llave "); }
+           | '{' bloque_sentencias_FOR 	   ';'  error    { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta cerrar llave "); }
+           | '{' bloque_sentencias_FOR '}'	error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
+       	/* REVISAR PORQUE EL ELSE CORRESPONDE SOLO A DEVOLVER UN VALOR SOLO SI VIENE DE LA ETIQUETA */
+           | '{' bloque_sentencias_FOR '}' 	ELSE cte ';'
+           | '{' bloque_sentencias_FOR '}' 	ELSE ';' error  { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta la constante "); }
+           | '{' bloque_sentencias_FOR '}' 	cte ';'  error   { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta el ELSE. "); }
            ;
 
-sentencias_FOR : sentencias_ejecutables
+sentencias_FOR : ejecutables
                | sentencia_BREAK
                | sentencia_CONTINUE
-               | sentencias_declarativas error{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias declarativas adentro del FOR"); }
+            		 /*  | declarativas error{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias declarativas adentro del FOR"); } */
                ;
 
 expresion_FOR : encabezado_FOR cuerpo_FOR
+	      | encabezado_FOR sentencias_FOR  ';'
               ;
 
 
@@ -176,13 +181,16 @@ sentencia_CONTINUE : CONTINUE ';'
                    | CONTINUE ':' id error      { sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta ';' "); }
                    ;
 
-condicion : expresion_relacional
-          ;
+condicion_if : '(' expresion_relacional ')'
+	     | expresion_relacional ')'		{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN IF "); }
+	     | '(' expresion_relacional 	{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN IF "); }
+	     | expresion_relacional 		{ sintactico.addErrorSintactico("ERROR SINTÁCTICO (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN IF "); }
+             ;
 
 expresion_relacional : expresion comparador expresion
                      ;
 
-expresion : '(' expresion ')' signo termino
+expresion : expresion signo termino
           | termino
           ;
 

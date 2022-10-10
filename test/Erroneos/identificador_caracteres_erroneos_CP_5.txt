@@ -1,0 +1,5 @@
+program
+    fun f5 () : f32
+    {
+        f32 x_,
+    }

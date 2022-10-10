@@ -17,6 +17,7 @@ public class AnalizadorSintactico {
         analizadorLexico = l;
         parser = p;
         erroresSintacticos = new ArrayList<String>();
+        analisisSintactico = new ArrayList<String>();
         tablaSimbolos = l.getTablaSimbolos();
         tipo = "";
 

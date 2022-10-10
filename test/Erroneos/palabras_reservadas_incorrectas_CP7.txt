@@ -1,0 +1,10 @@
+program
+    FUN f7 () : f32
+    {
+        f32 x =: 1.2;
+        if (x > 0.0) then
+            rEtUrN (x);
+        else
+            return (0.0);
+        END_IF;
+    }

@@ -1,0 +1,10 @@
+program
+    fun f9 () : f32
+    {
+		'¡Esto es un comentario / 
+		multilinea! ’
+        f32 x =: 1.2;
+        if (x = 1.2) then
+            return (x);
+		end_if
+    }

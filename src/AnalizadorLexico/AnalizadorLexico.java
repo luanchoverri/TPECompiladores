@@ -240,6 +240,9 @@ public class AnalizadorLexico {
         if (this.tokenActual != 0 && this.tokenActual != -1) {
             String tipo = tablaSimbolos.getTipoToken(this.tokenActual);
             Atributo token = new Atributo(this.tokenActual, this.buffer, this.LINEA, tipo);
+
+            System.out.println(token.toString());
+
             if (tipo == "IDENTIFICADOR" || tipo == "PALABRA RESERVADA" || tipo == "CONSTANTE"){
                 posArchivo--;
             }
@@ -271,6 +274,10 @@ public class AnalizadorLexico {
 
     public void addErrorLexico(String error) {
         this.errores.add(error);
+    }
+
+    public String getTipoToken(int id){
+        return tablaSimbolos.getTipoToken(id);
     }
 
     public boolean esFinDeArchivo() {

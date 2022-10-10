@@ -1,0 +1,9 @@
+program
+    fun f8 () : f32
+    {
+	  << esto es un comentario de una linea
+        f32 x =: 1.2;
+        if (x = 1.2) then
+            return (x);
+		end_if
+    }

@@ -89,8 +89,10 @@ public class TablaSimbolos {
     }
 
     public int getIdToken(String lexema) {
-        System.out.println("lexema " + lexema);
-        return this.idTokens.get(lexema);
+        int id = this.idTokens.get(lexema);
+
+        return id;
+
     }
 
 
