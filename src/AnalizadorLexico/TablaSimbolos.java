@@ -5,8 +5,9 @@ import java.util.HashMap;
 
 public class TablaSimbolos {
 
-    private ArrayList<Atributo> registroTokens;
-    private HashMap<String, Integer> idTokens;
+
+    private ArrayList<Atributo> registroTokens; // esta es la tabla de simbolos donde se guardan los pares lexema-id
+    private HashMap<String, Integer> idTokens; // aca solo se guardan los id correspondientes
 
 
 

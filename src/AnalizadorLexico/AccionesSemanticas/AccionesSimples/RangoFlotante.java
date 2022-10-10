@@ -33,9 +33,8 @@ public class RangoFlotante extends AccionSemanticaSimple {
             if (((floatBuffer < MINIMO_FLOAT) || (floatBuffer > MAXIMO_FLOAT))){
                 throw new Exception("FUERA DE RANGO"); // genero la excepcion
             }
-        } catch (Exception e){
-            lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): la constante f32 " + buffer + " está fuera de rango.") ;
-            e.printStackTrace(); // fuera de rango
+        } catch (Throwable e){
+            lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): la constante f32 con valor -> " + buffer + " está fuera de rango.") ;
         }
 
         int idToken = lexico.getIdToken("cte");

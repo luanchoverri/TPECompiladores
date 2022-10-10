@@ -57,6 +57,5 @@ public class Atributo {
         return " | TOKEN " + "id=" + idToken + " " + lexema + "  nroLinea=" + nroLinea + " tipo= " + tipo + "  |";
     }
 
-
 }
 

@@ -41,7 +41,7 @@ public class AnalizadorLexico {
     // -- Constructor --
 
     public AnalizadorLexico(String archivo) {
-        this.archivo = archivo;
+        this.archivo = archivo + '$';
         this.matrizAccionesSemanticas = new MatrizAccionesSemanticas(ESTADOS, SIMBOLOS);
         this.matrizEstados = new MatrizEstados();
         this.tablaSimbolos = new TablaSimbolos();
@@ -105,23 +105,24 @@ public class AnalizadorLexico {
         AccionSemantica AS16 = new AccionSemanticaCompuesta(new ArrayList<>(List.of(AS5, AS6)), this);
 
 
-        AccionSemantica[][] matrizSemantica = {
-                /*            L       d     .     _     F     <     >     =     +     -     *     /     '    \n     ;     :     ,     (     )     {     }   otro    !  Bl,Tab  $
-                /*0*/        {AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15, AS1, null, AS15, null, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
-                /*1*/        {null, AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                /*2*/        {AS12, AS2, AS2, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, null},
-                /*3*/        {AS11, AS2, AS11, AS11, AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
-                /*4*/        {null, AS2, null, null, null, null, null, null, AS2, AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                /*5*/        {null, AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                /*6*/        {AS11, AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
+
+        AccionSemantica[][] matrizSemantica = { // Revisar los fin de archivo ($) en cada estado del automata por si se debe invocar una accion semantica
+                /*            L       d     .     _     F     <     >     =     +     -     *     /     '    \n     ;     :     ,     (     )     {     }   otro   !   Bl,Tab  $
+                /*0*/        {AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS10, AS15, AS15, AS15, AS15,  AS1, null, AS15, AS15, AS15, AS15, AS15, AS15, AS15, null, null, null, null},
+                /*1*/        {null,  AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                /*2*/        {AS12,  AS2,  AS2, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, AS12, null},
+                /*3*/        {AS11,  AS2, AS11, AS11,  AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
+                /*4*/        {null,  AS2, null, null, null, null, null, null,  AS2,  AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                /*5*/        {null,  AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                /*6*/        {AS11,  AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
                 /*7*/        {AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, null},
                 /*8*/        {AS13, AS13, AS13, AS13, AS13, null, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, null},
                 /*9*/        {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 /*10*/       {AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, null},
-                /*11*/       {AS2, AS2, AS16, AS2, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, null},
-                /*12*/       {AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS17, null, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, null},
-                /*13*/       {AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, null, AS9, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, null},
-                /*14*/       {AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS17, null, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, AS2, null},
+                /*11*/       { AS2,  AS2, AS16,  AS2, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16},
+                /*12*/       { AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, AS17, null,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null},
+                /*13*/       { AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null,  AS9,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null},
+                /*14*/       { AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, AS17, null,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2,  AS2, null},
 
         };
         this.matrizAccionesSemanticas.setMatrizAccionSemantica(matrizSemantica);
@@ -199,10 +200,6 @@ public class AnalizadorLexico {
 
             this.posArchivo += 1; // avanzamos a la posicion del siguiente caracter
 
-            // SI EL CARACTER ES UN SALTO DE LINEA
-            if (caracter == '\n' && estadoActual!=2 && estadoActual!=3 && estadoActual!=6 && estadoActual!=11)
-                LINEA++;
-
             // SI EL CARACTER ES FIN DE ARCHIVO
             if (caracter == '$') {
                 if (esFinDeArchivo()) // actualiza las variables y corta
@@ -211,7 +208,7 @@ public class AnalizadorLexico {
                     // Si no cerró la cadena y venía el EoF
                     if (this.posArchivo == this.archivo.length())
                         if (this.estadoActual == 12) {
-                         //   this.addErrorLexico("ERROR LÉXICO (Línea " + this.LINEA + "): cadena o comentario mal cerrados");
+                            this.addErrorLexico("ERROR LÉXICO (Línea " + this.LINEA + "): cadena o comentario mal cerrados");
                             this.tokenActual = 0;
                             this.posArchivo = 0;
                             this.LINEA = 1;
@@ -221,13 +218,20 @@ public class AnalizadorLexico {
                 }
             }
 
+            // SI EL CARACTER ES UN SALTO DE LINEA
+            if (caracter == '\n' && estadoActual!=2 && estadoActual!=3 && estadoActual!=6 && estadoActual!=11)
+                LINEA++;
+
             // CONSIGO EL SIGUIENTE ESTADO
             int estadoSiguiente = this.matrizEstados.get(this.estadoActual, columnaCaracter);
             estadoActual = estadoSiguiente;
 
+
             // SI EL SIGUIENTE ESTADO ES INVALIDO
             if (this.estadoActual == -1)
                 this.sincronizarAnalisis(caracter); // TRATO EL ERROR
+
+
 
         } // VUELVE AL WHILE
 
@@ -236,6 +240,9 @@ public class AnalizadorLexico {
         if (this.tokenActual != 0 && this.tokenActual != -1) {
             String tipo = tablaSimbolos.getTipoToken(this.tokenActual);
             Atributo token = new Atributo(this.tokenActual, this.buffer, this.LINEA, tipo);
+            if (tipo == "IDENTIFICADOR" || tipo == "PALABRA RESERVADA" || tipo == "CONSTANTE"){
+                posArchivo--;
+            }
             this.tokensReconocidos.add(token);
         }
 
@@ -309,7 +316,6 @@ public class AnalizadorLexico {
             }
         }
     }
-
 
     public boolean isPalabraReservada(String buffer) {
        return this.tablaSimbolos.isPalabraReservada(buffer);
