@@ -1,0 +1,7 @@
+program
+{
+    fun f ()  {
+        i32 f;
+        return(f;
+    }
+}

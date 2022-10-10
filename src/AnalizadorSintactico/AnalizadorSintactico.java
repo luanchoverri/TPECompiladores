@@ -29,7 +29,7 @@ public class AnalizadorSintactico {
         erroresSintacticos.add(nuevo);
     }
 
-    public void agregarAnalisis(String nuevo) {
+    public void addAnalisis(String nuevo) {
         analisisSintactico.add(nuevo);
     }
 

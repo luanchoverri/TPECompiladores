@@ -35,8 +35,8 @@ public class AnalizadorLexico {
     private ArrayList<String> errores; // ArrayList para almacenar los errores encontrados junto con el numero de linea (Implementar?) !!!!!!!!!!!!!!
 
     // -- MATRICES -- //
-    private MatrizAccionesSemanticas matrizAccionesSemanticas;  // Matriz de acciones semánticas.
-    private MatrizEstados matrizEstados;
+    private final MatrizAccionesSemanticas matrizAccionesSemanticas;  // Matriz de acciones semánticas.
+    private final MatrizEstados matrizEstados;
 
     // -- Constructor --
 
@@ -116,7 +116,7 @@ public class AnalizadorLexico {
                 /*5*/        {null,  AS2, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 /*6*/        {AS11,  AS2, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, AS11, null},
                 /*7*/        {AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, null},
-                /*8*/        {AS13, AS13, AS13, AS13, AS13, null, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, null},
+                /*8*/        {AS13, AS13, AS13, AS13, AS13, AS1, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, null},
                 /*9*/        {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 /*10*/       {AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, AS13, AS13, AS13, AS13, AS13, AS14, AS13, null},
                 /*11*/       { AS2,  AS2, AS16,  AS2, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16, AS16},
