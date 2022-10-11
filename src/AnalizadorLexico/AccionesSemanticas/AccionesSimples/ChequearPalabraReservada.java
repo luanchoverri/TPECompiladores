@@ -49,14 +49,15 @@ public class ChequearPalabraReservada extends AccionSemanticaSimple {
                             lexico.addErrorLexico("WARNING (Línea " + lexico.LINEA + "): el identificador " + buffer + " excede el rango y fue truncado") ;
                             buffer = buffer.substring(0, LONGITUD_MAXIMA-1); // si el identificador tiene mas de 25 chars se trunca.
                         }
-                        int idTokenIdentificador = lexico.getIdToken("id");
-                        this.getAnalizadorLexico().setTokenActual(idTokenIdentificador);
-                        lexico.agregarRegistro(buffer, idTokenIdentificador);
+
                     }else
                         throw new Exception("digito o '_'"); // genero la excepcion
+                    int idTokenIdentificador = lexico.getIdToken("id");
+                    this.getAnalizadorLexico().setTokenActual(idTokenIdentificador);
+                    lexico.agregarRegistro(buffer, idTokenIdentificador);
                 }
             } catch (Throwable e){
-                lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "):El identificador debe comenzar con una letra");
+                lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): Se encontro un digito o '_'. El identificador debe comenzar con una letra");
             }
 
             return true;
