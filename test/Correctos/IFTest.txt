@@ -1,7 +1,21 @@
 program
 {
     fun f ()  {
-        i32 f;
+        i32 _f;
         return(f;
     }
+
+    fun (i32 a): i32 {
+        return a;
+    }
+
+    fun f (i32 a, i32 a, i32 a): i32 {
+        return (a);
+    }
+
+    fun (i32 a): i32 {
+
 }
+
+
+
