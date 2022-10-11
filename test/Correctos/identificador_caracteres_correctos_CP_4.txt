@@ -1,8 +1,0 @@
-program
-    fun f4 (i32 x) : i32
-    {
-	i32 cero_ =: 0.0;
-	i32 identificadorOk =: 0;
-      return (cero_);
-    }  
-	

@@ -162,13 +162,13 @@ public class TablaSimbolos {
         return tipo;
     }
 
-    public void agregarRegistro(String lexema, int id){
-        Atributo registro = new Atributo(lexema, id);
+    public void agregarRegistro(String lexema, int id, int nroLinea){
+        Atributo registro = new Atributo(lexema, id, nroLinea);
         if (getTipoToken(id).equals("CONSTANTE")){
             if (lexema.contains(".")) {
                 registro.setTipo("FLOAT");
             } else {
-                registro.setTipo("INT");
+                registro.setTipo("LONG");
             }
         }
         this.registroTokens.add(registro);
@@ -190,4 +190,12 @@ public class TablaSimbolos {
     public void eliminarEntrada(int indice){
         this.registroTokens.remove(indice);
     }
+
+    public void imprimir(){
+        System.out.println("---------TABLA DE SIMBOLOS---------");
+        for(Atributo token : registroTokens){
+            System.out.println(token.toString());
+        }
+    }
+
 }

@@ -610,7 +610,7 @@ final static String yyrule[] = {
 "tipo : f32",
 };
 
-//#line 244 "gramatica.y"
+//#line 235 "gramatica.y"
 
 private AnalizadorLexico lexico;
 private AnalizadorSintactico sintactico;
@@ -839,7 +839,7 @@ case 34:
 break;
 case 36:
 //#line 91 "gramatica.y"
-{ sintactico.addAnalisis("SyntaxError. RETURN_FUN(Línea " + AnalizadorLexico.LINEA + "): reconoce retorno de funcion"); }
+{ sintactico.addAnalisis("Se reconoce retorno de funcion(Línea " + AnalizadorLexico.LINEA + ") "); }
 break;
 case 37:
 //#line 92 "gramatica.y"
@@ -938,43 +938,43 @@ case 70:
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
 break;
 case 82:
-//#line 176 "gramatica.y"
+//#line 167 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
 break;
 case 86:
-//#line 185 "gramatica.y"
+//#line 176 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de BREAK."); }
 break;
 case 88:
-//#line 189 "gramatica.y"
+//#line 180 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de CONTINUE."); }
 break;
 case 90:
-//#line 191 "gramatica.y"
+//#line 182 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta etiqueta"); }
 break;
 case 91:
-//#line 192 "gramatica.y"
+//#line 183 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'."); }
 break;
 case 92:
-//#line 193 "gramatica.y"
+//#line 184 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' "); }
 break;
 case 94:
-//#line 197 "gramatica.y"
+//#line 188 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
 break;
 case 95:
-//#line 198 "gramatica.y"
+//#line 189 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
 break;
 case 96:
-//#line 199 "gramatica.y"
+//#line 190 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
 break;
 case 104:
-//#line 215 "gramatica.y"
+//#line 206 "gramatica.y"
 {
                         sintactico.setTipo(sintactico.getTipoFromTS(val_peek(0).ival));
                         if (sintactico.getTipo().equals("LONG"))
@@ -982,44 +982,44 @@ case 104:
                   }
 break;
 case 105:
-//#line 220 "gramatica.y"
+//#line 211 "gramatica.y"
 {
                         sintactico.setNegativoTablaSimb(val_peek(0).ival);
                     }
 break;
 case 106:
-//#line 225 "gramatica.y"
+//#line 216 "gramatica.y"
 { yyval.sval = new String("<"); }
 break;
 case 107:
-//#line 226 "gramatica.y"
+//#line 217 "gramatica.y"
 { yyval.sval = new String(">"); }
 break;
 case 108:
-//#line 227 "gramatica.y"
+//#line 218 "gramatica.y"
 { yyval.sval = new String("<="); }
 break;
 case 109:
-//#line 228 "gramatica.y"
+//#line 219 "gramatica.y"
 { yyval.sval = new String(">="); }
 break;
 case 110:
-//#line 229 "gramatica.y"
+//#line 220 "gramatica.y"
 { yyval.sval = new String("="); }
 break;
 case 111:
-//#line 230 "gramatica.y"
+//#line 221 "gramatica.y"
 { yyval.sval = new String("=!"); }
 break;
 case 112:
-//#line 233 "gramatica.y"
+//#line 224 "gramatica.y"
 {
                     sintactico.setTipo("i32");
                     yyval.sval = new String("i32");
                 }
 break;
 case 113:
-//#line 237 "gramatica.y"
+//#line 228 "gramatica.y"
 {
                     sintactico.setTipo("f32");
                     yyval.sval = new String("f32");

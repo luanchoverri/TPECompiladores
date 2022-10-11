@@ -12,10 +12,11 @@ public class Atributo {
 
     // -- Constructor --
 
-    public Atributo(String lexema, int idToken) {
+    public Atributo(String lexema, int idToken, int nroLinea) {
         this.lexema = lexema;
         this.idToken = idToken;
         this.tipo = null;
+        this.nroLinea = nroLinea;
     }
 
     public Atributo(int idToken, String lexema, int nroLinea, String tipo) {

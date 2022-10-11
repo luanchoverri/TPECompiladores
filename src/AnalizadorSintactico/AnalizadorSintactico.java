@@ -42,7 +42,7 @@ public class AnalizadorSintactico {
     }
     public String getTipo() { return  this.tipo;}
     public void verificarRangoEnteroLargo(int indice) {
-        System.out.println("ESTOY ACAAAAAAA");
+
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
         Long numero = Long.parseLong(lexema);
 
@@ -57,27 +57,21 @@ public class AnalizadorSintactico {
         this.tablaSimbolos.getEntrada(indice).setLexema("-" + sinSigno);
     }
 
-    public void verificarRangoFloat(int indice) {
-        // esto hay que borrarlo, no es necesario.
-    }
 
-//    public void imprimirTablaSimbolos() {
-//        System.out.println();
-//        System.out.println("----------TABLA DE SÍMBOLOS-----------");
-//        if (this.tablaSimbolos.isEmpty())
-//            System.out.println("Tabla de símbolos vacía.");
-//        else {
-//            for (Atributo simbolo : this.tablaSimbolos)
-//                System.out.println("Tipo del símbolo: " + simbolo.getTipoToken() + " - Lexema: " + simbolo.getLexema() + " - Tipo Token: " + simbolo.getTipoToken() + " - Tipo Variable: " + simbolo.getTipoVariable() + " - Uso: " + simbolo.getUso() + " - Ambito: " + simbolo.getAmbito() + " - Func Ref: " + simbolo.getFuncionReferenciada());
-//        }
-//    }
+    public void imprimirTablaSimbolos() {
+        System.out.println();
+        if (this.tablaSimbolos.isEmpty())
+            System.out.println("|----- TABLA DE SIMBOLOS VACIA ------|");
+        else tablaSimbolos.imprimir();
+
+    }
 
     /**
      * Método para imprimir los errores sintácticos.
      */
     public void imprimirErroresSintacticos() {
         System.out.println();
-        System.out.println("----------ERRORES SINTÁCTICOS-----------");
+        System.out.println("|----------ERRORES SINTÁCTICOS-----------|");
         if (this.erroresSintacticos.isEmpty())
             System.out.println("Ejecución sin errores.");
         else {
@@ -91,13 +85,14 @@ public class AnalizadorSintactico {
      */
     public void imprimirAnalisisSintactico() {
         System.out.println();
-        System.out.println("----------ANÁLIZADOR SINTÁCTICO-----------");
+        System.out.println("|----------ANALISIS SINTÁCTICO-----------|");
 
         if (!this.analisisSintactico.isEmpty())
             for (String dato : this.analisisSintactico)
                 System.out.println(dato);
         else
             System.out.println("Análisis sintáctico vacío.");
+        System.out.println();
     }
 
     /**
@@ -112,7 +107,7 @@ public class AnalizadorSintactico {
      */
     public void imprimirAnalisisLexico() {
         System.out.println();
-        System.out.println("----------ANÁLIZADOR LÉXICO-----------");
+        System.out.println("|----------ANÁLIZADOR LÉXICO-----------|");
         ArrayList<Atributo> listaTokens = this.analizadorLexico.getListaTokens();
 
         for (Atributo token : listaTokens) {
@@ -133,8 +128,8 @@ public class AnalizadorSintactico {
         if (parser.yyparse() == 0) {
             System.out.println("Ejecución del Parser finalizada.");
             imprimirAnalisisLexico();
-            //imprimirAnalisisSintactico();
-           // imprimirTablaSimbolos();
+            imprimirAnalisisSintactico();
+            imprimirTablaSimbolos();
         }
         else
             System.out.println("Ejecución del Parser no finalizada.");

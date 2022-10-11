@@ -168,7 +168,7 @@ public class AnalizadorLexico {
     }
 
     public void agregarRegistro(String lexema, int idToken) {
-        this.tablaSimbolos.agregarRegistro(lexema, idToken);
+        this.tablaSimbolos.agregarRegistro(lexema, idToken, this.LINEA);
         this.refTablaSimbolos = this.tablaSimbolos.size() - 1;
     }
 
