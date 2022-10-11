@@ -3,6 +3,7 @@ program
 
    fun f1 (f32 x) : f32{
       const c1 =: 10;
+      return(c1);
    }
 
 
