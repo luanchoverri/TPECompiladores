@@ -10,14 +10,10 @@ import AnalizadorLexico.Atributo;
 
 %}
 
-%token id cte If then Else end_if out fun Return BREAK i32 when For CONTINUE f32 cadena menorigual mayorigual distinto opasignacion
+%token id cte If then Else end_if out fun Return BREAK i32 when For CONTINUE f32 cadena menorigual mayorigual distinto opasignacion Const
 %start programa
 
 %%
-
-// TODO CONST
-// TODO CORREGIR WHEN
-
 
 
 programa : encabezado_prog bloque_sentencias
@@ -33,7 +29,20 @@ bloque_sentencias : bloque_sentencias '{' sentencia '}'
 		  |  sentencia '}'   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir el bloque.");}
 		  ;
 
+declaracion_const : Const lista_de_asignacion_const ';' { sintactico.addAnalisis("Se reconoció una declaración de CONSTANTE. (Línea " + AnalizadorLexico.LINEA + ")"); }
+                  | Const lista_de_asignacion_const error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ; al final de la declaracion de constantes.");}
+                  | Const ';'                           error { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): No se reconoce una lista de constantes.");}
+                  ;
 
+lista_de_asignacion_const : decl_const
+                          | lista_de_asignacion_const ',' decl_const
+                          ;
+
+decl_const : id op_asignacion cte
+           | id op_asignacion error  { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta constante luego de la asignacion.");}
+           | id cte  error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta el operador asignacion luego del identificador.");}
+           | id        error         { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta la asignacion luego del identificador.");}
+           ;
 
 bloque_sentencias_For : sentencias_For
                       | bloque_sentencias_For sentencias_For
@@ -52,6 +61,7 @@ declarativas : tipo lista_de_variables ';'        { sintactico.addAnalisis("Se r
              | tipo lista_de_variables error      { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta ';' al final de la declaración de variable."); }
              | tipo error                         { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el identificador de variable"); }
              | declaracion_func
+             | declaracion_const
              ;
 
 ejecutables : asignacion
@@ -237,6 +247,7 @@ tipo : i32     {
                     sintactico.setTipo("f32");
                     $$.sval = new String("f32");
                 }
+
      ;
 
 %%
