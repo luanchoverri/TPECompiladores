@@ -34,7 +34,9 @@ public class Atributo {
     // -- MÉTODOS -- // 
 
     // Getters 
-
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
     public int getIdToken() {
         return this.idToken;
     }
@@ -58,9 +60,7 @@ public class Atributo {
         this.idToken = idToken;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+
 
     @Override
     public String toString() {

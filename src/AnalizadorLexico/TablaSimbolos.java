@@ -182,4 +182,12 @@ public class TablaSimbolos {
     public boolean isEmpty() {
         return registroTokens.isEmpty();
     }
+
+    public Atributo getEntrada(int indice){
+        return this.registroTokens.get(indice);
+    }
+
+    public void eliminarEntrada(int indice){
+        this.registroTokens.remove(indice);
+    }
 }

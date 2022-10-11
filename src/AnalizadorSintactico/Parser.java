@@ -662,7 +662,7 @@ final static String yyrule[] = {
 "tipo : f32",
 };
 
-//#line 245 "gramatica.y"
+//#line 251 "gramatica.y"
 
 private AnalizadorLexico lexico;
 private AnalizadorSintactico sintactico;
@@ -1073,45 +1073,59 @@ case 109:
 //#line 206 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
 break;
+case 117:
+//#line 222 "gramatica.y"
+{
+                        sintactico.setTipo(sintactico.getTipoFromTS(val_peek(0).ival));
+                        if (sintactico.getTipo().equals("LONG"))
+                             sintactico.verificarRangoEnteroLargo(val_peek(0).ival);
+                  }
+break;
+case 118:
+//#line 227 "gramatica.y"
+{
+                        sintactico.setNegativoTablaSimb(val_peek(0).ival);
+                    }
+break;
 case 119:
-//#line 226 "gramatica.y"
+//#line 232 "gramatica.y"
 { yyval.sval = new String("<"); }
 break;
 case 120:
-//#line 227 "gramatica.y"
+//#line 233 "gramatica.y"
 { yyval.sval = new String(">"); }
 break;
 case 121:
-//#line 228 "gramatica.y"
+//#line 234 "gramatica.y"
 { yyval.sval = new String("<="); }
 break;
 case 122:
-//#line 229 "gramatica.y"
+//#line 235 "gramatica.y"
 { yyval.sval = new String(">="); }
 break;
 case 123:
-//#line 230 "gramatica.y"
+//#line 236 "gramatica.y"
 { yyval.sval = new String("="); }
 break;
 case 124:
-//#line 231 "gramatica.y"
+//#line 237 "gramatica.y"
 { yyval.sval = new String("=!"); }
 break;
 case 125:
-//#line 234 "gramatica.y"
+//#line 240 "gramatica.y"
 {
                     sintactico.setTipo("i32");
                     yyval.sval = new String("i32");
                 }
 break;
 case 126:
-//#line 238 "gramatica.y"
+//#line 244 "gramatica.y"
 {
                     sintactico.setTipo("f32");
                     yyval.sval = new String("f32");
                 }
 break;
-//#line 1038 "Parser.java"
+//#line 1052 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
