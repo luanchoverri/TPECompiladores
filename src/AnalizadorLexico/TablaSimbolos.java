@@ -164,8 +164,16 @@ public class TablaSimbolos {
 
     public void agregarRegistro(String lexema, int id){
         Atributo registro = new Atributo(lexema, id);
+        if (getTipoToken(id).equals("CONSTANTE")){
+            if (lexema.contains(".")) {
+                registro.setTipo("FLOAT");
+            } else {
+                registro.setTipo("INT");
+            }
+        }
         this.registroTokens.add(registro);
     }
+
 
     public int size(){
        return registroTokens.size();

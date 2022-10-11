@@ -15,12 +15,19 @@ public class Atributo {
     public Atributo(String lexema, int idToken) {
         this.lexema = lexema;
         this.idToken = idToken;
+        this.tipo = null;
     }
 
     public Atributo(int idToken, String lexema, int nroLinea, String tipo) {
         this.idToken = idToken;
         this.lexema = lexema;
         this.nroLinea = nroLinea;
+        this.tipo = tipo;
+    }
+
+    public Atributo(int idToken, String lexema, String tipo) {
+        this.idToken = idToken;
+        this.lexema = lexema;
         this.tipo = tipo;
     }
 
@@ -51,6 +58,9 @@ public class Atributo {
         this.idToken = idToken;
     }
 
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 
     @Override
     public String toString() {
