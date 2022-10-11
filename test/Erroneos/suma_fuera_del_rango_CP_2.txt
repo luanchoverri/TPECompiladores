@@ -1,0 +1,13 @@
+program
+    fun f1 (i32 x) : i32
+    {
+	fun f2(i32 x) : i32
+	{
+		return (x);
+	}
+      i32 a,b,_c;
+      a =: 2147483648;
+      b =: 2147483648;
+      _c =: a + b;
+      return (_c);
+    }

@@ -1,0 +1,9 @@
+program
+    fun f3 (f32 x) : f32
+    {
+	f32 enRango_ =: 3.40282347F+38;
+	f32 fueraDeRango_1 =: 8.40282347F+38;
+	f32 fueraDeRango_2 =: 7.40282347F+38;
+	f32 cero_ =: 0.;
+      return (cero_);
+    }  
