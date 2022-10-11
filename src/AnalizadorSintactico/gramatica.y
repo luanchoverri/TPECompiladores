@@ -144,17 +144,25 @@ sentencia_when : when '(' condicion_for ')' then cuerpo_when ';'
              | when '(' condicion_for ')' cuerpo_when error              { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
 
 /* CORREGIR WHEN */
-cuerpo_when : bloque_sentencias
+cuerpo_when : bloque_sentencias_For
             ;
 
-encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' '{' bloque_sentencias_For '}' ';'
-	       | For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' sentencias_For
-               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' '{' bloque_sentencias_For '}' ';'
-               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' sentencias_For
+cola_For : '{' bloque_sentencias_For '}' ';'
+	|  sentencias_For
+	;
+
+
+encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For 	  { sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")"); }
+	       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For
+
                ;
 
 condicion_for :  id comparador cte  // para en un futuro expandirla y coparar con expresion
 	      ;
+
 
 signo : '+'
       | '-'
@@ -177,11 +185,9 @@ sentencia_BREAK : BREAK ';'
                 ;
 
 sentencia_CONTINUE : CONTINUE ';'
-                   | CONTINUE error  { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de CONTINUE."); }
                    | CONTINUE ':' id ';'
-                   | CONTINUE ':' ';' error     { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta etiqueta"); }
-                   | CONTINUE id ';' error      { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'."); }
-                   | CONTINUE ':' id error      { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' "); }
+                   | CONTINUE id ';' error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'CONTINUE."); }
+                   | CONTINUE error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' "); }
                    ;
 
 condicion_if : '(' expresion_relacional ')'
