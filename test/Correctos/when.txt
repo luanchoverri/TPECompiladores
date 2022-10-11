@@ -1,0 +1,17 @@
+program
+{
+    << caso correcto
+    when ( i > 3 ) then { a =: i + 1; };
+
+    << casos incorrectos
+    when ( i > 3 then  { a =: i + 1; };
+
+    when  i > 3 ) then  { a =: i + 1; };
+
+    when ( i > 3 ) then   a =: i + 1; };
+
+    when ( i > 3 ) then  { a =: i + 1; ;
+
+    when ( i > 3 ) { a =: i + 1; };
+
+}
