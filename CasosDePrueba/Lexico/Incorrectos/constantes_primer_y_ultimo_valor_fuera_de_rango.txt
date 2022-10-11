@@ -1,0 +1,8 @@
+program
+    fun f1 (i32 x) : i32
+    {
+	i32 cteEnteraFueraRango_1 =: 3147483648;
+	i32 cteEnteraFueraRango_2 =: -3147483649;
+	i32 cero_ =: 0;
+      return (cero_);
+    }  

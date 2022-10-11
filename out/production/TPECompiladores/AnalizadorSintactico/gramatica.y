@@ -138,13 +138,15 @@ cuerpo_Else : '{' bloque_sentencias_For'}'
 	    | sentencias_For
             ;
 
-sentencia_when : when '(' condicion_for ')' then cuerpo_when ';'
-             | when condicion_for                                        { sintactico.addErrorSintactico( " SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): la condición de when debe estar entre paréntesis." ); }
-             | when '(' condicion_for  then error                        { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta paréntesis de cierre en la lista de parámetros."); }
-             | when '(' condicion_for ')' cuerpo_when error              { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+sentencia_when : when '(' condicion_for ')' then cuerpo_when ';'         { sintactico.addAnalisis("Se reconocio una sentencia when");}
+             | when condicion_for ')' then cuerpo_when ';' error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir paréntesis la condicion"); }
+             | when '(' condicion_for  then cuerpo_when';' error                        { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta paréntesis de cierre en la condicion."); }
+             | when '(' condicion_for ')' cuerpo_when ';' error              { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+             ;
 
-/* CORREGIR WHEN */
-cuerpo_when : bloque_sentencias_For
+cuerpo_when : '{' sentencia '}'
+            | '{' sentencia error       { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar la llave del bloque."); }
+            |  sentencia '}' error      { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir la llave del bloque"); }
             ;
 
 cola_For : '{' bloque_sentencias_For '}' ';'
