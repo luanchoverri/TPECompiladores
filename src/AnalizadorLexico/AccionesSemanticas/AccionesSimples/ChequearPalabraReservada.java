@@ -36,12 +36,14 @@ public class ChequearPalabraReservada extends AccionSemanticaSimple {
 
         AnalizadorLexico lexico = this.getAnalizadorLexico();
         try{
+
                 if (lexico.isPalabraReservada(buffer)){ // Retorna TRUE si existe la palabra reservada (Era identificador)
                     int idTokenReservada = lexico.getIdToken(buffer);
                     lexico.setTokenActual(idTokenReservada); // Obtiene el ID de la palabra reservada
                     return true;
                 }else{
                     if (this.isIdentificador(buffer)){
+                        //ocupa mas de 25 caracteres
                         if (buffer.length() > LONGITUD_MAXIMA) {
                             Logger l = Logger.getLogger(ChequearPalabraReservada.class.getName());
                             l.setLevel(Level.WARNING);
@@ -50,11 +52,16 @@ public class ChequearPalabraReservada extends AccionSemanticaSimple {
                             buffer = buffer.substring(0, LONGITUD_MAXIMA-1); // si el identificador tiene mas de 25 chars se trunca.
                         }
 
-                    }else
-                        throw new Exception("digito o '_'"); // genero la excepcion
-                    int idTokenIdentificador = lexico.getIdToken("id");
-                    this.getAnalizadorLexico().setTokenActual(idTokenIdentificador);
-                    lexico.agregarRegistro(buffer, idTokenIdentificador);
+                        int idTokenIdentificador = lexico.getIdToken("id");
+                        this.getAnalizadorLexico().setTokenActual(idTokenIdentificador);
+                        lexico.agregarRegistro(buffer, idTokenIdentificador);
+                    } else {
+                        int idTokenIdentificador = lexico.getIdToken("id");
+                        this.getAnalizadorLexico().setTokenActual(idTokenIdentificador);
+                        lexico.agregarRegistro(buffer, idTokenIdentificador);
+                        throw new Exception("digito o '_'");
+                    }; // genero la excepcion
+
                 }
             } catch (Throwable e){
                 lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): Se encontro un digito o '_'. El identificador debe comenzar con una letra");
