@@ -64,7 +64,7 @@ public class ChequearPalabraReservada extends AccionSemanticaSimple {
 
                 }
             } catch (Throwable e){
-                lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): Se encontro un digito o '_'. El identificador debe comenzar con una letra");
+                lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "):El identificador debe comenzar con una letra");
             }
 
             return true;

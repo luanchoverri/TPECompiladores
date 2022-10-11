@@ -162,20 +162,17 @@ cola_For : '{' bloque_sentencias_For '}' ';'
 	;
 
 
-encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo_FOR id ')' 	cola_For 	  { sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")"); }
-	       | For     id op_asignacion cte ';' condicion_for ';' signo_FOR id ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	       | For     id op_asignacion cte ';' condicion_for ';' signo_FOR id 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	       | For '(' id op_asignacion cte ':'   condicion_for ':' signo_FOR id ')' 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo_FOR id ')' cola_For
+encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For 	  { sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")"); }
+	       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For
 
                ;
 
 condicion_for :  id comparador cte  // para en un futuro expandirla y coparar con expresion
 	      ;
 
-signo_FOR: signo
-	|
-	;
 
 signo : '+'
       | '-'
@@ -199,7 +196,7 @@ sentencia_BREAK : BREAK ';'
 
 sentencia_CONTINUE : CONTINUE ';'
                    | CONTINUE ':' id ';'
-                   | CONTINUE id ';' error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'."); }
+                   | CONTINUE id ';' error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'CONTINUE."); }
                    | CONTINUE error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' "); }
                    ;
 
