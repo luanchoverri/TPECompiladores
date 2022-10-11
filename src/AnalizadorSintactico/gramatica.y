@@ -17,7 +17,7 @@ import AnalizadorLexico.Atributo;
 
 // TODO CONST
 // TODO CORREGIR WHEN
-// TODO CORREGIR Else DESP DEL For PARA QUE SI O SI VENGA DE UN ETIQUETADO
+
 
 
 programa : encabezado_prog bloque_sentencias
@@ -159,16 +159,7 @@ condicion_for :  id comparador cte  // para en un futuro expandirla y coparar co
 signo : '+'
       | '-'
       ;
-//
-//cuerpo_For : '{' bloque_sentencias_For '}' ';'
-//           | 	 bloque_sentencias_For '}' ';'  error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir llave "); }
-//           | '{' bloque_sentencias_For 	   ';'  error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar llave "); }
-//           | '{' bloque_sentencias_For '}'	error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-//       	/* REVISAR PORQUE EL Else CORRESPONDE SOLO A DEVOLVER UN VALOR SOLO SI VIENE DE LA ETIQUETA */
-//           | '{' bloque_sentencias_For '}' 	Else cte ';'
-//           | '{' bloque_sentencias_For '}' 	Else ';' error  { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta la constante "); }
-//           | '{' bloque_sentencias_For '}' 	cte ';'  error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta el Else. "); }
-//           ;
+
 
 sentencias_For : ejecutables
                | sentencia_BREAK

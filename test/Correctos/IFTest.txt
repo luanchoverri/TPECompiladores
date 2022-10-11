@@ -1,10 +1,14 @@
 program
 {
+    fun f ()  {
+        i32 _f;
+        return(f;
+    }
 
-   fun f1 (f32 x) : f32{
-      const c1 =: 10;
-      return(c1);
-   }
+    fun f (i32 a) : i32 {
+
+            return f;
+    }
 
 
 }
