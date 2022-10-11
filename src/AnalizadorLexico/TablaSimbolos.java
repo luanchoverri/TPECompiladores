@@ -50,6 +50,7 @@ public class TablaSimbolos {
         this.idTokens.put("for", 269);
         this.idTokens.put("continue", 270);
         this.idTokens.put("f32",271);
+        this.idTokens.put("const",277);
 
         // Cadena de caracteres
         this.idTokens.put("cadena", 272);
@@ -82,6 +83,7 @@ public class TablaSimbolos {
             case "when":
             case "for":
             case "continue":
+            case "const":
                 return true;
             default:
                 return false;
@@ -142,6 +144,7 @@ public class TablaSimbolos {
             case 269:
             case 270:
             case 271:
+            case 277:
                 tipo = "PALABRA RESERVADA";
                 break;
             case 272:
