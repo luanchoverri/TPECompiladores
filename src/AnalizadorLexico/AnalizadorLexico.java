@@ -35,8 +35,8 @@ public class AnalizadorLexico {
     private ArrayList<String> errores; // ArrayList para almacenar los errores encontrados junto con el numero de linea (Implementar?) !!!!!!!!!!!!!!
 
     // -- MATRICES -- //
-    private MatrizAccionesSemanticas matrizAccionesSemanticas;  // Matriz de acciones semánticas.
-    private MatrizEstados matrizEstados;
+    private final MatrizAccionesSemanticas matrizAccionesSemanticas;  // Matriz de acciones semánticas.
+    private final MatrizEstados matrizEstados;
 
     // -- Constructor --
 
