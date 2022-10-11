@@ -30,7 +30,7 @@ public class RangoFlotante extends AccionSemanticaSimple {
                         floatBuffer = Float.parseFloat(buffer);
                     }
                 }
-            if (((floatBuffer < MINIMO_FLOAT) || (floatBuffer > MAXIMO_FLOAT))){
+            if (((Math.abs(floatBuffer) < MINIMO_FLOAT) || (Math.abs(floatBuffer) > MAXIMO_FLOAT))){ // el abs es para contemplar casos positivos y negativos
                 throw new Exception("FUERA DE RANGO"); // genero la excepcion
             }
         } catch (Throwable e){

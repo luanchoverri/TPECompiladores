@@ -16,7 +16,8 @@ public class RangoEntero extends AccionSemanticaSimple {
     }
     @Override
     public boolean ejecutar(String buffer, char ultimoLeido) {
-        AnalizadorLexico lexico = this.getAnalizadorLexico();
+       AnalizadorLexico lexico = this.getAnalizadorLexico();
+
         try {
             if (buffer.equals("0")) // Si es cero, retorna true
                 return true;

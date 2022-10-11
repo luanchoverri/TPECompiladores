@@ -610,7 +610,7 @@ final static String yyrule[] = {
 "tipo : f32",
 };
 
-//#line 238 "gramatica.y"
+//#line 244 "gramatica.y"
 
 private AnalizadorLexico lexico;
 private AnalizadorSintactico sintactico;
@@ -973,45 +973,59 @@ case 96:
 //#line 199 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
 break;
+case 104:
+//#line 215 "gramatica.y"
+{
+                        sintactico.setTipo(sintactico.getTipoFromTS(val_peek(0).ival));
+                        if (sintactico.getTipo().equals("LONG"))
+                             sintactico.verificarRangoEnteroLargo(val_peek(0).ival);
+                  }
+break;
+case 105:
+//#line 220 "gramatica.y"
+{
+                        sintactico.setNegativoTablaSimb(val_peek(0).ival);
+                    }
+break;
 case 106:
-//#line 219 "gramatica.y"
+//#line 225 "gramatica.y"
 { yyval.sval = new String("<"); }
 break;
 case 107:
-//#line 220 "gramatica.y"
+//#line 226 "gramatica.y"
 { yyval.sval = new String(">"); }
 break;
 case 108:
-//#line 221 "gramatica.y"
+//#line 227 "gramatica.y"
 { yyval.sval = new String("<="); }
 break;
 case 109:
-//#line 222 "gramatica.y"
+//#line 228 "gramatica.y"
 { yyval.sval = new String(">="); }
 break;
 case 110:
-//#line 223 "gramatica.y"
+//#line 229 "gramatica.y"
 { yyval.sval = new String("="); }
 break;
 case 111:
-//#line 224 "gramatica.y"
+//#line 230 "gramatica.y"
 { yyval.sval = new String("=!"); }
 break;
 case 112:
-//#line 227 "gramatica.y"
+//#line 233 "gramatica.y"
 {
                     sintactico.setTipo("i32");
                     yyval.sval = new String("i32");
                 }
 break;
 case 113:
-//#line 231 "gramatica.y"
+//#line 237 "gramatica.y"
 {
                     sintactico.setTipo("f32");
                     yyval.sval = new String("f32");
                 }
 break;
-//#line 938 "Parser.java"
+//#line 952 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

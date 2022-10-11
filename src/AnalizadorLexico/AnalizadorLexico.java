@@ -128,7 +128,6 @@ public class AnalizadorLexico {
         this.matrizAccionesSemanticas.setMatrizAccionSemantica(matrizSemantica);
     }
 
-
     // -- Metodos --
     public String getBuffer() {
         return buffer;

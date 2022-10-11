@@ -15,6 +15,7 @@ public class Atributo {
     public Atributo(String lexema, int idToken) {
         this.lexema = lexema;
         this.idToken = idToken;
+        this.tipo = null;
     }
 
     public Atributo(int idToken, String lexema, int nroLinea, String tipo) {
@@ -24,10 +25,18 @@ public class Atributo {
         this.tipo = tipo;
     }
 
+    public Atributo(int idToken, String lexema, String tipo) {
+        this.idToken = idToken;
+        this.lexema = lexema;
+        this.tipo = tipo;
+    }
+
     // -- MÉTODOS -- // 
 
     // Getters 
-
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
     public int getIdToken() {
         return this.idToken;
     }
@@ -50,6 +59,7 @@ public class Atributo {
     public void setIdToken(int idToken) {
         this.idToken = idToken;
     }
+
 
 
     @Override
