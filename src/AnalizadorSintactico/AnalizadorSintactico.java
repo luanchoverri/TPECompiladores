@@ -1,5 +1,7 @@
 package AnalizadorSintactico;
 import AnalizadorLexico.*;
+import AnalizadorLexico.AccionesSemanticas.AccionesSimples.RangoEntero;
+
 import java.util.ArrayList;
 
 
@@ -25,6 +27,8 @@ public class AnalizadorSintactico {
     }
 
 
+    public String getTipoFromTS(int indice) { return this.tablaSimbolos.getEntrada(indice).getTipo(); }
+
     public void addErrorSintactico(String nuevo) {
         erroresSintacticos.add(nuevo);
     }
@@ -36,12 +40,25 @@ public class AnalizadorSintactico {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+    public String getTipo() { return  this.tipo;}
     public void verificarRangoEnteroLargo(int indice) {
-        // TODO
+        System.out.println("ESTOY ACAAAAAAA");
+        String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
+        Long numero = Long.parseLong(lexema);
+
+        if (numero == 2147483648L) {
+            this.tablaSimbolos.eliminarEntrada(indice);    // Se elimina la entrada de la tabla de símbolos.
+            this.addErrorSintactico("ERROR SINTÁCTICO (Línea " + this.analizadorLexico.LINEA + "): la constante LONG está fuera de rango.");
+        }
+    }
+
+    public void setNegativoTablaSimb(int indice) {
+        String sinSigno = this.tablaSimbolos.getEntrada(indice).getLexema();
+        this.tablaSimbolos.getEntrada(indice).setLexema("-" + sinSigno);
     }
 
     public void verificarRangoFloat(int indice) {
-        // TODO
+        // esto hay que borrarlo, no es necesario.
     }
 
 //    public void imprimirTablaSimbolos() {

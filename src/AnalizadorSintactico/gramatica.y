@@ -212,8 +212,14 @@ termino : termino '*' factor
         ;
 
 factor : id
-       | cte
-       | '-' cte
+       | cte      {
+                        sintactico.setTipo(sintactico.getTipoFromTS($1.ival));
+                        if (sintactico.getTipo().equals("LONG"))
+                             sintactico.verificarRangoEnteroLargo($1.ival);
+                  }
+       | '-' cte    {
+                        sintactico.setNegativoTablaSimb($2.ival);
+                    }
        ;
 
 comparador : '<'            { $$.sval = new String("<"); }
