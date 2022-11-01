@@ -1,14 +1,21 @@
 package AnalizadorLexico;
 
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.filechooser.FileSystemView;
 
 import AnalizadorLexico.AccionesSemanticas.AccionSemantica;
 import AnalizadorLexico.AccionesSemanticas.AccionSemanticaCompuesta;
 import AnalizadorLexico.AccionesSemanticas.AccionSemanticaSimple;
 import AnalizadorLexico.AccionesSemanticas.AccionesSimples.*;
+import AnalizadorSintactico.AnalizadorSintactico;
 import AnalizadorLexico.AccionesSemanticas.MatrizAccionesSemanticas;
 
 public class AnalizadorLexico {
@@ -301,13 +308,43 @@ public class AnalizadorLexico {
 
 
     public void imprimirErrores() {
-        System.out.println();
-        System.out.println("|--- ERRORES LÉXICOS: ---|");
-        if (this.errores.isEmpty())
-            System.out.println("Ejecución sin errores.");
-        else {
-            for (int i = 0; i < this.errores.size(); i++)
-                System.out.println(this.errores.get(i));
+        try {
+            String ruta = "salida_archivo/ejecucion_reciente.txt";
+            String contenido;
+            File file = new File(ruta);
+
+            // Si el archivo no existe es creado
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            // Leo el codigo fuente
+            bw.write("-----------------------------------------------------------------" + "\n" + "\n");
+            contenido = "|--- CODIGO FUENTE ---|" + "\n" + "\n" + "\n";
+            bw.write(contenido);
+            bw.write(archivo);
+            bw.write("\n" + "\n"+ "-----------------------------------------------------------------" + "\n");
+
+            if (this.errores.isEmpty()){
+                contenido = "\n" + "\n" + "\n" + "\n" +  "|--- Sin errores LEXICOS ---| (OK)";
+                bw.write(contenido);
+            }
+            else{
+                if (!(this.errores.isEmpty())){ // Si hay errores lexicos
+                    contenido = "\n" + "\n" + "\n" + "|--- ERRORES LÉXICOS: ---| (!)" + "\n" + "\n" + "\n";
+                    bw.write(contenido);
+                    for (int i = 0; i < this.errores.size(); i++){
+                        contenido = this.errores.get(i);
+                        bw.write(contenido);
+                    }
+                }
+            }
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
