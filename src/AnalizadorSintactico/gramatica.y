@@ -149,9 +149,9 @@ cuerpo_Else : '{' bloque_sentencias_For'}'
             ;
 
 sentencia_when : when '(' condicion_for ')' then cuerpo_when ';'         { sintactico.addAnalisis("Se reconocio una sentencia when");}
-             | when condicion_for ')' then cuerpo_when ';' error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir paréntesis la condicion"); }
-             | when '(' condicion_for  then cuerpo_when';' error                        { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta paréntesis de cierre en la condicion."); }
-             | when '(' condicion_for ')' cuerpo_when ';' error              { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+             | when condicion_for ')' then cuerpo_when ';' error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta abrir paréntesis la condicion"); }
+             | when '(' condicion_for  then cuerpo_when';' error                        { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta paréntesis de cierre en la condicion."); }
+             | when '(' condicion_for ')' cuerpo_when ';' error              { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta la declaración de then."); }
              ;
 
 cuerpo_when : '{' sentencia '}'

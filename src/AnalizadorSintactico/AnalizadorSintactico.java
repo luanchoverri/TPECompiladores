@@ -89,6 +89,7 @@ public class AnalizadorSintactico {
                     for (int i = 0; i < this.erroresSintacticos.size(); i++){
                         contenido = this.erroresSintacticos.get(i);
                         Files.write(path, contenido.getBytes(), StandardOpenOption.APPEND);
+                        Files.write(path, "\n".getBytes(), StandardOpenOption.APPEND);
                     }
                 }
             }
