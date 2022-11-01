@@ -5,6 +5,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -322,7 +327,9 @@ public class AnalizadorLexico {
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
             // Leo el codigo fuente
-            bw.write("-----------------------------------------------------------------" + "\n" + "\n");
+            String horaActual = DateTimeFormatter.ofPattern("MMM dd yyyy, hh:mm:ss a").format(LocalDateTime.now());
+            bw.write("Hora de ejecucion: " + horaActual);
+            bw.write("\n" + "\n" + "\n" + "\n" + "-----------------------------------------------------------------" + "\n" + "\n");
             contenido = "|--- CODIGO FUENTE ---|" + "\n" + "\n" + "\n";
             bw.write(contenido);
             bw.write(archivo);
