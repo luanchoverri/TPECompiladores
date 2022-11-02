@@ -1,4 +1,4 @@
-Hora de ejecucion: nov. 01 2022, 09:23:01 p. m.
+Hora de ejecucion: nov. 02 2022, 06:51:21 p. m.
 
 
 
@@ -9,56 +9,28 @@ Hora de ejecucion: nov. 01 2022, 09:23:01 p. m.
 
 program
 {
-  const c1 =:10, x=:5;
-  const c2 =:12;  
 
-  f32 c4;
-  c4 =: 18;
+    fun f (i32 a) : i32 {
+        etiqueta : for(i=:1 ; i < 3 ; +i){
+                if(i = 1) then{
+                     continue : etiqueta;
+                     return(a);
+                }
+                end_if;
 
-  const c3 =: 20;
+         };
+    }
 
-  when ( c1 > 3 ) then { 
-     x =: c1 + 1; 
-  };
+    if(i = 1) then{
+                         return(a);
+                    }
+                    end_if;
 
-  a =: for i =: 1 ;i < 3 ; +i){
-       
-           f32 c5;
+}
 
-           c4 =:19;
-        };
-          else 3;
 
-  b =: for (i =: 1 ;i < 3 ; +i){
-           
-           if (i = 1) then{
-             
-            break
-          
-           }
-           end_if;
 
-           c4 =:19;
-        };
-          else 3;
-
-  c =: for (i =: 1 ;i < 3 ; +i){
-           
-           if (i = 1) then{
-             
-            break 1;
-          
-           } else
-      
-                  continue
-
-           end_if;
-
-           c4 =:19;
-        };
-          else 3;
-
-}$
+$
 
 -----------------------------------------------------------------
 
@@ -71,7 +43,4 @@ program
 |--- ERRORES SINTACTICOS: ---| (!)
 
 
-SyntaxError. (Línea 18): no se permiten sentencias declarativas adentro del For
-SyntaxError. FOR1(Línea 21): problema en la declaracion FOR
-SyntaxError. (Línea 29): falta ';' luego de BREAK.
-SyntaxError. (Línea 46): falta ';' luego del CONTINUE 
+SyntaxError. (Línea 16): no se permiten retornos fuera de una funcion

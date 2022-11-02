@@ -62,13 +62,13 @@ declarativas : tipo lista_de_variables ';'        { sintactico.addAnalisis("Se r
              | tipo error                         { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el identificador de variable"); }
              | declaracion_func
              | declaracion_const
+             | sentencia_when
              ;
 
 ejecutables : asignacion
             | salida
             | sentencia_If
             | expresion_For
-            | sentencia_when
             ;
 
 lista_de_variables : id
@@ -103,12 +103,89 @@ ret_fun:   Return '(' expresion ')'  ';'	 { sintactico.addAnalisis("Se reconoce 
         |  Return '(' expresion   	';'	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN2(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
         |  Return  	 expresion   	';' 	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN3(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
         |  Return '(' expresion ')'  error 	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN4(Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
-        | error 				 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN5(Línea " + AnalizadorLexico.LINEA + "): no se reconoce return"); }
         ;
 
-cuerpo_fun: sentencia ret_fun
-	  | ret_fun
+cuerpo_fun: bloque_sentencias_funcion
 	  ;
+
+ejecutables_funcion: asignacion
+		   | sentencia_if_funcion
+		   | salida
+		   | sentencia_for_funcion
+		   | ret_fun
+		   ;
+
+
+bloque_sentencias_ejecutables_funcion: bloque_sentencias_ejecutables_funcion ejecutables_funcion
+				     | ejecutables_funcion
+				     ;
+
+bloque_sentencias_funcion: bloque_sentencias_funcion ejecutables_funcion
+			 | bloque_sentencias_funcion declarativas
+			 | ejecutables_funcion
+			 | declarativas
+			 ;
+
+sentencia_if_funcion : If condicion_if then cuerpo_If_funcion end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             	     | If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             	     | If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             	     | If condicion_if then cuerpo_If_funcion 			     error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+             	     | If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion error ';'      { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+             	     | If condicion_if 	    cuerpo_If_funcion error                           { sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+                     ;
+
+cuerpo_If_funcion :  '{' bloque_sentencias_ejecutables_funcion '}'
+		  |   ejecutables_funcion
+		  ;
+
+cuerpo_Else_funcion : '{' bloque_sentencias_ejecutables_funcion'}'
+		    | ejecutables_funcion
+		    ;
+
+sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             	     | If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             	     | If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             	     | If condicion_if then cuerpo_If_for_funcion 			     error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+             	     | If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion error ';'      { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+             	     | If condicion_if 	    cuerpo_If_for_funcion error                           { sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+                     ;
+
+cuerpo_If_for_funcion :  '{' bloque_sentencias_For_funcion '}'
+		  |  sentencias_For_funcion
+		  ;
+
+cuerpo_Else_for_funcion :  '{' bloque_sentencias_For_funcion '}'
+                        |  sentencias_For_funcion
+                        ;
+
+cola_For_funcion : '{' bloque_sentencias_For_funcion '}' ';'
+	|  sentencias_For_funcion
+	;
+
+
+sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For_funcion 	  { sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")"); }
+	       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For_funcion 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");}
+
+               ;
+
+sentencias_For_funcion : asignacion
+	       | salida
+	       | sentencia_for_funcion
+	       | ret_fun
+               | sentencia_BREAK
+               | sentencia_CONTINUE
+               | sentencia_if_for_funcion
+               | declarativas error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
+               ;
+
+bloque_sentencias_For_funcion : sentencias_For_funcion
+                      | bloque_sentencias_For_funcion sentencias_For_funcion
+                      ;
+
+
 
 
 op_asignacion : opasignacion    { $$.sval = new String("=:"); }
@@ -168,7 +245,7 @@ encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')'
 	       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 	       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 	       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For
+               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");}
 
                ;
 
@@ -185,19 +262,20 @@ sentencias_For : ejecutables
                | sentencia_BREAK
                | sentencia_CONTINUE
                | declarativas error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
+               | ret_fun error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten retornos fuera de una funcion"); }
                ;
 
 expresion_For : encabezado_For
               ;
 
 
-sentencia_BREAK : BREAK ';'
-                | BREAK cte ';'
+sentencia_BREAK : BREAK ';'	{ sintactico.addAnalisis("Se reconocio una sentencia break (Línea " + AnalizadorLexico.LINEA + ")");}
+                | BREAK cte ';'	{ sintactico.addAnalisis("Se reconocio una sentencia break con retorno de valor (Línea " + AnalizadorLexico.LINEA + ")");}
                 | BREAK error  { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de BREAK."); }
                 ;
 
-sentencia_CONTINUE : CONTINUE ';'
-                   | CONTINUE ':' id ';'
+sentencia_CONTINUE : CONTINUE ';'		{ sintactico.addAnalisis("Se reconocio una sentencia continue (Línea " + AnalizadorLexico.LINEA + ")");}
+                   | CONTINUE ':' id ';'	{ sintactico.addAnalisis("Se reconocio una sentencia continue con etiquetado(Línea " + AnalizadorLexico.LINEA + ")");}
                    | CONTINUE id ';' error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'CONTINUE."); }
                    | CONTINUE error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
                    ;

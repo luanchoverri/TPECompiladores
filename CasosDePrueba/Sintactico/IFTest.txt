@@ -1,15 +1,21 @@
 program
 {
-    fun f ()  {
-        i32 _f;
-        return(f;
-    }
 
     fun f (i32 a) : i32 {
+        etiqueta : for(i=:1 ; i < 3 ; +i){
+                if(i = 1) then{
+                     continue : etiqueta;
+                     return(a);
+                }
+                end_if;
 
-            return f;
+         };
     }
 
+    if(i = 1) then{
+                         return(a);
+                    }
+                    end_if;
 
 }
 
