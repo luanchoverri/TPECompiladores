@@ -65,10 +65,17 @@ declarativas : tipo lista_de_variables ';'        { sintactico.addAnalisis("Se r
              | sentencia_when
              ;
 
+
+bloque_ejecutables: bloque_ejecutables ejecutables
+		  | ejecutables
+		  ;
+
 ejecutables : asignacion
             | salida
             | sentencia_If
             | expresion_For
+            | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
+            | sentencia_CONTINUE error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
             ;
 
 lista_de_variables : id
@@ -113,6 +120,8 @@ ejecutables_funcion: asignacion
 		   | salida
 		   | sentencia_for_funcion
 		   | ret_fun
+		   | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
+		   | sentencia_CONTINUE error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
 		   ;
 
 
@@ -217,11 +226,27 @@ sentencia_If : If condicion_if then cuerpo_If end_if ';'                      { 
              | If condicion_if 	    cuerpo_If error                           { sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
              ;
 
-cuerpo_If :  '{' bloque_sentencias_For '}'
+cuerpo_If :  '{' bloque_ejecutables '}'
+	  |   ejecutables
+          ;
+
+cuerpo_Else : '{' bloque_ejecutables'}'
+	    | ejecutables
+            ;
+
+sentencia_if_for : If condicion_if then cuerpo_If_for end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             | If condicion_if then cuerpo_If_for 			     error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+             | If condicion_if then cuerpo_If_for Else cuerpo_Else_for error ';'      { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+             | If condicion_if 	    cuerpo_If_for error                           { sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+             ;
+
+cuerpo_If_for :  '{' bloque_sentencias_For '}'
 	  |   sentencias_For
           ;
 
-cuerpo_Else : '{' bloque_sentencias_For'}'
+cuerpo_Else_for : '{' bloque_sentencias_For'}'
 	    | sentencias_For
             ;
 
@@ -258,7 +283,10 @@ signo : '+'
       ;
 
 
-sentencias_For : ejecutables
+sentencias_For : asignacion
+		| salida
+		| expresion_For
+		| sentencia_if_for
                | sentencia_BREAK
                | sentencia_CONTINUE
                | declarativas error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }

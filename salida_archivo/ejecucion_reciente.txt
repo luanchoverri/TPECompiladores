@@ -1,4 +1,4 @@
-Hora de ejecucion: nov. 02 2022, 06:51:21 p. m.
+Hora de ejecucion: nov. 02 2022, 07:25:41 p. m.
 
 
 
@@ -11,18 +11,18 @@ program
 {
 
     fun f (i32 a) : i32 {
-        etiqueta : for(i=:1 ; i < 3 ; +i){
+
                 if(i = 1) then{
                      continue : etiqueta;
                      return(a);
                 }
                 end_if;
 
-         };
+
     }
 
     if(i = 1) then{
-                         return(a);
+                         continue;
                     }
                     end_if;
 
@@ -43,4 +43,5 @@ $
 |--- ERRORES SINTACTICOS: ---| (!)
 
 
-SyntaxError. (Línea 16): no se permiten retornos fuera de una funcion
+SyntaxError. If3 (Línea 8): no se permiten sentencias continue fuera de una sentencia for 
+SyntaxError. If3 (Línea 17): no se permiten sentencias continue fuera de una sentencia for 
