@@ -199,7 +199,7 @@ sentencia_BREAK : BREAK ';'
 sentencia_CONTINUE : CONTINUE ';'
                    | CONTINUE ':' id ';'
                    | CONTINUE id ';' error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'CONTINUE."); }
-                   | CONTINUE error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' "); }
+                   | CONTINUE error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
                    ;
 
 condicion_if : '(' expresion_relacional ')'
