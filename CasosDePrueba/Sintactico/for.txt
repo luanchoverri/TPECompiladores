@@ -1,0 +1,44 @@
+program
+{
+    for(i=:1 ; i < 3 ; +i){
+        i32 a;
+        if(i = 1) then{
+            break 2;
+        }
+        end_if;
+    };
+
+     for(i=:1 : i < 3 : +i){
+          a =: 1;
+     };
+
+     _a =:  for(i=:1 ; i < 3 ; +i){
+                if(i = 1) then{
+                      break 2;
+                }
+                end_if;
+           };else 3;
+
+    b =:  for(i=:1 ; i < 3 ; +i){
+                    if(i = 1) then{
+                          break 2;
+                    }
+                    end_if;
+               };
+
+    sigue : for(i=:1 ; i < 3 ; -i){
+                    continue: sigue;
+                };
+
+    sigue : for(i=:1 ; i < 3 ; -i){
+            continue sigue;
+             };
+
+    for i=:1 ; i < 4; -i{
+           a =: 1;
+    };
+
+}
+
+
+

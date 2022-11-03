@@ -2,6 +2,11 @@ package AnalizadorSintactico;
 import AnalizadorLexico.*;
 import AnalizadorLexico.AccionesSemanticas.AccionesSimples.RangoEntero;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 
@@ -70,13 +75,26 @@ public class AnalizadorSintactico {
      * Método para imprimir los errores sintácticos.
      */
     public void imprimirErroresSintacticos() {
-        System.out.println();
-        System.out.println("|----------ERRORES SINTÁCTICOS-----------|");
-        if (this.erroresSintacticos.isEmpty())
-            System.out.println("Ejecución sin errores.");
-        else {
-            for (int i = 0; i < this.erroresSintacticos.size(); i++)
-                System.out.println(this.erroresSintacticos.get(i));
+
+        Path path = Paths.get("salida_archivo/ejecucion_reciente.txt");
+        String contenido = "";
+        try {
+            if (this.erroresSintacticos.isEmpty()){
+                contenido = "\n" + "\n" + "\n" + "\n" +  "|--- Sin errores SINTACTICOS ---| (OK)";
+                Files.write(path, contenido.getBytes(), StandardOpenOption.APPEND);
+            }else{
+                if (!(this.erroresSintacticos.isEmpty())){ // Si hay errores sintacticos
+                    contenido = "\n" + "\n" + "\n" + "|--- ERRORES SINTACTICOS: ---| (!)" + "\n" + "\n" + "\n";
+                    Files.write(path, contenido.getBytes(), StandardOpenOption.APPEND);
+                    for (int i = 0; i < this.erroresSintacticos.size(); i++){
+                        contenido = this.erroresSintacticos.get(i);
+                        Files.write(path, contenido.getBytes(), StandardOpenOption.APPEND);
+                        Files.write(path, "\n".getBytes(), StandardOpenOption.APPEND);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

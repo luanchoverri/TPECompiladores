@@ -1,0 +1,23 @@
+program
+{
+
+    fun f (i32 a) : i32 {
+
+                if(i = 1) then{
+                     continue : etiqueta;
+                     return(a);
+                }
+                end_if;
+
+
+    }
+
+    if(i = 1) then{
+                         continue;
+                    }
+                    end_if;
+
+}
+
+
+
