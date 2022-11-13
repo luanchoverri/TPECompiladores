@@ -48,7 +48,7 @@
 
   36  lista_de_variables : id
   37                     | lista_de_variables ',' id
-  38                     | lista_de_variables id error
+  38                     | lista_de_variables id
 
   39  encabezado_func : fun id '('
   40                  | fun '(' error
@@ -142,113 +142,123 @@
  108                | '='
 
  109  asignacion : id op_asignacion expresion ';'
- 110             | id op_asignacion expresion error
- 111             | id op_asignacion expresion_For Else cte ';'
- 112             | id op_asignacion expresion_For error
+ 110             | id op_asignacion expresion
+ 111             | etiquetaFor
 
- 113  salida : out '(' cadena ')' ';'
- 114         | out '(' cadena ')' error
- 115         | out '(' cadena error ';'
- 116         | out cadena error ';'
- 117         | '(' cadena error
- 118         | out '(' ')' error ';'
+ 112  etiquetaFor : id op_asignacion encabezado_For devolverValor
 
- 119  sentencia_If : If condicion_if then cuerpo_If end_if ';'
- 120               | If condicion_if then cuerpo_If Else cuerpo_Else end_if ';'
- 121               | If condicion_if then cuerpo_If Else cuerpo_Else end_if error
- 122               | If condicion_if then cuerpo_If error
- 123               | If condicion_if then cuerpo_If Else cuerpo_Else error ';'
- 124               | If condicion_if cuerpo_If error
+ 113  devolverValor : Else cte ';'
+ 114                | error
 
- 125  cuerpo_If : '{' bloque_ejecutables '}'
- 126            | ejecutables
+ 115  salida : out '(' cadena ')' ';'
+ 116         | out '(' cadena ')' error
+ 117         | out '(' cadena error ';'
+ 118         | out cadena error ';'
+ 119         | '(' cadena error
+ 120         | out '(' ')' error ';'
 
- 127  cuerpo_Else : '{' bloque_ejecutables '}'
- 128              | ejecutables
+ 121  sentencia_If : If condicion_if then cuerpo_If end_if ';'
+ 122               | If condicion_if then cuerpo_If Else cuerpo_Else end_if ';'
+ 123               | If condicion_if then cuerpo_If Else cuerpo_Else end_if error
+ 124               | If condicion_if then cuerpo_If error
+ 125               | If condicion_if then cuerpo_If Else cuerpo_Else error ';'
+ 126               | If condicion_if cuerpo_If error
 
- 129  sentencia_if_for : If condicion_if then cuerpo_If_for end_if ';'
- 130                   | If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if ';'
- 131                   | If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if error
- 132                   | If condicion_if then cuerpo_If_for error
- 133                   | If condicion_if then cuerpo_If_for Else cuerpo_Else_for error ';'
- 134                   | If condicion_if cuerpo_If_for error
+ 127  cuerpo_If : '{' bloque_ejecutables '}'
+ 128            | ejecutables
 
- 135  cuerpo_If_for : '{' bloque_sentencias_For '}'
- 136                | sentencias_For
+ 129  cuerpo_Else : '{' bloque_ejecutables '}'
+ 130              | ejecutables
 
- 137  cuerpo_Else_for : '{' bloque_sentencias_For '}'
- 138                  | sentencias_For
+ 131  sentencia_if_for : If condicion_if then cuerpo_If_for end_if ';'
+ 132                   | If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if ';'
+ 133                   | If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if error
+ 134                   | If condicion_if then cuerpo_If_for error
+ 135                   | If condicion_if then cuerpo_If_for Else cuerpo_Else_for error ';'
+ 136                   | If condicion_if cuerpo_If_for error
 
- 139  sentencia_when : when '(' condicion_for ')' then cuerpo_when ';'
- 140                 | when condicion_for ')' then cuerpo_when ';' error
- 141                 | when '(' condicion_for then cuerpo_when ';' error
- 142                 | when '(' condicion_for ')' cuerpo_when ';' error
+ 137  cuerpo_If_for : '{' bloque_sentencias_For '}'
+ 138                | sentencias_For
 
- 143  cuerpo_when : '{' sentencia '}'
- 144              | '{' sentencia error
- 145              | sentencia '}' error
+ 139  cuerpo_Else_for : '{' bloque_sentencias_For '}'
+ 140                  | sentencias_For
 
- 146  cola_For : '{' bloque_sentencias_For '}' ';'
- 147           | sentencias_For
+ 141  sentencia_when : when '(' condicion_for ')' then cuerpo_when ';'
+ 142                 | when condicion_for ')' then cuerpo_when ';' error
+ 143                 | when '(' condicion_for then cuerpo_when ';' error
+ 144                 | when '(' condicion_for ')' cuerpo_when ';' error
 
- 148  encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For
- 149                 | For id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For error
- 150                 | For id op_asignacion cte ';' condicion_for ';' signo id cola_For error
- 151                 | For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error
- 152                 | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For
+ 145  cuerpo_when : '{' sentencia '}'
+ 146              | '{' sentencia error
+ 147              | sentencia '}' error
 
- 153  condicion_for : id comparador cte
+ 148  cola_For : '{' bloque_sentencias_For '}' ';'
+ 149           | sentencias_For
 
- 154  signo : '+'
- 155        | '-'
+ 150  encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For
+ 151                 | For id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For error
+ 152                 | For id op_asignacion cte ';' condicion_for ';' signo id cola_For error
+ 153                 | For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error
+ 154                 | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For
 
- 156  sentencias_For : asignacion
- 157                 | salida
- 158                 | expresion_For
- 159                 | sentencia_if_for
- 160                 | sentencia_BREAK
- 161                 | sentencia_CONTINUE
- 162                 | declarativas error
- 163                 | ret_fun error
+ 155  condicion_for : id comparador cte
 
- 164  expresion_For : encabezado_For
+ 156  signo : '+'
+ 157        | '-'
 
- 165  sentencia_BREAK : BREAK ';'
- 166                  | BREAK cte ';'
- 167                  | BREAK error
+ 158  sentencias_For : asignacion
+ 159                 | salida
+ 160                 | expresion_For
+ 161                 | sentencia_if_for
+ 162                 | sentencia_BREAK
+ 163                 | sentencia_CONTINUE
+ 164                 | declarativas error
+ 165                 | ret_fun error
 
- 168  sentencia_CONTINUE : CONTINUE ';'
- 169                     | CONTINUE ':' id ';'
- 170                     | CONTINUE id ';' error
- 171                     | CONTINUE error
+ 166  expresion_For : encabezado_For
 
- 172  condicion_if : '(' expresion_relacional ')'
- 173               | expresion_relacional ')'
- 174               | '(' expresion_relacional
- 175               | expresion_relacional
+ 167  sentencia_BREAK : BREAK ';'
+ 168                  | BREAK cte ';'
+ 169                  | BREAK error
 
- 176  expresion_relacional : expresion comparador expresion
+ 170  sentencia_CONTINUE : CONTINUE ';'
+ 171                     | CONTINUE ':' id ';'
+ 172                     | CONTINUE id ';' error
+ 173                     | CONTINUE error
 
- 177  expresion : expresion signo termino
- 178            | termino
+ 174  condicion_if : '(' expresion_relacional ')'
+ 175               | expresion_relacional ')'
+ 176               | '(' expresion_relacional
+ 177               | expresion_relacional
 
- 179  termino : termino '*' factor
- 180          | termino '/' factor
- 181          | factor
+ 178  expresion_relacional : expresion comparador expresion
 
- 182  factor : id
- 183         | cte
- 184         | '-' cte
+ 179  list_param_invoc : factor
+ 180                   | list_param_invoc factor
 
- 185  comparador : '<'
- 186             | '>'
- 187             | menorigual
- 188             | mayorigual
- 189             | '='
- 190             | distinto
+ 181  invocacion : cadena '(' list_param_invoc ')'
 
- 191  tipo : i32
- 192       | f32
+ 182  expresion : expresion signo termino
+ 183            | termino
+
+ 184  termino : termino '*' factor
+ 185          | termino '/' factor
+ 186          | factor
+
+ 187  factor : id
+ 188         | cte
+ 189         | '-' cte
+ 190         | invocacion
+
+ 191  comparador : '<'
+ 192             | '>'
+ 193             | menorigual
+ 194             | mayorigual
+ 195             | '='
+ 196             | distinto
+
+ 197  tipo : i32
+ 198       | f32
 
 state 0
 	$accept : . programa $end  (0)
@@ -305,54 +315,56 @@ state 3
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
 	encabezado_func  goto 31
-	encabezado_For  goto 32
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
 state 4
 	asignacion : id . op_asignacion expresion ';'  (109)
-	asignacion : id . op_asignacion expresion error  (110)
-	asignacion : id . op_asignacion expresion_For Else cte ';'  (111)
-	asignacion : id . op_asignacion expresion_For error  (112)
-	encabezado_For : id . ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (152)
+	asignacion : id . op_asignacion expresion  (110)
+	etiquetaFor : id . op_asignacion encabezado_For devolverValor  (112)
+	encabezado_For : id . ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (154)
 
-	opasignacion  shift 33
-	':'  shift 34
-	'='  shift 35
+	opasignacion  shift 34
+	':'  shift 35
+	'='  shift 36
 	.  error
 
-	op_asignacion  goto 36
+	op_asignacion  goto 37
 
 
 state 5
-	sentencia_If : If . condicion_if then cuerpo_If end_if ';'  (119)
-	sentencia_If : If . condicion_if then cuerpo_If Else cuerpo_Else end_if ';'  (120)
-	sentencia_If : If . condicion_if then cuerpo_If Else cuerpo_Else end_if error  (121)
-	sentencia_If : If . condicion_if then cuerpo_If error  (122)
-	sentencia_If : If . condicion_if then cuerpo_If Else cuerpo_Else error ';'  (123)
-	sentencia_If : If . condicion_if cuerpo_If error  (124)
+	sentencia_If : If . condicion_if then cuerpo_If end_if ';'  (121)
+	sentencia_If : If . condicion_if then cuerpo_If Else cuerpo_Else end_if ';'  (122)
+	sentencia_If : If . condicion_if then cuerpo_If Else cuerpo_Else end_if error  (123)
+	sentencia_If : If . condicion_if then cuerpo_If error  (124)
+	sentencia_If : If . condicion_if then cuerpo_If Else cuerpo_Else error ';'  (125)
+	sentencia_If : If . condicion_if cuerpo_If error  (126)
 
-	id  shift 37
-	cte  shift 38
-	'('  shift 39
-	'-'  shift 40
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'('  shift 41
+	'-'  shift 42
 	.  error
 
-	expresion  goto 41
-	condicion_if  goto 42
-	expresion_relacional  goto 43
-	termino  goto 44
-	factor  goto 45
+	expresion  goto 43
+	condicion_if  goto 44
+	expresion_relacional  goto 45
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 48
 
 
 state 6
-	salida : out . '(' cadena ')' ';'  (113)
-	salida : out . '(' cadena ')' error  (114)
-	salida : out . '(' cadena error ';'  (115)
-	salida : out . cadena error ';'  (116)
-	salida : out . '(' ')' error ';'  (118)
+	salida : out . '(' cadena ')' ';'  (115)
+	salida : out . '(' cadena ')' error  (116)
+	salida : out . '(' cadena error ';'  (117)
+	salida : out . cadena error ';'  (118)
+	salida : out . '(' ')' error ';'  (120)
 
-	cadena  shift 46
-	'('  shift 47
+	cadena  shift 49
+	'('  shift 50
 	.  error
 
 
@@ -360,69 +372,69 @@ state 7
 	encabezado_func : fun . id '('  (39)
 	encabezado_func : fun . '(' error  (40)
 
-	id  shift 48
-	'('  shift 49
+	id  shift 51
+	'('  shift 52
 	.  error
 
 
 state 8
-	sentencia_BREAK : BREAK . ';'  (165)
-	sentencia_BREAK : BREAK . cte ';'  (166)
-	sentencia_BREAK : BREAK . error  (167)
+	sentencia_BREAK : BREAK . ';'  (167)
+	sentencia_BREAK : BREAK . cte ';'  (168)
+	sentencia_BREAK : BREAK . error  (169)
 
-	error  shift 50
-	cte  shift 51
-	';'  shift 52
+	error  shift 53
+	cte  shift 54
+	';'  shift 55
 	.  error
 
 
 state 9
-	tipo : i32 .  (191)
+	tipo : i32 .  (197)
 
-	.  reduce 191
+	.  reduce 197
 
 
 state 10
-	sentencia_when : when . '(' condicion_for ')' then cuerpo_when ';'  (139)
-	sentencia_when : when . condicion_for ')' then cuerpo_when ';' error  (140)
-	sentencia_when : when . '(' condicion_for then cuerpo_when ';' error  (141)
-	sentencia_when : when . '(' condicion_for ')' cuerpo_when ';' error  (142)
-
-	id  shift 53
-	'('  shift 54
-	.  error
-
-	condicion_for  goto 55
-
-
-state 11
-	encabezado_For : For . '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (148)
-	encabezado_For : For . id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For error  (149)
-	encabezado_For : For . id op_asignacion cte ';' condicion_for ';' signo id cola_For error  (150)
-	encabezado_For : For . '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error  (151)
+	sentencia_when : when . '(' condicion_for ')' then cuerpo_when ';'  (141)
+	sentencia_when : when . condicion_for ')' then cuerpo_when ';' error  (142)
+	sentencia_when : when . '(' condicion_for then cuerpo_when ';' error  (143)
+	sentencia_when : when . '(' condicion_for ')' cuerpo_when ';' error  (144)
 
 	id  shift 56
 	'('  shift 57
 	.  error
 
+	condicion_for  goto 58
+
+
+state 11
+	encabezado_For : For . '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (150)
+	encabezado_For : For . id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For error  (151)
+	encabezado_For : For . id op_asignacion cte ';' condicion_for ';' signo id cola_For error  (152)
+	encabezado_For : For . '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error  (153)
+
+	id  shift 59
+	'('  shift 60
+	.  error
+
 
 state 12
-	sentencia_CONTINUE : CONTINUE . ';'  (168)
-	sentencia_CONTINUE : CONTINUE . ':' id ';'  (169)
-	sentencia_CONTINUE : CONTINUE . id ';' error  (170)
-	sentencia_CONTINUE : CONTINUE . error  (171)
+	sentencia_CONTINUE : CONTINUE . ';'  (170)
+	sentencia_CONTINUE : CONTINUE . ':' id ';'  (171)
+	sentencia_CONTINUE : CONTINUE . id ';' error  (172)
+	sentencia_CONTINUE : CONTINUE . error  (173)
 
-	error  shift 58
-	id  shift 59
-	';'  shift 60
-	':'  shift 61
+	error  shift 61
+	id  shift 62
+	';'  shift 63
+	':'  shift 64
 	.  error
 
 
 state 13
-	tipo : f32 .  (192)
+	tipo : f32 .  (198)
 
-	.  reduce 192
+	.  reduce 198
 
 
 state 14
@@ -430,12 +442,12 @@ state 14
 	declaracion_const : Const . lista_de_asignacion_const error  (8)
 	declaracion_const : Const . ';' error  (9)
 
-	id  shift 62
-	';'  shift 63
+	id  shift 65
+	';'  shift 66
 	.  error
 
-	lista_de_asignacion_const  goto 64
-	decl_const  goto 65
+	lista_de_asignacion_const  goto 67
+	decl_const  goto 68
 
 
 state 15
@@ -456,7 +468,7 @@ state 15
 	'('  shift 16
 	.  error
 
-	sentencia  goto 66
+	sentencia  goto 69
 	declaracion_const  goto 19
 	declarativas  goto 20
 	ejecutables  goto 21
@@ -470,13 +482,14 @@ state 15
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
 	encabezado_func  goto 31
-	encabezado_For  goto 32
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
 state 16
-	salida : '(' . cadena error  (117)
+	salida : '(' . cadena error  (119)
 
-	cadena  shift 67
+	cadena  shift 70
 	.  error
 
 
@@ -484,7 +497,7 @@ state 17
 	programa : encabezado_prog bloque_sentencias .  (1)
 	bloque_sentencias : bloque_sentencias . '{' sentencia '}'  (3)
 
-	'{'  shift 68
+	'{'  shift 71
 	$end  reduce 1
 
 
@@ -504,13 +517,13 @@ state 18
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'}'  shift 69
+	'}'  shift 72
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 70
-	ejecutables  goto 71
+	declarativas  goto 73
+	ejecutables  goto 74
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
@@ -521,7 +534,8 @@ state 18
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
 	encabezado_func  goto 31
-	encabezado_For  goto 32
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
 state 19
@@ -547,11 +561,11 @@ state 22
 	declarativas : tipo . lista_de_variables error  (23)
 	declarativas : tipo . error  (24)
 
-	error  shift 72
-	id  shift 73
+	error  shift 75
+	id  shift 76
 	.  error
 
-	lista_de_variables  goto 74
+	lista_de_variables  goto 77
 
 
 state 23
@@ -593,14 +607,14 @@ state 28
 state 29
 	ejecutables : sentencia_BREAK . error  (34)
 
-	error  shift 75
+	error  shift 78
 	.  error
 
 
 state 30
 	ejecutables : sentencia_CONTINUE . error  (35)
 
-	error  shift 76
+	error  shift 79
 	.  error
 
 
@@ -610,378 +624,404 @@ state 31
 	declaracion_func : encabezado_func . parametro ',' parametro ',' parametro cola_func  (48)
 	declaracion_func : encabezado_func . cola_func  (49)
 
-	id  shift 77
+	id  shift 80
 	i32  shift 9
 	f32  shift 13
-	')'  shift 78
+	')'  shift 81
 	.  error
 
-	tipo  goto 79
-	parametro  goto 80
-	cola_func  goto 81
+	tipo  goto 82
+	parametro  goto 83
+	cola_func  goto 84
 
 
 state 32
-	expresion_For : encabezado_For .  (164)
+	asignacion : etiquetaFor .  (111)
 
-	.  reduce 164
+	.  reduce 111
 
 
 state 33
+	expresion_For : encabezado_For .  (166)
+
+	.  reduce 166
+
+
+state 34
 	op_asignacion : opasignacion .  (106)
 
 	.  reduce 106
 
 
-state 34
+state 35
 	op_asignacion : ':' . '='  (107)
-	encabezado_For : id ':' . For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (152)
+	encabezado_For : id ':' . For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (154)
 
-	For  shift 82
-	'='  shift 83
+	For  shift 85
+	'='  shift 86
 	.  error
 
 
-state 35
+state 36
 	op_asignacion : '=' .  (108)
 
 	.  reduce 108
 
 
-state 36
+state 37
 	asignacion : id op_asignacion . expresion ';'  (109)
-	asignacion : id op_asignacion . expresion error  (110)
-	asignacion : id op_asignacion . expresion_For Else cte ';'  (111)
-	asignacion : id op_asignacion . expresion_For error  (112)
+	asignacion : id op_asignacion . expresion  (110)
+	etiquetaFor : id op_asignacion . encabezado_For devolverValor  (112)
 
-	id  shift 84
-	cte  shift 38
+	id  shift 87
+	cte  shift 39
 	For  shift 11
-	'-'  shift 40
+	cadena  shift 40
+	'-'  shift 42
 	.  error
 
-	expresion_For  goto 85
-	expresion  goto 86
-	encabezado_For  goto 32
-	termino  goto 44
-	factor  goto 45
-
-
-state 37
-	factor : id .  (182)
-
-	.  reduce 182
+	expresion  goto 88
+	encabezado_For  goto 89
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 48
 
 
 state 38
-	factor : cte .  (183)
+	factor : id .  (187)
 
-	.  reduce 183
+	.  reduce 187
 
 
 state 39
-	condicion_if : '(' . expresion_relacional ')'  (172)
-	condicion_if : '(' . expresion_relacional  (174)
+	factor : cte .  (188)
 
-	id  shift 37
-	cte  shift 38
-	'-'  shift 40
-	.  error
-
-	expresion  goto 41
-	expresion_relacional  goto 87
-	termino  goto 44
-	factor  goto 45
+	.  reduce 188
 
 
 state 40
-	factor : '-' . cte  (184)
+	invocacion : cadena . '(' list_param_invoc ')'  (181)
 
-	cte  shift 88
+	'('  shift 90
 	.  error
 
 
 state 41
-	expresion_relacional : expresion . comparador expresion  (176)
-	expresion : expresion . signo termino  (177)
+	condicion_if : '(' . expresion_relacional ')'  (174)
+	condicion_if : '(' . expresion_relacional  (176)
 
-	menorigual  shift 89
-	mayorigual  shift 90
-	distinto  shift 91
-	'='  shift 92
-	'+'  shift 93
-	'-'  shift 94
-	'<'  shift 95
-	'>'  shift 96
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'-'  shift 42
 	.  error
 
-	signo  goto 97
-	comparador  goto 98
+	expresion  goto 43
+	expresion_relacional  goto 91
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 48
 
 
 state 42
-	sentencia_If : If condicion_if . then cuerpo_If end_if ';'  (119)
-	sentencia_If : If condicion_if . then cuerpo_If Else cuerpo_Else end_if ';'  (120)
-	sentencia_If : If condicion_if . then cuerpo_If Else cuerpo_Else end_if error  (121)
-	sentencia_If : If condicion_if . then cuerpo_If error  (122)
-	sentencia_If : If condicion_if . then cuerpo_If Else cuerpo_Else error ';'  (123)
-	sentencia_If : If condicion_if . cuerpo_If error  (124)
+	factor : '-' . cte  (189)
+
+	cte  shift 92
+	.  error
+
+
+state 43
+	expresion_relacional : expresion . comparador expresion  (178)
+	expresion : expresion . signo termino  (182)
+
+	menorigual  shift 93
+	mayorigual  shift 94
+	distinto  shift 95
+	'='  shift 96
+	'+'  shift 97
+	'-'  shift 98
+	'<'  shift 99
+	'>'  shift 100
+	.  error
+
+	signo  goto 101
+	comparador  goto 102
+
+
+state 44
+	sentencia_If : If condicion_if . then cuerpo_If end_if ';'  (121)
+	sentencia_If : If condicion_if . then cuerpo_If Else cuerpo_Else end_if ';'  (122)
+	sentencia_If : If condicion_if . then cuerpo_If Else cuerpo_Else end_if error  (123)
+	sentencia_If : If condicion_if . then cuerpo_If error  (124)
+	sentencia_If : If condicion_if . then cuerpo_If Else cuerpo_Else error ';'  (125)
+	sentencia_If : If condicion_if . cuerpo_If error  (126)
 
 	id  shift 4
 	If  shift 5
-	then  shift 99
+	then  shift 103
 	out  shift 6
 	BREAK  shift 8
 	For  shift 11
 	CONTINUE  shift 12
-	'{'  shift 100
+	'{'  shift 104
 	'('  shift 16
 	.  error
 
-	ejecutables  goto 101
+	ejecutables  goto 105
 	asignacion  goto 25
 	salida  goto 26
 	sentencia_If  goto 27
 	expresion_For  goto 28
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
-	cuerpo_If  goto 102
-	encabezado_For  goto 32
-
-
-state 43
-	condicion_if : expresion_relacional . ')'  (173)
-	condicion_if : expresion_relacional .  (175)
-
-	')'  shift 103
-	id  reduce 175
-	If  reduce 175
-	then  reduce 175
-	out  reduce 175
-	fun  reduce 175
-	Return  reduce 175
-	BREAK  reduce 175
-	i32  reduce 175
-	when  reduce 175
-	For  reduce 175
-	CONTINUE  reduce 175
-	f32  reduce 175
-	Const  reduce 175
-	'{'  reduce 175
-	'('  reduce 175
-
-
-state 44
-	expresion : termino .  (178)
-	termino : termino . '*' factor  (179)
-	termino : termino . '/' factor  (180)
-
-	'*'  shift 104
-	'/'  shift 105
-	error  reduce 178
-	id  reduce 178
-	If  reduce 178
-	then  reduce 178
-	out  reduce 178
-	fun  reduce 178
-	Return  reduce 178
-	BREAK  reduce 178
-	i32  reduce 178
-	when  reduce 178
-	For  reduce 178
-	CONTINUE  reduce 178
-	f32  reduce 178
-	menorigual  reduce 178
-	mayorigual  reduce 178
-	distinto  reduce 178
-	Const  reduce 178
-	'{'  reduce 178
-	';'  reduce 178
-	'('  reduce 178
-	')'  reduce 178
-	'='  reduce 178
-	'+'  reduce 178
-	'-'  reduce 178
-	'<'  reduce 178
-	'>'  reduce 178
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	cuerpo_If  goto 106
 
 
 state 45
-	termino : factor .  (181)
+	condicion_if : expresion_relacional . ')'  (175)
+	condicion_if : expresion_relacional .  (177)
 
-	.  reduce 181
+	')'  shift 107
+	id  reduce 177
+	If  reduce 177
+	then  reduce 177
+	out  reduce 177
+	fun  reduce 177
+	Return  reduce 177
+	BREAK  reduce 177
+	i32  reduce 177
+	when  reduce 177
+	For  reduce 177
+	CONTINUE  reduce 177
+	f32  reduce 177
+	Const  reduce 177
+	'{'  reduce 177
+	'('  reduce 177
 
 
 state 46
-	salida : out cadena . error ';'  (116)
+	termino : factor .  (186)
 
-	error  shift 106
-	.  error
+	.  reduce 186
 
 
 state 47
-	salida : out '(' . cadena ')' ';'  (113)
-	salida : out '(' . cadena ')' error  (114)
-	salida : out '(' . cadena error ';'  (115)
-	salida : out '(' . ')' error ';'  (118)
+	factor : invocacion .  (190)
 
-	cadena  shift 107
-	')'  shift 108
-	.  error
+	.  reduce 190
 
 
 state 48
-	encabezado_func : fun id . '('  (39)
+	expresion : termino .  (183)
+	termino : termino . '*' factor  (184)
+	termino : termino . '/' factor  (185)
 
-	'('  shift 109
-	.  error
+	'*'  shift 108
+	'/'  shift 109
+	$end  reduce 183
+	error  reduce 183
+	id  reduce 183
+	If  reduce 183
+	then  reduce 183
+	Else  reduce 183
+	end_if  reduce 183
+	out  reduce 183
+	fun  reduce 183
+	Return  reduce 183
+	BREAK  reduce 183
+	i32  reduce 183
+	when  reduce 183
+	For  reduce 183
+	CONTINUE  reduce 183
+	f32  reduce 183
+	menorigual  reduce 183
+	mayorigual  reduce 183
+	distinto  reduce 183
+	Const  reduce 183
+	'{'  reduce 183
+	'}'  reduce 183
+	';'  reduce 183
+	'('  reduce 183
+	')'  reduce 183
+	'='  reduce 183
+	'+'  reduce 183
+	'-'  reduce 183
+	'<'  reduce 183
+	'>'  reduce 183
 
 
 state 49
-	encabezado_func : fun '(' . error  (40)
+	salida : out cadena . error ';'  (118)
 
 	error  shift 110
 	.  error
 
 
 state 50
-	sentencia_BREAK : BREAK error .  (167)
+	salida : out '(' . cadena ')' ';'  (115)
+	salida : out '(' . cadena ')' error  (116)
+	salida : out '(' . cadena error ';'  (117)
+	salida : out '(' . ')' error ';'  (120)
 
-	.  reduce 167
+	cadena  shift 111
+	')'  shift 112
+	.  error
 
 
 state 51
-	sentencia_BREAK : BREAK cte . ';'  (166)
+	encabezado_func : fun id . '('  (39)
 
-	';'  shift 111
+	'('  shift 113
 	.  error
 
 
 state 52
-	sentencia_BREAK : BREAK ';' .  (165)
+	encabezado_func : fun '(' . error  (40)
 
-	.  reduce 165
+	error  shift 114
+	.  error
 
 
 state 53
-	condicion_for : id . comparador cte  (153)
+	sentencia_BREAK : BREAK error .  (169)
 
-	menorigual  shift 89
-	mayorigual  shift 90
-	distinto  shift 91
-	'='  shift 92
-	'<'  shift 95
-	'>'  shift 96
-	.  error
-
-	comparador  goto 112
+	.  reduce 169
 
 
 state 54
-	sentencia_when : when '(' . condicion_for ')' then cuerpo_when ';'  (139)
-	sentencia_when : when '(' . condicion_for then cuerpo_when ';' error  (141)
-	sentencia_when : when '(' . condicion_for ')' cuerpo_when ';' error  (142)
+	sentencia_BREAK : BREAK cte . ';'  (168)
 
-	id  shift 53
+	';'  shift 115
 	.  error
-
-	condicion_for  goto 113
 
 
 state 55
-	sentencia_when : when condicion_for . ')' then cuerpo_when ';' error  (140)
+	sentencia_BREAK : BREAK ';' .  (167)
 
-	')'  shift 114
-	.  error
+	.  reduce 167
 
 
 state 56
-	encabezado_For : For id . op_asignacion cte ';' condicion_for ';' signo id ')' cola_For error  (149)
-	encabezado_For : For id . op_asignacion cte ';' condicion_for ';' signo id cola_For error  (150)
+	condicion_for : id . comparador cte  (155)
 
-	opasignacion  shift 33
-	':'  shift 115
-	'='  shift 35
+	menorigual  shift 93
+	mayorigual  shift 94
+	distinto  shift 95
+	'='  shift 96
+	'<'  shift 99
+	'>'  shift 100
 	.  error
 
-	op_asignacion  goto 116
+	comparador  goto 116
 
 
 state 57
-	encabezado_For : For '(' . id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (148)
-	encabezado_For : For '(' . id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error  (151)
+	sentencia_when : when '(' . condicion_for ')' then cuerpo_when ';'  (141)
+	sentencia_when : when '(' . condicion_for then cuerpo_when ';' error  (143)
+	sentencia_when : when '(' . condicion_for ')' cuerpo_when ';' error  (144)
 
-	id  shift 117
+	id  shift 56
 	.  error
+
+	condicion_for  goto 117
 
 
 state 58
-	sentencia_CONTINUE : CONTINUE error .  (171)
+	sentencia_when : when condicion_for . ')' then cuerpo_when ';' error  (142)
 
-	.  reduce 171
+	')'  shift 118
+	.  error
 
 
 state 59
-	sentencia_CONTINUE : CONTINUE id . ';' error  (170)
+	encabezado_For : For id . op_asignacion cte ';' condicion_for ';' signo id ')' cola_For error  (151)
+	encabezado_For : For id . op_asignacion cte ';' condicion_for ';' signo id cola_For error  (152)
 
-	';'  shift 118
+	opasignacion  shift 34
+	':'  shift 119
+	'='  shift 36
 	.  error
+
+	op_asignacion  goto 120
 
 
 state 60
-	sentencia_CONTINUE : CONTINUE ';' .  (168)
+	encabezado_For : For '(' . id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (150)
+	encabezado_For : For '(' . id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error  (153)
 
-	.  reduce 168
-
-
-state 61
-	sentencia_CONTINUE : CONTINUE ':' . id ';'  (169)
-
-	id  shift 119
+	id  shift 121
 	.  error
 
 
+state 61
+	sentencia_CONTINUE : CONTINUE error .  (173)
+
+	.  reduce 173
+
+
 state 62
+	sentencia_CONTINUE : CONTINUE id . ';' error  (172)
+
+	';'  shift 122
+	.  error
+
+
+state 63
+	sentencia_CONTINUE : CONTINUE ';' .  (170)
+
+	.  reduce 170
+
+
+state 64
+	sentencia_CONTINUE : CONTINUE ':' . id ';'  (171)
+
+	id  shift 123
+	.  error
+
+
+state 65
 	decl_const : id . op_asignacion cte  (12)
 	decl_const : id . op_asignacion error  (13)
 	decl_const : id . cte error  (14)
 	decl_const : id . error  (15)
 
-	error  shift 120
-	cte  shift 121
-	opasignacion  shift 33
-	':'  shift 115
-	'='  shift 35
+	error  shift 124
+	cte  shift 125
+	opasignacion  shift 34
+	':'  shift 119
+	'='  shift 36
 	.  error
 
-	op_asignacion  goto 122
+	op_asignacion  goto 126
 
 
-state 63
+state 66
 	declaracion_const : Const ';' . error  (9)
 
-	error  shift 123
+	error  shift 127
 	.  error
 
 
-state 64
+state 67
 	declaracion_const : Const lista_de_asignacion_const . ';'  (7)
 	declaracion_const : Const lista_de_asignacion_const . error  (8)
 	lista_de_asignacion_const : lista_de_asignacion_const . ',' decl_const  (11)
 
-	error  shift 124
-	';'  shift 125
-	','  shift 126
+	error  shift 128
+	';'  shift 129
+	','  shift 130
 	.  error
 
 
-state 65
+state 68
 	lista_de_asignacion_const : decl_const .  (10)
 
 	.  reduce 10
 
 
-state 66
+state 69
 	bloque_sentencias : '{' sentencia . '}'  (4)
 	bloque_sentencias : '{' sentencia .  (5)
 	sentencia : sentencia . declarativas  (20)
@@ -998,14 +1038,14 @@ state 66
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'}'  shift 127
+	'}'  shift 131
 	'('  shift 16
 	$end  reduce 5
 	'{'  reduce 5
 
 	declaracion_const  goto 19
-	declarativas  goto 70
-	ejecutables  goto 71
+	declarativas  goto 73
+	ejecutables  goto 74
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
@@ -1016,17 +1056,18 @@ state 66
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
 	encabezado_func  goto 31
-	encabezado_For  goto 32
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
-state 67
-	salida : '(' cadena . error  (117)
+state 70
+	salida : '(' cadena . error  (119)
 
-	error  shift 128
+	error  shift 132
 	.  error
 
 
-state 68
+state 71
 	bloque_sentencias : bloque_sentencias '{' . sentencia '}'  (3)
 
 	id  shift 4
@@ -1043,7 +1084,7 @@ state 68
 	'('  shift 16
 	.  error
 
-	sentencia  goto 129
+	sentencia  goto 133
 	declaracion_const  goto 19
 	declarativas  goto 20
 	ejecutables  goto 21
@@ -1057,712 +1098,211 @@ state 68
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
 	encabezado_func  goto 31
-	encabezado_For  goto 32
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
-state 69
+state 72
 	bloque_sentencias : sentencia '}' .  (6)
 
 	.  reduce 6
 
 
-state 70
+state 73
 	sentencia : sentencia declarativas .  (20)
 
 	.  reduce 20
 
 
-state 71
+state 74
 	sentencia : sentencia ejecutables .  (21)
 
 	.  reduce 21
 
 
-state 72
+state 75
 	declarativas : tipo error .  (24)
 
 	.  reduce 24
 
 
-state 73
+state 76
 	lista_de_variables : id .  (36)
 
 	.  reduce 36
 
 
-state 74
+state 77
 	declarativas : tipo lista_de_variables . ';'  (22)
 	declarativas : tipo lista_de_variables . error  (23)
 	lista_de_variables : lista_de_variables . ',' id  (37)
-	lista_de_variables : lista_de_variables . id error  (38)
+	lista_de_variables : lista_de_variables . id  (38)
 
-	error  shift 130
-	id  shift 131
-	';'  shift 132
-	','  shift 133
+	error  shift 134
+	id  shift 135
+	';'  shift 136
+	','  shift 137
 	.  error
 
 
-state 75
+state 78
 	ejecutables : sentencia_BREAK error .  (34)
 
 	.  reduce 34
 
 
-state 76
+state 79
 	ejecutables : sentencia_CONTINUE error .  (35)
 
 	.  reduce 35
 
 
-state 77
+state 80
 	parametro : id . error  (42)
 
-	error  shift 134
+	error  shift 138
 	.  error
 
 
-state 78
+state 81
 	cola_func : ')' . asig_fun '{' cuerpo_fun '}'  (45)
 	asig_fun : .  (44)
 
-	':'  shift 135
+	':'  shift 139
 	'{'  reduce 44
 
-	asig_fun  goto 136
+	asig_fun  goto 140
 
 
-state 79
+state 82
 	parametro : tipo . id  (41)
 
-	id  shift 137
+	id  shift 141
 	.  error
 
 
-state 80
+state 83
 	declaracion_func : encabezado_func parametro . cola_func  (46)
 	declaracion_func : encabezado_func parametro . ',' parametro cola_func  (47)
 	declaracion_func : encabezado_func parametro . ',' parametro ',' parametro cola_func  (48)
 
-	','  shift 138
-	')'  shift 78
+	','  shift 142
+	')'  shift 81
 	.  error
 
-	cola_func  goto 139
+	cola_func  goto 143
 
 
-state 81
+state 84
 	declaracion_func : encabezado_func cola_func .  (49)
 
 	.  reduce 49
 
 
-state 82
-	encabezado_For : id ':' For . '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (152)
+state 85
+	encabezado_For : id ':' For . '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (154)
 
-	'('  shift 140
+	'('  shift 144
 	.  error
 
 
-state 83
+state 86
 	op_asignacion : ':' '=' .  (107)
 
 	.  reduce 107
 
 
-state 84
-	encabezado_For : id . ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (152)
-	factor : id .  (182)
-
-	':'  shift 141
-	error  reduce 182
-	';'  reduce 182
-	'+'  reduce 182
-	'-'  reduce 182
-	'*'  reduce 182
-	'/'  reduce 182
-
-
-state 85
-	asignacion : id op_asignacion expresion_For . Else cte ';'  (111)
-	asignacion : id op_asignacion expresion_For . error  (112)
-
-	error  shift 142
-	Else  shift 143
-	.  error
-
-
-state 86
-	asignacion : id op_asignacion expresion . ';'  (109)
-	asignacion : id op_asignacion expresion . error  (110)
-	expresion : expresion . signo termino  (177)
-
-	error  shift 144
-	';'  shift 145
-	'+'  shift 93
-	'-'  shift 94
-	.  error
-
-	signo  goto 97
-
-
 state 87
-	condicion_if : '(' expresion_relacional . ')'  (172)
-	condicion_if : '(' expresion_relacional .  (174)
+	encabezado_For : id . ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (154)
+	factor : id .  (187)
 
-	')'  shift 146
-	id  reduce 174
-	If  reduce 174
-	then  reduce 174
-	out  reduce 174
-	fun  reduce 174
-	Return  reduce 174
-	BREAK  reduce 174
-	i32  reduce 174
-	when  reduce 174
-	For  reduce 174
-	CONTINUE  reduce 174
-	f32  reduce 174
-	Const  reduce 174
-	'{'  reduce 174
-	'('  reduce 174
+	':'  shift 145
+	$end  reduce 187
+	error  reduce 187
+	id  reduce 187
+	If  reduce 187
+	Else  reduce 187
+	end_if  reduce 187
+	out  reduce 187
+	fun  reduce 187
+	Return  reduce 187
+	BREAK  reduce 187
+	i32  reduce 187
+	when  reduce 187
+	For  reduce 187
+	CONTINUE  reduce 187
+	f32  reduce 187
+	Const  reduce 187
+	'{'  reduce 187
+	'}'  reduce 187
+	';'  reduce 187
+	'('  reduce 187
+	'+'  reduce 187
+	'-'  reduce 187
+	'*'  reduce 187
+	'/'  reduce 187
 
 
 state 88
-	factor : '-' cte .  (184)
+	asignacion : id op_asignacion expresion . ';'  (109)
+	asignacion : id op_asignacion expresion .  (110)
+	expresion : expresion . signo termino  (182)
 
-	.  reduce 184
+	';'  shift 146
+	'+'  shift 97
+	'-'  shift 98
+	$end  reduce 110
+	error  reduce 110
+	id  reduce 110
+	If  reduce 110
+	Else  reduce 110
+	end_if  reduce 110
+	out  reduce 110
+	fun  reduce 110
+	Return  reduce 110
+	BREAK  reduce 110
+	i32  reduce 110
+	when  reduce 110
+	For  reduce 110
+	CONTINUE  reduce 110
+	f32  reduce 110
+	Const  reduce 110
+	'{'  reduce 110
+	'}'  reduce 110
+	'('  reduce 110
+
+	signo  goto 101
 
 
 state 89
-	comparador : menorigual .  (187)
+	etiquetaFor : id op_asignacion encabezado_For . devolverValor  (112)
 
-	.  reduce 187
+	error  shift 147
+	Else  shift 148
+	.  error
+
+	devolverValor  goto 149
 
 
 state 90
-	comparador : mayorigual .  (188)
+	invocacion : cadena '(' . list_param_invoc ')'  (181)
 
-	.  reduce 188
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'-'  shift 42
+	.  error
+
+	list_param_invoc  goto 150
+	factor  goto 151
+	invocacion  goto 47
 
 
 state 91
-	comparador : distinto .  (190)
+	condicion_if : '(' expresion_relacional . ')'  (174)
+	condicion_if : '(' expresion_relacional .  (176)
 
-	.  reduce 190
-
-
-state 92
-	comparador : '=' .  (189)
-
-	.  reduce 189
-
-
-state 93
-	signo : '+' .  (154)
-
-	.  reduce 154
-
-
-state 94
-	signo : '-' .  (155)
-
-	.  reduce 155
-
-
-state 95
-	comparador : '<' .  (185)
-
-	.  reduce 185
-
-
-state 96
-	comparador : '>' .  (186)
-
-	.  reduce 186
-
-
-state 97
-	expresion : expresion signo . termino  (177)
-
-	id  shift 37
-	cte  shift 38
-	'-'  shift 40
-	.  error
-
-	termino  goto 147
-	factor  goto 45
-
-
-state 98
-	expresion_relacional : expresion comparador . expresion  (176)
-
-	id  shift 37
-	cte  shift 38
-	'-'  shift 40
-	.  error
-
-	expresion  goto 148
-	termino  goto 44
-	factor  goto 45
-
-
-state 99
-	sentencia_If : If condicion_if then . cuerpo_If end_if ';'  (119)
-	sentencia_If : If condicion_if then . cuerpo_If Else cuerpo_Else end_if ';'  (120)
-	sentencia_If : If condicion_if then . cuerpo_If Else cuerpo_Else end_if error  (121)
-	sentencia_If : If condicion_if then . cuerpo_If error  (122)
-	sentencia_If : If condicion_if then . cuerpo_If Else cuerpo_Else error ';'  (123)
-
-	id  shift 4
-	If  shift 5
-	out  shift 6
-	BREAK  shift 8
-	For  shift 11
-	CONTINUE  shift 12
-	'{'  shift 100
-	'('  shift 16
-	.  error
-
-	ejecutables  goto 101
-	asignacion  goto 25
-	salida  goto 26
-	sentencia_If  goto 27
-	expresion_For  goto 28
-	sentencia_BREAK  goto 29
-	sentencia_CONTINUE  goto 30
-	cuerpo_If  goto 149
-	encabezado_For  goto 32
-
-
-state 100
-	cuerpo_If : '{' . bloque_ejecutables '}'  (125)
-
-	id  shift 4
-	If  shift 5
-	out  shift 6
-	BREAK  shift 8
-	For  shift 11
-	CONTINUE  shift 12
-	'('  shift 16
-	.  error
-
-	ejecutables  goto 150
-	bloque_ejecutables  goto 151
-	asignacion  goto 25
-	salida  goto 26
-	sentencia_If  goto 27
-	expresion_For  goto 28
-	sentencia_BREAK  goto 29
-	sentencia_CONTINUE  goto 30
-	encabezado_For  goto 32
-
-
-state 101
-	cuerpo_If : ejecutables .  (126)
-
-	.  reduce 126
-
-
-state 102
-	sentencia_If : If condicion_if cuerpo_If . error  (124)
-
-	error  shift 152
-	.  error
-
-
-state 103
-	condicion_if : expresion_relacional ')' .  (173)
-
-	.  reduce 173
-
-
-state 104
-	termino : termino '*' . factor  (179)
-
-	id  shift 37
-	cte  shift 38
-	'-'  shift 40
-	.  error
-
-	factor  goto 153
-
-
-state 105
-	termino : termino '/' . factor  (180)
-
-	id  shift 37
-	cte  shift 38
-	'-'  shift 40
-	.  error
-
-	factor  goto 154
-
-
-state 106
-	salida : out cadena error . ';'  (116)
-
-	';'  shift 155
-	.  error
-
-
-state 107
-	salida : out '(' cadena . ')' ';'  (113)
-	salida : out '(' cadena . ')' error  (114)
-	salida : out '(' cadena . error ';'  (115)
-
-	error  shift 156
-	')'  shift 157
-	.  error
-
-
-state 108
-	salida : out '(' ')' . error ';'  (118)
-
-	error  shift 158
-	.  error
-
-
-state 109
-	encabezado_func : fun id '(' .  (39)
-
-	.  reduce 39
-
-
-state 110
-	encabezado_func : fun '(' error .  (40)
-
-	.  reduce 40
-
-
-state 111
-	sentencia_BREAK : BREAK cte ';' .  (166)
-
-	.  reduce 166
-
-
-state 112
-	condicion_for : id comparador . cte  (153)
-
-	cte  shift 159
-	.  error
-
-
-state 113
-	sentencia_when : when '(' condicion_for . ')' then cuerpo_when ';'  (139)
-	sentencia_when : when '(' condicion_for . then cuerpo_when ';' error  (141)
-	sentencia_when : when '(' condicion_for . ')' cuerpo_when ';' error  (142)
-
-	then  shift 160
-	')'  shift 161
-	.  error
-
-
-state 114
-	sentencia_when : when condicion_for ')' . then cuerpo_when ';' error  (140)
-
-	then  shift 162
-	.  error
-
-
-state 115
-	op_asignacion : ':' . '='  (107)
-
-	'='  shift 83
-	.  error
-
-
-state 116
-	encabezado_For : For id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For error  (149)
-	encabezado_For : For id op_asignacion . cte ';' condicion_for ';' signo id cola_For error  (150)
-
-	cte  shift 163
-	.  error
-
-
-state 117
-	encabezado_For : For '(' id . op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (148)
-	encabezado_For : For '(' id . op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error  (151)
-
-	opasignacion  shift 33
-	':'  shift 115
-	'='  shift 35
-	.  error
-
-	op_asignacion  goto 164
-
-
-state 118
-	sentencia_CONTINUE : CONTINUE id ';' . error  (170)
-
-	error  shift 165
-	.  error
-
-
-state 119
-	sentencia_CONTINUE : CONTINUE ':' id . ';'  (169)
-
-	';'  shift 166
-	.  error
-
-
-state 120
-	decl_const : id error .  (15)
-
-	.  reduce 15
-
-
-state 121
-	decl_const : id cte . error  (14)
-
-	error  shift 167
-	.  error
-
-
-state 122
-	decl_const : id op_asignacion . cte  (12)
-	decl_const : id op_asignacion . error  (13)
-
-	error  shift 168
-	cte  shift 169
-	.  error
-
-
-state 123
-	declaracion_const : Const ';' error .  (9)
-
-	.  reduce 9
-
-
-state 124
-	declaracion_const : Const lista_de_asignacion_const error .  (8)
-
-	.  reduce 8
-
-
-state 125
-	declaracion_const : Const lista_de_asignacion_const ';' .  (7)
-
-	.  reduce 7
-
-
-state 126
-	lista_de_asignacion_const : lista_de_asignacion_const ',' . decl_const  (11)
-
-	id  shift 62
-	.  error
-
-	decl_const  goto 170
-
-
-state 127
-	bloque_sentencias : '{' sentencia '}' .  (4)
-
-	.  reduce 4
-
-
-state 128
-	salida : '(' cadena error .  (117)
-
-	.  reduce 117
-
-
-state 129
-	bloque_sentencias : bloque_sentencias '{' sentencia . '}'  (3)
-	sentencia : sentencia . declarativas  (20)
-	sentencia : sentencia . ejecutables  (21)
-
-	id  shift 4
-	If  shift 5
-	out  shift 6
-	fun  shift 7
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'}'  shift 171
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	declarativas  goto 70
-	ejecutables  goto 71
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 25
-	salida  goto 26
-	sentencia_If  goto 27
-	expresion_For  goto 28
-	sentencia_BREAK  goto 29
-	sentencia_CONTINUE  goto 30
-	encabezado_func  goto 31
-	encabezado_For  goto 32
-
-
-state 130
-	declarativas : tipo lista_de_variables error .  (23)
-
-	.  reduce 23
-
-
-state 131
-	lista_de_variables : lista_de_variables id . error  (38)
-
-	error  shift 172
-	.  error
-
-
-state 132
-	declarativas : tipo lista_de_variables ';' .  (22)
-
-	.  reduce 22
-
-
-state 133
-	lista_de_variables : lista_de_variables ',' . id  (37)
-
-	id  shift 173
-	.  error
-
-
-state 134
-	parametro : id error .  (42)
-
-	.  reduce 42
-
-
-state 135
-	asig_fun : ':' . tipo  (43)
-
-	i32  shift 9
-	f32  shift 13
-	.  error
-
-	tipo  goto 174
-
-
-state 136
-	cola_func : ')' asig_fun . '{' cuerpo_fun '}'  (45)
-
-	'{'  shift 175
-	.  error
-
-
-state 137
-	parametro : tipo id .  (41)
-
-	.  reduce 41
-
-
-state 138
-	declaracion_func : encabezado_func parametro ',' . parametro cola_func  (47)
-	declaracion_func : encabezado_func parametro ',' . parametro ',' parametro cola_func  (48)
-
-	id  shift 77
-	i32  shift 9
-	f32  shift 13
-	.  error
-
-	tipo  goto 79
-	parametro  goto 176
-
-
-state 139
-	declaracion_func : encabezado_func parametro cola_func .  (46)
-
-	.  reduce 46
-
-
-state 140
-	encabezado_For : id ':' For '(' . id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (152)
-
-	id  shift 177
-	.  error
-
-
-state 141
-	encabezado_For : id ':' . For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (152)
-
-	For  shift 82
-	.  error
-
-
-state 142
-	asignacion : id op_asignacion expresion_For error .  (112)
-
-	.  reduce 112
-
-
-state 143
-	asignacion : id op_asignacion expresion_For Else . cte ';'  (111)
-
-	cte  shift 178
-	.  error
-
-
-state 144
-	asignacion : id op_asignacion expresion error .  (110)
-
-	.  reduce 110
-
-
-state 145
-	asignacion : id op_asignacion expresion ';' .  (109)
-
-	.  reduce 109
-
-
-state 146
-	condicion_if : '(' expresion_relacional ')' .  (172)
-
-	.  reduce 172
-
-
-state 147
-	expresion : expresion signo termino .  (177)
-	termino : termino . '*' factor  (179)
-	termino : termino . '/' factor  (180)
-
-	'*'  shift 104
-	'/'  shift 105
-	error  reduce 177
-	id  reduce 177
-	If  reduce 177
-	then  reduce 177
-	out  reduce 177
-	fun  reduce 177
-	Return  reduce 177
-	BREAK  reduce 177
-	i32  reduce 177
-	when  reduce 177
-	For  reduce 177
-	CONTINUE  reduce 177
-	f32  reduce 177
-	menorigual  reduce 177
-	mayorigual  reduce 177
-	distinto  reduce 177
-	Const  reduce 177
-	'{'  reduce 177
-	';'  reduce 177
-	'('  reduce 177
-	')'  reduce 177
-	'='  reduce 177
-	'+'  reduce 177
-	'-'  reduce 177
-	'<'  reduce 177
-	'>'  reduce 177
-
-
-state 148
-	expresion_relacional : expresion comparador expresion .  (176)
-	expresion : expresion . signo termino  (177)
-
-	'+'  shift 93
-	'-'  shift 94
+	')'  shift 152
 	id  reduce 176
 	If  reduce 176
 	then  reduce 176
@@ -1778,33 +1318,620 @@ state 148
 	Const  reduce 176
 	'{'  reduce 176
 	'('  reduce 176
-	')'  reduce 176
-
-	signo  goto 97
 
 
-state 149
-	sentencia_If : If condicion_if then cuerpo_If . end_if ';'  (119)
-	sentencia_If : If condicion_if then cuerpo_If . Else cuerpo_Else end_if ';'  (120)
-	sentencia_If : If condicion_if then cuerpo_If . Else cuerpo_Else end_if error  (121)
-	sentencia_If : If condicion_if then cuerpo_If . error  (122)
-	sentencia_If : If condicion_if then cuerpo_If . Else cuerpo_Else error ';'  (123)
+state 92
+	factor : '-' cte .  (189)
 
-	error  shift 179
-	Else  shift 180
-	end_if  shift 181
+	.  reduce 189
+
+
+state 93
+	comparador : menorigual .  (193)
+
+	.  reduce 193
+
+
+state 94
+	comparador : mayorigual .  (194)
+
+	.  reduce 194
+
+
+state 95
+	comparador : distinto .  (196)
+
+	.  reduce 196
+
+
+state 96
+	comparador : '=' .  (195)
+
+	.  reduce 195
+
+
+state 97
+	signo : '+' .  (156)
+
+	.  reduce 156
+
+
+state 98
+	signo : '-' .  (157)
+
+	.  reduce 157
+
+
+state 99
+	comparador : '<' .  (191)
+
+	.  reduce 191
+
+
+state 100
+	comparador : '>' .  (192)
+
+	.  reduce 192
+
+
+state 101
+	expresion : expresion signo . termino  (182)
+
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'-'  shift 42
+	.  error
+
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 153
+
+
+state 102
+	expresion_relacional : expresion comparador . expresion  (178)
+
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'-'  shift 42
+	.  error
+
+	expresion  goto 154
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 48
+
+
+state 103
+	sentencia_If : If condicion_if then . cuerpo_If end_if ';'  (121)
+	sentencia_If : If condicion_if then . cuerpo_If Else cuerpo_Else end_if ';'  (122)
+	sentencia_If : If condicion_if then . cuerpo_If Else cuerpo_Else end_if error  (123)
+	sentencia_If : If condicion_if then . cuerpo_If error  (124)
+	sentencia_If : If condicion_if then . cuerpo_If Else cuerpo_Else error ';'  (125)
+
+	id  shift 4
+	If  shift 5
+	out  shift 6
+	BREAK  shift 8
+	For  shift 11
+	CONTINUE  shift 12
+	'{'  shift 104
+	'('  shift 16
+	.  error
+
+	ejecutables  goto 105
+	asignacion  goto 25
+	salida  goto 26
+	sentencia_If  goto 27
+	expresion_For  goto 28
+	sentencia_BREAK  goto 29
+	sentencia_CONTINUE  goto 30
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	cuerpo_If  goto 155
+
+
+state 104
+	cuerpo_If : '{' . bloque_ejecutables '}'  (127)
+
+	id  shift 4
+	If  shift 5
+	out  shift 6
+	BREAK  shift 8
+	For  shift 11
+	CONTINUE  shift 12
+	'('  shift 16
+	.  error
+
+	ejecutables  goto 156
+	bloque_ejecutables  goto 157
+	asignacion  goto 25
+	salida  goto 26
+	sentencia_If  goto 27
+	expresion_For  goto 28
+	sentencia_BREAK  goto 29
+	sentencia_CONTINUE  goto 30
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+
+
+state 105
+	cuerpo_If : ejecutables .  (128)
+
+	.  reduce 128
+
+
+state 106
+	sentencia_If : If condicion_if cuerpo_If . error  (126)
+
+	error  shift 158
 	.  error
 
 
+state 107
+	condicion_if : expresion_relacional ')' .  (175)
+
+	.  reduce 175
+
+
+state 108
+	termino : termino '*' . factor  (184)
+
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'-'  shift 42
+	.  error
+
+	factor  goto 159
+	invocacion  goto 47
+
+
+state 109
+	termino : termino '/' . factor  (185)
+
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'-'  shift 42
+	.  error
+
+	factor  goto 160
+	invocacion  goto 47
+
+
+state 110
+	salida : out cadena error . ';'  (118)
+
+	';'  shift 161
+	.  error
+
+
+state 111
+	salida : out '(' cadena . ')' ';'  (115)
+	salida : out '(' cadena . ')' error  (116)
+	salida : out '(' cadena . error ';'  (117)
+
+	error  shift 162
+	')'  shift 163
+	.  error
+
+
+state 112
+	salida : out '(' ')' . error ';'  (120)
+
+	error  shift 164
+	.  error
+
+
+state 113
+	encabezado_func : fun id '(' .  (39)
+
+	.  reduce 39
+
+
+state 114
+	encabezado_func : fun '(' error .  (40)
+
+	.  reduce 40
+
+
+state 115
+	sentencia_BREAK : BREAK cte ';' .  (168)
+
+	.  reduce 168
+
+
+state 116
+	condicion_for : id comparador . cte  (155)
+
+	cte  shift 165
+	.  error
+
+
+state 117
+	sentencia_when : when '(' condicion_for . ')' then cuerpo_when ';'  (141)
+	sentencia_when : when '(' condicion_for . then cuerpo_when ';' error  (143)
+	sentencia_when : when '(' condicion_for . ')' cuerpo_when ';' error  (144)
+
+	then  shift 166
+	')'  shift 167
+	.  error
+
+
+state 118
+	sentencia_when : when condicion_for ')' . then cuerpo_when ';' error  (142)
+
+	then  shift 168
+	.  error
+
+
+state 119
+	op_asignacion : ':' . '='  (107)
+
+	'='  shift 86
+	.  error
+
+
+state 120
+	encabezado_For : For id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For error  (151)
+	encabezado_For : For id op_asignacion . cte ';' condicion_for ';' signo id cola_For error  (152)
+
+	cte  shift 169
+	.  error
+
+
+state 121
+	encabezado_For : For '(' id . op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (150)
+	encabezado_For : For '(' id . op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error  (153)
+
+	opasignacion  shift 34
+	':'  shift 119
+	'='  shift 36
+	.  error
+
+	op_asignacion  goto 170
+
+
+state 122
+	sentencia_CONTINUE : CONTINUE id ';' . error  (172)
+
+	error  shift 171
+	.  error
+
+
+state 123
+	sentencia_CONTINUE : CONTINUE ':' id . ';'  (171)
+
+	';'  shift 172
+	.  error
+
+
+state 124
+	decl_const : id error .  (15)
+
+	.  reduce 15
+
+
+state 125
+	decl_const : id cte . error  (14)
+
+	error  shift 173
+	.  error
+
+
+state 126
+	decl_const : id op_asignacion . cte  (12)
+	decl_const : id op_asignacion . error  (13)
+
+	error  shift 174
+	cte  shift 175
+	.  error
+
+
+state 127
+	declaracion_const : Const ';' error .  (9)
+
+	.  reduce 9
+
+
+state 128
+	declaracion_const : Const lista_de_asignacion_const error .  (8)
+
+	.  reduce 8
+
+
+state 129
+	declaracion_const : Const lista_de_asignacion_const ';' .  (7)
+
+	.  reduce 7
+
+
+state 130
+	lista_de_asignacion_const : lista_de_asignacion_const ',' . decl_const  (11)
+
+	id  shift 65
+	.  error
+
+	decl_const  goto 176
+
+
+state 131
+	bloque_sentencias : '{' sentencia '}' .  (4)
+
+	.  reduce 4
+
+
+state 132
+	salida : '(' cadena error .  (119)
+
+	.  reduce 119
+
+
+state 133
+	bloque_sentencias : bloque_sentencias '{' sentencia . '}'  (3)
+	sentencia : sentencia . declarativas  (20)
+	sentencia : sentencia . ejecutables  (21)
+
+	id  shift 4
+	If  shift 5
+	out  shift 6
+	fun  shift 7
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'}'  shift 177
+	'('  shift 16
+	.  error
+
+	declaracion_const  goto 19
+	declarativas  goto 73
+	ejecutables  goto 74
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 25
+	salida  goto 26
+	sentencia_If  goto 27
+	expresion_For  goto 28
+	sentencia_BREAK  goto 29
+	sentencia_CONTINUE  goto 30
+	encabezado_func  goto 31
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+
+
+state 134
+	declarativas : tipo lista_de_variables error .  (23)
+
+	.  reduce 23
+
+
+state 135
+	lista_de_variables : lista_de_variables id .  (38)
+
+	.  reduce 38
+
+
+state 136
+	declarativas : tipo lista_de_variables ';' .  (22)
+
+	.  reduce 22
+
+
+state 137
+	lista_de_variables : lista_de_variables ',' . id  (37)
+
+	id  shift 178
+	.  error
+
+
+state 138
+	parametro : id error .  (42)
+
+	.  reduce 42
+
+
+state 139
+	asig_fun : ':' . tipo  (43)
+
+	i32  shift 9
+	f32  shift 13
+	.  error
+
+	tipo  goto 179
+
+
+state 140
+	cola_func : ')' asig_fun . '{' cuerpo_fun '}'  (45)
+
+	'{'  shift 180
+	.  error
+
+
+state 141
+	parametro : tipo id .  (41)
+
+	.  reduce 41
+
+
+state 142
+	declaracion_func : encabezado_func parametro ',' . parametro cola_func  (47)
+	declaracion_func : encabezado_func parametro ',' . parametro ',' parametro cola_func  (48)
+
+	id  shift 80
+	i32  shift 9
+	f32  shift 13
+	.  error
+
+	tipo  goto 82
+	parametro  goto 181
+
+
+state 143
+	declaracion_func : encabezado_func parametro cola_func .  (46)
+
+	.  reduce 46
+
+
+state 144
+	encabezado_For : id ':' For '(' . id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (154)
+
+	id  shift 182
+	.  error
+
+
+state 145
+	encabezado_For : id ':' . For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (154)
+
+	For  shift 85
+	.  error
+
+
+state 146
+	asignacion : id op_asignacion expresion ';' .  (109)
+
+	.  reduce 109
+
+
+state 147
+	devolverValor : error .  (114)
+
+	.  reduce 114
+
+
+state 148
+	devolverValor : Else . cte ';'  (113)
+
+	cte  shift 183
+	.  error
+
+
+state 149
+	etiquetaFor : id op_asignacion encabezado_For devolverValor .  (112)
+
+	.  reduce 112
+
+
 state 150
+	list_param_invoc : list_param_invoc . factor  (180)
+	invocacion : cadena '(' list_param_invoc . ')'  (181)
+
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	')'  shift 184
+	'-'  shift 42
+	.  error
+
+	factor  goto 185
+	invocacion  goto 47
+
+
+state 151
+	list_param_invoc : factor .  (179)
+
+	.  reduce 179
+
+
+state 152
+	condicion_if : '(' expresion_relacional ')' .  (174)
+
+	.  reduce 174
+
+
+state 153
+	expresion : expresion signo termino .  (182)
+	termino : termino . '*' factor  (184)
+	termino : termino . '/' factor  (185)
+
+	'*'  shift 108
+	'/'  shift 109
+	$end  reduce 182
+	error  reduce 182
+	id  reduce 182
+	If  reduce 182
+	then  reduce 182
+	Else  reduce 182
+	end_if  reduce 182
+	out  reduce 182
+	fun  reduce 182
+	Return  reduce 182
+	BREAK  reduce 182
+	i32  reduce 182
+	when  reduce 182
+	For  reduce 182
+	CONTINUE  reduce 182
+	f32  reduce 182
+	menorigual  reduce 182
+	mayorigual  reduce 182
+	distinto  reduce 182
+	Const  reduce 182
+	'{'  reduce 182
+	'}'  reduce 182
+	';'  reduce 182
+	'('  reduce 182
+	')'  reduce 182
+	'='  reduce 182
+	'+'  reduce 182
+	'-'  reduce 182
+	'<'  reduce 182
+	'>'  reduce 182
+
+
+state 154
+	expresion_relacional : expresion comparador expresion .  (178)
+	expresion : expresion . signo termino  (182)
+
+	'+'  shift 97
+	'-'  shift 98
+	id  reduce 178
+	If  reduce 178
+	then  reduce 178
+	out  reduce 178
+	fun  reduce 178
+	Return  reduce 178
+	BREAK  reduce 178
+	i32  reduce 178
+	when  reduce 178
+	For  reduce 178
+	CONTINUE  reduce 178
+	f32  reduce 178
+	Const  reduce 178
+	'{'  reduce 178
+	'('  reduce 178
+	')'  reduce 178
+
+	signo  goto 101
+
+
+state 155
+	sentencia_If : If condicion_if then cuerpo_If . end_if ';'  (121)
+	sentencia_If : If condicion_if then cuerpo_If . Else cuerpo_Else end_if ';'  (122)
+	sentencia_If : If condicion_if then cuerpo_If . Else cuerpo_Else end_if error  (123)
+	sentencia_If : If condicion_if then cuerpo_If . error  (124)
+	sentencia_If : If condicion_if then cuerpo_If . Else cuerpo_Else error ';'  (125)
+
+	error  shift 186
+	Else  shift 187
+	end_if  shift 188
+	.  error
+
+
+state 156
 	bloque_ejecutables : ejecutables .  (29)
 
 	.  reduce 29
 
 
-state 151
+state 157
 	bloque_ejecutables : bloque_ejecutables . ejecutables  (28)
-	cuerpo_If : '{' bloque_ejecutables . '}'  (125)
+	cuerpo_If : '{' bloque_ejecutables . '}'  (127)
 
 	id  shift 4
 	If  shift 5
@@ -1812,271 +1939,269 @@ state 151
 	BREAK  shift 8
 	For  shift 11
 	CONTINUE  shift 12
-	'}'  shift 182
+	'}'  shift 189
 	'('  shift 16
 	.  error
 
-	ejecutables  goto 183
+	ejecutables  goto 190
 	asignacion  goto 25
 	salida  goto 26
 	sentencia_If  goto 27
 	expresion_For  goto 28
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
-	encabezado_For  goto 32
-
-
-state 152
-	sentencia_If : If condicion_if cuerpo_If error .  (124)
-
-	.  reduce 124
-
-
-state 153
-	termino : termino '*' factor .  (179)
-
-	.  reduce 179
-
-
-state 154
-	termino : termino '/' factor .  (180)
-
-	.  reduce 180
-
-
-state 155
-	salida : out cadena error ';' .  (116)
-
-	.  reduce 116
-
-
-state 156
-	salida : out '(' cadena error . ';'  (115)
-
-	';'  shift 184
-	.  error
-
-
-state 157
-	salida : out '(' cadena ')' . ';'  (113)
-	salida : out '(' cadena ')' . error  (114)
-
-	error  shift 185
-	';'  shift 186
-	.  error
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
 state 158
-	salida : out '(' ')' error . ';'  (118)
+	sentencia_If : If condicion_if cuerpo_If error .  (126)
 
-	';'  shift 187
-	.  error
+	.  reduce 126
 
 
 state 159
-	condicion_for : id comparador cte .  (153)
+	termino : termino '*' factor .  (184)
 
-	.  reduce 153
+	.  reduce 184
 
 
 state 160
-	sentencia_when : when '(' condicion_for then . cuerpo_when ';' error  (141)
+	termino : termino '/' factor .  (185)
 
-	id  shift 4
-	If  shift 5
-	out  shift 6
-	fun  shift 7
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'{'  shift 188
-	'('  shift 16
-	.  error
-
-	sentencia  goto 189
-	declaracion_const  goto 19
-	declarativas  goto 20
-	ejecutables  goto 21
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 25
-	salida  goto 26
-	sentencia_If  goto 27
-	expresion_For  goto 28
-	sentencia_BREAK  goto 29
-	sentencia_CONTINUE  goto 30
-	encabezado_func  goto 31
-	cuerpo_when  goto 190
-	encabezado_For  goto 32
+	.  reduce 185
 
 
 state 161
-	sentencia_when : when '(' condicion_for ')' . then cuerpo_when ';'  (139)
-	sentencia_when : when '(' condicion_for ')' . cuerpo_when ';' error  (142)
+	salida : out cadena error ';' .  (118)
 
-	id  shift 4
-	If  shift 5
-	then  shift 191
-	out  shift 6
-	fun  shift 7
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'{'  shift 188
-	'('  shift 16
-	.  error
-
-	sentencia  goto 189
-	declaracion_const  goto 19
-	declarativas  goto 20
-	ejecutables  goto 21
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 25
-	salida  goto 26
-	sentencia_If  goto 27
-	expresion_For  goto 28
-	sentencia_BREAK  goto 29
-	sentencia_CONTINUE  goto 30
-	encabezado_func  goto 31
-	cuerpo_when  goto 192
-	encabezado_For  goto 32
+	.  reduce 118
 
 
 state 162
-	sentencia_when : when condicion_for ')' then . cuerpo_when ';' error  (140)
+	salida : out '(' cadena error . ';'  (117)
 
-	id  shift 4
-	If  shift 5
-	out  shift 6
-	fun  shift 7
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'{'  shift 188
-	'('  shift 16
+	';'  shift 191
 	.  error
-
-	sentencia  goto 189
-	declaracion_const  goto 19
-	declarativas  goto 20
-	ejecutables  goto 21
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 25
-	salida  goto 26
-	sentencia_If  goto 27
-	expresion_For  goto 28
-	sentencia_BREAK  goto 29
-	sentencia_CONTINUE  goto 30
-	encabezado_func  goto 31
-	cuerpo_when  goto 193
-	encabezado_For  goto 32
 
 
 state 163
-	encabezado_For : For id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For error  (149)
-	encabezado_For : For id op_asignacion cte . ';' condicion_for ';' signo id cola_For error  (150)
+	salida : out '(' cadena ')' . ';'  (115)
+	salida : out '(' cadena ')' . error  (116)
+
+	error  shift 192
+	';'  shift 193
+	.  error
+
+
+state 164
+	salida : out '(' ')' error . ';'  (120)
 
 	';'  shift 194
 	.  error
 
 
-state 164
-	encabezado_For : For '(' id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For  (148)
-	encabezado_For : For '(' id op_asignacion . cte ':' condicion_for ':' signo id ')' cola_For error  (151)
-
-	cte  shift 195
-	.  error
-
-
 state 165
-	sentencia_CONTINUE : CONTINUE id ';' error .  (170)
+	condicion_for : id comparador cte .  (155)
 
-	.  reduce 170
+	.  reduce 155
 
 
 state 166
-	sentencia_CONTINUE : CONTINUE ':' id ';' .  (169)
+	sentencia_when : when '(' condicion_for then . cuerpo_when ';' error  (143)
 
-	.  reduce 169
+	id  shift 4
+	If  shift 5
+	out  shift 6
+	fun  shift 7
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 195
+	'('  shift 16
+	.  error
+
+	sentencia  goto 196
+	declaracion_const  goto 19
+	declarativas  goto 20
+	ejecutables  goto 21
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 25
+	salida  goto 26
+	sentencia_If  goto 27
+	expresion_For  goto 28
+	sentencia_BREAK  goto 29
+	sentencia_CONTINUE  goto 30
+	encabezado_func  goto 31
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	cuerpo_when  goto 197
 
 
 state 167
+	sentencia_when : when '(' condicion_for ')' . then cuerpo_when ';'  (141)
+	sentencia_when : when '(' condicion_for ')' . cuerpo_when ';' error  (144)
+
+	id  shift 4
+	If  shift 5
+	then  shift 198
+	out  shift 6
+	fun  shift 7
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 195
+	'('  shift 16
+	.  error
+
+	sentencia  goto 196
+	declaracion_const  goto 19
+	declarativas  goto 20
+	ejecutables  goto 21
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 25
+	salida  goto 26
+	sentencia_If  goto 27
+	expresion_For  goto 28
+	sentencia_BREAK  goto 29
+	sentencia_CONTINUE  goto 30
+	encabezado_func  goto 31
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	cuerpo_when  goto 199
+
+
+state 168
+	sentencia_when : when condicion_for ')' then . cuerpo_when ';' error  (142)
+
+	id  shift 4
+	If  shift 5
+	out  shift 6
+	fun  shift 7
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 195
+	'('  shift 16
+	.  error
+
+	sentencia  goto 196
+	declaracion_const  goto 19
+	declarativas  goto 20
+	ejecutables  goto 21
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 25
+	salida  goto 26
+	sentencia_If  goto 27
+	expresion_For  goto 28
+	sentencia_BREAK  goto 29
+	sentencia_CONTINUE  goto 30
+	encabezado_func  goto 31
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	cuerpo_when  goto 200
+
+
+state 169
+	encabezado_For : For id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For error  (151)
+	encabezado_For : For id op_asignacion cte . ';' condicion_for ';' signo id cola_For error  (152)
+
+	';'  shift 201
+	.  error
+
+
+state 170
+	encabezado_For : For '(' id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For  (150)
+	encabezado_For : For '(' id op_asignacion . cte ':' condicion_for ':' signo id ')' cola_For error  (153)
+
+	cte  shift 202
+	.  error
+
+
+state 171
+	sentencia_CONTINUE : CONTINUE id ';' error .  (172)
+
+	.  reduce 172
+
+
+state 172
+	sentencia_CONTINUE : CONTINUE ':' id ';' .  (171)
+
+	.  reduce 171
+
+
+state 173
 	decl_const : id cte error .  (14)
 
 	.  reduce 14
 
 
-state 168
+state 174
 	decl_const : id op_asignacion error .  (13)
 
 	.  reduce 13
 
 
-state 169
+state 175
 	decl_const : id op_asignacion cte .  (12)
 
 	.  reduce 12
 
 
-state 170
+state 176
 	lista_de_asignacion_const : lista_de_asignacion_const ',' decl_const .  (11)
 
 	.  reduce 11
 
 
-state 171
+state 177
 	bloque_sentencias : bloque_sentencias '{' sentencia '}' .  (3)
 
 	.  reduce 3
 
 
-state 172
-	lista_de_variables : lista_de_variables id error .  (38)
-
-	.  reduce 38
-
-
-state 173
+state 178
 	lista_de_variables : lista_de_variables ',' id .  (37)
 
 	.  reduce 37
 
 
-state 174
+state 179
 	asig_fun : ':' tipo .  (43)
 
 	.  reduce 43
 
 
-state 175
+state 180
 	cola_func : ')' asig_fun '{' . cuerpo_fun '}'  (45)
 
-	id  shift 196
-	If  shift 197
+	id  shift 203
+	If  shift 204
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
@@ -2084,207 +2209,144 @@ state 175
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 200
+	declarativas  goto 207
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 201
-	salida  goto 202
-	sentencia_BREAK  goto 203
-	sentencia_CONTINUE  goto 204
+	asignacion  goto 208
+	salida  goto 209
+	sentencia_BREAK  goto 210
+	sentencia_CONTINUE  goto 211
 	encabezado_func  goto 31
-	cuerpo_fun  goto 205
-	ret_fun  goto 206
-	bloque_sentencias_funcion  goto 207
-	ejecutables_funcion  goto 208
-	sentencia_if_funcion  goto 209
-	sentencia_for_funcion  goto 210
-
-
-state 176
-	declaracion_func : encabezado_func parametro ',' parametro . cola_func  (47)
-	declaracion_func : encabezado_func parametro ',' parametro . ',' parametro cola_func  (48)
-
-	','  shift 211
-	')'  shift 78
-	.  error
-
-	cola_func  goto 212
-
-
-state 177
-	encabezado_For : id ':' For '(' id . op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (152)
-
-	opasignacion  shift 33
-	':'  shift 115
-	'='  shift 35
-	.  error
-
-	op_asignacion  goto 213
-
-
-state 178
-	asignacion : id op_asignacion expresion_For Else cte . ';'  (111)
-
-	';'  shift 214
-	.  error
-
-
-state 179
-	sentencia_If : If condicion_if then cuerpo_If error .  (122)
-
-	.  reduce 122
-
-
-state 180
-	sentencia_If : If condicion_if then cuerpo_If Else . cuerpo_Else end_if ';'  (120)
-	sentencia_If : If condicion_if then cuerpo_If Else . cuerpo_Else end_if error  (121)
-	sentencia_If : If condicion_if then cuerpo_If Else . cuerpo_Else error ';'  (123)
-
-	id  shift 4
-	If  shift 5
-	out  shift 6
-	BREAK  shift 8
-	For  shift 11
-	CONTINUE  shift 12
-	'{'  shift 215
-	'('  shift 16
-	.  error
-
-	ejecutables  goto 216
-	asignacion  goto 25
-	salida  goto 26
-	sentencia_If  goto 27
-	expresion_For  goto 28
-	sentencia_BREAK  goto 29
-	sentencia_CONTINUE  goto 30
-	cuerpo_Else  goto 217
-	encabezado_For  goto 32
+	cuerpo_fun  goto 212
+	ret_fun  goto 213
+	bloque_sentencias_funcion  goto 214
+	ejecutables_funcion  goto 215
+	sentencia_if_funcion  goto 216
+	sentencia_for_funcion  goto 217
+	etiquetaFor  goto 32
 
 
 state 181
-	sentencia_If : If condicion_if then cuerpo_If end_if . ';'  (119)
+	declaracion_func : encabezado_func parametro ',' parametro . cola_func  (47)
+	declaracion_func : encabezado_func parametro ',' parametro . ',' parametro cola_func  (48)
 
-	';'  shift 218
+	','  shift 218
+	')'  shift 81
 	.  error
+
+	cola_func  goto 219
 
 
 state 182
-	cuerpo_If : '{' bloque_ejecutables '}' .  (125)
+	encabezado_For : id ':' For '(' id . op_asignacion cte ';' condicion_for ';' signo id ')' cola_For  (154)
 
-	.  reduce 125
+	opasignacion  shift 34
+	':'  shift 119
+	'='  shift 36
+	.  error
+
+	op_asignacion  goto 220
 
 
 state 183
-	bloque_ejecutables : bloque_ejecutables ejecutables .  (28)
-
-	.  reduce 28
-
-
-state 184
-	salida : out '(' cadena error ';' .  (115)
-
-	.  reduce 115
-
-
-state 185
-	salida : out '(' cadena ')' error .  (114)
-
-	.  reduce 114
-
-
-state 186
-	salida : out '(' cadena ')' ';' .  (113)
-
-	.  reduce 113
-
-
-state 187
-	salida : out '(' ')' error ';' .  (118)
-
-	.  reduce 118
-
-
-state 188
-	cuerpo_when : '{' . sentencia '}'  (143)
-	cuerpo_when : '{' . sentencia error  (144)
-
-	id  shift 4
-	If  shift 5
-	out  shift 6
-	fun  shift 7
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'('  shift 16
-	.  error
-
-	sentencia  goto 219
-	declaracion_const  goto 19
-	declarativas  goto 20
-	ejecutables  goto 21
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 25
-	salida  goto 26
-	sentencia_If  goto 27
-	expresion_For  goto 28
-	sentencia_BREAK  goto 29
-	sentencia_CONTINUE  goto 30
-	encabezado_func  goto 31
-	encabezado_For  goto 32
-
-
-state 189
-	sentencia : sentencia . declarativas  (20)
-	sentencia : sentencia . ejecutables  (21)
-	cuerpo_when : sentencia . '}' error  (145)
-
-	id  shift 4
-	If  shift 5
-	out  shift 6
-	fun  shift 7
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'}'  shift 220
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	declarativas  goto 70
-	ejecutables  goto 71
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 25
-	salida  goto 26
-	sentencia_If  goto 27
-	expresion_For  goto 28
-	sentencia_BREAK  goto 29
-	sentencia_CONTINUE  goto 30
-	encabezado_func  goto 31
-	encabezado_For  goto 32
-
-
-state 190
-	sentencia_when : when '(' condicion_for then cuerpo_when . ';' error  (141)
+	devolverValor : Else cte . ';'  (113)
 
 	';'  shift 221
 	.  error
 
 
+state 184
+	invocacion : cadena '(' list_param_invoc ')' .  (181)
+
+	.  reduce 181
+
+
+state 185
+	list_param_invoc : list_param_invoc factor .  (180)
+
+	.  reduce 180
+
+
+state 186
+	sentencia_If : If condicion_if then cuerpo_If error .  (124)
+
+	.  reduce 124
+
+
+state 187
+	sentencia_If : If condicion_if then cuerpo_If Else . cuerpo_Else end_if ';'  (122)
+	sentencia_If : If condicion_if then cuerpo_If Else . cuerpo_Else end_if error  (123)
+	sentencia_If : If condicion_if then cuerpo_If Else . cuerpo_Else error ';'  (125)
+
+	id  shift 4
+	If  shift 5
+	out  shift 6
+	BREAK  shift 8
+	For  shift 11
+	CONTINUE  shift 12
+	'{'  shift 222
+	'('  shift 16
+	.  error
+
+	ejecutables  goto 223
+	asignacion  goto 25
+	salida  goto 26
+	sentencia_If  goto 27
+	expresion_For  goto 28
+	sentencia_BREAK  goto 29
+	sentencia_CONTINUE  goto 30
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	cuerpo_Else  goto 224
+
+
+state 188
+	sentencia_If : If condicion_if then cuerpo_If end_if . ';'  (121)
+
+	';'  shift 225
+	.  error
+
+
+state 189
+	cuerpo_If : '{' bloque_ejecutables '}' .  (127)
+
+	.  reduce 127
+
+
+state 190
+	bloque_ejecutables : bloque_ejecutables ejecutables .  (28)
+
+	.  reduce 28
+
+
 state 191
-	sentencia_when : when '(' condicion_for ')' then . cuerpo_when ';'  (139)
+	salida : out '(' cadena error ';' .  (117)
+
+	.  reduce 117
+
+
+state 192
+	salida : out '(' cadena ')' error .  (116)
+
+	.  reduce 116
+
+
+state 193
+	salida : out '(' cadena ')' ';' .  (115)
+
+	.  reduce 115
+
+
+state 194
+	salida : out '(' ')' error ';' .  (120)
+
+	.  reduce 120
+
+
+state 195
+	cuerpo_when : '{' . sentencia '}'  (145)
+	cuerpo_when : '{' . sentencia error  (146)
 
 	id  shift 4
 	If  shift 5
@@ -2297,11 +2359,10 @@ state 191
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 188
 	'('  shift 16
 	.  error
 
-	sentencia  goto 189
+	sentencia  goto 226
 	declaracion_const  goto 19
 	declarativas  goto 20
 	ejecutables  goto 21
@@ -2315,59 +2376,139 @@ state 191
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
 	encabezado_func  goto 31
-	cuerpo_when  goto 222
-	encabezado_For  goto 32
-
-
-state 192
-	sentencia_when : when '(' condicion_for ')' cuerpo_when . ';' error  (142)
-
-	';'  shift 223
-	.  error
-
-
-state 193
-	sentencia_when : when condicion_for ')' then cuerpo_when . ';' error  (140)
-
-	';'  shift 224
-	.  error
-
-
-state 194
-	encabezado_For : For id op_asignacion cte ';' . condicion_for ';' signo id ')' cola_For error  (149)
-	encabezado_For : For id op_asignacion cte ';' . condicion_for ';' signo id cola_For error  (150)
-
-	id  shift 53
-	.  error
-
-	condicion_for  goto 225
-
-
-state 195
-	encabezado_For : For '(' id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For  (148)
-	encabezado_For : For '(' id op_asignacion cte . ':' condicion_for ':' signo id ')' cola_For error  (151)
-
-	';'  shift 226
-	':'  shift 227
-	.  error
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
 state 196
-	sentencia_for_funcion : id . ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
-	asignacion : id . op_asignacion expresion ';'  (109)
-	asignacion : id . op_asignacion expresion error  (110)
-	asignacion : id . op_asignacion expresion_For Else cte ';'  (111)
-	asignacion : id . op_asignacion expresion_For error  (112)
+	sentencia : sentencia . declarativas  (20)
+	sentencia : sentencia . ejecutables  (21)
+	cuerpo_when : sentencia . '}' error  (147)
 
-	opasignacion  shift 33
-	':'  shift 228
-	'='  shift 35
+	id  shift 4
+	If  shift 5
+	out  shift 6
+	fun  shift 7
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'}'  shift 227
+	'('  shift 16
 	.  error
 
-	op_asignacion  goto 36
+	declaracion_const  goto 19
+	declarativas  goto 73
+	ejecutables  goto 74
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 25
+	salida  goto 26
+	sentencia_If  goto 27
+	expresion_For  goto 28
+	sentencia_BREAK  goto 29
+	sentencia_CONTINUE  goto 30
+	encabezado_func  goto 31
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
 state 197
+	sentencia_when : when '(' condicion_for then cuerpo_when . ';' error  (143)
+
+	';'  shift 228
+	.  error
+
+
+state 198
+	sentencia_when : when '(' condicion_for ')' then . cuerpo_when ';'  (141)
+
+	id  shift 4
+	If  shift 5
+	out  shift 6
+	fun  shift 7
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 195
+	'('  shift 16
+	.  error
+
+	sentencia  goto 196
+	declaracion_const  goto 19
+	declarativas  goto 20
+	ejecutables  goto 21
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 25
+	salida  goto 26
+	sentencia_If  goto 27
+	expresion_For  goto 28
+	sentencia_BREAK  goto 29
+	sentencia_CONTINUE  goto 30
+	encabezado_func  goto 31
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	cuerpo_when  goto 229
+
+
+state 199
+	sentencia_when : when '(' condicion_for ')' cuerpo_when . ';' error  (144)
+
+	';'  shift 230
+	.  error
+
+
+state 200
+	sentencia_when : when condicion_for ')' then cuerpo_when . ';' error  (142)
+
+	';'  shift 231
+	.  error
+
+
+state 201
+	encabezado_For : For id op_asignacion cte ';' . condicion_for ';' signo id ')' cola_For error  (151)
+	encabezado_For : For id op_asignacion cte ';' . condicion_for ';' signo id cola_For error  (152)
+
+	id  shift 56
+	.  error
+
+	condicion_for  goto 232
+
+
+state 202
+	encabezado_For : For '(' id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For  (150)
+	encabezado_For : For '(' id op_asignacion cte . ':' condicion_for ':' signo id ')' cola_For error  (153)
+
+	';'  shift 233
+	':'  shift 234
+	.  error
+
+
+state 203
+	sentencia_for_funcion : id . ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
+	asignacion : id . op_asignacion expresion ';'  (109)
+	asignacion : id . op_asignacion expresion  (110)
+	etiquetaFor : id . op_asignacion encabezado_For devolverValor  (112)
+
+	opasignacion  shift 34
+	':'  shift 235
+	'='  shift 36
+	.  error
+
+	op_asignacion  goto 37
+
+
+state 204
 	sentencia_if_funcion : If . condicion_if then cuerpo_If_funcion end_if ';'  (69)
 	sentencia_if_funcion : If . condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if ';'  (70)
 	sentencia_if_funcion : If . condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if error  (71)
@@ -2375,107 +2516,111 @@ state 197
 	sentencia_if_funcion : If . condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion error ';'  (73)
 	sentencia_if_funcion : If . condicion_if cuerpo_If_funcion error  (74)
 
-	id  shift 37
-	cte  shift 38
-	'('  shift 39
-	'-'  shift 40
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'('  shift 41
+	'-'  shift 42
 	.  error
 
-	expresion  goto 41
-	condicion_if  goto 229
-	expresion_relacional  goto 43
-	termino  goto 44
-	factor  goto 45
+	expresion  goto 43
+	condicion_if  goto 236
+	expresion_relacional  goto 45
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 48
 
 
-state 198
+state 205
 	ret_fun : Return . '(' expresion ')' ';'  (50)
 	ret_fun : Return . expresion ')' ';'  (51)
 	ret_fun : Return . '(' expresion ';'  (52)
 	ret_fun : Return . expresion ';'  (53)
 	ret_fun : Return . '(' expresion ')' error  (54)
 
-	id  shift 37
-	cte  shift 38
-	'('  shift 230
-	'-'  shift 40
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'('  shift 237
+	'-'  shift 42
 	.  error
 
-	expresion  goto 231
-	termino  goto 44
-	factor  goto 45
+	expresion  goto 238
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 48
 
 
-state 199
+state 206
 	sentencia_for_funcion : For . '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (91)
 	sentencia_for_funcion : For . id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion error  (92)
 	sentencia_for_funcion : For . id op_asignacion cte ';' condicion_for ';' signo id cola_For_funcion error  (93)
 	sentencia_for_funcion : For . '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For_funcion error  (94)
 
-	id  shift 232
-	'('  shift 233
+	id  shift 239
+	'('  shift 240
 	.  error
 
 
-state 200
+state 207
 	bloque_sentencias_funcion : declarativas .  (68)
 
 	.  reduce 68
 
 
-state 201
+state 208
 	ejecutables_funcion : asignacion .  (56)
 
 	.  reduce 56
 
 
-state 202
+state 209
 	ejecutables_funcion : salida .  (58)
 
 	.  reduce 58
 
 
-state 203
+state 210
 	ejecutables_funcion : sentencia_BREAK . error  (61)
 
-	error  shift 234
+	error  shift 241
 	.  error
 
 
-state 204
+state 211
 	ejecutables_funcion : sentencia_CONTINUE . error  (62)
 
-	error  shift 235
+	error  shift 242
 	.  error
 
 
-state 205
+state 212
 	cola_func : ')' asig_fun '{' cuerpo_fun . '}'  (45)
 
-	'}'  shift 236
+	'}'  shift 243
 	.  error
 
 
-state 206
+state 213
 	ejecutables_funcion : ret_fun .  (60)
 
 	.  reduce 60
 
 
-state 207
+state 214
 	cuerpo_fun : bloque_sentencias_funcion .  (55)
 	bloque_sentencias_funcion : bloque_sentencias_funcion . ejecutables_funcion  (65)
 	bloque_sentencias_funcion : bloque_sentencias_funcion . declarativas  (66)
 
-	id  shift 196
-	If  shift 197
+	id  shift 203
+	If  shift 204
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
@@ -2483,72 +2628,73 @@ state 207
 	'}'  reduce 55
 
 	declaracion_const  goto 19
-	declarativas  goto 237
+	declarativas  goto 244
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 201
-	salida  goto 202
-	sentencia_BREAK  goto 203
-	sentencia_CONTINUE  goto 204
+	asignacion  goto 208
+	salida  goto 209
+	sentencia_BREAK  goto 210
+	sentencia_CONTINUE  goto 211
 	encabezado_func  goto 31
-	ret_fun  goto 206
-	ejecutables_funcion  goto 238
-	sentencia_if_funcion  goto 209
-	sentencia_for_funcion  goto 210
+	ret_fun  goto 213
+	ejecutables_funcion  goto 245
+	sentencia_if_funcion  goto 216
+	sentencia_for_funcion  goto 217
+	etiquetaFor  goto 32
 
 
-state 208
+state 215
 	bloque_sentencias_funcion : ejecutables_funcion .  (67)
 
 	.  reduce 67
 
 
-state 209
+state 216
 	ejecutables_funcion : sentencia_if_funcion .  (57)
 
 	.  reduce 57
 
 
-state 210
+state 217
 	ejecutables_funcion : sentencia_for_funcion .  (59)
 
 	.  reduce 59
 
 
-state 211
+state 218
 	declaracion_func : encabezado_func parametro ',' parametro ',' . parametro cola_func  (48)
 
-	id  shift 77
+	id  shift 80
 	i32  shift 9
 	f32  shift 13
 	.  error
 
-	tipo  goto 79
-	parametro  goto 239
+	tipo  goto 82
+	parametro  goto 246
 
 
-state 212
+state 219
 	declaracion_func : encabezado_func parametro ',' parametro cola_func .  (47)
 
 	.  reduce 47
 
 
-state 213
-	encabezado_For : id ':' For '(' id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For  (152)
+state 220
+	encabezado_For : id ':' For '(' id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For  (154)
 
-	cte  shift 240
+	cte  shift 247
 	.  error
 
 
-state 214
-	asignacion : id op_asignacion expresion_For Else cte ';' .  (111)
+state 221
+	devolverValor : Else cte ';' .  (113)
 
-	.  reduce 111
+	.  reduce 113
 
 
-state 215
-	cuerpo_Else : '{' . bloque_ejecutables '}'  (127)
+state 222
+	cuerpo_Else : '{' . bloque_ejecutables '}'  (129)
 
 	id  shift 4
 	If  shift 5
@@ -2559,46 +2705,47 @@ state 215
 	'('  shift 16
 	.  error
 
-	ejecutables  goto 150
-	bloque_ejecutables  goto 241
+	ejecutables  goto 156
+	bloque_ejecutables  goto 248
 	asignacion  goto 25
 	salida  goto 26
 	sentencia_If  goto 27
 	expresion_For  goto 28
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
-	encabezado_For  goto 32
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
-state 216
-	cuerpo_Else : ejecutables .  (128)
+state 223
+	cuerpo_Else : ejecutables .  (130)
 
-	.  reduce 128
+	.  reduce 130
 
 
-state 217
-	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else . end_if ';'  (120)
-	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else . end_if error  (121)
-	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else . error ';'  (123)
+state 224
+	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else . end_if ';'  (122)
+	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else . end_if error  (123)
+	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else . error ';'  (125)
 
-	error  shift 242
-	end_if  shift 243
+	error  shift 249
+	end_if  shift 250
 	.  error
 
 
-state 218
-	sentencia_If : If condicion_if then cuerpo_If end_if ';' .  (119)
+state 225
+	sentencia_If : If condicion_if then cuerpo_If end_if ';' .  (121)
 
-	.  reduce 119
+	.  reduce 121
 
 
-state 219
+state 226
 	sentencia : sentencia . declarativas  (20)
 	sentencia : sentencia . ejecutables  (21)
-	cuerpo_when : '{' sentencia . '}'  (143)
-	cuerpo_when : '{' sentencia . error  (144)
+	cuerpo_when : '{' sentencia . '}'  (145)
+	cuerpo_when : '{' sentencia . error  (146)
 
-	error  shift 244
+	error  shift 251
 	id  shift 4
 	If  shift 5
 	out  shift 6
@@ -2610,13 +2757,13 @@ state 219
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'}'  shift 245
+	'}'  shift 252
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 70
-	ejecutables  goto 71
+	declarativas  goto 73
+	ejecutables  goto 74
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
@@ -2627,80 +2774,81 @@ state 219
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
 	encabezado_func  goto 31
-	encabezado_For  goto 32
-
-
-state 220
-	cuerpo_when : sentencia '}' . error  (145)
-
-	error  shift 246
-	.  error
-
-
-state 221
-	sentencia_when : when '(' condicion_for then cuerpo_when ';' . error  (141)
-
-	error  shift 247
-	.  error
-
-
-state 222
-	sentencia_when : when '(' condicion_for ')' then cuerpo_when . ';'  (139)
-
-	';'  shift 248
-	.  error
-
-
-state 223
-	sentencia_when : when '(' condicion_for ')' cuerpo_when ';' . error  (142)
-
-	error  shift 249
-	.  error
-
-
-state 224
-	sentencia_when : when condicion_for ')' then cuerpo_when ';' . error  (140)
-
-	error  shift 250
-	.  error
-
-
-state 225
-	encabezado_For : For id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For error  (149)
-	encabezado_For : For id op_asignacion cte ';' condicion_for . ';' signo id cola_For error  (150)
-
-	';'  shift 251
-	.  error
-
-
-state 226
-	encabezado_For : For '(' id op_asignacion cte ';' . condicion_for ';' signo id ')' cola_For  (148)
-
-	id  shift 53
-	.  error
-
-	condicion_for  goto 252
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
 state 227
-	encabezado_For : For '(' id op_asignacion cte ':' . condicion_for ':' signo id ')' cola_For error  (151)
+	cuerpo_when : sentencia '}' . error  (147)
 
-	id  shift 53
+	error  shift 253
 	.  error
-
-	condicion_for  goto 253
 
 
 state 228
-	sentencia_for_funcion : id ':' . For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
-	op_asignacion : ':' . '='  (107)
+	sentencia_when : when '(' condicion_for then cuerpo_when ';' . error  (143)
 
-	For  shift 254
-	'='  shift 83
+	error  shift 254
 	.  error
 
 
 state 229
+	sentencia_when : when '(' condicion_for ')' then cuerpo_when . ';'  (141)
+
+	';'  shift 255
+	.  error
+
+
+state 230
+	sentencia_when : when '(' condicion_for ')' cuerpo_when ';' . error  (144)
+
+	error  shift 256
+	.  error
+
+
+state 231
+	sentencia_when : when condicion_for ')' then cuerpo_when ';' . error  (142)
+
+	error  shift 257
+	.  error
+
+
+state 232
+	encabezado_For : For id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For error  (151)
+	encabezado_For : For id op_asignacion cte ';' condicion_for . ';' signo id cola_For error  (152)
+
+	';'  shift 258
+	.  error
+
+
+state 233
+	encabezado_For : For '(' id op_asignacion cte ';' . condicion_for ';' signo id ')' cola_For  (150)
+
+	id  shift 56
+	.  error
+
+	condicion_for  goto 259
+
+
+state 234
+	encabezado_For : For '(' id op_asignacion cte ':' . condicion_for ':' signo id ')' cola_For error  (153)
+
+	id  shift 56
+	.  error
+
+	condicion_for  goto 260
+
+
+state 235
+	sentencia_for_funcion : id ':' . For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
+	op_asignacion : ':' . '='  (107)
+
+	For  shift 261
+	'='  shift 86
+	.  error
+
+
+state 236
 	sentencia_if_funcion : If condicion_if . then cuerpo_If_funcion end_if ';'  (69)
 	sentencia_if_funcion : If condicion_if . then cuerpo_If_funcion Else cuerpo_Else_funcion end_if ';'  (70)
 	sentencia_if_funcion : If condicion_if . then cuerpo_If_funcion Else cuerpo_Else_funcion end_if error  (71)
@@ -2708,127 +2856,130 @@ state 229
 	sentencia_if_funcion : If condicion_if . then cuerpo_If_funcion Else cuerpo_Else_funcion error ';'  (73)
 	sentencia_if_funcion : If condicion_if . cuerpo_If_funcion error  (74)
 
-	id  shift 196
-	If  shift 197
-	then  shift 255
+	id  shift 203
+	If  shift 204
+	then  shift 262
 	out  shift 6
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
-	'{'  shift 256
+	'{'  shift 263
 	'('  shift 16
 	.  error
 
-	asignacion  goto 201
-	salida  goto 202
-	sentencia_BREAK  goto 203
-	sentencia_CONTINUE  goto 204
-	ret_fun  goto 206
-	ejecutables_funcion  goto 257
-	sentencia_if_funcion  goto 209
-	sentencia_for_funcion  goto 210
-	cuerpo_If_funcion  goto 258
+	asignacion  goto 208
+	salida  goto 209
+	sentencia_BREAK  goto 210
+	sentencia_CONTINUE  goto 211
+	ret_fun  goto 213
+	ejecutables_funcion  goto 264
+	sentencia_if_funcion  goto 216
+	sentencia_for_funcion  goto 217
+	cuerpo_If_funcion  goto 265
+	etiquetaFor  goto 32
 
 
-state 230
+state 237
 	ret_fun : Return '(' . expresion ')' ';'  (50)
 	ret_fun : Return '(' . expresion ';'  (52)
 	ret_fun : Return '(' . expresion ')' error  (54)
 
-	id  shift 37
-	cte  shift 38
-	'-'  shift 40
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'-'  shift 42
 	.  error
 
-	expresion  goto 259
-	termino  goto 44
-	factor  goto 45
+	expresion  goto 266
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 48
 
 
-state 231
+state 238
 	ret_fun : Return expresion . ')' ';'  (51)
 	ret_fun : Return expresion . ';'  (53)
-	expresion : expresion . signo termino  (177)
+	expresion : expresion . signo termino  (182)
 
-	';'  shift 260
-	')'  shift 261
-	'+'  shift 93
-	'-'  shift 94
+	';'  shift 267
+	')'  shift 268
+	'+'  shift 97
+	'-'  shift 98
 	.  error
 
-	signo  goto 97
+	signo  goto 101
 
 
-state 232
+state 239
 	sentencia_for_funcion : For id . op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion error  (92)
 	sentencia_for_funcion : For id . op_asignacion cte ';' condicion_for ';' signo id cola_For_funcion error  (93)
 
-	opasignacion  shift 33
-	':'  shift 115
-	'='  shift 35
+	opasignacion  shift 34
+	':'  shift 119
+	'='  shift 36
 	.  error
 
-	op_asignacion  goto 262
+	op_asignacion  goto 269
 
 
-state 233
+state 240
 	sentencia_for_funcion : For '(' . id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (91)
 	sentencia_for_funcion : For '(' . id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For_funcion error  (94)
 
-	id  shift 263
+	id  shift 270
 	.  error
 
 
-state 234
+state 241
 	ejecutables_funcion : sentencia_BREAK error .  (61)
 
 	.  reduce 61
 
 
-state 235
+state 242
 	ejecutables_funcion : sentencia_CONTINUE error .  (62)
 
 	.  reduce 62
 
 
-state 236
+state 243
 	cola_func : ')' asig_fun '{' cuerpo_fun '}' .  (45)
 
 	.  reduce 45
 
 
-state 237
+state 244
 	bloque_sentencias_funcion : bloque_sentencias_funcion declarativas .  (66)
 
 	.  reduce 66
 
 
-state 238
+state 245
 	bloque_sentencias_funcion : bloque_sentencias_funcion ejecutables_funcion .  (65)
 
 	.  reduce 65
 
 
-state 239
+state 246
 	declaracion_func : encabezado_func parametro ',' parametro ',' parametro . cola_func  (48)
 
-	')'  shift 78
+	')'  shift 81
 	.  error
 
-	cola_func  goto 264
+	cola_func  goto 271
 
 
-state 240
-	encabezado_For : id ':' For '(' id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For  (152)
+state 247
+	encabezado_For : id ':' For '(' id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For  (154)
 
-	';'  shift 265
+	';'  shift 272
 	.  error
 
 
-state 241
+state 248
 	bloque_ejecutables : bloque_ejecutables . ejecutables  (28)
-	cuerpo_Else : '{' bloque_ejecutables . '}'  (127)
+	cuerpo_Else : '{' bloque_ejecutables . '}'  (129)
 
 	id  shift 4
 	If  shift 5
@@ -2836,401 +2987,405 @@ state 241
 	BREAK  shift 8
 	For  shift 11
 	CONTINUE  shift 12
-	'}'  shift 266
+	'}'  shift 273
 	'('  shift 16
 	.  error
 
-	ejecutables  goto 183
+	ejecutables  goto 190
 	asignacion  goto 25
 	salida  goto 26
 	sentencia_If  goto 27
 	expresion_For  goto 28
 	sentencia_BREAK  goto 29
 	sentencia_CONTINUE  goto 30
-	encabezado_For  goto 32
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
 
 
-state 242
-	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else error . ';'  (123)
+state 249
+	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else error . ';'  (125)
 
-	';'  shift 267
+	';'  shift 274
 	.  error
 
 
-state 243
-	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else end_if . ';'  (120)
-	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else end_if . error  (121)
+state 250
+	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else end_if . ';'  (122)
+	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else end_if . error  (123)
 
-	error  shift 268
-	';'  shift 269
+	error  shift 275
+	';'  shift 276
 	.  error
 
 
-state 244
-	cuerpo_when : '{' sentencia error .  (144)
+state 251
+	cuerpo_when : '{' sentencia error .  (146)
 
-	.  reduce 144
-
-
-state 245
-	cuerpo_when : '{' sentencia '}' .  (143)
-
-	.  reduce 143
+	.  reduce 146
 
 
-state 246
-	cuerpo_when : sentencia '}' error .  (145)
+state 252
+	cuerpo_when : '{' sentencia '}' .  (145)
 
 	.  reduce 145
 
 
-state 247
-	sentencia_when : when '(' condicion_for then cuerpo_when ';' error .  (141)
+state 253
+	cuerpo_when : sentencia '}' error .  (147)
+
+	.  reduce 147
+
+
+state 254
+	sentencia_when : when '(' condicion_for then cuerpo_when ';' error .  (143)
+
+	.  reduce 143
+
+
+state 255
+	sentencia_when : when '(' condicion_for ')' then cuerpo_when ';' .  (141)
 
 	.  reduce 141
 
 
-state 248
-	sentencia_when : when '(' condicion_for ')' then cuerpo_when ';' .  (139)
+state 256
+	sentencia_when : when '(' condicion_for ')' cuerpo_when ';' error .  (144)
 
-	.  reduce 139
+	.  reduce 144
 
 
-state 249
-	sentencia_when : when '(' condicion_for ')' cuerpo_when ';' error .  (142)
+state 257
+	sentencia_when : when condicion_for ')' then cuerpo_when ';' error .  (142)
 
 	.  reduce 142
 
 
-state 250
-	sentencia_when : when condicion_for ')' then cuerpo_when ';' error .  (140)
+state 258
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For error  (151)
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' . signo id cola_For error  (152)
 
-	.  reduce 140
-
-
-state 251
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For error  (149)
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' . signo id cola_For error  (150)
-
-	'+'  shift 93
-	'-'  shift 94
+	'+'  shift 97
+	'-'  shift 98
 	.  error
 
-	signo  goto 270
+	signo  goto 277
 
 
-state 252
-	encabezado_For : For '(' id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For  (148)
+state 259
+	encabezado_For : For '(' id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For  (150)
 
-	';'  shift 271
+	';'  shift 278
 	.  error
 
 
-state 253
-	encabezado_For : For '(' id op_asignacion cte ':' condicion_for . ':' signo id ')' cola_For error  (151)
+state 260
+	encabezado_For : For '(' id op_asignacion cte ':' condicion_for . ':' signo id ')' cola_For error  (153)
 
-	':'  shift 272
+	':'  shift 279
 	.  error
 
 
-state 254
+state 261
 	sentencia_for_funcion : id ':' For . '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
 
-	'('  shift 273
+	'('  shift 280
 	.  error
 
 
-state 255
+state 262
 	sentencia_if_funcion : If condicion_if then . cuerpo_If_funcion end_if ';'  (69)
 	sentencia_if_funcion : If condicion_if then . cuerpo_If_funcion Else cuerpo_Else_funcion end_if ';'  (70)
 	sentencia_if_funcion : If condicion_if then . cuerpo_If_funcion Else cuerpo_Else_funcion end_if error  (71)
 	sentencia_if_funcion : If condicion_if then . cuerpo_If_funcion error  (72)
 	sentencia_if_funcion : If condicion_if then . cuerpo_If_funcion Else cuerpo_Else_funcion error ';'  (73)
 
-	id  shift 196
-	If  shift 197
+	id  shift 203
+	If  shift 204
 	out  shift 6
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
-	'{'  shift 256
+	'{'  shift 263
 	'('  shift 16
 	.  error
 
-	asignacion  goto 201
-	salida  goto 202
-	sentencia_BREAK  goto 203
-	sentencia_CONTINUE  goto 204
-	ret_fun  goto 206
-	ejecutables_funcion  goto 257
-	sentencia_if_funcion  goto 209
-	sentencia_for_funcion  goto 210
-	cuerpo_If_funcion  goto 274
+	asignacion  goto 208
+	salida  goto 209
+	sentencia_BREAK  goto 210
+	sentencia_CONTINUE  goto 211
+	ret_fun  goto 213
+	ejecutables_funcion  goto 264
+	sentencia_if_funcion  goto 216
+	sentencia_for_funcion  goto 217
+	cuerpo_If_funcion  goto 281
+	etiquetaFor  goto 32
 
 
-state 256
+state 263
 	cuerpo_If_funcion : '{' . bloque_sentencias_ejecutables_funcion '}'  (75)
 
-	id  shift 196
-	If  shift 197
+	id  shift 203
+	If  shift 204
 	out  shift 6
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	'('  shift 16
 	.  error
 
-	asignacion  goto 201
-	salida  goto 202
-	sentencia_BREAK  goto 203
-	sentencia_CONTINUE  goto 204
-	ret_fun  goto 206
-	ejecutables_funcion  goto 275
-	sentencia_if_funcion  goto 209
-	sentencia_for_funcion  goto 210
-	bloque_sentencias_ejecutables_funcion  goto 276
+	asignacion  goto 208
+	salida  goto 209
+	sentencia_BREAK  goto 210
+	sentencia_CONTINUE  goto 211
+	ret_fun  goto 213
+	ejecutables_funcion  goto 282
+	sentencia_if_funcion  goto 216
+	sentencia_for_funcion  goto 217
+	bloque_sentencias_ejecutables_funcion  goto 283
+	etiquetaFor  goto 32
 
 
-state 257
+state 264
 	cuerpo_If_funcion : ejecutables_funcion .  (76)
 
 	.  reduce 76
 
 
-state 258
+state 265
 	sentencia_if_funcion : If condicion_if cuerpo_If_funcion . error  (74)
 
-	error  shift 277
+	error  shift 284
 	.  error
 
 
-state 259
+state 266
 	ret_fun : Return '(' expresion . ')' ';'  (50)
 	ret_fun : Return '(' expresion . ';'  (52)
 	ret_fun : Return '(' expresion . ')' error  (54)
-	expresion : expresion . signo termino  (177)
+	expresion : expresion . signo termino  (182)
 
-	';'  shift 278
-	')'  shift 279
-	'+'  shift 93
-	'-'  shift 94
+	';'  shift 285
+	')'  shift 286
+	'+'  shift 97
+	'-'  shift 98
 	.  error
 
-	signo  goto 97
+	signo  goto 101
 
 
-state 260
+state 267
 	ret_fun : Return expresion ';' .  (53)
 
 	.  reduce 53
 
 
-state 261
+state 268
 	ret_fun : Return expresion ')' . ';'  (51)
 
-	';'  shift 280
+	';'  shift 287
 	.  error
 
 
-state 262
+state 269
 	sentencia_for_funcion : For id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For_funcion error  (92)
 	sentencia_for_funcion : For id op_asignacion . cte ';' condicion_for ';' signo id cola_For_funcion error  (93)
 
-	cte  shift 281
+	cte  shift 288
 	.  error
 
 
-state 263
+state 270
 	sentencia_for_funcion : For '(' id . op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (91)
 	sentencia_for_funcion : For '(' id . op_asignacion cte ':' condicion_for ':' signo id ')' cola_For_funcion error  (94)
 
-	opasignacion  shift 33
-	':'  shift 115
-	'='  shift 35
+	opasignacion  shift 34
+	':'  shift 119
+	'='  shift 36
 	.  error
 
-	op_asignacion  goto 282
+	op_asignacion  goto 289
 
 
-state 264
+state 271
 	declaracion_func : encabezado_func parametro ',' parametro ',' parametro cola_func .  (48)
 
 	.  reduce 48
 
 
-state 265
-	encabezado_For : id ':' For '(' id op_asignacion cte ';' . condicion_for ';' signo id ')' cola_For  (152)
+state 272
+	encabezado_For : id ':' For '(' id op_asignacion cte ';' . condicion_for ';' signo id ')' cola_For  (154)
 
-	id  shift 53
+	id  shift 56
 	.  error
 
-	condicion_for  goto 283
+	condicion_for  goto 290
 
 
-state 266
-	cuerpo_Else : '{' bloque_ejecutables '}' .  (127)
+state 273
+	cuerpo_Else : '{' bloque_ejecutables '}' .  (129)
 
-	.  reduce 127
+	.  reduce 129
 
 
-state 267
-	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else error ';' .  (123)
+state 274
+	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else error ';' .  (125)
+
+	.  reduce 125
+
+
+state 275
+	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else end_if error .  (123)
 
 	.  reduce 123
 
 
-state 268
-	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else end_if error .  (121)
+state 276
+	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else end_if ';' .  (122)
 
-	.  reduce 121
-
-
-state 269
-	sentencia_If : If condicion_if then cuerpo_If Else cuerpo_Else end_if ';' .  (120)
-
-	.  reduce 120
+	.  reduce 122
 
 
-state 270
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For error  (149)
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo . id cola_For error  (150)
+state 277
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For error  (151)
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo . id cola_For error  (152)
 
-	id  shift 284
+	id  shift 291
 	.  error
 
 
-state 271
-	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For  (148)
+state 278
+	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For  (150)
 
-	'+'  shift 93
-	'-'  shift 94
+	'+'  shift 97
+	'-'  shift 98
 	.  error
 
-	signo  goto 285
+	signo  goto 292
 
 
-state 272
-	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' . signo id ')' cola_For error  (151)
+state 279
+	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' . signo id ')' cola_For error  (153)
 
-	'+'  shift 93
-	'-'  shift 94
+	'+'  shift 97
+	'-'  shift 98
 	.  error
 
-	signo  goto 286
+	signo  goto 293
 
 
-state 273
+state 280
 	sentencia_for_funcion : id ':' For '(' . id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
 
-	id  shift 287
+	id  shift 294
 	.  error
 
 
-state 274
+state 281
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion . end_if ';'  (69)
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion . Else cuerpo_Else_funcion end_if ';'  (70)
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion . Else cuerpo_Else_funcion end_if error  (71)
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion . error  (72)
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion . Else cuerpo_Else_funcion error ';'  (73)
 
-	error  shift 288
-	Else  shift 289
-	end_if  shift 290
+	error  shift 295
+	Else  shift 296
+	end_if  shift 297
 	.  error
 
 
-state 275
+state 282
 	bloque_sentencias_ejecutables_funcion : ejecutables_funcion .  (64)
 
 	.  reduce 64
 
 
-state 276
+state 283
 	bloque_sentencias_ejecutables_funcion : bloque_sentencias_ejecutables_funcion . ejecutables_funcion  (63)
 	cuerpo_If_funcion : '{' bloque_sentencias_ejecutables_funcion . '}'  (75)
 
-	id  shift 196
-	If  shift 197
+	id  shift 203
+	If  shift 204
 	out  shift 6
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
-	'}'  shift 291
+	'}'  shift 298
 	'('  shift 16
 	.  error
 
-	asignacion  goto 201
-	salida  goto 202
-	sentencia_BREAK  goto 203
-	sentencia_CONTINUE  goto 204
-	ret_fun  goto 206
-	ejecutables_funcion  goto 292
-	sentencia_if_funcion  goto 209
-	sentencia_for_funcion  goto 210
+	asignacion  goto 208
+	salida  goto 209
+	sentencia_BREAK  goto 210
+	sentencia_CONTINUE  goto 211
+	ret_fun  goto 213
+	ejecutables_funcion  goto 299
+	sentencia_if_funcion  goto 216
+	sentencia_for_funcion  goto 217
+	etiquetaFor  goto 32
 
 
-state 277
+state 284
 	sentencia_if_funcion : If condicion_if cuerpo_If_funcion error .  (74)
 
 	.  reduce 74
 
 
-state 278
+state 285
 	ret_fun : Return '(' expresion ';' .  (52)
 
 	.  reduce 52
 
 
-state 279
+state 286
 	ret_fun : Return '(' expresion ')' . ';'  (50)
 	ret_fun : Return '(' expresion ')' . error  (54)
 
-	error  shift 293
-	';'  shift 294
+	error  shift 300
+	';'  shift 301
 	.  error
 
 
-state 280
+state 287
 	ret_fun : Return expresion ')' ';' .  (51)
 
 	.  reduce 51
 
 
-state 281
+state 288
 	sentencia_for_funcion : For id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For_funcion error  (92)
 	sentencia_for_funcion : For id op_asignacion cte . ';' condicion_for ';' signo id cola_For_funcion error  (93)
 
-	';'  shift 295
+	';'  shift 302
 	.  error
 
 
-state 282
+state 289
 	sentencia_for_funcion : For '(' id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For_funcion  (91)
 	sentencia_for_funcion : For '(' id op_asignacion . cte ':' condicion_for ':' signo id ')' cola_For_funcion error  (94)
 
-	cte  shift 296
+	cte  shift 303
 	.  error
 
 
-state 283
-	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For  (152)
+state 290
+	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For  (154)
 
-	';'  shift 297
+	';'  shift 304
 	.  error
 
 
-state 284
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For error  (149)
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id . cola_For error  (150)
+state 291
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For error  (151)
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id . cola_For error  (152)
 
 	id  shift 4
-	If  shift 298
+	If  shift 305
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
@@ -3238,418 +3393,425 @@ state 284
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 299
+	'{'  shift 306
 	'('  shift 16
-	')'  shift 300
+	')'  shift 307
 	.  error
 
 	declaracion_const  goto 19
-	sentencias_For  goto 301
-	declarativas  goto 302
+	sentencias_For  goto 308
+	declarativas  goto 309
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
 	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	cola_For  goto 310
-	encabezado_For  goto 32
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+	cola_For  goto 317
 
 
-state 285
-	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For  (148)
+state 292
+	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For  (150)
 
-	id  shift 311
+	id  shift 318
 	.  error
 
 
-state 286
-	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo . id ')' cola_For error  (151)
+state 293
+	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo . id ')' cola_For error  (153)
 
-	id  shift 312
+	id  shift 319
 	.  error
 
 
-state 287
+state 294
 	sentencia_for_funcion : id ':' For '(' id . op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
 
-	opasignacion  shift 33
-	':'  shift 115
-	'='  shift 35
+	opasignacion  shift 34
+	':'  shift 119
+	'='  shift 36
 	.  error
 
-	op_asignacion  goto 313
+	op_asignacion  goto 320
 
 
-state 288
+state 295
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion error .  (72)
 
 	.  reduce 72
 
 
-state 289
+state 296
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else . cuerpo_Else_funcion end_if ';'  (70)
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else . cuerpo_Else_funcion end_if error  (71)
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else . cuerpo_Else_funcion error ';'  (73)
 
-	id  shift 196
-	If  shift 197
+	id  shift 203
+	If  shift 204
 	out  shift 6
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
-	'{'  shift 314
+	'{'  shift 321
 	'('  shift 16
 	.  error
 
-	asignacion  goto 201
-	salida  goto 202
-	sentencia_BREAK  goto 203
-	sentencia_CONTINUE  goto 204
-	ret_fun  goto 206
-	ejecutables_funcion  goto 315
-	sentencia_if_funcion  goto 209
-	sentencia_for_funcion  goto 210
-	cuerpo_Else_funcion  goto 316
+	asignacion  goto 208
+	salida  goto 209
+	sentencia_BREAK  goto 210
+	sentencia_CONTINUE  goto 211
+	ret_fun  goto 213
+	ejecutables_funcion  goto 322
+	sentencia_if_funcion  goto 216
+	sentencia_for_funcion  goto 217
+	cuerpo_Else_funcion  goto 323
+	etiquetaFor  goto 32
 
 
-state 290
+state 297
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion end_if . ';'  (69)
 
-	';'  shift 317
+	';'  shift 324
 	.  error
 
 
-state 291
+state 298
 	cuerpo_If_funcion : '{' bloque_sentencias_ejecutables_funcion '}' .  (75)
 
 	.  reduce 75
 
 
-state 292
+state 299
 	bloque_sentencias_ejecutables_funcion : bloque_sentencias_ejecutables_funcion ejecutables_funcion .  (63)
 
 	.  reduce 63
 
 
-state 293
+state 300
 	ret_fun : Return '(' expresion ')' error .  (54)
 
 	.  reduce 54
 
 
-state 294
+state 301
 	ret_fun : Return '(' expresion ')' ';' .  (50)
 
 	.  reduce 50
 
 
-state 295
+state 302
 	sentencia_for_funcion : For id op_asignacion cte ';' . condicion_for ';' signo id ')' cola_For_funcion error  (92)
 	sentencia_for_funcion : For id op_asignacion cte ';' . condicion_for ';' signo id cola_For_funcion error  (93)
 
-	id  shift 53
+	id  shift 56
 	.  error
 
-	condicion_for  goto 318
-
-
-state 296
-	sentencia_for_funcion : For '(' id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For_funcion  (91)
-	sentencia_for_funcion : For '(' id op_asignacion cte . ':' condicion_for ':' signo id ')' cola_For_funcion error  (94)
-
-	';'  shift 319
-	':'  shift 320
-	.  error
-
-
-state 297
-	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For  (152)
-
-	'+'  shift 93
-	'-'  shift 94
-	.  error
-
-	signo  goto 321
-
-
-state 298
-	sentencia_if_for : If . condicion_if then cuerpo_If_for end_if ';'  (129)
-	sentencia_if_for : If . condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if ';'  (130)
-	sentencia_if_for : If . condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if error  (131)
-	sentencia_if_for : If . condicion_if then cuerpo_If_for error  (132)
-	sentencia_if_for : If . condicion_if then cuerpo_If_for Else cuerpo_Else_for error ';'  (133)
-	sentencia_if_for : If . condicion_if cuerpo_If_for error  (134)
-
-	id  shift 37
-	cte  shift 38
-	'('  shift 39
-	'-'  shift 40
-	.  error
-
-	expresion  goto 41
-	condicion_if  goto 322
-	expresion_relacional  goto 43
-	termino  goto 44
-	factor  goto 45
-
-
-state 299
-	cola_For : '{' . bloque_sentencias_For '}' ';'  (146)
-
-	id  shift 4
-	If  shift 298
-	out  shift 6
-	fun  shift 7
-	Return  shift 198
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	bloque_sentencias_For  goto 323
-	sentencias_For  goto 324
-	declarativas  goto 302
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
-	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	encabezado_For  goto 32
-
-
-state 300
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id ')' . cola_For error  (149)
-
-	id  shift 4
-	If  shift 298
-	out  shift 6
-	fun  shift 7
-	Return  shift 198
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'{'  shift 299
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	sentencias_For  goto 301
-	declarativas  goto 302
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
-	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	cola_For  goto 325
-	encabezado_For  goto 32
-
-
-state 301
-	cola_For : sentencias_For .  (147)
-
-	.  reduce 147
-
-
-state 302
-	sentencias_For : declarativas . error  (162)
-
-	error  shift 326
-	.  error
+	condicion_for  goto 325
 
 
 state 303
-	sentencias_For : asignacion .  (156)
+	sentencia_for_funcion : For '(' id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For_funcion  (91)
+	sentencia_for_funcion : For '(' id op_asignacion cte . ':' condicion_for ':' signo id ')' cola_For_funcion error  (94)
 
-	.  reduce 156
+	';'  shift 326
+	':'  shift 327
+	.  error
 
 
 state 304
-	sentencias_For : salida .  (157)
+	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For  (154)
 
-	.  reduce 157
+	'+'  shift 97
+	'-'  shift 98
+	.  error
+
+	signo  goto 328
 
 
 state 305
-	sentencias_For : expresion_For .  (158)
+	sentencia_if_for : If . condicion_if then cuerpo_If_for end_if ';'  (131)
+	sentencia_if_for : If . condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if ';'  (132)
+	sentencia_if_for : If . condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if error  (133)
+	sentencia_if_for : If . condicion_if then cuerpo_If_for error  (134)
+	sentencia_if_for : If . condicion_if then cuerpo_If_for Else cuerpo_Else_for error ';'  (135)
+	sentencia_if_for : If . condicion_if cuerpo_If_for error  (136)
+
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'('  shift 41
+	'-'  shift 42
+	.  error
+
+	expresion  goto 43
+	condicion_if  goto 329
+	expresion_relacional  goto 45
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 48
+
+
+state 306
+	cola_For : '{' . bloque_sentencias_For '}' ';'  (148)
+
+	id  shift 4
+	If  shift 305
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'('  shift 16
+	.  error
+
+	declaracion_const  goto 19
+	bloque_sentencias_For  goto 330
+	sentencias_For  goto 331
+	declarativas  goto 309
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
+	encabezado_func  goto 31
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+
+
+state 307
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id ')' . cola_For error  (151)
+
+	id  shift 4
+	If  shift 305
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 306
+	'('  shift 16
+	.  error
+
+	declaracion_const  goto 19
+	sentencias_For  goto 308
+	declarativas  goto 309
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
+	encabezado_func  goto 31
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+	cola_For  goto 332
+
+
+state 308
+	cola_For : sentencias_For .  (149)
+
+	.  reduce 149
+
+
+state 309
+	sentencias_For : declarativas . error  (164)
+
+	error  shift 333
+	.  error
+
+
+state 310
+	sentencias_For : asignacion .  (158)
 
 	.  reduce 158
 
 
-state 306
-	sentencias_For : sentencia_BREAK .  (160)
-
-	.  reduce 160
-
-
-state 307
-	sentencias_For : sentencia_CONTINUE .  (161)
-
-	.  reduce 161
-
-
-state 308
-	sentencias_For : ret_fun . error  (163)
-
-	error  shift 327
-	.  error
-
-
-state 309
-	sentencias_For : sentencia_if_for .  (159)
+state 311
+	sentencias_For : salida .  (159)
 
 	.  reduce 159
 
 
-state 310
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id cola_For . error  (150)
-
-	error  shift 328
-	.  error
-
-
-state 311
-	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For  (148)
-
-	')'  shift 329
-	.  error
-
-
 state 312
-	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo id . ')' cola_For error  (151)
+	sentencias_For : expresion_For .  (160)
 
-	')'  shift 330
-	.  error
+	.  reduce 160
 
 
 state 313
-	sentencia_for_funcion : id ':' For '(' id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
+	sentencias_For : sentencia_BREAK .  (162)
 
-	cte  shift 331
-	.  error
+	.  reduce 162
 
 
 state 314
+	sentencias_For : sentencia_CONTINUE .  (163)
+
+	.  reduce 163
+
+
+state 315
+	sentencias_For : ret_fun . error  (165)
+
+	error  shift 334
+	.  error
+
+
+state 316
+	sentencias_For : sentencia_if_for .  (161)
+
+	.  reduce 161
+
+
+state 317
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id cola_For . error  (152)
+
+	error  shift 335
+	.  error
+
+
+state 318
+	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For  (150)
+
+	')'  shift 336
+	.  error
+
+
+state 319
+	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo id . ')' cola_For error  (153)
+
+	')'  shift 337
+	.  error
+
+
+state 320
+	sentencia_for_funcion : id ':' For '(' id op_asignacion . cte ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
+
+	cte  shift 338
+	.  error
+
+
+state 321
 	cuerpo_Else_funcion : '{' . bloque_sentencias_ejecutables_funcion '}'  (77)
 
-	id  shift 196
-	If  shift 197
+	id  shift 203
+	If  shift 204
 	out  shift 6
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	'('  shift 16
 	.  error
 
-	asignacion  goto 201
-	salida  goto 202
-	sentencia_BREAK  goto 203
-	sentencia_CONTINUE  goto 204
-	ret_fun  goto 206
-	ejecutables_funcion  goto 275
-	sentencia_if_funcion  goto 209
-	sentencia_for_funcion  goto 210
-	bloque_sentencias_ejecutables_funcion  goto 332
+	asignacion  goto 208
+	salida  goto 209
+	sentencia_BREAK  goto 210
+	sentencia_CONTINUE  goto 211
+	ret_fun  goto 213
+	ejecutables_funcion  goto 282
+	sentencia_if_funcion  goto 216
+	sentencia_for_funcion  goto 217
+	bloque_sentencias_ejecutables_funcion  goto 339
+	etiquetaFor  goto 32
 
 
-state 315
+state 322
 	cuerpo_Else_funcion : ejecutables_funcion .  (78)
 
 	.  reduce 78
 
 
-state 316
+state 323
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion . end_if ';'  (70)
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion . end_if error  (71)
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion . error ';'  (73)
 
-	error  shift 333
-	end_if  shift 334
+	error  shift 340
+	end_if  shift 341
 	.  error
 
 
-state 317
+state 324
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion end_if ';' .  (69)
 
 	.  reduce 69
 
 
-state 318
+state 325
 	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For_funcion error  (92)
 	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for . ';' signo id cola_For_funcion error  (93)
 
-	';'  shift 335
+	';'  shift 342
 	.  error
 
 
-state 319
+state 326
 	sentencia_for_funcion : For '(' id op_asignacion cte ';' . condicion_for ';' signo id ')' cola_For_funcion  (91)
 
-	id  shift 53
+	id  shift 56
 	.  error
 
-	condicion_for  goto 336
+	condicion_for  goto 343
 
 
-state 320
+state 327
 	sentencia_for_funcion : For '(' id op_asignacion cte ':' . condicion_for ':' signo id ')' cola_For_funcion error  (94)
 
-	id  shift 53
+	id  shift 56
 	.  error
 
-	condicion_for  goto 337
+	condicion_for  goto 344
 
 
-state 321
-	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For  (152)
+state 328
+	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For  (154)
 
-	id  shift 338
+	id  shift 345
 	.  error
 
 
-state 322
-	sentencia_if_for : If condicion_if . then cuerpo_If_for end_if ';'  (129)
-	sentencia_if_for : If condicion_if . then cuerpo_If_for Else cuerpo_Else_for end_if ';'  (130)
-	sentencia_if_for : If condicion_if . then cuerpo_If_for Else cuerpo_Else_for end_if error  (131)
-	sentencia_if_for : If condicion_if . then cuerpo_If_for error  (132)
-	sentencia_if_for : If condicion_if . then cuerpo_If_for Else cuerpo_Else_for error ';'  (133)
-	sentencia_if_for : If condicion_if . cuerpo_If_for error  (134)
+state 329
+	sentencia_if_for : If condicion_if . then cuerpo_If_for end_if ';'  (131)
+	sentencia_if_for : If condicion_if . then cuerpo_If_for Else cuerpo_Else_for end_if ';'  (132)
+	sentencia_if_for : If condicion_if . then cuerpo_If_for Else cuerpo_Else_for end_if error  (133)
+	sentencia_if_for : If condicion_if . then cuerpo_If_for error  (134)
+	sentencia_if_for : If condicion_if . then cuerpo_If_for Else cuerpo_Else_for error ';'  (135)
+	sentencia_if_for : If condicion_if . cuerpo_If_for error  (136)
 
 	id  shift 4
-	If  shift 298
-	then  shift 339
+	If  shift 305
+	then  shift 346
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
@@ -3657,37 +3819,38 @@ state 322
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 340
+	'{'  shift 347
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	sentencias_For  goto 341
-	declarativas  goto 302
+	sentencias_For  goto 348
+	declarativas  goto 309
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
 	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	cuerpo_If_for  goto 342
-	encabezado_For  goto 32
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+	cuerpo_If_for  goto 349
 
 
-state 323
+state 330
 	bloque_sentencias_For : bloque_sentencias_For . sentencias_For  (17)
-	cola_For : '{' bloque_sentencias_For . '}' ';'  (146)
+	cola_For : '{' bloque_sentencias_For . '}' ';'  (148)
 
 	id  shift 4
-	If  shift 298
+	If  shift 305
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
@@ -3695,581 +3858,461 @@ state 323
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'}'  shift 343
+	'}'  shift 350
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	sentencias_For  goto 344
-	declarativas  goto 302
+	sentencias_For  goto 351
+	declarativas  goto 309
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
 	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	encabezado_For  goto 32
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
 
 
-state 324
+state 331
 	bloque_sentencias_For : sentencias_For .  (16)
 
 	.  reduce 16
 
 
-state 325
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For . error  (149)
-
-	error  shift 345
-	.  error
-
-
-state 326
-	sentencias_For : declarativas error .  (162)
-
-	.  reduce 162
-
-
-state 327
-	sentencias_For : ret_fun error .  (163)
-
-	.  reduce 163
-
-
-state 328
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id cola_For error .  (150)
-
-	.  reduce 150
-
-
-state 329
-	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' . cola_For  (148)
-
-	id  shift 4
-	If  shift 298
-	out  shift 6
-	fun  shift 7
-	Return  shift 198
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'{'  shift 299
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	sentencias_For  goto 301
-	declarativas  goto 302
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
-	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	cola_For  goto 346
-	encabezado_For  goto 32
-
-
-state 330
-	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' . cola_For error  (151)
-
-	id  shift 4
-	If  shift 298
-	out  shift 6
-	fun  shift 7
-	Return  shift 198
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'{'  shift 299
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	sentencias_For  goto 301
-	declarativas  goto 302
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
-	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	cola_For  goto 347
-	encabezado_For  goto 32
-
-
-state 331
-	sentencia_for_funcion : id ':' For '(' id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
-
-	';'  shift 348
-	.  error
-
-
 state 332
-	bloque_sentencias_ejecutables_funcion : bloque_sentencias_ejecutables_funcion . ejecutables_funcion  (63)
-	cuerpo_Else_funcion : '{' bloque_sentencias_ejecutables_funcion . '}'  (77)
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For . error  (151)
 
-	id  shift 196
-	If  shift 197
-	out  shift 6
-	Return  shift 198
-	BREAK  shift 8
-	For  shift 199
-	CONTINUE  shift 12
-	'}'  shift 349
-	'('  shift 16
+	error  shift 352
 	.  error
-
-	asignacion  goto 201
-	salida  goto 202
-	sentencia_BREAK  goto 203
-	sentencia_CONTINUE  goto 204
-	ret_fun  goto 206
-	ejecutables_funcion  goto 292
-	sentencia_if_funcion  goto 209
-	sentencia_for_funcion  goto 210
 
 
 state 333
-	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion error . ';'  (73)
+	sentencias_For : declarativas error .  (164)
 
-	';'  shift 350
-	.  error
+	.  reduce 164
 
 
 state 334
-	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if . ';'  (70)
-	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if . error  (71)
+	sentencias_For : ret_fun error .  (165)
 
-	error  shift 351
-	';'  shift 352
-	.  error
+	.  reduce 165
 
 
 state 335
-	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For_funcion error  (92)
-	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' . signo id cola_For_funcion error  (93)
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id cola_For error .  (152)
 
-	'+'  shift 93
-	'-'  shift 94
-	.  error
-
-	signo  goto 353
+	.  reduce 152
 
 
 state 336
-	sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For_funcion  (91)
+	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' . cola_For  (150)
 
-	';'  shift 354
+	id  shift 4
+	If  shift 305
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 306
+	'('  shift 16
 	.  error
+
+	declaracion_const  goto 19
+	sentencias_For  goto 308
+	declarativas  goto 309
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
+	encabezado_func  goto 31
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+	cola_For  goto 353
 
 
 state 337
-	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for . ':' signo id ')' cola_For_funcion error  (94)
+	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' . cola_For error  (153)
 
-	':'  shift 355
+	id  shift 4
+	If  shift 305
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 306
+	'('  shift 16
 	.  error
+
+	declaracion_const  goto 19
+	sentencias_For  goto 308
+	declarativas  goto 309
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
+	encabezado_func  goto 31
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+	cola_For  goto 354
 
 
 state 338
-	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For  (152)
+	sentencia_for_funcion : id ':' For '(' id op_asignacion cte . ';' condicion_for ';' signo id ')' cola_For_funcion  (95)
 
-	')'  shift 356
+	';'  shift 355
 	.  error
 
 
 state 339
-	sentencia_if_for : If condicion_if then . cuerpo_If_for end_if ';'  (129)
-	sentencia_if_for : If condicion_if then . cuerpo_If_for Else cuerpo_Else_for end_if ';'  (130)
-	sentencia_if_for : If condicion_if then . cuerpo_If_for Else cuerpo_Else_for end_if error  (131)
-	sentencia_if_for : If condicion_if then . cuerpo_If_for error  (132)
-	sentencia_if_for : If condicion_if then . cuerpo_If_for Else cuerpo_Else_for error ';'  (133)
+	bloque_sentencias_ejecutables_funcion : bloque_sentencias_ejecutables_funcion . ejecutables_funcion  (63)
+	cuerpo_Else_funcion : '{' bloque_sentencias_ejecutables_funcion . '}'  (77)
 
-	id  shift 4
-	If  shift 298
+	id  shift 203
+	If  shift 204
 	out  shift 6
-	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
+	For  shift 206
 	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'{'  shift 340
+	'}'  shift 356
 	'('  shift 16
 	.  error
 
-	declaracion_const  goto 19
-	sentencias_For  goto 341
-	declarativas  goto 302
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
-	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	cuerpo_If_for  goto 357
-	encabezado_For  goto 32
+	asignacion  goto 208
+	salida  goto 209
+	sentencia_BREAK  goto 210
+	sentencia_CONTINUE  goto 211
+	ret_fun  goto 213
+	ejecutables_funcion  goto 299
+	sentencia_if_funcion  goto 216
+	sentencia_for_funcion  goto 217
+	etiquetaFor  goto 32
 
 
 state 340
-	cuerpo_If_for : '{' . bloque_sentencias_For '}'  (135)
+	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion error . ';'  (73)
 
-	id  shift 4
-	If  shift 298
-	out  shift 6
-	fun  shift 7
-	Return  shift 198
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'('  shift 16
+	';'  shift 357
 	.  error
-
-	declaracion_const  goto 19
-	bloque_sentencias_For  goto 358
-	sentencias_For  goto 324
-	declarativas  goto 302
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
-	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	encabezado_For  goto 32
 
 
 state 341
-	cuerpo_If_for : sentencias_For .  (136)
+	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if . ';'  (70)
+	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if . error  (71)
 
-	.  reduce 136
-
-
-state 342
-	sentencia_if_for : If condicion_if cuerpo_If_for . error  (134)
-
-	error  shift 359
+	error  shift 358
+	';'  shift 359
 	.  error
 
 
-state 343
-	cola_For : '{' bloque_sentencias_For '}' . ';'  (146)
+state 342
+	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For_funcion error  (92)
+	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' . signo id cola_For_funcion error  (93)
 
-	';'  shift 360
+	'+'  shift 97
+	'-'  shift 98
+	.  error
+
+	signo  goto 360
+
+
+state 343
+	sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For_funcion  (91)
+
+	';'  shift 361
 	.  error
 
 
 state 344
+	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for . ':' signo id ')' cola_For_funcion error  (94)
+
+	':'  shift 362
+	.  error
+
+
+state 345
+	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For  (154)
+
+	')'  shift 363
+	.  error
+
+
+state 346
+	sentencia_if_for : If condicion_if then . cuerpo_If_for end_if ';'  (131)
+	sentencia_if_for : If condicion_if then . cuerpo_If_for Else cuerpo_Else_for end_if ';'  (132)
+	sentencia_if_for : If condicion_if then . cuerpo_If_for Else cuerpo_Else_for end_if error  (133)
+	sentencia_if_for : If condicion_if then . cuerpo_If_for error  (134)
+	sentencia_if_for : If condicion_if then . cuerpo_If_for Else cuerpo_Else_for error ';'  (135)
+
+	id  shift 4
+	If  shift 305
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 347
+	'('  shift 16
+	.  error
+
+	declaracion_const  goto 19
+	sentencias_For  goto 348
+	declarativas  goto 309
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
+	encabezado_func  goto 31
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+	cuerpo_If_for  goto 364
+
+
+state 347
+	cuerpo_If_for : '{' . bloque_sentencias_For '}'  (137)
+
+	id  shift 4
+	If  shift 305
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'('  shift 16
+	.  error
+
+	declaracion_const  goto 19
+	bloque_sentencias_For  goto 365
+	sentencias_For  goto 331
+	declarativas  goto 309
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
+	encabezado_func  goto 31
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+
+
+state 348
+	cuerpo_If_for : sentencias_For .  (138)
+
+	.  reduce 138
+
+
+state 349
+	sentencia_if_for : If condicion_if cuerpo_If_for . error  (136)
+
+	error  shift 366
+	.  error
+
+
+state 350
+	cola_For : '{' bloque_sentencias_For '}' . ';'  (148)
+
+	';'  shift 367
+	.  error
+
+
+state 351
 	bloque_sentencias_For : bloque_sentencias_For sentencias_For .  (17)
 
 	.  reduce 17
 
 
-state 345
-	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For error .  (149)
+state 352
+	encabezado_For : For id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For error .  (151)
 
-	.  reduce 149
-
-
-state 346
-	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For .  (148)
-
-	.  reduce 148
+	.  reduce 151
 
 
-state 347
-	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For . error  (151)
+state 353
+	encabezado_For : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For .  (150)
 
-	error  shift 361
+	.  reduce 150
+
+
+state 354
+	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For . error  (153)
+
+	error  shift 368
 	.  error
 
 
-state 348
+state 355
 	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' . condicion_for ';' signo id ')' cola_For_funcion  (95)
 
-	id  shift 53
+	id  shift 56
 	.  error
 
-	condicion_for  goto 362
+	condicion_for  goto 369
 
 
-state 349
+state 356
 	cuerpo_Else_funcion : '{' bloque_sentencias_ejecutables_funcion '}' .  (77)
 
 	.  reduce 77
 
 
-state 350
+state 357
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion error ';' .  (73)
 
 	.  reduce 73
 
 
-state 351
+state 358
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if error .  (71)
 
 	.  reduce 71
 
 
-state 352
+state 359
 	sentencia_if_funcion : If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if ';' .  (70)
 
 	.  reduce 70
 
 
-state 353
+state 360
 	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For_funcion error  (92)
 	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo . id cola_For_funcion error  (93)
 
-	id  shift 363
+	id  shift 370
 	.  error
-
-
-state 354
-	sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For_funcion  (91)
-
-	'+'  shift 93
-	'-'  shift 94
-	.  error
-
-	signo  goto 364
-
-
-state 355
-	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for ':' . signo id ')' cola_For_funcion error  (94)
-
-	'+'  shift 93
-	'-'  shift 94
-	.  error
-
-	signo  goto 365
-
-
-state 356
-	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' . cola_For  (152)
-
-	id  shift 4
-	If  shift 298
-	out  shift 6
-	fun  shift 7
-	Return  shift 198
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'{'  shift 299
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	sentencias_For  goto 301
-	declarativas  goto 302
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
-	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	cola_For  goto 366
-	encabezado_For  goto 32
-
-
-state 357
-	sentencia_if_for : If condicion_if then cuerpo_If_for . end_if ';'  (129)
-	sentencia_if_for : If condicion_if then cuerpo_If_for . Else cuerpo_Else_for end_if ';'  (130)
-	sentencia_if_for : If condicion_if then cuerpo_If_for . Else cuerpo_Else_for end_if error  (131)
-	sentencia_if_for : If condicion_if then cuerpo_If_for . error  (132)
-	sentencia_if_for : If condicion_if then cuerpo_If_for . Else cuerpo_Else_for error ';'  (133)
-
-	error  shift 367
-	Else  shift 368
-	end_if  shift 369
-	.  error
-
-
-state 358
-	bloque_sentencias_For : bloque_sentencias_For . sentencias_For  (17)
-	cuerpo_If_for : '{' bloque_sentencias_For . '}'  (135)
-
-	id  shift 4
-	If  shift 298
-	out  shift 6
-	fun  shift 7
-	Return  shift 198
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 11
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'}'  shift 370
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	sentencias_For  goto 344
-	declarativas  goto 302
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
-	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	encabezado_For  goto 32
-
-
-state 359
-	sentencia_if_for : If condicion_if cuerpo_If_for error .  (134)
-
-	.  reduce 134
-
-
-state 360
-	cola_For : '{' bloque_sentencias_For '}' ';' .  (146)
-
-	.  reduce 146
 
 
 state 361
-	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error .  (151)
+	sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For_funcion  (91)
 
-	.  reduce 151
+	'+'  shift 97
+	'-'  shift 98
+	.  error
+
+	signo  goto 371
 
 
 state 362
-	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For_funcion  (95)
+	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for ':' . signo id ')' cola_For_funcion error  (94)
 
-	';'  shift 371
+	'+'  shift 97
+	'-'  shift 98
 	.  error
+
+	signo  goto 372
 
 
 state 363
-	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For_funcion error  (92)
-	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo id . cola_For_funcion error  (93)
+	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' . cola_For  (154)
 
-	id  shift 196
-	If  shift 372
+	id  shift 4
+	If  shift 305
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 11
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 373
+	'{'  shift 306
 	'('  shift 16
-	')'  shift 374
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	sentencias_For  goto 308
+	declarativas  goto 309
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	sentencias_For_funcion  goto 383
-	cola_For_funcion  goto 384
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+	cola_For  goto 373
 
 
 state 364
-	sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For_funcion  (91)
+	sentencia_if_for : If condicion_if then cuerpo_If_for . end_if ';'  (131)
+	sentencia_if_for : If condicion_if then cuerpo_If_for . Else cuerpo_Else_for end_if ';'  (132)
+	sentencia_if_for : If condicion_if then cuerpo_If_for . Else cuerpo_Else_for end_if error  (133)
+	sentencia_if_for : If condicion_if then cuerpo_If_for . error  (134)
+	sentencia_if_for : If condicion_if then cuerpo_If_for . Else cuerpo_Else_for error ';'  (135)
 
-	id  shift 385
+	error  shift 374
+	Else  shift 375
+	end_if  shift 376
 	.  error
 
 
 state 365
-	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for ':' signo . id ')' cola_For_funcion error  (94)
-
-	id  shift 386
-	.  error
-
-
-state 366
-	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For .  (152)
-
-	.  reduce 152
-
-
-state 367
-	sentencia_if_for : If condicion_if then cuerpo_If_for error .  (132)
-
-	.  reduce 132
-
-
-state 368
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else . cuerpo_Else_for end_if ';'  (130)
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else . cuerpo_Else_for end_if error  (131)
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else . cuerpo_Else_for error ';'  (133)
+	bloque_sentencias_For : bloque_sentencias_For . sentencias_For  (17)
+	cuerpo_If_for : '{' bloque_sentencias_For . '}'  (137)
 
 	id  shift 4
-	If  shift 298
+	If  shift 305
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
@@ -4277,52 +4320,182 @@ state 368
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 387
+	'}'  shift 377
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	sentencias_For  goto 388
-	declarativas  goto 302
+	sentencias_For  goto 351
+	declarativas  goto 309
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
 	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	cuerpo_Else_for  goto 389
-	encabezado_For  goto 32
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+
+
+state 366
+	sentencia_if_for : If condicion_if cuerpo_If_for error .  (136)
+
+	.  reduce 136
+
+
+state 367
+	cola_For : '{' bloque_sentencias_For '}' ';' .  (148)
+
+	.  reduce 148
+
+
+state 368
+	encabezado_For : For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For error .  (153)
+
+	.  reduce 153
 
 
 state 369
-	sentencia_if_for : If condicion_if then cuerpo_If_for end_if . ';'  (129)
+	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' condicion_for . ';' signo id ')' cola_For_funcion  (95)
 
-	';'  shift 390
+	';'  shift 378
 	.  error
 
 
 state 370
-	cuerpo_If_for : '{' bloque_sentencias_For '}' .  (135)
+	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For_funcion error  (92)
+	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo id . cola_For_funcion error  (93)
 
-	.  reduce 135
+	id  shift 203
+	If  shift 379
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 206
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 380
+	'('  shift 16
+	')'  shift 381
+	.  error
+
+	declaracion_const  goto 19
+	declarativas  goto 382
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
+	encabezado_func  goto 31
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	sentencias_For_funcion  goto 390
+	cola_For_funcion  goto 391
+	etiquetaFor  goto 32
 
 
 state 371
-	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For_funcion  (95)
+	sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For_funcion  (91)
 
-	'+'  shift 93
-	'-'  shift 94
+	id  shift 392
 	.  error
-
-	signo  goto 391
 
 
 state 372
+	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for ':' signo . id ')' cola_For_funcion error  (94)
+
+	id  shift 393
+	.  error
+
+
+state 373
+	encabezado_For : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For .  (154)
+
+	.  reduce 154
+
+
+state 374
+	sentencia_if_for : If condicion_if then cuerpo_If_for error .  (134)
+
+	.  reduce 134
+
+
+state 375
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else . cuerpo_Else_for end_if ';'  (132)
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else . cuerpo_Else_for end_if error  (133)
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else . cuerpo_Else_for error ';'  (135)
+
+	id  shift 4
+	If  shift 305
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 11
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 394
+	'('  shift 16
+	.  error
+
+	declaracion_const  goto 19
+	sentencias_For  goto 395
+	declarativas  goto 309
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
+	encabezado_func  goto 31
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
+	cuerpo_Else_for  goto 396
+
+
+state 376
+	sentencia_if_for : If condicion_if then cuerpo_If_for end_if . ';'  (131)
+
+	';'  shift 397
+	.  error
+
+
+state 377
+	cuerpo_If_for : '{' bloque_sentencias_For '}' .  (137)
+
+	.  reduce 137
+
+
+state 378
+	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' condicion_for ';' . signo id ')' cola_For_funcion  (95)
+
+	'+'  shift 97
+	'-'  shift 98
+	.  error
+
+	signo  goto 398
+
+
+state 379
 	sentencia_if_for_funcion : If . condicion_if then cuerpo_If_for_funcion end_if ';'  (79)
 	sentencia_if_for_funcion : If . condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if ';'  (80)
 	sentencia_if_for_funcion : If . condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if error  (81)
@@ -4330,31 +4503,33 @@ state 372
 	sentencia_if_for_funcion : If . condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion error ';'  (83)
 	sentencia_if_for_funcion : If . condicion_if cuerpo_If_for_funcion error  (84)
 
-	id  shift 37
-	cte  shift 38
-	'('  shift 39
-	'-'  shift 40
+	id  shift 38
+	cte  shift 39
+	cadena  shift 40
+	'('  shift 41
+	'-'  shift 42
 	.  error
 
-	expresion  goto 41
-	condicion_if  goto 392
-	expresion_relacional  goto 43
-	termino  goto 44
-	factor  goto 45
+	expresion  goto 43
+	condicion_if  goto 399
+	expresion_relacional  goto 45
+	factor  goto 46
+	invocacion  goto 47
+	termino  goto 48
 
 
-state 373
+state 380
 	cola_For_funcion : '{' . bloque_sentencias_For_funcion '}' ';'  (89)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
@@ -4362,142 +4537,144 @@ state 373
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	bloque_sentencias_For_funcion  goto 393
-	sentencias_For_funcion  goto 394
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	bloque_sentencias_For_funcion  goto 400
+	sentencias_For_funcion  goto 401
+	etiquetaFor  goto 32
 
 
-state 374
+state 381
 	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo id ')' . cola_For_funcion error  (92)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 373
+	'{'  shift 380
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	sentencias_For_funcion  goto 383
-	cola_For_funcion  goto 395
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	sentencias_For_funcion  goto 390
+	cola_For_funcion  goto 402
+	etiquetaFor  goto 32
 
 
-state 375
+state 382
 	sentencias_For_funcion : declarativas . error  (103)
 
-	error  shift 396
+	error  shift 403
 	.  error
 
 
-state 376
+state 383
 	sentencias_For_funcion : asignacion .  (96)
 
 	.  reduce 96
 
 
-state 377
+state 384
 	sentencias_For_funcion : salida .  (97)
 
 	.  reduce 97
 
 
-state 378
+state 385
 	sentencias_For_funcion : sentencia_BREAK .  (100)
 
 	.  reduce 100
 
 
-state 379
+state 386
 	sentencias_For_funcion : sentencia_CONTINUE .  (101)
 
 	.  reduce 101
 
 
-state 380
+state 387
 	sentencias_For_funcion : ret_fun .  (99)
 
 	.  reduce 99
 
 
-state 381
+state 388
 	sentencias_For_funcion : sentencia_for_funcion .  (98)
 
 	.  reduce 98
 
 
-state 382
+state 389
 	sentencias_For_funcion : sentencia_if_for_funcion .  (102)
 
 	.  reduce 102
 
 
-state 383
+state 390
 	cola_For_funcion : sentencias_For_funcion .  (90)
 
 	.  reduce 90
 
 
-state 384
+state 391
 	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo id cola_For_funcion . error  (93)
 
-	error  shift 397
+	error  shift 404
 	.  error
 
 
-state 385
+state 392
 	sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For_funcion  (91)
 
-	')'  shift 398
+	')'  shift 405
 	.  error
 
 
-state 386
+state 393
 	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for ':' signo id . ')' cola_For_funcion error  (94)
 
-	')'  shift 399
+	')'  shift 406
 	.  error
 
 
-state 387
-	cuerpo_Else_for : '{' . bloque_sentencias_For '}'  (137)
+state 394
+	cuerpo_Else_for : '{' . bloque_sentencias_For '}'  (139)
 
 	id  shift 4
-	If  shift 298
+	If  shift 305
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
@@ -4509,53 +4686,54 @@ state 387
 	.  error
 
 	declaracion_const  goto 19
-	bloque_sentencias_For  goto 400
-	sentencias_For  goto 324
-	declarativas  goto 302
+	bloque_sentencias_For  goto 407
+	sentencias_For  goto 331
+	declarativas  goto 309
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
 	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	encabezado_For  goto 32
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
 
 
-state 388
-	cuerpo_Else_for : sentencias_For .  (138)
+state 395
+	cuerpo_Else_for : sentencias_For .  (140)
 
-	.  reduce 138
+	.  reduce 140
 
 
-state 389
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for . end_if ';'  (130)
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for . end_if error  (131)
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for . error ';'  (133)
+state 396
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for . end_if ';'  (132)
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for . end_if error  (133)
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for . error ';'  (135)
 
-	error  shift 401
-	end_if  shift 402
+	error  shift 408
+	end_if  shift 409
 	.  error
 
 
-state 390
-	sentencia_if_for : If condicion_if then cuerpo_If_for end_if ';' .  (129)
+state 397
+	sentencia_if_for : If condicion_if then cuerpo_If_for end_if ';' .  (131)
 
-	.  reduce 129
+	.  reduce 131
 
 
-state 391
+state 398
 	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo . id ')' cola_For_funcion  (95)
 
-	id  shift 403
+	id  shift 410
 	.  error
 
 
-state 392
+state 399
 	sentencia_if_for_funcion : If condicion_if . then cuerpo_If_for_funcion end_if ';'  (79)
 	sentencia_if_for_funcion : If condicion_if . then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if ';'  (80)
 	sentencia_if_for_funcion : If condicion_if . then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if error  (81)
@@ -4563,182 +4741,186 @@ state 392
 	sentencia_if_for_funcion : If condicion_if . then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion error ';'  (83)
 	sentencia_if_for_funcion : If condicion_if . cuerpo_If_for_funcion error  (84)
 
-	id  shift 196
-	If  shift 372
-	then  shift 404
+	id  shift 203
+	If  shift 379
+	then  shift 411
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 405
+	'{'  shift 412
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	cuerpo_If_for_funcion  goto 406
-	sentencias_For_funcion  goto 407
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	cuerpo_If_for_funcion  goto 413
+	sentencias_For_funcion  goto 414
+	etiquetaFor  goto 32
 
 
-state 393
+state 400
 	cola_For_funcion : '{' bloque_sentencias_For_funcion . '}' ';'  (89)
 	bloque_sentencias_For_funcion : bloque_sentencias_For_funcion . sentencias_For_funcion  (105)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'}'  shift 408
+	'}'  shift 415
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	sentencias_For_funcion  goto 409
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	sentencias_For_funcion  goto 416
+	etiquetaFor  goto 32
 
 
-state 394
+state 401
 	bloque_sentencias_For_funcion : sentencias_For_funcion .  (104)
 
 	.  reduce 104
 
 
-state 395
+state 402
 	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion . error  (92)
 
-	error  shift 410
+	error  shift 417
 	.  error
 
 
-state 396
+state 403
 	sentencias_For_funcion : declarativas error .  (103)
 
 	.  reduce 103
 
 
-state 397
+state 404
 	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo id cola_For_funcion error .  (93)
 
 	.  reduce 93
 
 
-state 398
+state 405
 	sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' . cola_For_funcion  (91)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 373
+	'{'  shift 380
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	sentencias_For_funcion  goto 383
-	cola_For_funcion  goto 411
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	sentencias_For_funcion  goto 390
+	cola_For_funcion  goto 418
+	etiquetaFor  goto 32
 
 
-state 399
+state 406
 	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' . cola_For_funcion error  (94)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 373
+	'{'  shift 380
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	sentencias_For_funcion  goto 383
-	cola_For_funcion  goto 412
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	sentencias_For_funcion  goto 390
+	cola_For_funcion  goto 419
+	etiquetaFor  goto 32
 
 
-state 400
+state 407
 	bloque_sentencias_For : bloque_sentencias_For . sentencias_For  (17)
-	cuerpo_Else_for : '{' bloque_sentencias_For . '}'  (137)
+	cuerpo_Else_for : '{' bloque_sentencias_For . '}'  (139)
 
 	id  shift 4
-	If  shift 298
+	If  shift 305
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
@@ -4746,372 +4928,378 @@ state 400
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'}'  shift 413
+	'}'  shift 420
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	sentencias_For  goto 344
-	declarativas  goto 302
+	sentencias_For  goto 351
+	declarativas  goto 309
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 303
-	salida  goto 304
-	expresion_For  goto 305
-	sentencia_BREAK  goto 306
-	sentencia_CONTINUE  goto 307
+	asignacion  goto 310
+	salida  goto 311
+	expresion_For  goto 312
+	sentencia_BREAK  goto 313
+	sentencia_CONTINUE  goto 314
 	encabezado_func  goto 31
-	ret_fun  goto 308
-	sentencia_if_for  goto 309
-	encabezado_For  goto 32
-
-
-state 401
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for error . ';'  (133)
-
-	';'  shift 414
-	.  error
-
-
-state 402
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if . ';'  (130)
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if . error  (131)
-
-	error  shift 415
-	';'  shift 416
-	.  error
-
-
-state 403
-	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For_funcion  (95)
-
-	')'  shift 417
-	.  error
-
-
-state 404
-	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion end_if ';'  (79)
-	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if ';'  (80)
-	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if error  (81)
-	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion error  (82)
-	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion Else cuerpo_Else_for_funcion error ';'  (83)
-
-	id  shift 196
-	If  shift 372
-	out  shift 6
-	fun  shift 7
-	Return  shift 198
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 199
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'{'  shift 405
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	declarativas  goto 375
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
-	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	cuerpo_If_for_funcion  goto 418
-	sentencias_For_funcion  goto 407
-
-
-state 405
-	cuerpo_If_for_funcion : '{' . bloque_sentencias_For_funcion '}'  (85)
-
-	id  shift 196
-	If  shift 372
-	out  shift 6
-	fun  shift 7
-	Return  shift 198
-	BREAK  shift 8
-	i32  shift 9
-	when  shift 10
-	For  shift 199
-	CONTINUE  shift 12
-	f32  shift 13
-	Const  shift 14
-	'('  shift 16
-	.  error
-
-	declaracion_const  goto 19
-	declarativas  goto 375
-	tipo  goto 22
-	declaracion_func  goto 23
-	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
-	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	bloque_sentencias_For_funcion  goto 419
-	sentencias_For_funcion  goto 394
-
-
-state 406
-	sentencia_if_for_funcion : If condicion_if cuerpo_If_for_funcion . error  (84)
-
-	error  shift 420
-	.  error
-
-
-state 407
-	cuerpo_If_for_funcion : sentencias_For_funcion .  (86)
-
-	.  reduce 86
+	ret_fun  goto 315
+	etiquetaFor  goto 32
+	encabezado_For  goto 33
+	sentencia_if_for  goto 316
 
 
 state 408
-	cola_For_funcion : '{' bloque_sentencias_For_funcion '}' . ';'  (89)
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for error . ';'  (135)
 
 	';'  shift 421
 	.  error
 
 
 state 409
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if . ';'  (132)
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if . error  (133)
+
+	error  shift 422
+	';'  shift 423
+	.  error
+
+
+state 410
+	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id . ')' cola_For_funcion  (95)
+
+	')'  shift 424
+	.  error
+
+
+state 411
+	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion end_if ';'  (79)
+	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if ';'  (80)
+	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if error  (81)
+	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion error  (82)
+	sentencia_if_for_funcion : If condicion_if then . cuerpo_If_for_funcion Else cuerpo_Else_for_funcion error ';'  (83)
+
+	id  shift 203
+	If  shift 379
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 206
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'{'  shift 412
+	'('  shift 16
+	.  error
+
+	declaracion_const  goto 19
+	declarativas  goto 382
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
+	encabezado_func  goto 31
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	cuerpo_If_for_funcion  goto 425
+	sentencias_For_funcion  goto 414
+	etiquetaFor  goto 32
+
+
+state 412
+	cuerpo_If_for_funcion : '{' . bloque_sentencias_For_funcion '}'  (85)
+
+	id  shift 203
+	If  shift 379
+	out  shift 6
+	fun  shift 7
+	Return  shift 205
+	BREAK  shift 8
+	i32  shift 9
+	when  shift 10
+	For  shift 206
+	CONTINUE  shift 12
+	f32  shift 13
+	Const  shift 14
+	'('  shift 16
+	.  error
+
+	declaracion_const  goto 19
+	declarativas  goto 382
+	tipo  goto 22
+	declaracion_func  goto 23
+	sentencia_when  goto 24
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
+	encabezado_func  goto 31
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	bloque_sentencias_For_funcion  goto 426
+	sentencias_For_funcion  goto 401
+	etiquetaFor  goto 32
+
+
+state 413
+	sentencia_if_for_funcion : If condicion_if cuerpo_If_for_funcion . error  (84)
+
+	error  shift 427
+	.  error
+
+
+state 414
+	cuerpo_If_for_funcion : sentencias_For_funcion .  (86)
+
+	.  reduce 86
+
+
+state 415
+	cola_For_funcion : '{' bloque_sentencias_For_funcion '}' . ';'  (89)
+
+	';'  shift 428
+	.  error
+
+
+state 416
 	bloque_sentencias_For_funcion : bloque_sentencias_For_funcion sentencias_For_funcion .  (105)
 
 	.  reduce 105
 
 
-state 410
+state 417
 	sentencia_for_funcion : For id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion error .  (92)
 
 	.  reduce 92
 
 
-state 411
+state 418
 	sentencia_for_funcion : For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion .  (91)
 
 	.  reduce 91
 
 
-state 412
+state 419
 	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For_funcion . error  (94)
 
-	error  shift 422
+	error  shift 429
 	.  error
 
 
-state 413
-	cuerpo_Else_for : '{' bloque_sentencias_For '}' .  (137)
+state 420
+	cuerpo_Else_for : '{' bloque_sentencias_For '}' .  (139)
 
-	.  reduce 137
+	.  reduce 139
 
 
-state 414
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for error ';' .  (133)
+state 421
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for error ';' .  (135)
+
+	.  reduce 135
+
+
+state 422
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if error .  (133)
 
 	.  reduce 133
 
 
-state 415
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if error .  (131)
+state 423
+	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if ';' .  (132)
 
-	.  reduce 131
-
-
-state 416
-	sentencia_if_for : If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if ';' .  (130)
-
-	.  reduce 130
+	.  reduce 132
 
 
-state 417
+state 424
 	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' . cola_For_funcion  (95)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 373
+	'{'  shift 380
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	sentencias_For_funcion  goto 383
-	cola_For_funcion  goto 423
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	sentencias_For_funcion  goto 390
+	cola_For_funcion  goto 430
+	etiquetaFor  goto 32
 
 
-state 418
+state 425
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion . end_if ';'  (79)
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion . Else cuerpo_Else_for_funcion end_if ';'  (80)
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion . Else cuerpo_Else_for_funcion end_if error  (81)
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion . error  (82)
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion . Else cuerpo_Else_for_funcion error ';'  (83)
 
-	error  shift 424
-	Else  shift 425
-	end_if  shift 426
+	error  shift 431
+	Else  shift 432
+	end_if  shift 433
 	.  error
 
 
-state 419
+state 426
 	cuerpo_If_for_funcion : '{' bloque_sentencias_For_funcion . '}'  (85)
 	bloque_sentencias_For_funcion : bloque_sentencias_For_funcion . sentencias_For_funcion  (105)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'}'  shift 427
+	'}'  shift 434
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	sentencias_For_funcion  goto 409
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	sentencias_For_funcion  goto 416
+	etiquetaFor  goto 32
 
 
-state 420
+state 427
 	sentencia_if_for_funcion : If condicion_if cuerpo_If_for_funcion error .  (84)
 
 	.  reduce 84
 
 
-state 421
+state 428
 	cola_For_funcion : '{' bloque_sentencias_For_funcion '}' ';' .  (89)
 
 	.  reduce 89
 
 
-state 422
+state 429
 	sentencia_for_funcion : For '(' id op_asignacion cte ':' condicion_for ':' signo id ')' cola_For_funcion error .  (94)
 
 	.  reduce 94
 
 
-state 423
+state 430
 	sentencia_for_funcion : id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion .  (95)
 
 	.  reduce 95
 
 
-state 424
+state 431
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion error .  (82)
 
 	.  reduce 82
 
 
-state 425
+state 432
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else . cuerpo_Else_for_funcion end_if ';'  (80)
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else . cuerpo_Else_for_funcion end_if error  (81)
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else . cuerpo_Else_for_funcion error ';'  (83)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'{'  shift 428
+	'{'  shift 435
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	cuerpo_Else_for_funcion  goto 429
-	sentencias_For_funcion  goto 430
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	cuerpo_Else_for_funcion  goto 436
+	sentencias_For_funcion  goto 437
+	etiquetaFor  goto 32
 
 
-state 426
+state 433
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion end_if . ';'  (79)
 
-	';'  shift 431
+	';'  shift 438
 	.  error
 
 
-state 427
+state 434
 	cuerpo_If_for_funcion : '{' bloque_sentencias_For_funcion '}' .  (85)
 
 	.  reduce 85
 
 
-state 428
+state 435
 	cuerpo_Else_for_funcion : '{' . bloque_sentencias_For_funcion '}'  (87)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
@@ -5119,119 +5307,121 @@ state 428
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	bloque_sentencias_For_funcion  goto 432
-	sentencias_For_funcion  goto 394
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	bloque_sentencias_For_funcion  goto 439
+	sentencias_For_funcion  goto 401
+	etiquetaFor  goto 32
 
 
-state 429
+state 436
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion . end_if ';'  (80)
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion . end_if error  (81)
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion . error ';'  (83)
 
-	error  shift 433
-	end_if  shift 434
+	error  shift 440
+	end_if  shift 441
 	.  error
 
 
-state 430
+state 437
 	cuerpo_Else_for_funcion : sentencias_For_funcion .  (88)
 
 	.  reduce 88
 
 
-state 431
+state 438
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion end_if ';' .  (79)
 
 	.  reduce 79
 
 
-state 432
+state 439
 	cuerpo_Else_for_funcion : '{' bloque_sentencias_For_funcion . '}'  (87)
 	bloque_sentencias_For_funcion : bloque_sentencias_For_funcion . sentencias_For_funcion  (105)
 
-	id  shift 196
-	If  shift 372
+	id  shift 203
+	If  shift 379
 	out  shift 6
 	fun  shift 7
-	Return  shift 198
+	Return  shift 205
 	BREAK  shift 8
 	i32  shift 9
 	when  shift 10
-	For  shift 199
+	For  shift 206
 	CONTINUE  shift 12
 	f32  shift 13
 	Const  shift 14
-	'}'  shift 435
+	'}'  shift 442
 	'('  shift 16
 	.  error
 
 	declaracion_const  goto 19
-	declarativas  goto 375
+	declarativas  goto 382
 	tipo  goto 22
 	declaracion_func  goto 23
 	sentencia_when  goto 24
-	asignacion  goto 376
-	salida  goto 377
-	sentencia_BREAK  goto 378
-	sentencia_CONTINUE  goto 379
+	asignacion  goto 383
+	salida  goto 384
+	sentencia_BREAK  goto 385
+	sentencia_CONTINUE  goto 386
 	encabezado_func  goto 31
-	ret_fun  goto 380
-	sentencia_for_funcion  goto 381
-	sentencia_if_for_funcion  goto 382
-	sentencias_For_funcion  goto 409
+	ret_fun  goto 387
+	sentencia_for_funcion  goto 388
+	sentencia_if_for_funcion  goto 389
+	sentencias_For_funcion  goto 416
+	etiquetaFor  goto 32
 
 
-state 433
+state 440
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion error . ';'  (83)
 
-	';'  shift 436
+	';'  shift 443
 	.  error
 
 
-state 434
+state 441
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if . ';'  (80)
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if . error  (81)
 
-	error  shift 437
-	';'  shift 438
+	error  shift 444
+	';'  shift 445
 	.  error
 
 
-state 435
+state 442
 	cuerpo_Else_for_funcion : '{' bloque_sentencias_For_funcion '}' .  (87)
 
 	.  reduce 87
 
 
-state 436
+state 443
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion error ';' .  (83)
 
 	.  reduce 83
 
 
-state 437
+state 444
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if error .  (81)
 
 	.  reduce 81
 
 
-state 438
+state 445
 	sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if ';' .  (80)
 
 	.  reduce 80
 
 
-37 terminals, 59 nonterminals
-193 grammar rules, 439 states
+37 terminals, 63 nonterminals
+199 grammar rules, 446 states

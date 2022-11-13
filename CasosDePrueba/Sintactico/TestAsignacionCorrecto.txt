@@ -1,0 +1,10 @@
+program
+{
+    i32 x, b, c;
+    x =: 2 + 3;
+    f32 a;
+    a =: 2;
+    c =: a ;
+    b =: 2 / a;
+    b =: 2 / raizCuadrada(a);
+}

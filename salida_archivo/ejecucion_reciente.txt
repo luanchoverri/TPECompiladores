@@ -1,4 +1,4 @@
-Hora de ejecucion: nov. 02 2022, 07:25:41 p. m.
+Hora de ejecucion: nov. 03 2022, 04:27:24 a. m.
 
 
 
@@ -9,28 +9,14 @@ Hora de ejecucion: nov. 02 2022, 07:25:41 p. m.
 
 program
 {
-
-    fun f (i32 a) : i32 {
-
-                if(i = 1) then{
-                     continue : etiqueta;
-                     return(a);
-                }
-                end_if;
-
-
-    }
-
-    if(i = 1) then{
-                         continue;
-                    }
-                    end_if;
-
-}
-
-
-
-$
+    i32 x, b, c;
+    x =: 2 + 3;
+    f32 a;
+    a =: 2;
+    c =: a ;
+    b =: 2 / a;
+    b =: 2 / raiz(a, 2);
+}$
 
 -----------------------------------------------------------------
 
@@ -43,5 +29,4 @@ $
 |--- ERRORES SINTACTICOS: ---| (!)
 
 
-SyntaxError. If3 (Línea 8): no se permiten sentencias continue fuera de una sentencia for 
-SyntaxError. If3 (Línea 17): no se permiten sentencias continue fuera de una sentencia for 
+SyntaxError. OP(Línea 8): falta ';' luego de la ASIG.

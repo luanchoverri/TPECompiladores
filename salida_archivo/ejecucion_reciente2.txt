@@ -1,0 +1,26 @@
+Hora de ejecucion: nov. 03 2022, 03:21:15 a. m.
+
+
+
+
+
+|--- CODIGO FUENTE ---|
+
+
+program
+{
+    i32 x, b, c;
+    x =: 2 + 3;
+    f32 a;
+    a =: 2;
+    c =: a ;
+    b =: 2 / a;
+}$
+
+
+
+|--- Sin errores LEXICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)

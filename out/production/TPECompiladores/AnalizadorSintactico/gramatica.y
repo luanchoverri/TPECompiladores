@@ -80,7 +80,7 @@ ejecutables : asignacion
 
 lista_de_variables : id
                    | lista_de_variables ',' id
-                   | lista_de_variables id error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
+                   | lista_de_variables id     { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
                    ;
 
 encabezado_func : fun id '('	     { sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" ); }
@@ -204,10 +204,15 @@ op_asignacion : opasignacion    { $$.sval = new String("=:"); }
 
 
 asignacion : id op_asignacion expresion ';'
-           | id op_asignacion expresion  error { sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la ASIG."); }
-           | id op_asignacion expresion_For Else cte ';'
-           | id op_asignacion expresion_For error  { sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  "); }
+           | id op_asignacion expresion  { sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA-1) + "): falta ';' luego de la ASIG."); }
+           | etiquetaFor
            ;
+
+etiquetaFor: id op_asignacion encabezado_For devolverValor
+	;
+devolverValor :  Else cte ';'
+	      |  error { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  "); }
+	      ;
 
 salida : out '(' cadena ')' ';'
        | out '(' cadena ')' error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
@@ -317,6 +322,13 @@ condicion_if : '(' expresion_relacional ')'
 expresion_relacional : expresion comparador expresion
                      ;
 
+list_param_invoc : factor
+		| list_param_invoc factor
+		;
+
+invocacion : cadena '(' list_param_invoc  ')'
+	  ;
+
 expresion : expresion signo termino
           | termino
           ;
@@ -325,6 +337,8 @@ termino : termino '*' factor
         | termino '/' factor
         | factor
         ;
+
+
 
 factor : id
        | cte      {
@@ -335,6 +349,7 @@ factor : id
        | '-' cte    {
                         sintactico.setNegativoTablaSimb($2.ival);
                     }
+       | invocacion
        ;
 
 comparador : '<'            { $$.sval = new String("<"); }
