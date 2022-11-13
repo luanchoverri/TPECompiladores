@@ -46,4 +46,8 @@ public class NodoBinario extends Nodo {
 		this.hijoIzquierdo = izquierda;
 		this.hijoDerecho = derecha;
 	}
+
+	public void setHijoDerecho(Nodo hijoDerecho) {
+		this.hijoDerecho = hijoDerecho;
+	}
 }

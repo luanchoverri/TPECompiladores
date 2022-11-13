@@ -8,6 +8,7 @@ public class Atributo {
     private String lexema; // Significado del Token
     private int nroLinea;
     private String tipo;
+    private String uso;
 
 
     // -- Constructor --
@@ -17,6 +18,7 @@ public class Atributo {
         this.idToken = idToken;
         this.tipo = null;
         this.nroLinea = nroLinea;
+        this.uso = null;
     }
 
     public Atributo(int idToken, String lexema, int nroLinea, String tipo) {
@@ -24,12 +26,14 @@ public class Atributo {
         this.lexema = lexema;
         this.nroLinea = nroLinea;
         this.tipo = tipo;
+        this.uso = null;
     }
 
     public Atributo(int idToken, String lexema, String tipo) {
         this.idToken = idToken;
         this.lexema = lexema;
         this.tipo = tipo;
+        this.uso = null;
     }
 
     // -- MÉTODOS -- // 
@@ -50,8 +54,14 @@ public class Atributo {
         return this.tipo;
     }
 
+    public String getUso() {
+        return uso;
+    }
 
-    // Setters
+    public void setUso(String uso) {
+        this.uso = uso;
+    }
+// Setters
 
     public void setLexema(String lexema) {
         this.lexema = lexema;

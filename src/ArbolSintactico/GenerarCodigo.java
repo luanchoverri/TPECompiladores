@@ -17,18 +17,18 @@ public class GenerarCodigo{
         this.tablaDeSimbolos = tablaDeSimbolos;
     }
 
-    public void generarCodigoLeido(Nodo nodo){
-        switch (nodo.getLexema()) { // switch case de prueba
-
-            case ("=:"):
-              asignacionAssembler(nodo);
-            break;
-
-            case ("+"):
-              sumaAssembler(nodo);
-            break;
-        }
-    }
+//    public void generarCodigoLeido(Nodo nodo){
+//        switch (nodo.getLexema()) { // switch case de prueba
+//
+//            case ("=:"):
+//              asignacionAssembler(nodo);
+//            break;
+//
+//            case ("+"):
+//              sumaAssembler(nodo);
+//            break;
+//        }
+//    }
 
     private void sumaAssembler(Nodo nodo) {
 

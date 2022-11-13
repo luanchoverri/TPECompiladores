@@ -1,4 +1,4 @@
-Hora de ejecucion: nov. 02 2022, 07:25:41 p. m.
+Hora de ejecucion: nov. 13 2022, 02:24:51 a. m.
 
 
 
@@ -7,30 +7,11 @@ Hora de ejecucion: nov. 02 2022, 07:25:41 p. m.
 |--- CODIGO FUENTE ---|
 
 
-program
-{
+program{
 
-    fun f (i32 a) : i32 {
+   const a =: 3 , b =: 5, c =: 7;
 
-                if(i = 1) then{
-                     continue : etiqueta;
-                     return(a);
-                }
-                end_if;
-
-
-    }
-
-    if(i = 1) then{
-                         continue;
-                    }
-                    end_if;
-
-}
-
-
-
-$
+}$
 
 -----------------------------------------------------------------
 
@@ -40,8 +21,5 @@ $
 |--- Sin errores LEXICOS ---| (OK)
 
 
-|--- ERRORES SINTACTICOS: ---| (!)
 
-
-SyntaxError. If3 (Línea 8): no se permiten sentencias continue fuera de una sentencia for 
-SyntaxError. If3 (Línea 17): no se permiten sentencias continue fuera de una sentencia for 
+|--- Sin errores SINTACTICOS ---| (OK)

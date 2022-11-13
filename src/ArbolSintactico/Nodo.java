@@ -31,4 +31,6 @@ public abstract class Nodo {
 
     public abstract Nodo getHijoDerecho ();
 
+	public abstract void setHijoDerecho(Nodo derecho);
+
 }
