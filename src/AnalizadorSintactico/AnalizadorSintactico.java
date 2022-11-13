@@ -1,6 +1,7 @@
 package AnalizadorSintactico;
 import AnalizadorLexico.*;
 import AnalizadorLexico.AccionesSemanticas.AccionesSimples.RangoEntero;
+import ArbolSintactico.GenerarCodigo;
 import ArbolSintactico.Nodo;
 import ArbolSintactico.NodoBinario;
 import ArbolSintactico.NodoHijo;
@@ -237,8 +238,9 @@ public class AnalizadorSintactico {
         System.out.println("________________________________________________");
 
         imprimirArbol(this.raiz,0);
+        GenerarCodigo g = new GenerarCodigo(this.tablaSimbolos);
+        g.generacionDeCodigo();
     }
-
 }
 
 
