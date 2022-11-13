@@ -1,0 +1,7 @@
+program
+    fun f5 (f32 identificador_con_mas_caracteres_) : f32
+    {
+	f32 identificador_do_con_mas_caracteres_2 =: 1.0;
+	f32 cero =: 0.;
+      return (cero);
+    }  

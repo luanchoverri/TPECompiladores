@@ -7,22 +7,31 @@ import AnalizadorLexico.Atributo;
 
 public class RangoEntero extends AccionSemanticaSimple {
 
-    private TablaSimbolos tablaSimbolos;
+    public static final long MAXIMO_ENTERO_LARGO = 2147483648L;
 
-    public RangoEntero(AnalizadorLexico analizadorLexico, TablaSimbolos tablaSimbolos){
+    public static final long MINIMO_ENTERO_LARGO = -2147483648L;
+
+    public RangoEntero(AnalizadorLexico analizadorLexico){
         super(analizadorLexico);
-        this.tablaSimbolos = tablaSimbolos;
     }
     @Override
     public boolean ejecutar(String buffer, char ultimoLeido) {
-        try {
-            int intBuffer = Integer.parseInt(buffer);
+       AnalizadorLexico lexico = this.getAnalizadorLexico();
 
-        } catch (Exception e){
-            e.printStackTrace(); //fuera de rango
+        try {
+            if (buffer.equals("0")) // Si es cero, retorna true
+                return true;
+            long intBuffer = Long.parseLong(buffer);
+            if (!(intBuffer <= MAXIMO_ENTERO_LARGO) || !(intBuffer >= MINIMO_ENTERO_LARGO))
+                throw new Exception("FUERA DE RANGO"); // genero la excepcion
+
+        } catch (Throwable e){
+            lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): la constante i32 con valor -> " + buffer + " está fuera de rango.") ;
+            //e.printStackTrace(); // fuera de rango (Quiere decir que no se pudo asignar a la variable)
         }
-        this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken("i32"));
-        this.tablaSimbolos.agregarRegistro(buffer, new Atributo(this.tablaSimbolos.getIdToken("i32")));
+        int idToken = lexico.getIdToken("cte");
+        lexico.setTokenActual(idToken);
+        lexico.agregarRegistro(buffer, idToken);
         return true;
     }
 }

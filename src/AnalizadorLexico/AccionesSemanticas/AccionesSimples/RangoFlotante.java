@@ -2,34 +2,44 @@ package AnalizadorLexico.AccionesSemanticas.AccionesSimples;
 
 import AnalizadorLexico.AccionesSemanticas.AccionSemanticaSimple;
 import AnalizadorLexico.AnalizadorLexico;
-import AnalizadorLexico.TablaSimbolos;
-import AnalizadorLexico.Atributo;
+
 
 public class RangoFlotante extends AccionSemanticaSimple {
 
-    TablaSimbolos tablaSimbolos;
+    public static final float MINIMO_FLOAT = (float) Math.pow(1.17549435, -38); // 1.17549435E-38f (Rango minimo negativo)
+    public static final float MAXIMO_FLOAT = (float) Math.pow(3.40282347, 38); // 3.40282347E+38f (Rango maximo positivo)
 
-    public RangoFlotante(AnalizadorLexico analizadorLexico, TablaSimbolos tablaSimbolos){
+    public RangoFlotante(AnalizadorLexico analizadorLexico){
         super(analizadorLexico);
-        this.tablaSimbolos = tablaSimbolos;
+
     }
 
     @Override
     public boolean ejecutar(String buffer, char ultimoLeido) {
-        if (buffer.contains("F") && !buffer.endsWith("F")){
-            buffer = buffer.replace("F","e");
-            buffer += "f";
-        }
+        AnalizadorLexico lexico = this.getAnalizadorLexico();
         try {
-            float floatBuffer = Float.parseFloat(buffer);
-            if ((!(1.17549435e-38 < floatBuffer) || !(floatBuffer < 3.40282347e+38) || !(-3.40282347e+38 < floatBuffer) || !(floatBuffer < -1.17549435e-38))){
-                throw new Exception("out of range");
+            if (buffer.equals("0.0") || buffer.equals("0.") || buffer.equals(".0")) // Si es cualquier caso de cero, retorna true
+                return true;
+
+            float floatBuffer = 0f;
+                if (buffer.contains("F")){
+                    String[] parts = buffer.split("F");
+                    floatBuffer = (float) Math.pow(Double.valueOf(parts[0]), Double.valueOf(parts[1]));
+                }else{
+                    if(!buffer.endsWith("F")){
+                        floatBuffer = Float.parseFloat(buffer);
+                    }
+                }
+            if (((Math.abs(floatBuffer) < MINIMO_FLOAT) || (Math.abs(floatBuffer) > MAXIMO_FLOAT))){ // el abs es para contemplar casos positivos y negativos
+                throw new Exception("FUERA DE RANGO"); // genero la excepcion
             }
-        } catch (Exception e){
-            e.printStackTrace(); //fuera de rango
+        } catch (Throwable e){
+            lexico.addErrorLexico("ERROR LÉXICO (Línea " + lexico.LINEA + "): la constante f32 con valor -> " + buffer + " está fuera de rango.") ;
         }
-        this.getAnalizadorLexico().setIdToken(this.tablaSimbolos.getIdToken("f32"));
-        this.tablaSimbolos.agregarRegistro(buffer, new Atributo(this.tablaSimbolos.getIdToken("f32")));
+
+        int idToken = lexico.getIdToken("cte");
+        lexico.setTokenActual(idToken);
+        lexico.agregarRegistro(buffer, idToken);
         return true;
-    }
+   }
 }

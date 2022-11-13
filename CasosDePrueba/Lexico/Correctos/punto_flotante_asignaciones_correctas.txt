@@ -1,0 +1,12 @@
+program
+    fun f4 (f32 x) : f32
+    {
+	f32 enteraSinParteDecimal =: 1.;
+	f32 decimalYEntero =: 1.0;
+	f32 decimalSinParteEntera =: .6;
+	f32 expNegativo =: 3.S-5;
+	f32 expPositivo =: 2.S+34;
+	f32 sinSigno =: 2.S34;
+	f32 cero =: 0.;
+      return (cero);
+    }  

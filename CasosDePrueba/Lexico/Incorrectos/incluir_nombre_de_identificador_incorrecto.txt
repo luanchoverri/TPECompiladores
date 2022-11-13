@@ -1,0 +1,7 @@
+program
+    fun f7 (f32 x) : f32
+    {
+	f32 a:_2;
+	f32 cero =: 0.0;
+      return (cero);
+    }  

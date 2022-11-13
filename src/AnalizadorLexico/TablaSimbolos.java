@@ -1,17 +1,21 @@
 package AnalizadorLexico;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TablaSimbolos {
 
-    private HashMap<String, Atributo> registroTokens;
-    private HashMap<String, Integer> idTokens;
+
+    private ArrayList<Atributo> registroTokens; // esta es la tabla de simbolos donde se guardan los pares lexema-id
+    private HashMap<String, Integer> idTokens; // aca solo se guardan los id correspondientes
 
 
 
     public TablaSimbolos(){
 
-        this.registroTokens = new HashMap<>();
+        this.registroTokens = new ArrayList<Atributo>();
+        this.idTokens = new HashMap<>();
+
         //--- CARGA DE TOKENS ---//
         // Operadores aritméticos
         this.idTokens.put("+", (int) '+');
@@ -22,8 +26,11 @@ public class TablaSimbolos {
         // Símbolos de puntuación
         this.idTokens.put("(", (int) '(');
         this.idTokens.put(")", (int) ')');
+        this.idTokens.put("{", (int) '{');
+        this.idTokens.put("}", (int) '}');
         this.idTokens.put(",", (int) ',');
         this.idTokens.put(";", (int) ';');
+        this.idTokens.put(":", (int) ':');
 
 
         // Identificador y constante
@@ -33,7 +40,7 @@ public class TablaSimbolos {
         this.idTokens.put("if", 259);
         this.idTokens.put("then", 260);
         this.idTokens.put("else", 261);
-        this.idTokens.put("endif", 262);
+        this.idTokens.put("end_if", 262);
         this.idTokens.put("out", 263);
         this.idTokens.put("fun", 264);
         this.idTokens.put("return", 265);
@@ -43,22 +50,22 @@ public class TablaSimbolos {
         this.idTokens.put("for", 269);
         this.idTokens.put("continue", 270);
         this.idTokens.put("f32",271);
+        this.idTokens.put("const",277);
 
         // Cadena de caracteres
-        this.idTokens.put("cadena", 280);
+        this.idTokens.put("cadena", 272);
 
         // Comparadores
         this.idTokens.put(">", (int) '>');
         this.idTokens.put("<", (int) '<');
-        this.idTokens.put("<=", 281);
-        this.idTokens.put(">=", 282);
-        this.idTokens.put("=", 283);
-        this.idTokens.put("=!", 284);
+        this.idTokens.put("<=", 273);
+        this.idTokens.put(">=", 274);
+        this.idTokens.put("=", (int) '=');
+        this.idTokens.put("=!", 275);
 
         // Operador de asignación
-        this.idTokens.put("=:", 285);
+        this.idTokens.put("=:", 276);
 
-        // Operadores lógicos ?
     }
 
     public boolean isPalabraReservada(String lexema){
@@ -66,7 +73,7 @@ public class TablaSimbolos {
             case "if":
             case "then":
             case "else":
-            case "endif":
+            case "end_if":
             case "out":
             case "fun":
             case "return":
@@ -76,26 +83,30 @@ public class TablaSimbolos {
             case "when":
             case "for":
             case "continue":
+            case "const":
                 return true;
             default:
                 return false;
         }
     }
 
-    public int getIdToken(String tipoToken) {
-        return this.idTokens.get(tipoToken);
+    public int getIdToken(String lexema) {
+        int id = this.idTokens.get(lexema);
+
+        return id;
+
     }
 
 
     /**
      * En base al id de un token pasado por parámetro, determina su tipo.
-     * @param idToken
+     * @param id
      * @return
      */
-    public String getTipoToken(int idToken) {
+    public String getTipoToken(int id) {
         String tipo = "";
 
-        switch (idToken) {
+        switch (id) {
             case (int) '+':
             case (int) '-':
             case (int) '*':
@@ -104,11 +115,14 @@ public class TablaSimbolos {
                 break;
             case (int) '(':
             case (int) ')':
+            case (int) '{':
+            case (int) '}':
             case (int) ',':
             case (int) ';':
+            case (int) ':':
                 tipo = "LITERAL";
                 break;
-            case 285:
+            case 276:
                 tipo = "ASIGNACION";
                 break;
             case 257:
@@ -129,17 +143,19 @@ public class TablaSimbolos {
             case 268:
             case 269:
             case 270:
+            case 271:
+            case 277:
                 tipo = "PALABRA RESERVADA";
                 break;
-            case 280:
+            case 272:
                 tipo = "CADENA DE CARACTERES";
                 break;
             case (int) '<':
             case (int) '>':
-            case 281:
-            case 282:
-            case 283:
-            case 284:
+            case (int) '=':
+            case 273:
+            case 274:
+            case 275:
                 tipo = "COMPARADOR";
                 break;
             default:
@@ -149,7 +165,40 @@ public class TablaSimbolos {
         return tipo;
     }
 
-    public void agregarRegistro(String lexema, Atributo atributos){
-        this.registroTokens.put(lexema,atributos);
+    public void agregarRegistro(String lexema, int id, int nroLinea){
+        Atributo registro = new Atributo(lexema, id, nroLinea);
+        if (getTipoToken(id).equals("CONSTANTE")){
+            if (lexema.contains(".")) {
+                registro.setTipo("FLOAT");
+            } else {
+                registro.setTipo("LONG");
+            }
+        }
+        this.registroTokens.add(registro);
     }
+
+
+    public int size(){
+       return registroTokens.size();
+    }
+
+    public boolean isEmpty() {
+        return registroTokens.isEmpty();
+    }
+
+    public Atributo getEntrada(int indice){
+        return this.registroTokens.get(indice);
+    }
+
+    public void eliminarEntrada(int indice){
+        this.registroTokens.remove(indice);
+    }
+
+    public void imprimir(){
+        System.out.println("---------TABLA DE SIMBOLOS---------");
+        for(Atributo token : registroTokens){
+            System.out.println(token.toString());
+        }
+    }
+
 }

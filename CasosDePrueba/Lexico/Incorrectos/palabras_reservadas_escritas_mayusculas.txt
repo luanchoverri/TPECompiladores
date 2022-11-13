@@ -1,0 +1,14 @@
+program
+    fun f6 (f32 x) : f32
+    {
+	IF
+	THEN
+	ELSE
+	END_IF
+	OUT
+	FUN
+	RETURN
+	BREAK
+	f32 cero =: 0.;
+      return (cero);
+    }  
