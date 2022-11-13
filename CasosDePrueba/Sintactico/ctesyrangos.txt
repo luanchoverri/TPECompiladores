@@ -1,5 +1,10 @@
 program{
 
-   const a =: 3 , b =: 5, c =: 7;
+   fun f (i32 a) : i32 {
+
+                  out ( 'cadena de prueba' );
+                  return(c + 1);
+
+       }
 
 }

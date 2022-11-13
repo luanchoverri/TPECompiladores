@@ -15,14 +15,14 @@ import AnalizadorLexico.Atributo;
 
 %%
 
-
+//TODO listo
 programa : encabezado_prog bloque_sentencias {$$ = new ParserVal(sintactico.crearNodoControl("raiz", $2)); sintactico.setRaiz($$); }
 	 ;
 
 
 encabezado_prog : id
                 ;
-
+//TODO listo
 bloque_sentencias : bloque_sentencias '{' sentencia '}'{$$ = new ParserVal(sintactico.crearNodoControl("primera_sentencia", $3));}
 		  | '{' sentencia '}' {$$ = new ParserVal(sintactico.crearNodoControl("primera_sentencia", $2));}
 		  | '{' sentencia    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar el bloque.");}
@@ -40,6 +40,7 @@ lista_de_asignacion_const : decl_const {$$ = new ParserVal(sintactico.crearNodo(
                           | lista_de_asignacion_const ',' decl_const {$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $3, $1));}
                           ;
 
+// TODO falcha inferir el tipo
 decl_const : id op_asignacion cte {$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($3.ival))));} //TODO inferir el tipo de la cte
            | id op_asignacion error  { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta constante luego de la asignacion.");}
            | id cte  error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta el operador asignacion luego del identificador.");}
@@ -108,20 +109,22 @@ parametro : tipo id
 asig_fun: ':' tipo
 	|	 { sintactico.addErrorSintactico("SyntaxError. COLA_FUN(Línea " + AnalizadorLexico.LINEA + "): falta TIPO "); }
 	;
-cola_func: ')' asig_fun '{' cuerpo_fun '}' { sintactico.addAnalisis("Se reconoce TIPO funcion (Línea " + AnalizadorLexico.LINEA + ")"); }
+cola_func: ')' asig_fun '{' cuerpo_fun '}' { sintactico.addAnalisis("Se reconoce TIPO funcion (Línea " + AnalizadorLexico.LINEA + ")");
+ 						$$ = $4;}
 	 ;
 
 
-declaracion_func : encabezado_func  parametro  		   cola_func
+declaracion_func : encabezado_func  parametro  		   cola_func {$$ = $3;}
                  | encabezado_func parametro ',' parametro cola_func
                  | encabezado_func parametro ',' parametro ',' parametro cola_func { sintactico.addErrorSintactico("SyntaxError. DECLARACION_FUN(Línea " + AnalizadorLexico.LINEA + "): no se permiten mas de 2 parametros "); }
                  | encabezado_func  			   cola_func
                  ;
 
-ret_fun:   Return '(' expresion ')'  ';'	 { sintactico.addAnalisis("Se reconoce retorno de funcion(Línea " + AnalizadorLexico.LINEA + ") "); }
-        |  Return  	 expresion ')'  ';' 	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN1 (Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
-        |  Return '(' expresion   	';'	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN2(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
-        |  Return  	 expresion   	';' 	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN3(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
+ret_fun:   Return '(' expresion ')'  ';'	 { sintactico.addAnalisis("Se reconoce retorno de funcion(Línea " + AnalizadorLexico.LINEA + ") ");
+						   $$ = new ParserVal(sintactico.crearNodoControl("return",$3));}
+        |  Return  	 expresion ')'  ';' error	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN1 (Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
+        |  Return '(' expresion   	';' error	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN2(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
+        |  Return  	 expresion   	';' error	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN3(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
         |  Return '(' expresion ')'  error 	 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN4(Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
         ;
 
@@ -157,49 +160,201 @@ bloque_sentencias_funcion: bloque_sentencias_funcion ejecutables_funcion {
 			 | declarativas {$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
 			 ;
 
-sentencia_if_funcion : If condicion_if then cuerpo_If_funcion end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             	     | If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             	     | If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
-             	     | If condicion_if then cuerpo_If_funcion 			     error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
-             	     | If condicion_if then cuerpo_If_funcion Else cuerpo_Else_funcion error ';'      { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
-             	     | If condicion_if 	    cuerpo_If_funcion error                           { sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+
+
+
+
+
+
+op_asignacion : opasignacion    { $$.sval = new String("=:"); }
+	      | ':''=' 		{ sintactico.addErrorSintactico("SyntaxError. OP1(Línea " + (AnalizadorLexico.LINEA) + "): error en el op de ASIG"); }
+              | '=' 		{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): error en el op de ASIG"); }
+              ;
+
+// TODO listo
+asignacion : id op_asignacion expresion ';' {	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
+						$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
+					   }
+           | id op_asignacion expresion  error { sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la ASIG."); }
+           | id op_asignacion for_else_cte';' {$$ = new ParserVal(sintactico.crearNodo("=:", $1, $3));}
+
+           ;
+
+for_else_cte : expresion_For Else cte {$$ = new ParserVal(sintactico.crearNodo("else", $1, $3));} //TODO Aca tambien nodo de control???
+	     | expresion_For error  {sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
+	     ;
+
+salida : out '(' cadena ')' ';'		{$$ = new ParserVal(sintactico.crearNodoControl("out", new ParserVal(sintactico.crearHoja($3.ival))));}
+       | out '(' cadena ')' error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
+       | out '(' cadena error ';'   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): cierre erróneo de la lista de parámetros de out."); }
+       | out cadena error ';'       { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): los parámetros de out deben estar entre paréntesis."); }
+       | '(' cadena error             { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): se esperaba out, se encontró '('."); }
+       | out '(' ')' error ';'      { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta declarar una cadena para PRINT."); }
+       ;
+
+// ------------------------------------------- SENTENCIAS IF ---------------------------------------------------------
+// TODO listo
+sentencia_If : If condicion_if cuerpo_If end_if ';'                      { 	$$ = new ParserVal(sintactico.crearNodo("if",$2,$3));
+										sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | If condicion_if then cuerpo_If end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             | If condicion_if then cuerpo_If 			     error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+             ;
+
+// TODO listo
+condicion_if : '(' expresion_relacional ')'	{$$ = new ParserVal(sintactico.crearNodoControl("cond",$2));}
+	     | expresion_relacional ')'		{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
+	     | '(' expresion_relacional 	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
+	     | expresion_relacional 		{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
+             ;
+
+// TODO listo REVISAR ERRORES
+cuerpo_If: cuerpo_Then cuerpo_Else {$$ = new ParserVal(sintactico.crearNodo("cuerpo", $1, $2));}
+	| cuerpo_Then {$$ = new ParserVal(sintactico.crearNodo("cuerpo", $1, null));}
+	| cuerpo_Else { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta bloque then."); }
+	;
+
+// TODO listo REVISAR ERRORES
+cuerpo_Then : then '{' bloque_ejecutables '}' {$$ = new ParserVal(sintactico.crearNodoControl("then", $3));}
+	  |   then ejecutables {$$ = new ParserVal(sintactico.crearNodoControl("then", $2));}
+          ;
+
+// TODO listo
+cuerpo_Else : Else '{' bloque_ejecutables'}' {$$ = new ParserVal(sintactico.crearNodoControl("else", $3));}
+	    | Else ejecutables {$$ = new ParserVal(sintactico.crearNodoControl("else", $2));}
+	    ;
+
+sentencia_if_for : If condicion_if cuerpo_If_for end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
+ 										   $$ = new ParserVal(sintactico.crearNodo("if",$2,$3));}
+             | If condicion_if cuerpo_If_for end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             | If condicion_if cuerpo_If_for error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+             ;
+
+cuerpo_If_for :  cuerpo_then_for cuerpo_Else_for {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,$2));}
+	  |   cuerpo_then_for {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,null));}
+	  | cuerpo_Else_for error {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
+          ;
+
+cuerpo_then_for : then '{' bloque_sentencias_For'}' {$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
+	    | then sentencias_For {$$ = new ParserVal(sintactico.crearNodoControl("then",$2));}
+            ;
+
+cuerpo_Else_for : Else '{' bloque_sentencias_For'}' {$$ = new ParserVal(sintactico.crearNodoControl("else",$3));}
+	    | Else sentencias_For {$$ = new ParserVal(sintactico.crearNodoControl("else",$2));}
+            ;
+
+sentencia_if_funcion : If condicion_if cuerpo_If_funcion end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
+ 											   $$ = new ParserVal(sintactico.crearNodo("if",$2,$3));}
+             	     | If condicion_if cuerpo_If_funcion end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             	     | If condicion_if cuerpo_If_funcion error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
                      ;
 
-cuerpo_If_funcion :  '{' bloque_sentencias_ejecutables_funcion '}'
-		  |   ejecutables_funcion
+cuerpo_If_funcion :  cuerpo_then_funcion cuerpo_Else_funcion {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,$2));}
+		  |  cuerpo_then_funcion {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,null));}
+		  | cuerpo_Else_funcion error {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
 		  ;
 
-cuerpo_Else_funcion : '{' bloque_sentencias_ejecutables_funcion'}'
-		    | ejecutables_funcion
+cuerpo_then_funcion : then '{' bloque_sentencias_ejecutables_funcion'}' {$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
+		    | then ejecutables_funcion {$$ = new ParserVal(sintactico.crearNodoControl("then",$2));}
 		    ;
 
-sentencia_if_for_funcion : If condicion_if then cuerpo_If_for_funcion end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             	     | If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             	     | If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
-             	     | If condicion_if then cuerpo_If_for_funcion 			     error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
-             	     | If condicion_if then cuerpo_If_for_funcion Else cuerpo_Else_for_funcion error ';'      { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
-             	     | If condicion_if 	    cuerpo_If_for_funcion error                           { sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
+cuerpo_Else_funcion : Else '{' bloque_sentencias_ejecutables_funcion'}' {$$ = new ParserVal(sintactico.crearNodoControl("else",$3));}
+		    | Else ejecutables_funcion {$$ = new ParserVal(sintactico.crearNodoControl("else",$2));}
+		    ;
+
+sentencia_if_for_funcion : If condicion_if cuerpo_If_for_funcion end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
+												  $$ = new ParserVal(sintactico.crearNodo("if",$2,$3));}
+             	     | If condicion_if cuerpo_If_for_funcion end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             	     | If condicion_if cuerpo_If_for_funcion error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
                      ;
 
-cuerpo_If_for_funcion :  '{' bloque_sentencias_For_funcion '}'
-		  |  sentencias_For_funcion
+cuerpo_If_for_funcion :  then_if_for_funcion else_if_for_funcion {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,$2));}
+		      | then_if_for_funcion {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,null));}
+		      | else_if_for_funcion error {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
+		      ;
+
+then_if_for_funcion: then '{' bloque_sentencias_For_funcion '}' {$$ = new ParserVal(sintactico.crearNodoControl("then", $3));}
+		  | then sentencias_For_funcion {$$ = new ParserVal(sintactico.crearNodoControl("then", $2));}
 		  ;
 
-cuerpo_Else_for_funcion :  '{' bloque_sentencias_For_funcion '}'
-                        |  sentencias_For_funcion
+else_if_for_funcion : Else '{' bloque_sentencias_For_funcion '}' {$$ = new ParserVal(sintactico.crearNodoControl("else", $3));}
+                        | Else sentencias_For_funcion {$$ = new ParserVal(sintactico.crearNodoControl("else", $2));}
                         ;
+// ------------------------------------------- FIN SENTENCIAS IF ---------------------------------------------------------
 
-cola_For_funcion : '{' bloque_sentencias_For_funcion '}' ';'
-	|  sentencias_For_funcion
+// ------------------------------------------- SENTENCIAS WHEN ---------------------------------------------------------
+// TODO listo
+sentencia_when : when '(' condicion_for ')' cuerpo_when ';'         { sintactico.addAnalisis("Se reconocio una sentencia when");
+									$$ = new ParserVal(sintactico.crearNodo("when", $3, $5));}
+             | when condicion_for ')' cuerpo_when ';' error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta abrir paréntesis la condicion"); }
+             | when '(' condicion_for  cuerpo_when';' error                        { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta paréntesis de cierre en la condicion."); }
+             ;
+
+// TODO listo
+cuerpo_when : then '{' sentencia '}'	{$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
+            | then '{' sentencia error       { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar la llave del bloque."); }
+            | then  sentencia '}' error      { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir la llave del bloque"); }
+            ;
+// ------------------------------------------- FIN SENTENCIAS WHEN ---------------------------------------------------------
+
+// ------------------------------------------- SENTENCIAS FOR ---------------------------------------------------------
+
+// TODO REVISAR ERRORES
+encabezado_For : For '(' detalles_for ')' 	cola_For 	  { sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
+									$$ = new ParserVal(sintactico.crearNodo("For",$3,$5));
+									}
+	       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");}
+		;
+
+ // TODO listo
+detalles_for: asignacion_for ';' condicion_operacion_for {$$ = new ParserVal(sintactico.crearNodo("encabezado for",$1, $3));}
+		;
+// TODO listo
+condicion_operacion_for: condicion_for ';' operacion_for {$$ = new ParserVal(sintactico.crearNodo("condicion y operacion for",  $1, $3));}
+
+// TODO listo (lo del arbol sintactico)
+condicion_for :  id comparador cte  {	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
+					ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
+					$$ = new ParserVal(sintactico.crearNodoControl("cond", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));}// para en un futuro expandirla y coparar con expresion
+	      ;
+// TODO listo
+cola_For : '{' bloque_sentencias_For '}' ';'  {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
+	|  sentencias_For  {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
+	;
+
+signo : '+' {$$.sval = new String("+");}
+      | '-' {$$.sval = new String("-");}
+      ;
+
+
+sentencias_For : asignacion
+		| salida
+		| expresion_For
+		| sentencia_if_for
+               | sentencia_BREAK
+               | sentencia_CONTINUE
+               | declarativas error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
+               | ret_fun error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten retornos fuera de una funcion"); }
+               ;
+
+expresion_For : encabezado_For
+              ;
+
+cola_For_funcion : '{' bloque_sentencias_For_funcion '}' ';' {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
+	|  sentencias_For_funcion {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
 	;
 
 
-sentencia_for_funcion : For '(' asignacion_for ';' condicion_for ';' operacion_for ')' 	cola_For_funcion 	  { sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")"); }
-	       | For     asignacion_for ';' condicion_for ';' operacion_for ')' 	cola_For_funcion 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	       | For     asignacion_for ';' condicion_for ';' operacion_for 		cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	       | For '(' asignacion_for ':'   condicion_for ':' operacion_for ')' 	cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-               | id ':' For '(' asignacion_for ';' condicion_for ';' operacion_for ')' cola_For_funcion	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");}
-               ;
+sentencia_for_funcion :  For '(' detalles_for ')' 	cola_For_funcion 	  { sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
+                        									$$ = new ParserVal(sintactico.crearNodo("For",$3,$5));
+										}
+		       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For_funcion 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+		       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+		       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+		       | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");}
+			;
 // TODO listo
 asignacion_for: id op_asignacion cte {	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
 					ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
@@ -227,133 +382,7 @@ bloque_sentencias_For_funcion : sentencias_For_funcion {$$ = new ParserVal(sinta
 									}
                       ;
 
-
-
-
-op_asignacion : opasignacion    { $$.sval = new String("=:"); }
-	      | ':''=' 		{ sintactico.addErrorSintactico("SyntaxError. OP1(Línea " + (AnalizadorLexico.LINEA) + "): error en el op de ASIG"); }
-              | '=' 		{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): error en el op de ASIG"); }
-              ;
-
-// TODO listo
-asignacion : id op_asignacion expresion ';' {	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
-						$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
-					   }
-           | id op_asignacion expresion  error { sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la ASIG."); }
-           | id op_asignacion for_else_cte';' {$$ = new ParserVal(sintactico.crearNodo("=:", $1, $3));}
-
-           ;
-
-for_else_cte : expresion_For Else cte {$$ = new ParserVal(sintactico.crearNodo("else", $1, $3));} //TODO Aca tambien nodo de control???
-	     | expresion_For error  {sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
-	     ;
-
-salida : out '(' cadena ')' ';'
-       | out '(' cadena ')' error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
-       | out '(' cadena error ';'   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): cierre erróneo de la lista de parámetros de out."); }
-       | out cadena error ';'       { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): los parámetros de out deben estar entre paréntesis."); }
-       | '(' cadena error             { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): se esperaba out, se encontró '('."); }
-       | out '(' ')' error ';'      { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta declarar una cadena para PRINT."); }
-       ;
-
-// TODO listo
-sentencia_If : If condicion_if cuerpo_If end_if ';'                      { 	$$ = new ParserVal(sintactico.crearNodo("if",$2,$3));
-										sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             | If condicion_if then cuerpo_If end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
-             | If condicion_if then cuerpo_If 			     error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
-             ;
-
-// TODO listo REVISAR ERRORES
-cuerpo_If: cuerpo_Then cuerpo_Else {$$ = new ParserVal(sintactico.crearNodo("cuerpo", $1, $2));}
-	| cuerpo_Then {$$ = new ParserVal(sintactico.crearNodo("cuerpo", $1, null));}
-	| cuerpo_Else { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta bloque then."); }
-	;
-
-// TODO listo REVISAR ERRORES
-cuerpo_Then : then '{' bloque_ejecutables '}' {$$ = new ParserVal(sintactico.crearNodoControl("then", $3));}
-	  |   then ejecutables {$$ = new ParserVal(sintactico.crearNodoControl("then", $2));}
-          ;
-
-// TODO listo
-cuerpo_Else : Else '{' bloque_ejecutables'}' {$$ = new ParserVal(sintactico.crearNodoControl("else", $3));}
-	    | Else ejecutables {$$ = new ParserVal(sintactico.crearNodoControl("else", $2));}
-	    ;
-
-sentencia_if_for : If condicion_if then cuerpo_If_for end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             | If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             | If condicion_if then cuerpo_If_for Else cuerpo_Else_for end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
-             | If condicion_if then cuerpo_If_for 			     error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
-             | If condicion_if then cuerpo_If_for Else cuerpo_Else_for error ';'      { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
-             | If condicion_if 	    cuerpo_If_for error                           { sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta la declaración de then."); }
-             ;
-
-cuerpo_If_for :  '{' bloque_sentencias_For '}'
-	  |   sentencias_For
-          ;
-
-
-cuerpo_Else_for : '{' bloque_sentencias_For'}'
-	    | sentencias_For
-            ;
-
-// TODO listo
-sentencia_when : when '(' condicion_for ')' cuerpo_when ';'         { sintactico.addAnalisis("Se reconocio una sentencia when");
-									$$ = new ParserVal(sintactico.crearNodo("when", $3, $5));}
-             | when condicion_for ')' cuerpo_when ';' error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta abrir paréntesis la condicion"); }
-             | when '(' condicion_for  cuerpo_when';' error                        { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta paréntesis de cierre en la condicion."); }
-             ;
-
-// TODO listo
-cuerpo_when : then '{' sentencia '}'	{$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
-            | then '{' sentencia error       { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar la llave del bloque."); }
-            | then  sentencia '}' error      { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir la llave del bloque"); }
-            ;
-
-// TODO listo
-cola_For : '{' bloque_sentencias_For '}' ';'  {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
-	|  sentencias_For  {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
-	;
-
-// TODO REVISAR ERRORES
-encabezado_For : For '(' detalles_for ')' 	cola_For 	  { sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
-									$$ = new ParserVal(sintactico.crearNodo("For",$3,$5));
-									}
-	       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");}
-
- // TODO listo             ;
-detalles_for: asignacion_for ';' condicion_operacion_for {$$ = new ParserVal(sintactico.crearNodo("encabezado for",$1, $3));}
-		;
-// TODO listo
-condicion_operacion_for: condicion_for ';' operacion_for {$$ = new ParserVal(sintactico.crearNodo("condicion y operacion for",  $1, $3));}
-
-// TODO listo (lo del arbol sintactico)
-condicion_for :  id comparador cte  {	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
-					ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
-					$$ = new ParserVal(sintactico.crearNodoControl("cond", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));}// para en un futuro expandirla y coparar con expresion
-	      ;
-
-
-signo : '+' {$$.sval = new String("+");}
-      | '-' {$$.sval = new String("-");}
-      ;
-
-
-sentencias_For : asignacion
-		| salida
-		| expresion_For
-		| sentencia_if_for
-               | sentencia_BREAK
-               | sentencia_CONTINUE
-               | declarativas error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
-               | ret_fun error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten retornos fuera de una funcion"); }
-               ;
-
-expresion_For : encabezado_For
-              ;
-
+// ------------------------------------------- FIN SENTENCIAS FOR ---------------------------------------------------------
 // TODO listo
 sentencia_BREAK : BREAK ';'	{ sintactico.addAnalisis("Se reconocio una sentencia break (Línea " + AnalizadorLexico.LINEA + ")");
 				$$ = new ParserVal(sintactico.crearNodoControl("break",null));}
@@ -370,12 +399,7 @@ sentencia_CONTINUE : CONTINUE ';'		{ sintactico.addAnalisis("Se reconocio una se
                    | CONTINUE error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
                    ;
 
-// TODO listo
-condicion_if : '(' expresion_relacional ')'	{$$ = new ParserVal(sintactico.crearNodoControl("cond",$2));}
-	     | expresion_relacional ')'		{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
-	     | '(' expresion_relacional 	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
-	     | expresion_relacional 		{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
-             ;
+
 
 // TODO listo
 expresion_relacional : expresion comparador expresion { $$ = new ParserVal(sintactico.crearNodo($2.sval, $1, $3));}

@@ -1,4 +1,4 @@
-Hora de ejecucion: nov. 13 2022, 02:24:51 a. m.
+Hora de ejecucion: nov. 13 2022, 05:21:06 p. m.
 
 
 
@@ -9,7 +9,12 @@ Hora de ejecucion: nov. 13 2022, 02:24:51 a. m.
 
 program{
 
-   const a =: 3 , b =: 5, c =: 7;
+   fun f (i32 a) : i32 {
+
+                  out ( 'cadena de prueba' );
+                  return(c + 1);
+
+       }
 
 }$
 
