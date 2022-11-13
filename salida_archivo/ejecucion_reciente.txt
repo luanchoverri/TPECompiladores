@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Hora de ejecucion: nov. 03 2022, 04:27:24 a. m.
+=======
+Hora de ejecucion: nov. 13 2022, 05:21:06 p. m.
+>>>>>>> release
 
 
 
@@ -7,6 +11,7 @@ Hora de ejecucion: nov. 03 2022, 04:27:24 a. m.
 |--- CODIGO FUENTE ---|
 
 
+<<<<<<< HEAD
 program
 {
     i32 x, b, c;
@@ -16,6 +21,17 @@ program
     c =: a ;
     b =: 2 / a;
     b =: 2 / raiz(a, 2);
+=======
+program{
+
+   fun f (i32 a) : i32 {
+
+                  out ( 'cadena de prueba' );
+                  return(c + 1);
+
+       }
+
+>>>>>>> release
 }$
 
 -----------------------------------------------------------------
@@ -26,7 +42,10 @@ program
 |--- Sin errores LEXICOS ---| (OK)
 
 
-|--- ERRORES SINTACTICOS: ---| (!)
 
+<<<<<<< HEAD
 
 SyntaxError. OP(Línea 8): falta ';' luego de la ASIG.
+=======
+|--- Sin errores SINTACTICOS ---| (OK)
+>>>>>>> release
