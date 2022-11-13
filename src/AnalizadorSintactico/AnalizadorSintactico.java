@@ -119,6 +119,18 @@ public class AnalizadorSintactico {
         Nodo i = new NodoHijo(hijo.obj, identificador);
         return i;
     }
+
+    public Nodo crearNodoFunc(int indice, ParserVal hijo){
+        String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
+        if (hijo == null) {
+            Nodo i = new NodoHijo(null, lexema, indice);
+            return i;
+        } else {
+            Nodo i = new NodoHijo(hijo.obj, lexema, indice);
+            return i;
+        }
+    }
+
     public Atributo getEntradaTablaSimb(int indice){
         return this.tablaSimbolos.getEntrada(indice);
     }

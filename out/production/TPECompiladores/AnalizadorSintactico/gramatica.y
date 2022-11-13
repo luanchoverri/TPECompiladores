@@ -88,6 +88,7 @@ ejecutables : asignacion
             | salida
             | sentencia_If
             | expresion_For
+            | invocacion_funcion
             | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
             | sentencia_CONTINUE error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
             ;
@@ -134,6 +135,7 @@ cuerpo_fun: bloque_sentencias_funcion
 ejecutables_funcion: asignacion
 		   | sentencia_if_funcion
 		   | salida
+		   | invocacion_funcion
 		   | sentencia_for_funcion
 		   | ret_fun
 		   | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
@@ -333,6 +335,7 @@ sentencias_For : asignacion
 		| salida
 		| expresion_For
 		| sentencia_if_for
+		| invocacion_funcion
                | sentencia_BREAK
                | sentencia_CONTINUE
                | declarativas error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
@@ -368,6 +371,7 @@ sentencias_For_funcion : asignacion
 	       | salida
 	       | sentencia_for_funcion
 	       | ret_fun
+	       | invocacion_funcion
                | sentencia_BREAK
                | sentencia_CONTINUE
                | sentencia_if_for_funcion
@@ -399,7 +403,15 @@ sentencia_CONTINUE : CONTINUE ';'		{ sintactico.addAnalisis("Se reconocio una se
                    | CONTINUE error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
                    ;
 
+invocacion_funcion: id '(' list_parametros ')' ';' { $$ = new ParserVal(sintactico.crearNodoFunc($1.ival, $3));}
+		  | id '(' ')' ';' { $$ = new ParserVal(sintactico.crearNodoFunc($1.ival, null));}
+		  ;
 
+list_parametros: factor ',' factor {
+						$$ = new ParserVal(sintactico.crearNodo("param", $1, $3));
+					}
+		      | factor  {$$ = new ParserVal(sintactico.crearNodo("param", $1, null));}
+		      ;
 
 // TODO listo
 expresion_relacional : expresion comparador expresion { $$ = new ParserVal(sintactico.crearNodo($2.sval, $1, $3));}
