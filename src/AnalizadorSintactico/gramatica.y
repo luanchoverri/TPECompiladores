@@ -88,13 +88,14 @@ ejecutables : asignacion
             | salida
             | sentencia_If
             | expresion_For
+            | invocacion_funcion
             | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
             | sentencia_CONTINUE error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
             ;
 
 lista_de_variables : id
                    | lista_de_variables ',' id
-                   | lista_de_variables id     { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
+                   | lista_de_variables id error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
                    ;
 
 encabezado_func : fun id '('	     { sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" ); }
@@ -134,6 +135,7 @@ cuerpo_fun: bloque_sentencias_funcion
 ejecutables_funcion: asignacion
 		   | sentencia_if_funcion
 		   | salida
+		   | invocacion_funcion
 		   | sentencia_for_funcion
 		   | ret_fun
 		   | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
@@ -162,11 +164,14 @@ bloque_sentencias_funcion: bloque_sentencias_funcion ejecutables_funcion {
 
 
 
+
+
+
+
 op_asignacion : opasignacion    { $$.sval = new String("=:"); }
 	      | ':''=' 		{ sintactico.addErrorSintactico("SyntaxError. OP1(Línea " + (AnalizadorLexico.LINEA) + "): error en el op de ASIG"); }
               | '=' 		{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): error en el op de ASIG"); }
               ;
-
 
 // TODO listo
 asignacion : id op_asignacion expresion ';' {	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
@@ -222,14 +227,14 @@ cuerpo_Else : Else '{' bloque_ejecutables'}' {$$ = new ParserVal(sintactico.crea
 
 sentencia_if_for : If condicion_if cuerpo_If_for end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
  										   $$ = new ParserVal(sintactico.crearNodo("if",$2,$3));}
-         	 | If condicion_if cuerpo_If_for end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
-            	 | If condicion_if cuerpo_If_for error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+             | If condicion_if cuerpo_If_for end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             | If condicion_if cuerpo_If_for error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
              ;
 
 cuerpo_If_for :  cuerpo_then_for cuerpo_Else_for {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,$2));}
-	      |  cuerpo_then_for {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,null));}
-	      |  cuerpo_Else_for error {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
-               ;
+	  |   cuerpo_then_for {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,null));}
+	  | cuerpo_Else_for error {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
+          ;
 
 cuerpo_then_for : then '{' bloque_sentencias_For'}' {$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
 	    | then sentencias_For {$$ = new ParserVal(sintactico.crearNodoControl("then",$2));}
@@ -330,6 +335,7 @@ sentencias_For : asignacion
 		| salida
 		| expresion_For
 		| sentencia_if_for
+		| invocacion_funcion
                | sentencia_BREAK
                | sentencia_CONTINUE
                | declarativas error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
@@ -365,6 +371,7 @@ sentencias_For_funcion : asignacion
 	       | salida
 	       | sentencia_for_funcion
 	       | ret_fun
+	       | invocacion_funcion
                | sentencia_BREAK
                | sentencia_CONTINUE
                | sentencia_if_for_funcion
@@ -396,17 +403,23 @@ sentencia_CONTINUE : CONTINUE ';'		{ sintactico.addAnalisis("Se reconocio una se
                    | CONTINUE error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
                    ;
 
+invocacion_funcion: id '(' list_parametros ')' ';' { $$ = new ParserVal(sintactico.crearNodoFunc($1.ival, $3));}
+		  | id '(' ')' ';' { $$ = new ParserVal(sintactico.crearNodoFunc($1.ival, null));}
+		  ;
 
+list_parametros: factor ',' factor {
+						$$ = new ParserVal(sintactico.crearNodo("param", $1, $3));
+					}
+		      | factor  {$$ = new ParserVal(sintactico.crearNodo("param", $1, null));}
+		      ;
 
 // TODO listo
 expresion_relacional : expresion comparador expresion { $$ = new ParserVal(sintactico.crearNodo($2.sval, $1, $3));}
                      ;
 
-
 // TODO listo
 expresion : expresion signo termino {$$ = new ParserVal(sintactico.crearNodo($2.sval, $1, $3)); }
           | termino
-
           ;
 
 // TODO listo
@@ -414,7 +427,6 @@ termino : termino '*' factor {$$ = new ParserVal(sintactico.crearNodo("*",$1,$3)
         | termino '/' factor {$$ = new ParserVal(sintactico.crearNodo("/",$1,$3));}
         | factor
         ;
-
 
 // TODO falta chquear ambito
 factor : id  { $$ = new ParserVal(sintactico.crearHoja($1.ival));}// TODO ACA SE CHEQUEA AMBITO
@@ -474,5 +486,4 @@ public int yylex() {
 public void yyerror(String string) {
 	//sintactico.addErrorSintactico("par: " + string);
 }
-
 

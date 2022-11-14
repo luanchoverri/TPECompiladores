@@ -1,7 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 Hora de ejecucion: nov. 03 2022, 04:27:24 a. m.
 =======
 Hora de ejecucion: nov. 13 2022, 05:21:06 p. m.
+>>>>>>> release
+=======
+Hora de ejecucion: nov. 13 2022, 08:44:55 p. m.
 >>>>>>> release
 
 
@@ -30,6 +34,12 @@ program{
                   return(c + 1);
 
        }
+
+<<<<<<< HEAD
+>>>>>>> release
+=======
+   f(e,f);
+   g();
 
 >>>>>>> release
 }$

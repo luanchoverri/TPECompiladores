@@ -1,6 +1,7 @@
 package AnalizadorSintactico;
 import AnalizadorLexico.*;
 import AnalizadorLexico.AccionesSemanticas.AccionesSimples.RangoEntero;
+import ArbolSintactico.GenerarCodigo;
 import ArbolSintactico.Nodo;
 import ArbolSintactico.NodoBinario;
 import ArbolSintactico.NodoHijo;
@@ -119,6 +120,18 @@ public class AnalizadorSintactico {
         Nodo i = new NodoHijo(hijo.obj, identificador);
         return i;
     }
+
+    public Nodo crearNodoFunc(int indice, ParserVal hijo){
+        String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
+        if (hijo == null) {
+            Nodo i = new NodoHijo(null, lexema, indice);
+            return i;
+        } else {
+            Nodo i = new NodoHijo(hijo.obj, lexema, indice);
+            return i;
+        }
+    }
+
     public Atributo getEntradaTablaSimb(int indice){
         return this.tablaSimbolos.getEntrada(indice);
     }
@@ -225,8 +238,9 @@ public class AnalizadorSintactico {
         System.out.println("________________________________________________");
 
         imprimirArbol(this.raiz,0);
+        GenerarCodigo g = new GenerarCodigo(this.tablaSimbolos);
+        g.generacionDeCodigo();
     }
-
 }
 
 
