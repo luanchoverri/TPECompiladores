@@ -11,6 +11,7 @@ public class Atributo {
     private String uso;
 
 
+
     // -- Constructor --
 
     public Atributo(String lexema, int idToken, int nroLinea) {
@@ -29,12 +30,6 @@ public class Atributo {
         this.uso = null;
     }
 
-    public Atributo(int idToken, String lexema, String tipo) {
-        this.idToken = idToken;
-        this.lexema = lexema;
-        this.tipo = tipo;
-        this.uso = null;
-    }
 
     // -- MÉTODOS -- // 
 

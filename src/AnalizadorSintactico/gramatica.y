@@ -222,14 +222,14 @@ cuerpo_Else : Else '{' bloque_ejecutables'}' {$$ = new ParserVal(sintactico.crea
 
 sentencia_if_for : If condicion_if cuerpo_If_for end_if ';'                      { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
  										   $$ = new ParserVal(sintactico.crearNodo("if",$2,$3));}
-             | If condicion_if cuerpo_If_for end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
-             | If condicion_if cuerpo_If_for error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
+         	 | If condicion_if cuerpo_If_for end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+            	 | If condicion_if cuerpo_If_for error    { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
              ;
 
 cuerpo_If_for :  cuerpo_then_for cuerpo_Else_for {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,$2));}
-	  |   cuerpo_then_for {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,null));}
-	  | cuerpo_Else_for error {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
-          ;
+	      |  cuerpo_then_for {$$ = new ParserVal(sintactico.crearNodo("cuerpo",$1,null));}
+	      |  cuerpo_Else_for error {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
+               ;
 
 cuerpo_then_for : then '{' bloque_sentencias_For'}' {$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
 	    | then sentencias_For {$$ = new ParserVal(sintactico.crearNodoControl("then",$2));}
