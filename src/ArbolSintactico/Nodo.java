@@ -3,7 +3,12 @@ package ArbolSintactico;
 public abstract class Nodo {
 
 	protected String lexema;
+	protected int valor;
 	private String tipo;
+
+	public int getValor(){
+		return this.valor;
+	}
 
 	public String getLexema () {
 		return this.lexema;
@@ -32,5 +37,9 @@ public abstract class Nodo {
     public abstract Nodo getHijoDerecho ();
 
 	public abstract void setHijoDerecho(Nodo derecho);
+
+    public boolean hijosSonHoja() {
+        return false;
+    }
 
 }
