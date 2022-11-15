@@ -68,9 +68,9 @@ sentencia : declarativas {$$ = new ParserVal(sintactico.crearNodo("sentencia", $
            ;
 
 
-declarativas : tipo lista_de_variables ';'        { sintactico.addAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             | tipo lista_de_variables error      { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta ';' al final de la declaración de variable."); }
-             | tipo error                         { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el identificador de variable"); }
+declarativas : i32 lista_de_variables ';'        { sintactico.addAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | f32 lista_de_variables ';'        { sintactico.addAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | lista_de_variables ';'   error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el tipo de variable"); }
              | declaracion_func
              | declaracion_const
              | sentencia_when
@@ -91,12 +91,23 @@ ejecutables : asignacion
             | invocacion_funcion
             | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
             | sentencia_CONTINUE error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
-            ;
 
-lista_de_variables : id
-                   | lista_de_variables ',' id
-                   | lista_de_variables id error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
+
+lista_de_variables : id lista_de_variables
+                   | id ',' lista_de_variables    {
+                   				   sintactico.addListaVariables($1.sval);
+                   				   sintactico.setUso("Variable", $1.ival);}
+                   | id				  {
+                   				  sintactico.addListaVariables($1.sval);
+                                                  sintactico.setUso("Variable", $1.ival);}
+
+            //       | error ';' { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
                    ;
+
+//lista_de_variables : id
+//                   | lista_de_variables ',' id
+//                   | lista_de_variables id error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
+//                   ;
 
 encabezado_func : fun id '('	     { sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" ); }
                 | fun   '(' error   { sintactico.addErrorSintactico("SyntaxError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): problema en la definición de la función."); }

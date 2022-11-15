@@ -34,9 +34,7 @@ public class Atributo {
     // -- MÉTODOS -- // 
 
     // Getters 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+
     public int getIdToken() {
         return this.idToken;
     }
@@ -49,28 +47,25 @@ public class Atributo {
         return this.tipo;
     }
 
-    public String getUso() {
-        return uso;
-    }
+    public String getUso() { return uso; }
 
-    public void setUso(String uso) {
-        this.uso = uso;
-    }
+
 // Setters
 
     public void setLexema(String lexema) {
         this.lexema = lexema;
     }
 
-    public void setIdToken(int idToken) {
-        this.idToken = idToken;
-    }
+    public void setUso(String uso) {this.uso = uso;}
 
-
+    public void setTipo(String tipo) {this.tipo = tipo;}
 
     @Override
     public String toString() {
-        return " | TOKEN " + "id=" + idToken + " " + lexema + "  nroLinea=" + nroLinea + " tipo= " + tipo + "  |";
+
+        String s = String.format("%5s %5s %10s %10s %1s %5s %1s %5s ",
+                                "TOKEN", idToken, lexema, "#linea", nroLinea, "tipo", tipo, uso);
+        return(s) ;
     }
 
 }

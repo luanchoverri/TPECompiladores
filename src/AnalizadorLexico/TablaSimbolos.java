@@ -169,9 +169,9 @@ public class TablaSimbolos {
         Atributo registro = new Atributo(lexema, id, nroLinea);
         if (getTipoToken(id).equals("CONSTANTE")){
             if (lexema.contains(".")) {
-                registro.setTipo("FLOAT");
+                registro.setTipo("f32");
             } else {
-                registro.setTipo("LONG");
+                registro.setTipo("i32");
             }
         }
         this.registroTokens.add(registro);
@@ -195,7 +195,7 @@ public class TablaSimbolos {
     }
 
     public void imprimir(){
-        System.out.println("---------TABLA DE SIMBOLOS---------");
+        System.out.println("🟡🟡🟡🟡🟡 TABLA DE SIMBOLOS 🟡🟡🟡🟡🟡");
         for(Atributo token : registroTokens){
             System.out.println(token.toString());
         }

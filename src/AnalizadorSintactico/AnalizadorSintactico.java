@@ -24,6 +24,9 @@ public class AnalizadorSintactico {
     private String tipo;
     private Nodo raiz;
 
+    private ArrayList<String> listaVariables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
+
+
 
     public AnalizadorSintactico(AnalizadorLexico l, Parser p){
         analizadorLexico = l;
@@ -33,10 +36,19 @@ public class AnalizadorSintactico {
         tablaSimbolos = l.getTablaSimbolos();
         tipo = "";
         raiz = null;
+        listaVariables =  new ArrayList<String>();
 
 
     }
 
+    public void addListaVariables(String id){
+        listaVariables.add(id);
+    }
+
+    public void setUso(String uso, int indice){
+       tablaSimbolos.getEntrada(indice).setUso(uso);
+       System.out.println("kkkkkkkkkkkkkkkkkk    " + tablaSimbolos.getEntrada(indice).toString());
+    }
 
     public void setRaiz(ParserVal raiz){
         this.raiz = (Nodo) raiz.obj;
@@ -48,9 +60,9 @@ public class AnalizadorSintactico {
             return;
         }
         for (int i=0; i<nivel; i ++){
-            System.out.print("  ");
+            System.out.print("   ");
         }
-        System.out.println((nodo.getLexema().toString()) + " "); // mostrar datos del nodo
+        System.out.println(" └─ " + (nodo.getLexema().toString()) + " "); // mostrar datos del nodo
         nivel++;
         imprimirArbol(nodo.getHijoIzquierdo(),nivel); //recorre subarbol izquierdo
         imprimirArbol(nodo.getHijoDerecho(),nivel); //recorre subarbol derecho
@@ -58,6 +70,9 @@ public class AnalizadorSintactico {
     }
 
     public ParserVal modificarHijo(ParserVal arbolSentencias, Nodo nuevo){
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
         Nodo n = (Nodo) arbolSentencias.obj;
         System.out.println("ARBOL DE SENTENCIAS ANTES DE AGREGAR SENTENCIA");
         imprimirArbol(n,0);
@@ -97,19 +112,34 @@ public class AnalizadorSintactico {
         }
     }
     public Nodo crearHoja(int indice){
+
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
         Nodo i = new NodoHijo(null, lexema,indice);
+        i.setTipo(this.tablaSimbolos.getEntrada(indice).getTipo());
         return i;
     }
 
     public Nodo crearNodo(String identificador, ParserVal hijoIzq, ParserVal hijoDer){
-        if (hijoDer == null){
+        if (hijoDer == null){                                                   // POR QUE??? EL IZQUIERD0 NO?
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
             return i;
         } else {
             Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
+            i.setTipo( tipoResultante( (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
             return i;
         }
+    }
+
+    public String tipoResultante(Nodo izq, Nodo der){
+        System.out.println("nodo izquierdo " + izq.getLexema() + "tipo  " + izq.getTipo());
+        System.out.println("nodo derecho " + der.getLexema() + "tipo  " + der.getTipo());
+        if (izq.getTipo() != null && izq.getTipo() != null )
+            if(izq.getTipo().equals(der.getTipo())){
+                System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
+                return izq.getTipo();
+            }
+        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
+        return null;
     }
 
     public Nodo crearNodoControl(String identificador, ParserVal hijo){
@@ -163,7 +193,7 @@ public class AnalizadorSintactico {
                 Files.write(path, contenido.getBytes(), StandardOpenOption.APPEND);
             }else{
                 if (!(this.erroresSintacticos.isEmpty())){ // Si hay errores sintacticos
-                    contenido = "\n" + "\n" + "\n" + "|--- ERRORES SINTACTICOS: ---| (!)" + "\n" + "\n" + "\n";
+                    contenido = "\n" + "\n" + "\n" + "| ERRORES SINTACTICOS: ---| (!)" + "\n" + "\n" + "\n";
                     Files.write(path, contenido.getBytes(), StandardOpenOption.APPEND);
                     for (int i = 0; i < this.erroresSintacticos.size(); i++){
                         contenido = this.erroresSintacticos.get(i);
@@ -181,8 +211,8 @@ public class AnalizadorSintactico {
      * Método para imprimir el análisis sintáctico.
      */
     public void imprimirAnalisisSintactico() {
-        System.out.println();
-        System.out.println("|----------ANALISIS SINTÁCTICO-----------|");
+
+        System.out.println("   🔎  ANALISIS SINTÁCTICO    ");
 
         if (!this.analisisSintactico.isEmpty())
             for (String dato : this.analisisSintactico)
@@ -192,24 +222,18 @@ public class AnalizadorSintactico {
         System.out.println();
     }
 
-    /**
-     * Método para imprimir los errores léxicos.
-     */
-    public void imprimirErroresLexicos() {
-        this.analizadorLexico.imprimirErrores();
-    }
 
     /**
      * Método para imprimir el análisis léxico.
      */
     public void imprimirAnalisisLexico() {
         System.out.println();
-        System.out.println("|----------ANÁLIZADOR LÉXICO-----------|");
+        System.out.println("|                       ANÁLIZADOR LÉXICO                  |");
         ArrayList<Atributo> listaTokens = this.analizadorLexico.getListaTokens();
 
         for (Atributo token : listaTokens) {
-            System.out.println("----------------");
-            System.out.println("Tipo token: " + token.getTipo());
+            System.out.println("----------------------------------");
+            System.out.println("Tipo : " + token.getTipo());
             System.out.println("Lexema: " + token.getLexema());
         }
     }
@@ -223,21 +247,27 @@ public class AnalizadorSintactico {
         System.out.println();
 
         if (parser.yyparse() == 0) {
-            System.out.println("Ejecución del Parser finalizada.");
+
+            System.out.println(" \n \n ✅ EJECUCION DEL PARSER FINALIZADA \n \n  ");
             imprimirAnalisisLexico();
+            System.out.println("\n \n 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 \n ");
             imprimirAnalisisSintactico();
             imprimirTablaSimbolos();
         }
         else
-            System.out.println("Ejecución del Parser no finalizada.");
+            System.out.println(" \n \n ❌ EL PARSER NO PUDO TERMINAR \n \n ");
 
-        analizadorLexico.imprimirErrores();
+       // analizadorLexico.imprimirErrores();
+
         this.imprimirErroresSintacticos();
         analizadorLexico.setPosArchivo(0);
         analizadorLexico.setBuffer("");
-        System.out.println("________________________________________________");
 
+        System.out.println(" ");
+
+        System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
+
         GenerarCodigo g = new GenerarCodigo(this.tablaSimbolos);
         g.generacionDeCodigo();
     }

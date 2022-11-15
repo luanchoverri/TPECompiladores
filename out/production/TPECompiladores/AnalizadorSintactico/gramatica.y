@@ -68,9 +68,9 @@ sentencia : declarativas {$$ = new ParserVal(sintactico.crearNodo("sentencia", $
            ;
 
 
-declarativas : tipo lista_de_variables ';'        { sintactico.addAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             | tipo lista_de_variables error      { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta ';' al final de la declaración de variable."); }
-             | tipo error                         { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el identificador de variable"); }
+declarativas : i32 lista_de_variables ';'        { sintactico.addAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | f32 lista_de_variables ';'        { sintactico.addAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
+             | lista_de_variables ';'   error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el tipo de variable"); }
              | declaracion_func
              | declaracion_const
              | sentencia_when
@@ -91,12 +91,23 @@ ejecutables : asignacion
             | invocacion_funcion
             | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
             | sentencia_CONTINUE error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
-            ;
 
-lista_de_variables : id
-                   | lista_de_variables ',' id
-                   | lista_de_variables id     { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
+
+lista_de_variables : id lista_de_variables
+                   | id ',' lista_de_variables    {
+                   				   sintactico.addListaVariables($1.sval);
+                   				   sintactico.setUso("Variable", $1.ival);}
+                   | id				  {
+                   				  sintactico.addListaVariables($1.sval);
+                                                  sintactico.setUso("Variable", $1.ival);}
+
+            //       | error ';' { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
                    ;
+
+//lista_de_variables : id
+//                   | lista_de_variables ',' id
+//                   | lista_de_variables id error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
+//                   ;
 
 encabezado_func : fun id '('	     { sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" ); }
                 | fun   '(' error   { sintactico.addErrorSintactico("SyntaxError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): problema en la definición de la función."); }
@@ -173,21 +184,6 @@ op_asignacion : opasignacion    { $$.sval = new String("=:"); }
               | '=' 		{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): error en el op de ASIG"); }
               ;
 
-<<<<<<< HEAD
-
-asignacion : id op_asignacion expresion ';'
-           | id op_asignacion expresion  { sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA-1) + "): falta ';' luego de la ASIG."); }
-           | etiquetaFor
-           ;
-
-etiquetaFor: id op_asignacion encabezado_For devolverValor
-	;
-devolverValor :  Else cte ';'
-	      |  error { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  "); }
-	      ;
-
-salida : out '(' cadena ')' ';'
-=======
 // TODO listo
 asignacion : id op_asignacion expresion ';' {	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
 						$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
@@ -202,7 +198,6 @@ for_else_cte : expresion_For Else cte {$$ = new ParserVal(sintactico.crearNodo("
 	     ;
 
 salida : out '(' cadena ')' ';'		{$$ = new ParserVal(sintactico.crearNodoControl("out", new ParserVal(sintactico.crearHoja($3.ival))));}
->>>>>>> release
        | out '(' cadena ')' error   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
        | out '(' cadena error ';'   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): cierre erróneo de la lista de parámetros de out."); }
        | out cadena error ';'       { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): los parámetros de out deben estar entre paréntesis."); }
@@ -433,19 +428,8 @@ list_parametros: factor ',' factor {
 expresion_relacional : expresion comparador expresion { $$ = new ParserVal(sintactico.crearNodo($2.sval, $1, $3));}
                      ;
 
-<<<<<<< HEAD
-list_param_invoc : factor
-		| list_param_invoc factor
-		;
-
-invocacion : cadena '(' list_param_invoc  ')'
-	  ;
-
-expresion : expresion signo termino
-=======
 // TODO listo
 expresion : expresion signo termino {$$ = new ParserVal(sintactico.crearNodo($2.sval, $1, $3)); }
->>>>>>> release
           | termino
           ;
 
@@ -455,14 +439,8 @@ termino : termino '*' factor {$$ = new ParserVal(sintactico.crearNodo("*",$1,$3)
         | factor
         ;
 
-<<<<<<< HEAD
-
-
-factor : id
-=======
 // TODO falta chquear ambito
 factor : id  { $$ = new ParserVal(sintactico.crearHoja($1.ival));}// TODO ACA SE CHEQUEA AMBITO
->>>>>>> release
        | cte      {
                         sintactico.setTipo(sintactico.getTipoFromTS($1.ival));
                         if (sintactico.getTipo().equals("LONG"))
@@ -473,7 +451,6 @@ factor : id  { $$ = new ParserVal(sintactico.crearHoja($1.ival));}// TODO ACA SE
                         sintactico.setNegativoTablaSimb($2.ival);
                         $$ = new ParserVal(sintactico.crearHoja($1.ival));
                     }
-       | invocacion
        ;
 
 //TODO listo
@@ -520,5 +497,4 @@ public int yylex() {
 public void yyerror(String string) {
 	//sintactico.addErrorSintactico("par: " + string);
 }
-
 
