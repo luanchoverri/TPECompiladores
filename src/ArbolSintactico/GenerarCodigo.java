@@ -3,20 +3,17 @@ package ArbolSintactico;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-
 import AnalizadorLexico.TablaSimbolos;
 
 public class GenerarCodigo{
 
-    private StringBuilder assamblerCode; //  Usamos StringBuilder ya que la cadena de caracteres va a cambiar frecuentemente, ya que hacemos cada caso dentro de esta. (no sincro)
+    private StringBuilder assemblerCode; //  Usamos StringBuilder ya que la cadena de caracteres va a cambiar frecuentemente, ya que hacemos cada caso dentro de esta. (no sincro)
     private StringBuilder inicio;
     private TablaSimbolos tablaDeSimbolos;
+    private int contadorEtiquetaLabel=0;
 
     public GenerarCodigo(TablaSimbolos tablaDeSimbolos){
-        this.assamblerCode = new StringBuilder("");
+        this.assemblerCode = new StringBuilder("");
         this.inicio = new StringBuilder("");
         this.tablaDeSimbolos = tablaDeSimbolos;
     }
@@ -45,27 +42,247 @@ public class GenerarCodigo{
 	}
 
 
-//    public void generarCodigoLeido(Nodo nodo){
-//        switch (nodo.getLexema()) { // switch case de prueba
-//
-//            case ("=:"):
-//              asignacionAssembler(nodo);
-//            break;
-//
-//            case ("+"):
-//              sumaAssembler(nodo);
-//            break;
-//        }
-//    }
+    public void generarCodigoLeido(Nodo nodo) {
+
+        if (!nodo.esHoja()) {
+            if (nodo.getHijoIzquierdo() != null)
+                generarCodigoLeido(nodo.getHijoIzquierdo());
+            if (nodo.getHijoDerecho() != null)
+                generarCodigoLeido(nodo.getHijoDerecho());
+
+            if (nodo.hijosSonHoja()) {
+
+                switch (nodo.getLexema()) {
+
+                    // Asignacion
+
+                    case ("=:"):
+                        asignacionAssembler(nodo);
+                        break;
+
+                    // Operaciones aritmeticas
+
+                    case ("+"):
+                        sumaAssembler(nodo);
+                        break;
+
+                    case ("-"):
+                        restaAssembler(nodo);
+                        break;
+
+                    case ("*"):
+                        multiplicacionAssembler(nodo);
+                        break;
+
+                    case ("/"):
+                        divisionAssembler(nodo);
+                        break;
+
+                    // Comparadores
+
+                    case (">"):
+                        mayorAssembler(nodo);
+                        break;
+
+                    case ("<"):
+                        menorAssembler(nodo);
+                        break;
+
+                    case ("<="):
+                        menorIgualAssembler(nodo);
+                        break;
+
+                    case (">="):
+                        mayorIgualAssembler(nodo);
+                        break;
+
+                    case ("="):
+                        igualAssembler(nodo);
+                        break;
+
+                    case ("=!"):
+                        distintoAssembler(nodo);
+                        break;
+
+                    // Sentencias de control
+
+                    case ("if"):
+                        ifAssembler(nodo);
+                        break;
+
+                    case ("then"):
+                        thenAssembler(nodo);
+                        break;
+
+                    case ("else"):
+                        elseAssembler(nodo);
+                        break;
+
+                    // Funciones
+
+                    case ("break"):
+                        breakAssembler(nodo);
+                        break;
+
+                    case ("continue"):
+                        continueAssembler(nodo);
+                        break;
+
+                }
+            }
+        }
+    }
+
+    private void continueAssembler(Nodo nodo) {
+    }
+
+
+
+    private void distintoAssembler(Nodo nodo) {
+    }
+
+
+
+    private void igualAssembler(Nodo nodo) {
+    }
+
+
+
+    private void mayorIgualAssembler(Nodo nodo) {
+    }
+
+
+
+    private void menorIgualAssembler(Nodo nodo) {
+    }
+
+
+
+    private void menorAssembler(Nodo nodo) {
+    }
+
+
+
+    private void mayorAssembler(Nodo nodo) {
+    }
+
+
+
+    private void breakAssembler(Nodo nodo) {
+    }
+
+
+
+    private void elseAssembler(Nodo nodo) {
+    }
+
+
+
+    private void thenAssembler(Nodo nodo) {
+    }
+
+
+
+    private void ifAssembler(Nodo nodo) {
+    }
+
+
+
+    private void divisionAssembler(Nodo nodo) {
+    }
+
+
+
+    private void multiplicacionAssembler(Nodo nodo) {
+    }
+
+
+
+    private void restaAssembler(Nodo nodo) {
+    }
+
+
 
     private void sumaAssembler(Nodo nodo) {
 
     }
 
     private void asignacionAssembler(Nodo nodo) {
+       // if (this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getUso()=="Nombre de funcion") {
+			//if (nodo.getHijoDerecho().getPadre()==null) {
+				// Chequeo de recursion mutua????
+				String label="_label"+contadorEtiquetaLabel;
+				contadorEtiquetaLabel++;
+				this.assemblerCode.append("pop AX" + "\n");
+				this.assemblerCode.append("CMP AX,"+nodo.getHijoDerecho().getValor() + "\n");
+				this.assemblerCode.append("JNE " + label + "\n");
+				this.assemblerCode.append("invoke MessageBox, NULL, addr error, addr error, MB_OK" + "\n");
+				this.assemblerCode.append("invoke ExitProcess, 0" + "\n");
+				this.assemblerCode.append(label+": \n");
+				this.assemblerCode.append("push "+nodo.getValor()+"\n");
 
+				if (nodo.getHijoIzquierdo().getTipo()=="f32") {
+					//this.assemblerCode.append("MOV EAX,"+nodo.getHijoDerecho().getParametro()+"\n");
+					//if ((this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getP()==null)) {
+						this.assemblerCode.append("call _"+nodo.getHijoDerecho().getLexema());}
+					else {
+				//		this.assemblerCode.append("call _"+this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getP()+"\n");}
+					this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+",EAX" + "\n");
+				}
+			//	else {
+				//	this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getParametro()+"\n");
+				//	if ((this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getP()==null)) {
+			//			this.assemblerCode.append("call _"+nodo.getHijoDerecho().getLexema());}
+				//	else {
+					//	this.assemblerCode.append("call _"+this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getP()+"\n");}
+					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
+			//	}
+				this.assemblerCode.append("pop BX"+"\n");
+		//	}
+		//	else
+			{
+			//	this.tablaDeSimbolos.get(nodo.getHijoIzquierdo().getLexema()).setP(nodo.getHijoDerecho().getLexema());
+			//	this.tablaDeSimbolos.get(nodo.getHijoIzquierdo().getLexema()).setUso("Nombre de funcion");
+			}
+	//	}
+	//	else {
+			if (nodo.getHijoIzquierdo().getTipo()=="f32") { // Asignacion de tipo PUNTO FLOTANTE (32 BITS)
+				this.assemblerCode.append("MOV EAX"+","+nodo.getHijoDerecho().getLexema()+"\n");
+				this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+","+"EAX"+"\n");
+            }
+			else{
+			//	if(this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getUso()=="VS"){
+					this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
+				}
+			//	else{
+					this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema()+"\n");
+					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
+			//	}
+			//}
+	//	}
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // -------------------- GENERACION DE CODIGO (SALIDA) -------------------- //
 
     public void generacionDeCodigo() {
         try {
@@ -84,7 +301,7 @@ public class GenerarCodigo{
             // Leo el codigo fuente
             contenido = this.inicio.toString();
             bw.write(contenido);
-            contenido = this.assamblerCode.toString();
+            contenido = this.assemblerCode.toString();
             bw.write(contenido);
             bw.close();
         } catch (Exception e) {
