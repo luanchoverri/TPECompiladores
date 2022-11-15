@@ -18,3 +18,91 @@ SyntaxError. (Línea 4): falta ';' al final de la declaración de variable.
 
 
 |--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 2): falta el tipo de variable
+SyntaxError. (Línea 3): falta el tipo de variable
+SyntaxError. (Línea 4): falta el tipo de variable
+SyntaxError. (Línea 5): falta el tipo de variable
+SyntaxError. (Línea 6): falta el tipo de variable
+SyntaxError. (Línea 7): falta el tipo de variable
+SyntaxError. (Línea 9): falta el tipo de variable
+SyntaxError. (Línea 10): falta el tipo de variable
+SyntaxError. (Línea 11): falta el tipo de variable
+SyntaxError. (Línea 12): falta el tipo de variable
+SyntaxError. (Línea 13): falta el tipo de variable
+SyntaxError. (Línea 14): falta el tipo de variable
+SyntaxError. (Línea 15): falta el tipo de variable
+SyntaxError. (Línea 18): falta el tipo de variable
+
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 2): falta el tipo de variable
+SyntaxError. (Línea 3): falta el tipo de variable
+SyntaxError. (Línea 4): falta el tipo de variable
+SyntaxError. (Línea 5): falta el tipo de variable
+SyntaxError. (Línea 6): falta el tipo de variable
+SyntaxError. (Línea 7): falta el tipo de variable
+SyntaxError. (Línea 9): falta el tipo de variable
+SyntaxError. (Línea 10): falta el tipo de variable
+SyntaxError. (Línea 11): falta el tipo de variable
+SyntaxError. (Línea 12): falta el tipo de variable
+SyntaxError. (Línea 13): falta el tipo de variable
+SyntaxError. (Línea 14): falta el tipo de variable
+SyntaxError. (Línea 15): falta el tipo de variable
+SyntaxError. (Línea 18): falta el tipo de variable
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 2): falta el tipo de variable
+SyntaxError. (Línea 3): falta el tipo de variable
+SyntaxError. (Línea 4): falta el tipo de variable
+SyntaxError. (Línea 5): falta el tipo de variable
+SyntaxError. (Línea 6): falta el tipo de variable
+SyntaxError. (Línea 7): falta el tipo de variable
+SyntaxError. (Línea 9): falta el tipo de variable
+SyntaxError. (Línea 10): falta el tipo de variable
+SyntaxError. (Línea 11): falta el tipo de variable
+SyntaxError. (Línea 12): falta el tipo de variable
+SyntaxError. (Línea 13): falta el tipo de variable
+SyntaxError. (Línea 14): falta el tipo de variable
+SyntaxError. (Línea 15): falta el tipo de variable
+SyntaxError. (Línea 18): falta el tipo de variable
+
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)

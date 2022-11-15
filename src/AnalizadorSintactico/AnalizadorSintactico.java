@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class AnalizadorSintactico {
@@ -24,8 +25,9 @@ public class AnalizadorSintactico {
     private String tipo;
     private Nodo raiz;
 
-    private ArrayList<String> listaVariables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
+    private ArrayList<Integer> refVariables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
 
+    private HashMap<String, Integer> variables;
 
 
     public AnalizadorSintactico(AnalizadorLexico l, Parser p){
@@ -36,18 +38,25 @@ public class AnalizadorSintactico {
         tablaSimbolos = l.getTablaSimbolos();
         tipo = "";
         raiz = null;
-        listaVariables =  new ArrayList<String>();
+        refVariables =  new ArrayList<Integer>();
+        variables = new HashMap<String, Integer> ();
 
 
     }
 
-    public void addListaVariables(String id){
-        listaVariables.add(id);
+    public void addListaVariables(int refTS){
+        refVariables.add(refTS);
     }
 
     public void setUso(String uso, int indice){
        tablaSimbolos.getEntrada(indice).setUso(uso);
-       System.out.println("kkkkkkkkkkkkkkkkkk    " + tablaSimbolos.getEntrada(indice).toString());
+    }
+
+    public void completarConTipos(String tipo){
+        System.out.println("ENTRAAAAAAAAAAAAAAAAAAAAAAAAAA   EL TIPO ES "+ tipo);
+       for(int idVariable : refVariables){
+           tablaSimbolos.getEntrada(idVariable).setTipo(tipo);
+       }
     }
 
     public void setRaiz(ParserVal raiz){

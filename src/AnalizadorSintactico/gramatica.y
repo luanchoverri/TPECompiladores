@@ -68,7 +68,8 @@ sentencia : declarativas {$$ = new ParserVal(sintactico.crearNodo("sentencia", $
            ;
 
 
-declarativas : i32 lista_de_variables ';'        { sintactico.addAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
+declarativas : i32 lista_de_variables ';'        { sintactico.addAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")");
+						   sintactico.completarConTipos("i32");}
              | f32 lista_de_variables ';'        { sintactico.addAnalisis("Se reconoció una declaración de variable. (Línea " + AnalizadorLexico.LINEA + ")"); }
              | lista_de_variables ';'   error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el tipo de variable"); }
              | declaracion_func
@@ -95,10 +96,10 @@ ejecutables : asignacion
 
 lista_de_variables : id lista_de_variables
                    | id ',' lista_de_variables    {
-                   				   sintactico.addListaVariables($1.sval);
+                   				   sintactico.addListaVariables($1.ival);
                    				   sintactico.setUso("Variable", $1.ival);}
                    | id				  {
-                   				  sintactico.addListaVariables($1.sval);
+                   				  sintactico.addListaVariables($1.ival);
                                                   sintactico.setUso("Variable", $1.ival);}
 
             //       | error ';' { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
