@@ -153,7 +153,7 @@ public class AnalizadorSintactico {
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
                 return izq.getTipo();
             }
-        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
+
         return null;
     }
 
