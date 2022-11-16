@@ -3,19 +3,27 @@ package ArbolSintactico;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Stack;
+
+import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.TablaSimbolos;
 
 public class GenerarCodigo{
 
     private StringBuilder assemblerCode; //  Usamos StringBuilder ya que la cadena de caracteres va a cambiar frecuentemente, ya que hacemos cada caso dentro de esta. (no sincro)
     private StringBuilder inicio;
-    private TablaSimbolos tablaDeSimbolos;
-    private int contadorEtiquetaLabel=0;
+    private TablaSimbolos tablaSimbolos;
+    private int contadorEtiquetaLabel = 0;
+    private int contadorAux = 0;
+    private Stack <String> pila;
+    private Stack <String> pilaFor;
 
-    public GenerarCodigo(TablaSimbolos tablaDeSimbolos){
+    public GenerarCodigo(AnalizadorLexico l){
         this.assemblerCode = new StringBuilder("");
         this.inicio = new StringBuilder("");
-        this.tablaDeSimbolos = tablaDeSimbolos;
+        this.pila = new Stack<>();
+        this.pilaFor = new Stack<>();
+        tablaSimbolos = l.getTablaSimbolos();
     }
 
 
@@ -41,6 +49,17 @@ public class GenerarCodigo{
 
 	}
 
+
+    // -------------- REVISAR QUE OPERACIONES O LLAMADOS A FUNCIONES FALTARIAN
+    // -------------- REVISAR SETEO DE USO, GET PADRE, GET VALOR, GET PARAMETRO, COMPARACIONES
+    // -------------- REVISAR LLAMADOS A FUNCIONES, CODIGO CONTINUE
+    // -------------- REVISAR ENCABEZADO DE PROGRAMA Y DE FUNCIONES CUANDO SE DECLARAN LAS VARIABLES
+    // -------------- CONST?????
+    // -------------- REVISAR SI FALTA AGREGAR ALGO AL SWITCH CASE
+    // -------------- FALTA REVISAR LA ESTRUCTURA DE ASSEMBLER EN SI PARA LA EJECUCION CORRECTA DEL CODIGO
+    // -------------- DEBUG TODO
+    // -------------- REVISION GENERAL
+    // -------------- CASOS DE PRUEBA
 
     public void generarCodigoLeido(Nodo nodo) {
 
@@ -128,134 +147,707 @@ public class GenerarCodigo{
                         continueAssembler(nodo);
                         break;
 
+                    case ("return"):
+                        returnAssembler(nodo);
+                        break;
+
+                    case ("out"):
+                        outAssembler(nodo);
+                        break;
                 }
             }
         }
     }
 
-    private void continueAssembler(Nodo nodo) {
+    private void outAssembler(Nodo nodo) {
     }
 
+
+
+    private void returnAssembler(Nodo nodo) { // FALTA
+
+    }
+
+    private void continueAssembler(Nodo nodo) { // FALTA
+    }
+
+    private void breakAssembler(Nodo nodo) { // Corte para los FOR cuando se encuentra un BREAK
+        if (!this.pilaFor.isEmpty()) {
+			this.assemblerCode.append("JMP " + this.pilaFor.peek()  + "\n");
+		};
+    }
 
 
     private void distintoAssembler(Nodo nodo) {
-    }
 
+        String aux = "aux" + contadorAux;
+        this.contadorAux++;
+        String labelContinuar = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+        String labelFalso = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+      //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        if (nodo.getTipo() == "i32") {
+            this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
+            this.assemblerCode.append("JE " + labelFalso + "\n");
+            this.assemblerCode.append("MOV " + aux + ",1 \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("MOV " + aux + ", 0 \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+        //    s.setUso("variable");
+        } else {
+            String mem2bytes = "aux" + contadorAux;
+            this.contadorAux++;
+         //   Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        //    s2.setUso("variableP");
+          //  this.tablaDeSimbolos.put(mem2bytes, s2);
+
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FCOMPP \n");
+            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
+            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("SAHF \n");
+            this.assemblerCode.append("JE " + labelFalso + "\n");
+            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("FLDZ \n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+          //  s.setUso("variable");
+        //    s.setTipo("f32");
+        }
+      //  this.tablaDeSimbolos.put(aux, s);
+        //nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+       // nodo.setLexema(aux);
+
+    }
 
 
     private void igualAssembler(Nodo nodo) {
-    }
 
+        String aux = "aux" + contadorAux;
+        this.contadorAux++;
+        String labelContinuar = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+        String labelFalso = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+    //    Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        if (nodo.getTipo() == "i32") {
+            this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
+            this.assemblerCode.append("JNE " + labelFalso + "\n");
+            this.assemblerCode.append("MOV " + aux + ",1 \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("MOV " + aux + ", 0 \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+          //  s.setUso("variable");
+        } else {
+            String mem2bytes = "aux" + contadorAux;
+            this.contadorAux++;
+         //   Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+           // s2.setUso("variableP");
+           // this.tablaDeSimbolos.put(mem2bytes, s2);
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FCOMPP \n");
+            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
+            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("SAHF \n");
+            this.assemblerCode.append("JNE " + labelFalso + "\n");
+            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("FLDZ \n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+          //  s.setUso("variable");
+          //  s.setTipo("f32");
+        }
+       // this.tablaDeSimbolos.put(aux, s);
+       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+       // nodo.setLexema(aux);
+
+    }
 
 
     private void mayorIgualAssembler(Nodo nodo) {
-    }
 
+        String aux = "aux" + contadorAux;
+        this.contadorAux++;
+        String labelContinuar = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+        String labelFalso = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+     //   Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        if (nodo.getTipo() == "i32") {
+            this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
+            this.assemblerCode.append("JL " + labelFalso + "\n");
+            this.assemblerCode.append("MOV " + aux + ",1 \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("MOV " + aux + ", 0 \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+           // s.setUso("variable");
+        } else {
+            String mem2bytes = "aux" + contadorAux;
+            this.contadorAux++;
+         //   Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+           // s2.setUso("variableP");
+           // this.tablaDeSimbolos.put(mem2bytes, s2);
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FCOMPP \n");
+            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
+            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("SAHF \n");
+            this.assemblerCode.append("JB " + labelFalso + "\n");
+            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("FLDZ \n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+           // s.setUso("variable");
+         //   s.setTipo("f32");
+        }
+       // this.tablaDeSimbolos.put(aux, s);
+       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        nodo.setLexema(aux);
+
+    }
 
 
     private void menorIgualAssembler(Nodo nodo) {
-    }
 
+        String aux = "aux" + contadorAux;
+        this.contadorAux++;
+        String labelContinuar = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+        String labelFalso = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+     //   Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        if (nodo.getTipo() == "i32") {
+            this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
+            this.assemblerCode.append("JG " + labelFalso + "\n");
+            this.assemblerCode.append("MOV " + aux + ",1 \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("MOV " + aux + ", 0 \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+          //  s.setUso("variable");
+        } else {
+            String mem2bytes = "aux" + contadorAux;
+            this.contadorAux++;
+          //  Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+          //  s2.setUso("variableP");
+         //   this.tablaDeSimbolos.put(mem2bytes, s2);
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FCOMPP \n");
+            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
+            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("SAHF \n");
+            this.assemblerCode.append("JA " + labelFalso + "\n");
+            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("FLDZ \n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+          //  s.setUso("variable");
+           // s.setTipo("f32");
+        }
+       // this.tablaDeSimbolos.put(aux, s);
+       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        nodo.setLexema(aux);
+
+    }
 
 
     private void menorAssembler(Nodo nodo) {
-    }
 
+        String aux = "aux" + contadorAux;
+        this.contadorAux++;
+        String labelContinuar = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+        String labelFalso = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+    //    Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        if (nodo.getTipo() == "i32") {
+            this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
+            this.assemblerCode.append("JGE " + labelFalso + "\n");
+            this.assemblerCode.append("MOV " + aux + ",1 \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("MOV " + aux + ", 0 \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+         //   s.setUso("variable");
+        } else {
+            String mem2bytes = "aux" + contadorAux;
+            this.contadorAux++;
+         //   Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+          //  s2.setUso("variableP");
+           // this.tablaDeSimbolos.put(mem2bytes, s2);
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FCOMPP \n");
+            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
+            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("SAHF \n");
+            this.assemblerCode.append("JAE " + labelFalso + "\n");
+            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("FLDZ \n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+          //  s.setUso("variable");
+            //s.setTipo("f32");
+        }
+      //  this.tablaDeSimbolos.put(aux, s);
+       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        nodo.setLexema(aux);
+
+    }
 
 
     private void mayorAssembler(Nodo nodo) {
+
+        String aux = "aux" + contadorAux;
+        this.contadorAux++;
+        String labelContinuar = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+        String labelFalso = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+      //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        if (nodo.getTipo() == "i32") {
+            this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
+            this.assemblerCode.append("JLE " + labelFalso + "\n");
+            this.assemblerCode.append("MOV " + aux + ",1 \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("MOV " + aux + ", 0 \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+           // s.setUso("variable");
+        } else {
+            String mem2bytes = "aux" + contadorAux;
+            this.contadorAux++;
+        //    Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+          //  s2.setUso("variableP");
+           // this.tablaDeSimbolos.put(mem2bytes, s2);
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FCOMPP \n");
+            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
+            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("SAHF \n");
+            this.assemblerCode.append("JBE " + labelFalso + "\n");
+            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append(labelFalso + ":\n");
+            this.assemblerCode.append("FLDZ \n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+            this.assemblerCode.append(labelContinuar + ":\n");
+          //  s.setUso("variable");
+           // s.setTipo("f32");
+        }
+      //  this.tablaDeSimbolos.put(aux, s);
+       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        nodo.setLexema(aux);
+
     }
 
 
-
-    private void breakAssembler(Nodo nodo) {
+    private void elseAssembler(Nodo nodo) { // REVISAR
+        String label=this.pila.pop();
+		this.assemblerCode.append(label+":\n");
     }
-
-
-
-    private void elseAssembler(Nodo nodo) {
-    }
-
 
 
     private void thenAssembler(Nodo nodo) {
+        String label="_label"+contadorEtiquetaLabel;
+		contadorEtiquetaLabel++;
+		//desapilo label1 y apilo label2
+		this.assemblerCode.append("JMP "+label + "\n");
+		String labelAux= this.pila.pop();
+		this.assemblerCode.append(labelAux + ":\n");
+		this.pila.push(label);
     }
 
 
-
-    private void ifAssembler(Nodo nodo) {
+    private void ifAssembler(Nodo nodo) { // REVISAR
+        if (!this.pila.empty()) {
+			String labelAux= this.pila.pop();
+			this.assemblerCode.append(labelAux + ":\n");
+		}
     }
-
 
 
     private void divisionAssembler(Nodo nodo) {
-    }
 
+        String aux = "aux" + contadorAux;
+        this.contadorAux++;
+        if (nodo.getTipo() == "i32") {
+            String label = "_label" + contadorEtiquetaLabel;
+            contadorEtiquetaLabel++;
+            this.assemblerCode.append("MOV EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
+            this.assemblerCode.append("CMP EAX, 0 \n"); // COMPARA EL VALOR DE EAX CON 0 (MENOR, MAYOR O IGUAL)
+            this.assemblerCode.append("JNE " + label + "\n");
+            this.assemblerCode.append("invoke MessageBox, NULL, addr errorDiv, addr program, MB_OK\n"); // DIVISION POR CERO CONTROL
+            this.assemblerCode.append("invoke ExitProcess, 0\n");
+            this.assemblerCode.append(label + ":\n");
+            this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoIzquierdo().getLexema()+"\n");
+            this.assemblerCode.append("MOV "+"EDX"+","+" 0"+"\n");
+            this.assemblerCode.append("MOV EBX, " + nodo.getHijoDerecho().getLexema() + "\n");
+            this.assemblerCode.append("IDIV EBX\n");
+            this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
+          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+          //  s.setUso("variable");
+           // this.tablaDeSimbolos.put(aux, s);
+           // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+            nodo.setLexema(aux);
+        } else {
+            String label = "_label" + contadorEtiquetaLabel;
+            contadorEtiquetaLabel++;
+            String mem2bytes = "aux" + contadorAux;
+            this.contadorAux++;
+          //  Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+            //s2.setUso("variableP");
+           // this.tablaDeSimbolos.put(mem2bytes, s2);
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FLDZ\n");
+            this.assemblerCode.append("FCOMPP \n");
+            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
+            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("SAHF \n");
+            this.assemblerCode.append("JNE " + label + "\n");
+            this.assemblerCode.append("invoke MessageBox, NULL, addr errorDiv, addr program, MB_OK\n");
+            this.assemblerCode.append("invoke ExitProcess, 0\n");
+            this.assemblerCode.append(label + ":\n");
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FDIV"+"\n");
+            this.assemblerCode.append("FSTP "+aux+"\n");
+
+          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+          //  s.setUso("variable");
+          //  s.setTipo("SINGLE");
+           // this.tablaDeSimbolos.put(aux, s);
+            //nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+            nodo.setLexema(aux);
+        }
+
+    }
 
 
     private void multiplicacionAssembler(Nodo nodo) {
-    }
 
+        String aux = "aux" + contadorAux;
+        this.contadorAux++;
+        if (nodo.getTipo() == "i32") {
+            String label = "_label" + contadorEtiquetaLabel;
+            contadorEtiquetaLabel++;
+            this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoIzquierdo().getLexema()+"\n");
+            this.assemblerCode.append("IMUL "+"EAX"+","+nodo.getHijoDerecho().getLexema()+"\n");
+            this.assemblerCode.append("JNO " + label + "\n");
+        //    this.assemblerCode.append("invoke MessageBox, NULL, addr errorOv, addr program, MB_OK\n");
+          //  this.assemblerCode.append("invoke ExitProcess, 0\n");
+            this.assemblerCode.append(label + ":\n");
+            this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
+          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+           // s.setUso("variable");
+           // this.tablaDeSimbolos.put(aux, s);
+           // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+            nodo.setLexema(aux);
+
+        } else { // SI ES PUNTO FLOTANTE (32 BITS) - f32
+
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FMUL" + "\n");
+            this.assemblerCode.append("FSTP "+aux+"\n");
+
+          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+          //  s.setUso("variable");
+           // s.setTipo("SINGLE");
+           // this.tablaDeSimbolos.put(aux, s);
+           // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+            nodo.setLexema(aux);
+        }
+
+    }
 
 
     private void restaAssembler(Nodo nodo) {
-    }
+
+        String aux = "aux" + contadorAux;
+        this.contadorAux++;
+        if (nodo.getTipo() == "i32") { // ENTERO LARGO (32 BITS)
+
+            //if (this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getUso() == "Nombre de funcion") {
+              //  this.assemblerCode.append("MOV EAX," + nodo.getHijoIzquierdo().getParametro());
+                //this.assemblerCode.append("\n");
+                //this.assemblerCode.append("call _" + nodo.getHijoIzquierdo().getLexema());
+                //this.assemblerCode.append("\n");
+                //this.assemblerCode.append("SUB EAX," + nodo.getHijoDerecho().getLexema());
+                //this.assemblerCode.append("\n");
+            } else {
+               // if (this.tablaSimbolos.get(nodo.getHijoDerecho().getLexema()).getUso() == "Nombre de funcion") {
+                  //  this.assemblerCode.append("MOV EAX," + nodo.getHijoDerecho().getParametro());
+                    //this.assemblerCode.append("\n");
+                    //this.assemblerCode.append("call _" + nodo.getHijoDerecho().getLexema());
+                    //this.assemblerCode.append("\n");
+                    //this.assemblerCode.append("SUB EAX," + nodo.getHijoIzquierdo().getLexema());
+                    //this.assemblerCode.append("\n");
+
+//                } else {
+                    this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoIzquierdo().getLexema()+"\n");
+                    this.assemblerCode.append("SUB "+"EAX"+","+nodo.getHijoDerecho().getLexema()+"\n");
+                }
+         //  }
+            this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
+          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+            //s.setUso("variable");
+           // this.tablaSimbolos.put(aux, s);
+            //nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+            //nodo.setLexema(aux);
 
 
+       // } else { // SI ES PUNTO FLOTANTE (32 BITS) - f32
+
+
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+            this.assemblerCode.append("FSUB"+"\n");
+            this.assemblerCode.append("FSTP "+aux+"\n");
+         //   Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+           // s.setUso("variable");
+            //s.setTipo("SINGLE");
+            //this.tablaDeSimbolos.put(aux, s);
+            //nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+            nodo.setLexema(aux);
+        }
+
+   // }
 
     private void sumaAssembler(Nodo nodo) {
+        String aux = "aux" + contadorAux; // Variables auxiliares para guardar los valores de las operaciones a medida que se procesa
+        this.contadorAux++;
+        if (nodo.getTipo() == "i32") { // Si es suma ENTERO (32 bits)
 
-    }
+            //if (this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getUso() == "Nombre de funcion") { // ESTO DEBERIA SER PARA LA DEFINION DE FUNCIONES Y PROGRAMA (PROGRAM, FUN, ETC) ???
+               // this.assemblerCode.append("MOV EAX," + nodo.getHijoIzquierdo().getParametro() + "\n");
+             //   this.assemblerCode.append("call _" + nodo.getHijoIzquierdo().getLexema() + "\n");
+               // this.assemblerCode.append("ADD EAX," + nodo.getHijoDerecho().getLexema() + "\n");
+            //} else {
+              //  if (this.tablaSimbolos.get(nodo.getHijoDerecho().getLexema()).getUso() == "Nombre de funcion") {
+               //     this.assemblerCode.append("MOV EAX," + nodo.getHijoDerecho().getParametro() + "\n");
+
+                //    this.assemblerCode.append("call _" + nodo.getHijoDerecho().getLexema()+"\n");
+                  //  this.assemblerCode.append("ADD EAX," + nodo.getHijoIzquierdo().getLexema()+"\n");
+               // } else {
+                    this.assemblerCode.append("MOV "+"EAX"+","+ nodo.getHijoIzquierdo().getLexema() + "\n"); // Realiza la suma (OK)
+                    this.assemblerCode.append("ADD "+"EAX"+","+ nodo.getHijoDerecho().getLexema()+"\n"); // Realiza la suma (OK)
+                //}
+            //}
+            this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n"); // Realiza la suma (OK)
+           // Simbolo s = new Simbolo(0, 0, this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getTipo());
+          //  s.setUso("variable");
+            //this.tablaSimbolos.put(aux, s);
+            //nodo.setTipo(this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getTipo());
+          //  nodo.setLexema(aux);
+
+         } else { // PUNTO FLOTANTE (32 BITS)
+
+            if (nodo.getHijoDerecho().getLexema().contains(".")) {
+                this.assemblerCode
+                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+            }
+
+
+            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
+                this.assemblerCode.append(
+                        "FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+            } else {
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+            }
+
+        }
+           // this.assemblerCode.append("FADD"+"\n");
+          //  this.assemblerCode.append("FSTP "+aux+"\n");
+          //  Simbolo s = new Simbolo(0, 0, this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getTipo());
+           // s.setUso("variable");
+           // s.setTipo("SINGLE");
+           // this.tablaSimbolos.put(aux, s);
+           // nodo.setTipo(this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getTipo());
+           // nodo.setLexema(aux);
+        }
+   // }
 
     private void asignacionAssembler(Nodo nodo) {
-       // if (this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getUso()=="Nombre de funcion") {
-			//if (nodo.getHijoDerecho().getPadre()==null) {
+        //if (this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getUso()=="Nombre de funcion") { // ESTO DEBERIA SER PARA LA DEFINION DE FUNCIONES Y PROGRAMA (PROGRAM, FUN, ETC) ???
+			//if (nodo.getHijoDerechoerecho().getPadre()==null) {
 				// Chequeo de recursion mutua????
 				String label="_label"+contadorEtiquetaLabel;
 				contadorEtiquetaLabel++;
-				this.assemblerCode.append("pop AX" + "\n");
-				this.assemblerCode.append("CMP AX,"+nodo.getHijoDerecho().getValor() + "\n");
-				this.assemblerCode.append("JNE " + label + "\n");
-				this.assemblerCode.append("invoke MessageBox, NULL, addr error, addr error, MB_OK" + "\n");
-				this.assemblerCode.append("invoke ExitProcess, 0" + "\n");
-				this.assemblerCode.append(label+": \n");
-				this.assemblerCode.append("push "+nodo.getValor()+"\n");
+			//	this.assemblerCode.append("pop AX" + "\n");
+			//	this.assemblerCode.append("CMP AX,"+nodo.getHijoDerecho().getValor() + "\n");
+			//	this.assemblerCode.append("JNE " + label + "\n");
+			//	this.assemblerCode.append("invoke MessageBox, NULL, addr error, addr error, MB_OK" + "\n");
+			//	this.assemblerCode.append("invoke ExitProcess, 0" + "\n");
+			//	this.assemblerCode.append(label+": \n");
+			//	this.assemblerCode.append("push "+nodo.getValor()+"\n");
 
-				if (nodo.getHijoIzquierdo().getTipo()=="f32") {
-					//this.assemblerCode.append("MOV EAX,"+nodo.getHijoDerecho().getParametro()+"\n");
-					//if ((this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getP()==null)) {
-						this.assemblerCode.append("call _"+nodo.getHijoDerecho().getLexema());}
-					else {
-				//		this.assemblerCode.append("call _"+this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getP()+"\n");}
+				if (nodo.getHijoIzquierdo().getTipo()=="i32") {
+					//this.assemblerCode.append("MOV EAX,"+nodo.getHijoDerechoerecho().getParametro()+"\n");
+					//if ((this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()==null)) {
+				//		this.assemblerCode.append("call _"+nodo.getHijoDerecho().getLexema());}
+				//	else {
+				//		this.assemblerCode.append("call _"+this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()+"\n");}
 					this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+",EAX" + "\n");
 				}
-			//	else {
-				//	this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getParametro()+"\n");
-				//	if ((this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getP()==null)) {
-			//			this.assemblerCode.append("call _"+nodo.getHijoDerecho().getLexema());}
+
+			//	else { // PUNTO FLOTANTE (32 BITS)
+
+				//	this.assemblerCode.append("FLD "+nodo.getHijoDerechoerecho().getParametro()+"\n");
+				//	if ((this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()==null)) {
+			//			this.assemblerCode.append("call _"+nodo.getHijoDerechoerecho().getLexema());}
 				//	else {
-					//	this.assemblerCode.append("call _"+this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getP()+"\n");}
-					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
+					//	this.assemblerCode.append("call _"+this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()+"\n");}
+
+					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n"); // Co-procesador (solo para f32)
 			//	}
-				this.assemblerCode.append("pop BX"+"\n");
+				//this.assemblerCode.append("pop BX"+"\n");
 		//	}
 		//	else
 			{
-			//	this.tablaDeSimbolos.get(nodo.getHijoIzquierdo().getLexema()).setP(nodo.getHijoDerecho().getLexema());
-			//	this.tablaDeSimbolos.get(nodo.getHijoIzquierdo().getLexema()).setUso("Nombre de funcion");
+			//	this.tablaSimbolos.get(nodo.getHijoIzquierdozquierdo().getLexema()).setP(nodo.getHijoDerechoerecho().getLexema());
+			//	this.tablaSimbolos.get(nodo.getHijoIzquierdozquierdo().getLexema()).setUso("Nombre de funcion");
 			}
 	//	}
 	//	else {
-			if (nodo.getHijoIzquierdo().getTipo()=="f32") { // Asignacion de tipo PUNTO FLOTANTE (32 BITS)
+			if (nodo.getHijoIzquierdo().getTipo()=="i32") { // Asignacion de tipo ENTERO LARGO (32 BITS)
 				this.assemblerCode.append("MOV EAX"+","+nodo.getHijoDerecho().getLexema()+"\n");
 				this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+","+"EAX"+"\n");
             }
 			else{
-			//	if(this.tablaDeSimbolos.get(nodo.getHijoDerecho().getLexema()).getUso()=="VS"){
+			//	if(this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getUso()=="VS"){ // SI ES ASIGNACION DEL LADO DERECHO FLOTANTE
 					this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
 					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
 				}
-			//	else{
+			//	else{ // SI ES ASIGNACION DEL LADO DERECHO ENTERO
 					this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema()+"\n");
 					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
 			//	}

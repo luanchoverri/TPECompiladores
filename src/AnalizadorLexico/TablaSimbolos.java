@@ -177,7 +177,6 @@ public class TablaSimbolos {
         this.registroTokens.add(registro);
     }
 
-
     public int size(){
        return registroTokens.size();
     }

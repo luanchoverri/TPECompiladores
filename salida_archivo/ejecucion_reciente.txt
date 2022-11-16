@@ -106,3 +106,7 @@ SyntaxError. (Línea 18): falta el tipo de variable
 
 
 |--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)

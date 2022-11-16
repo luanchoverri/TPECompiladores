@@ -38,8 +38,8 @@ public abstract class Nodo {
 
 	public abstract void setHijoDerecho(Nodo derecho);
 
-    public boolean hijosSonHoja() {
-        return false;
-    }
+    public abstract boolean hijosSonHoja();
+
+	public abstract void descolgarHijos();
 
 }

@@ -63,4 +63,14 @@ public class NodoHijo extends Nodo {
         this.nodoHijo = nodoHijo;
     }
 
+    public boolean hijosSonHoja() {
+        if (this.nodoHijo.esHoja())
+            return true;
+        return false;
+    }
+
+    public void descolgarHijos() {
+        this.nodoHijo = null;
+    }
+
 }
