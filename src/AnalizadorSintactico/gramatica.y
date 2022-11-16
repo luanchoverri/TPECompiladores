@@ -40,8 +40,13 @@ lista_de_asignacion_const : decl_const {$$ = new ParserVal(sintactico.crearNodo(
                           | lista_de_asignacion_const ',' decl_const {$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $3, $1));}
                           ;
 
-// TODO falcha inferir el tipo
-decl_const : id op_asignacion cte {$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($3.ival))));} //TODO inferir el tipo de la cte
+// TODO listo el tipo y uso de la cte inferido en el id de la variable
+decl_const : id op_asignacion cte 	{	String type = sintactico.getTipoFromTS($3.ival);
+						Atributo id = sintactico.getEntradaTablaSimb($1.ival);
+						id.setUso("const");
+						id.setTipo(type);
+						$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($3.ival))));
+					}
            | id op_asignacion error  { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta constante luego de la asignacion.");}
            | id cte  error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta el operador asignacion luego del identificador.");}
            | id        error         { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta la asignacion luego del identificador.");}

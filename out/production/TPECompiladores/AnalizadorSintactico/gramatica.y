@@ -41,7 +41,12 @@ lista_de_asignacion_const : decl_const {$$ = new ParserVal(sintactico.crearNodo(
                           ;
 
 // TODO falcha inferir el tipo
-decl_const : id op_asignacion cte {$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($3.ival))));} //TODO inferir el tipo de la cte
+decl_const : id op_asignacion cte 	{	String type = sintactico.getTipoFromTS($3.ival);
+						Atributo id = sintactico.getEntradaTablaSimb($1.ival);
+						id.setUso("const");
+						id.setTipo(type);
+						$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($3.ival))));
+					}
            | id op_asignacion error  { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta constante luego de la asignacion.");}
            | id cte  error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta el operador asignacion luego del identificador.");}
            | id        error         { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta la asignacion luego del identificador.");}
@@ -98,6 +103,7 @@ ejecutables : asignacion
             | sentencia_CONTINUE error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
 
 
+// TODO Tipo y Uso LISTO
 lista_de_variables : id lista_de_variables	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores.");
 						 sintactico.addListaVariables($1.ival);
 						 sintactico.setUso("var", $1.ival);
@@ -111,10 +117,6 @@ lista_de_variables : id lista_de_variables	{ sintactico.addErrorSintactico("Synt
 
                    ;
 
-//lista_de_variables : id
-//                   | lista_de_variables ',' id
-//                   | lista_de_variables id error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores."); }
-//                   ;
 
 encabezado_func : fun id '('	     { sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" ); }
                 | fun   '(' error   { sintactico.addErrorSintactico("SyntaxError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): problema en la definición de la función."); }

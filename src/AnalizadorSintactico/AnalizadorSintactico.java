@@ -135,7 +135,7 @@ public class AnalizadorSintactico {
     }
 
     public Nodo crearNodo(String identificador, ParserVal hijoIzq, ParserVal hijoDer){
-        if (hijoDer == null){                                                   // POR QUE??? EL IZQUIERD0 NO?
+        if (hijoDer == null){                                                   // TODO POR QUE??? EL IZQUIERD0 NO?
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
             return i;
         } else {
@@ -146,8 +146,8 @@ public class AnalizadorSintactico {
     }
 
     public String tipoResultante(Nodo izq, Nodo der){
-        System.out.println("nodo izquierdo " + izq.getLexema() + "tipo  " + izq.getTipo());
-        System.out.println("nodo derecho " + der.getLexema() + "tipo  " + der.getTipo());
+        System.out.println("nodo izquierdo  " + izq.getLexema() + " ES  " + izq.getTipo());
+        System.out.println("nodo derecho  " + der.getLexema() + "  ES  " + der.getTipo());
         if (izq.getTipo() != null && izq.getTipo() != null )
             if(izq.getTipo().equals(der.getTipo())){
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
@@ -264,7 +264,7 @@ public class AnalizadorSintactico {
         if (parser.yyparse() == 0) {
 
             System.out.println(" \n \n ✅ EJECUCION DEL PARSER FINALIZADA \n \n  ");
-            imprimirAnalisisLexico();
+        //    imprimirAnalisisLexico();
             System.out.println("\n \n 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 \n ");
             imprimirAnalisisSintactico();
             imprimirTablaSimbolos();
