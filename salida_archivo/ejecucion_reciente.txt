@@ -106,3 +106,112 @@ SyntaxError. (Línea 18): falta el tipo de variable
 
 
 |--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 4): falta el tipo de variable
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 4): falta el tipo de variable
+
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 4): falta el tipo de variable
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 4): falta el tipo de variable
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 4): falta el tipo de variable
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.

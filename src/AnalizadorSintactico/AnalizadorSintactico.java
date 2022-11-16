@@ -1,6 +1,5 @@
 package AnalizadorSintactico;
 import AnalizadorLexico.*;
-import AnalizadorLexico.AccionesSemanticas.AccionesSimples.RangoEntero;
 import ArbolSintactico.GenerarCodigo;
 import ArbolSintactico.Nodo;
 import ArbolSintactico.NodoBinario;
@@ -25,9 +24,9 @@ public class AnalizadorSintactico {
     private String tipo;
     private Nodo raiz;
 
-    private ArrayList<Integer> refVariables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
+    private ArrayList<Integer> variables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
 
-    private HashMap<String, Integer> variables;
+
 
 
     public AnalizadorSintactico(AnalizadorLexico l, Parser p){
@@ -38,14 +37,14 @@ public class AnalizadorSintactico {
         tablaSimbolos = l.getTablaSimbolos();
         tipo = "";
         raiz = null;
-        refVariables =  new ArrayList<Integer>();
-        variables = new HashMap<String, Integer> ();
+        variables =  new ArrayList<Integer>();
+
 
 
     }
 
     public void addListaVariables(int refTS){
-        refVariables.add(refTS);
+        variables.add(refTS);
     }
 
     public void setUso(String uso, int indice){
@@ -53,10 +52,17 @@ public class AnalizadorSintactico {
     }
 
     public void completarConTipos(String tipo){
-        System.out.println("ENTRAAAAAAAAAAAAAAAAAAAAAAAAAA   EL TIPO ES "+ tipo);
-       for(int idVariable : refVariables){
+
+       for(int idVariable : variables){
            tablaSimbolos.getEntrada(idVariable).setTipo(tipo);
        }
+       vaciarListaVariables();
+    }
+
+    public void vaciarListaVariables(){
+        if (!variables.isEmpty()){
+            variables.clear();
+        }
     }
 
     public void setRaiz(ParserVal raiz){

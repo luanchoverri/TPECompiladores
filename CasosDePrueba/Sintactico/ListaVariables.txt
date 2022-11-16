@@ -1,6 +1,6 @@
 program
 {
-    i32 x, b, c;
+    i32 x b, c;
     f32 d;
     const e =: 3,  f =: 5.4;
 
