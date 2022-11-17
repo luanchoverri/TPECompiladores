@@ -229,3 +229,36 @@ SyntaxError. (Línea 3): falta una ',' entre identIficadores.
 
 
 SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)

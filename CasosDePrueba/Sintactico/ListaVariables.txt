@@ -1,7 +1,11 @@
 program
 {
-    i32 x b, c;
+    i32 x, b, c;
     f32 d;
     const e =: 3,  f =: 5.4;
+    fun k ( i32 a): i32 {
+        x =: 1;
+        return(x);
+    }
 
 }

@@ -118,16 +118,23 @@ lista_de_variables : id lista_de_variables	{ sintactico.addErrorSintactico("Synt
                    ;
 
 
-encabezado_func : fun id '('	     { sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" ); }
+encabezado_func : fun id '('	     { sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
+				        Atributo id = sintactico.getEntradaTablaSimb($2.ival);
+				        id.setUso("id fun");
+                                        id.setTipo(sintactico.getTipo());
+				      }
                 | fun   '(' error   { sintactico.addErrorSintactico("SyntaxError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): problema en la definición de la función."); }
                 ;
 
-parametro : tipo id
+parametro : tipo id        {String type = $1.sval;
+                            Atributo id = sintactico.getEntradaTablaSimb($2.ival);
+                            id.setUso("param");
+                            id.setTipo(type);}
 	  | 	id  error { sintactico.addErrorSintactico("SyntaxError. PARAM(Línea " + AnalizadorLexico.LINEA + "): falta TIPO en parametros."); }
 	  ;
 
 
-asig_fun: ':' tipo
+asig_fun: ':' tipo {sintactico.setTipo($2.sval); }
 	|	 { sintactico.addErrorSintactico("SyntaxError. COLA_FUN(Línea " + AnalizadorLexico.LINEA + "): falta TIPO "); }
 	;
 cola_func: ')' asig_fun '{' cuerpo_fun '}' { sintactico.addAnalisis("Se reconoce TIPO funcion (Línea " + AnalizadorLexico.LINEA + ")");

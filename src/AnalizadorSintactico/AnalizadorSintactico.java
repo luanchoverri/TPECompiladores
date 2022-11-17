@@ -116,6 +116,7 @@ public class AnalizadorSintactico {
         this.tipo = tipo;
     }
     public String getTipo() { return  this.tipo;}
+
     public void verificarRangoEnteroLargo(int indice) {
 
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
