@@ -29,18 +29,18 @@ public class ConsumidorTokens {
                 while (!lexico.isCodigoLeido() )
                     lexico.procesarYylex();
 
-                ArrayList<Token> tokens = lexico.getListaTokens();
+                ArrayList<Token> detectados = lexico.getListaTokens();
 
-                if (tokens.isEmpty()) { // Si esta vacio, no se detectan tokens
+                if (detectados.isEmpty()) { // Si esta vacio, no se detectan tokens
                     System.out.println("!!! ---------------ANALIZADOR LÉXICO--------------- !!!");
                     System.out.println("|--- TOKENS ---|");
                     System.out.println("|--- No se detectaron tokens dentro del archivo. ! --|-");
                 }else{
                     System.out.println("(Info) ---------------ANALIZADOR LÉXICO--------------- (Info)");
-                    for (Token token : tokens) {
+                    for (Token t : detectados) {
 
-                        System.out.println("Tipo de token --> " + token.getId()); // Devuelve el id con el tipo de token?
-                        System.out.println("Lexema --> " + token.getLexema());
+                        System.out.println("Tipo de token --> " + t.getId()); // Devuelve el id con el tipo de token?
+                        System.out.println("Lexema --> " + t.getLexema());
                     }
                 }
 

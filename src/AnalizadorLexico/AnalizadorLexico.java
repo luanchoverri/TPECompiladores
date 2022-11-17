@@ -142,9 +142,7 @@ public class AnalizadorLexico {
     public void setPosArchivo(int pos) {
         posArchivo = pos;
     }
-    public int getTokenActual() {
-        return tokenActual;
-    }
+
 
     public int getIdToken(String lexema) {
         return tablaSimbolos.getIdToken(lexema);
@@ -276,11 +274,6 @@ public class AnalizadorLexico {
     public void addErrorLexico(String error) {
         this.errores.add(error);
     }
-
-    public String getTipoToken(int id){
-        return tablaSimbolos.getTipoToken(id);
-    }
-
     public boolean esFinDeArchivo() {
         if (this.estadoActual == 0) { // si estoy en un estado final
             if (this.posArchivo == (this.archivo.length() - 1)) { // y si llegue al final del archivo entonces actualizo
@@ -300,7 +293,6 @@ public class AnalizadorLexico {
     public ArrayList<Token> getListaTokens() {
         return this.tokensReconocidos;
     }
-
 
     public void imprimirErrores() {
         try {

@@ -240,12 +240,12 @@ public class AnalizadorSintactico {
     public void imprimirAnalisisLexico() {
         System.out.println();
         System.out.println("|                       ANÁLIZADOR LÉXICO                  |");
-        ArrayList<Token> listaTokens = this.analizadorLexico.getListaTokens();
+        ArrayList<Token> detectados = this.analizadorLexico.getListaTokens();
 
-        for (Token token : listaTokens) {
+        for (Token t : detectados) {
             System.out.println("----------------------------------");
-            System.out.println("Tipo : " + token.getTipo());
-            System.out.println("Lexema: " + token.getLexema());
+            System.out.println("Tipo : " + t.getTipo());
+            System.out.println("Lexema: " + t.getLexema());
         }
     }
 
