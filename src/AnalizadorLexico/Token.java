@@ -1,10 +1,10 @@
 package AnalizadorLexico;
 
-public class Atributo {
+public class Token {
 
     // Posee los tokens (id del token, etc)
 
-    private int idToken; // Id del token (Numero de identificacion)
+    private int id; // Id del token (Numero de identificacion)
     private String lexema; // Significado del Token
     private int nroLinea;
     private String tipo;
@@ -14,16 +14,16 @@ public class Atributo {
 
     // -- Constructor --
 
-    public Atributo(String lexema, int idToken, int nroLinea) {
+    public Token(String lexema, int idToken, int nroLinea) {
         this.lexema = lexema;
-        this.idToken = idToken;
+        this.id = idToken;
         this.tipo = null;
         this.nroLinea = nroLinea;
         this.uso = null;
     }
 
-    public Atributo(int idToken, String lexema, int nroLinea, String tipo) {
-        this.idToken = idToken;
+    public Token(int idToken, String lexema, int nroLinea, String tipo) {
+        this.id = idToken;
         this.lexema = lexema;
         this.nroLinea = nroLinea;
         this.tipo = tipo;
@@ -35,8 +35,8 @@ public class Atributo {
 
     // Getters 
 
-    public int getIdToken() {
-        return this.idToken;
+    public int getId() {
+        return this.id;
     }
 
     public String getLexema() {
@@ -50,7 +50,7 @@ public class Atributo {
     public String getUso() { return uso; }
 
 
-// Setters
+    // Setters
 
     public void setLexema(String lexema) {
         this.lexema = lexema;
@@ -64,7 +64,7 @@ public class Atributo {
     public String toString() {
 
         String s = String.format("%5s %5s %10s %10s %1s %6s %6s ",
-                                "TOKEN", idToken, lexema, "#linea", nroLinea, tipo, uso);
+                                "TOKEN", id, lexema, "#linea", nroLinea, tipo, uso);
         return(s) ;
     }
 

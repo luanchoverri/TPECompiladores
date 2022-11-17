@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorSintactico.AnalizadorSintactico;
-import AnalizadorLexico.Atributo;
+import AnalizadorLexico.Token;
 
 %}
 
@@ -111,7 +111,7 @@ lista_de_variables : id lista_de_variables	{
 							sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores.");
 						 	int existente = enAmbito($1);
 							if (existente < 0) {
-								sintactico.modificarLexema($1.ival, this.ambito);
+								sintactico.setLexemaEnIndex($1.ival, this.ambito);
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUso("var", $1.ival);
 							} else {
@@ -121,7 +121,7 @@ lista_de_variables : id lista_de_variables	{
                    | id ',' lista_de_variables	{
 							int existente = enAmbito($1);
 							if (existente < 0) {
-								sintactico.modificarLexema($1.ival, this.ambito);
+								sintactico.setLexemaEnIndex($1.ival, this.ambito);
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUso("var", $1.ival);
 							} else {
@@ -131,7 +131,7 @@ lista_de_variables : id lista_de_variables	{
                    | id				{
                    					int existente = enAmbito($1);
                    					if (existente < 0) {
-                   						sintactico.modificarLexema($1.ival, this.ambito);
+                   						sintactico.setLexemaEnIndex($1.ival, this.ambito);
                    						sintactico.addListaVariables($1.ival);
 							    	sintactico.setUso("var", $1.ival);
                    					} else {
@@ -146,7 +146,7 @@ parametro : tipo id	{
 				int existente = enAmbito($2);
 				if (existente < 0) {
 					sintactico.setTipoEnIndex($1.sval, $2.ival);
-					sintactico.modificarLexema($2.ival, this.ambito);
+					sintactico.setLexemaEnIndex($2.ival, this.ambito);
 					sintactico.setUso("param", $2.ival);
 				} else {
 					sintactico.addErrorSintactico("SyntaxError. ENC_FUN/PARAMS (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
@@ -182,15 +182,14 @@ lista_parametros:
 encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 								sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
 
-								Atributo id = sintactico.getEntradaTablaSimb($2.ival);
-                                                                id.setTipo(sintactico.getTipo());
+                                                                sintactico.setTipoEnIndex(sintactico.getTipo(), $2.ival);
                                                                 sintactico.clearTipo();
 
 
 								String lexema = sintactico.getEntradaTablaSimb($2.ival).getLexema();
 								int existente = enAmbito($2);
 								if (existente < 0) { // no existe el id en el ambito
-									sintactico.modificarLexema($2.ival, this.ambito);
+									sintactico.setLexemaEnIndex($2.ival, this.ambito);
 									sintactico.setUso("func", $2.ival);
 									agregarAmbito(lexema);
 								} else {

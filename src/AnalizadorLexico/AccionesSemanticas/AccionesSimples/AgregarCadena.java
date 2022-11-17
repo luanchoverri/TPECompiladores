@@ -2,8 +2,6 @@ package AnalizadorLexico.AccionesSemanticas.AccionesSimples;
 
 import AnalizadorLexico.AccionesSemanticas.AccionSemanticaSimple;
 import AnalizadorLexico.AnalizadorLexico;
-import AnalizadorLexico.TablaSimbolos;
-import AnalizadorLexico.Atributo;
 
 /*
 ------------------------------------------

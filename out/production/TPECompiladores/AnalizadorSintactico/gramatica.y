@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorSintactico.AnalizadorSintactico;
-import AnalizadorLexico.Atributo;
+import AnalizadorLexico.Token;
 
 %}
 
@@ -16,33 +16,32 @@ import AnalizadorLexico.Atributo;
 %%
 
 //TODO listo
-programa : encabezado_prog bloque_sentencias {$$ = new ParserVal(sintactico.crearNodoControl("raiz", $2)); sintactico.setRaiz($$); }
+programa : encabezado_prog bloque_sentencias	{$$ = new ParserVal(sintactico.crearNodoControl("raiz", $2)); sintactico.setRaiz($$); }
 	 ;
 
 
 encabezado_prog : id
                 ;
 //TODO listo
-bloque_sentencias : bloque_sentencias '{' sentencia '}'{$$ = new ParserVal(sintactico.crearNodoControl("primera_sentencia", $3));}
-		  | '{' sentencia '}' {$$ = new ParserVal(sintactico.crearNodoControl("primera_sentencia", $2));}
-		  | '{' sentencia    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar el bloque.");}
-		  |  sentencia '}'   { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir el bloque.");}
+bloque_sentencias : bloque_sentencias '{' sentencia '}'	{$$ = new ParserVal(sintactico.crearNodoControl("primera_sentencia", $3));}
+		  | '{' sentencia '}' 			{$$ = new ParserVal(sintactico.crearNodoControl("primera_sentencia", $2));}
+		  | '{' sentencia    			{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar el bloque.");}
+		  |  sentencia '}'   			{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir el bloque.");}
 		  ;
 
-declaracion_const : Const lista_de_asignacion_const ';' { sintactico.addAnalisis("Se reconoció una declaración de CONSTANTE. (Línea " + AnalizadorLexico.LINEA + ")");
-							  $$ = new ParserVal(sintactico.crearNodoControl("lista_ctes", $2));
-							}
-                  | Const lista_de_asignacion_const error    { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ; al final de la declaracion de constantes.");}
-                  | Const ';'                           error { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): No se reconoce una lista de constantes.");}
+declaracion_const : Const lista_de_asignacion_const ';'		{ sintactico.addAnalisis("Se reconoció una declaración de CONSTANTE. (Línea " + AnalizadorLexico.LINEA + ")");
+							  	  $$ = new ParserVal(sintactico.crearNodoControl("lista_ctes", $2));}
+                  | Const lista_de_asignacion_const error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ; al final de la declaracion de constantes.");}
+                  | Const ';'                           error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): No se reconoce una lista de constantes.");}
                   ;
 
-lista_de_asignacion_const : decl_const {$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $1, null));} //TODO fijarse nombre
-                          | lista_de_asignacion_const ',' decl_const {$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $3, $1));}
+lista_de_asignacion_const : decl_const					{$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $1, null));} //TODO fijarse nombre
+                          | lista_de_asignacion_const ',' decl_const	{$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $3, $1));}
                           ;
 
 // TODO listo el tipo y uso de la cte inferido en el id de la variable
 // TODO fran chequear que no exista ya el id
-decl_const : id op_asignacion cte 	{
+decl_const : id op_asignacion cte	{
 						int existente = enAmbito($1);
 						if (existente < 0) {
 							int i = $1.ival;
@@ -60,22 +59,16 @@ decl_const : id op_asignacion cte 	{
            ;
 
 // TODO listo
-bloque_sentencias_For : sentencias_For {$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
-                      | bloque_sentencias_For sentencias_For {ParserVal modificado = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));
-                                                              $$ = modificado;}
-                      ;
+bloq_sentencias_For : sentencias_For 			     	{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
+                    | bloq_sentencias_For sentencias_For	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));}
+                    ;
 
 
 // TODO listo
-sentencia : declarativas {$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
-          | ejecutables  {$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
-          | sentencia declarativas	{
-						$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));
-						//$$ = modificado;
-						}
-          | sentencia ejecutables	{
-						ParserVal modificado = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));
-						$$ = modificado;}
+sentencia : declarativas 		{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
+          | ejecutables  		{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
+          | sentencia declarativas	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));}
+          | sentencia ejecutables	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));;}
           ;
 
 
@@ -118,7 +111,7 @@ lista_de_variables : id lista_de_variables	{
 							sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores.");
 						 	int existente = enAmbito($1);
 							if (existente < 0) {
-								sintactico.modificarLexema($1.ival, this.ambito);
+								sintactico.setLexemaEnIndex($1.ival, this.ambito);
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUso("var", $1.ival);
 							} else {
@@ -128,7 +121,7 @@ lista_de_variables : id lista_de_variables	{
                    | id ',' lista_de_variables	{
 							int existente = enAmbito($1);
 							if (existente < 0) {
-								sintactico.modificarLexema($1.ival, this.ambito);
+								sintactico.setLexemaEnIndex($1.ival, this.ambito);
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUso("var", $1.ival);
 							} else {
@@ -138,7 +131,7 @@ lista_de_variables : id lista_de_variables	{
                    | id				{
                    					int existente = enAmbito($1);
                    					if (existente < 0) {
-                   						sintactico.modificarLexema($1.ival, this.ambito);
+                   						sintactico.setLexemaEnIndex($1.ival, this.ambito);
                    						sintactico.addListaVariables($1.ival);
 							    	sintactico.setUso("var", $1.ival);
                    					} else {
@@ -153,7 +146,7 @@ parametro : tipo id	{
 				int existente = enAmbito($2);
 				if (existente < 0) {
 					sintactico.setTipoEnIndex($1.sval, $2.ival);
-					sintactico.modificarLexema($2.ival, this.ambito);
+					sintactico.setLexemaEnIndex($2.ival, this.ambito);
 					sintactico.setUso("param", $2.ival);
 				} else {
 					sintactico.addErrorSintactico("SyntaxError. ENC_FUN/PARAMS (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
@@ -189,15 +182,14 @@ lista_parametros:
 encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 								sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
 
-								Atributo id = sintactico.getEntradaTablaSimb($2.ival);
-                                                                id.setTipo(sintactico.getTipo());
+                                                                sintactico.setTipoEnIndex(sintactico.getTipo(), $2.ival);
                                                                 sintactico.clearTipo();
 
 
 								String lexema = sintactico.getEntradaTablaSimb($2.ival).getLexema();
 								int existente = enAmbito($2);
 								if (existente < 0) { // no existe el id en el ambito
-									sintactico.modificarLexema($2.ival, this.ambito);
+									sintactico.setLexemaEnIndex($2.ival, this.ambito);
 									sintactico.setUso("func", $2.ival);
 									agregarAmbito(lexema);
 								} else {
@@ -333,11 +325,11 @@ cuerpo_If_for : cuerpo_then_for cuerpo_Else_for	{$$ = new ParserVal(sintactico.c
 	      | cuerpo_Else_for error		{sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
               ;
 
-cuerpo_then_for : then '{' bloque_sentencias_For'}'	{$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
+cuerpo_then_for : then '{' bloq_sentencias_For'}'	{$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
 	    	| then sentencias_For 			{$$ = new ParserVal(sintactico.crearNodoControl("then",$2));}
             	;
 
-cuerpo_Else_for : Else '{' bloque_sentencias_For'}'	{$$ = new ParserVal(sintactico.crearNodoControl("else",$3));}
+cuerpo_Else_for : Else '{' bloq_sentencias_For'}'	{$$ = new ParserVal(sintactico.crearNodoControl("else",$3));}
 	    	| Else sentencias_For 			{$$ = new ParserVal(sintactico.crearNodoControl("else",$2));}
             	;
 
@@ -423,7 +415,7 @@ condicion_for :  id comparador cte	{	ParserVal identificador = new ParserVal(sin
 				     	} //TODO para en un futuro expandirla y coparar con expresion
 	      ;
 // TODO listo
-cola_For : '{' bloque_sentencias_For '}' ';'	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
+cola_For : '{' bloq_sentencias_For '}' ';'	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
 	 |  sentencias_For  			{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
 	 ;
 

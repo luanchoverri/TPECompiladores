@@ -1,26 +1,16 @@
 package AnalizadorLexico;
 
-import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.filechooser.FileSystemView;
 
 import AnalizadorLexico.AccionesSemanticas.AccionSemantica;
 import AnalizadorLexico.AccionesSemanticas.AccionSemanticaCompuesta;
-import AnalizadorLexico.AccionesSemanticas.AccionSemanticaSimple;
 import AnalizadorLexico.AccionesSemanticas.AccionesSimples.*;
-import AnalizadorSintactico.AnalizadorSintactico;
 import AnalizadorLexico.AccionesSemanticas.MatrizAccionesSemanticas;
 
 public class AnalizadorLexico {
@@ -43,7 +33,7 @@ public class AnalizadorLexico {
     private int posArchivo;
     private boolean codigoLeido;
     private TablaSimbolos tablaSimbolos;
-    private ArrayList<Atributo> tokensReconocidos; // Va procesando el codigo y acá guarda los tokens reconocidos
+    private ArrayList<Token> tokensReconocidos; // Va procesando el codigo y acá guarda los tokens reconocidos
     private ArrayList<String> errores; // ArrayList para almacenar los errores encontrados junto con el numero de linea (Implementar?) !!!!!!!!!!!!!!
 
     // -- MATRICES -- //
@@ -58,7 +48,7 @@ public class AnalizadorLexico {
         this.matrizEstados = new MatrizEstados();
         this.tablaSimbolos = new TablaSimbolos();
         this.errores = new ArrayList<String>();
-        this.tokensReconocidos = new ArrayList<Atributo>();
+        this.tokensReconocidos = new ArrayList<Token>();
         this.refTablaSimbolos = -1;
         this.codigoLeido = false;
 
@@ -250,7 +240,7 @@ public class AnalizadorLexico {
         //SALE DEL WHILE Y PREGUNTA SI HAY UN TOKEN RECONOCIDO ( != -1) Y QUE NO SEA DE LEER UNA CADENA O COMENTARIO (!= 0)
         if (this.tokenActual != 0 && this.tokenActual != -1) {
             String tipo = tablaSimbolos.getTipoToken(this.tokenActual);
-            Atributo token = new Atributo(this.tokenActual, this.buffer, this.LINEA, tipo);
+            Token token = new Token(this.tokenActual, this.buffer, this.LINEA, tipo);
 
 
 
@@ -307,7 +297,7 @@ public class AnalizadorLexico {
             return false;
     }
 
-    public ArrayList<Atributo> getListaTokens() {
+    public ArrayList<Token> getListaTokens() {
         return this.tokensReconocidos;
     }
 
@@ -361,7 +351,7 @@ public class AnalizadorLexico {
         if (this.tokensReconocidos.isEmpty())
             System.out.println("no hay tokens");
         else {
-            for(Atributo t : tokensReconocidos){
+            for(Token t : tokensReconocidos){
                 System.out.println(t.toString());
             }
         }

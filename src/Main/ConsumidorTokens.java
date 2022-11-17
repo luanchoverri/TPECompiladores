@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 import AnalizadorLexico.*;
-import AnalizadorSintactico.*;
 
 
 public class ConsumidorTokens {
@@ -30,7 +29,7 @@ public class ConsumidorTokens {
                 while (!lexico.isCodigoLeido() )
                     lexico.procesarYylex();
 
-                ArrayList<Atributo> tokens = lexico.getListaTokens();
+                ArrayList<Token> tokens = lexico.getListaTokens();
 
                 if (tokens.isEmpty()) { // Si esta vacio, no se detectan tokens
                     System.out.println("!!! ---------------ANALIZADOR LÉXICO--------------- !!!");
@@ -38,9 +37,9 @@ public class ConsumidorTokens {
                     System.out.println("|--- No se detectaron tokens dentro del archivo. ! --|-");
                 }else{
                     System.out.println("(Info) ---------------ANALIZADOR LÉXICO--------------- (Info)");
-                    for (Atributo token : tokens) {
+                    for (Token token : tokens) {
 
-                        System.out.println("Tipo de token --> " + token.getIdToken()); // Devuelve el id con el tipo de token?
+                        System.out.println("Tipo de token --> " + token.getId()); // Devuelve el id con el tipo de token?
                         System.out.println("Lexema --> " + token.getLexema());
                     }
                 }

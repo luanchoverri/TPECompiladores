@@ -5,15 +5,17 @@ import java.util.HashMap;
 
 public class TablaSimbolos {
 
+    /** Registro Tokens carga todos los tokens que se van reconociendo. Cada Token tiene sus propios atributos, lexema-id-uso-ambito-etc y la referencia es el indice */
+    private ArrayList<Token> registroTokens;
 
-    private ArrayList<Atributo> registroTokens; // esta es la tabla de simbolos donde se guardan los pares lexema-id
+    /** ID Tokens tiene guardos el numero de identificacion que le corresponde a cada token, se usa ASCII para los caracteres y se inventan para palabras reservadas u otros */
     private HashMap<String, Integer> idTokens; // aca solo se guardan los id correspondientes
 
 
 
     public TablaSimbolos(){
 
-        this.registroTokens = new ArrayList<Atributo>();
+        this.registroTokens = new ArrayList<Token>();
         this.idTokens = new HashMap<>();
 
         //--- CARGA DE TOKENS ---//
@@ -166,7 +168,7 @@ public class TablaSimbolos {
     }
 
     public void agregarRegistro(String lexema, int id, int nroLinea){
-        Atributo registro = new Atributo(lexema, id, nroLinea);
+        Token registro = new Token(lexema, id, nroLinea);
         if (getTipoToken(id).equals("CONSTANTE")){
             if (lexema.contains(".")) {
                 registro.setTipo("f32");
@@ -185,7 +187,7 @@ public class TablaSimbolos {
         return registroTokens.isEmpty();
     }
 
-    public Atributo getEntrada(int indice){
+    public Token getEntrada(int indice){
         return this.registroTokens.get(indice);
     }
 
@@ -195,7 +197,7 @@ public class TablaSimbolos {
 
     public void imprimir(){
         System.out.println("🟡🟡🟡🟡🟡 TABLA DE SIMBOLOS 🟡🟡🟡🟡🟡");
-        for(Atributo token : registroTokens){
+        for(Token token : registroTokens){
             System.out.println(token.toString());
         }
     }

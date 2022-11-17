@@ -22,10 +22,7 @@ public class AnalizadorSintactico {
     private ArrayList<String> analisisSintactico;
     private String tipo;
     private Nodo raiz;
-
     private ArrayList<Integer> variables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
-
-
 
 
     public AnalizadorSintactico(AnalizadorLexico l, Parser p){
@@ -38,54 +35,86 @@ public class AnalizadorSintactico {
         raiz = null;
         variables =  new ArrayList<Integer>();
 
-
-
     }
 
+    // -- Adders
     public void addListaVariables(int refTS){
         variables.add(refTS);
     }
-
-    public void setUso(String uso, int indice){
-       tablaSimbolos.getEntrada(indice).setUso(uso);
+    public void addErrorSintactico(String nuevo) {
+        erroresSintacticos.add(nuevo);
+    }
+    public void addAnalisis(String nuevo) {
+        analisisSintactico.add(nuevo);
     }
 
+
+
+    // -- Setters
+    /** Setea en negativo el valor del Token asociado al indice */
+    public void setNegativoTablaSimb(int indice) {
+        String sinSigno = this.tablaSimbolos.getEntrada(indice).getLexema();
+        this.tablaSimbolos.getEntrada(indice).setLexema("-" + sinSigno);
+    }
+
+    /** Setea la raiz del arbol Sintactico */
+    public void setRaiz(ParserVal raiz){
+        this.raiz = (Nodo) raiz.obj;
+    }
+
+    /** Setea el nuevo AMBITO para el Token que corresponde a ese indice en la Tabla de Simbolos */
+    public void setLexemaEnIndex(int indice, String ambito){
+        String nuevoLex = getEntradaTablaSimb(indice).getLexema() + ambito;
+        getEntradaTablaSimb(indice).setLexema(nuevoLex);
+    }
+
+    /** Setea el nuevo USO para el Token que corresponde a ese indice en la Tabla de Simbolos */
+    public void setUso(String uso, int indice){
+        tablaSimbolos.getEntrada(indice).setUso(uso);
+    }
+
+    /** Setea el nuevo TIPO para el Token que corresponde a ese indice en la Tabla de Simbolos */
     public void setTipoEnIndex(String tipo, int indice){
         tablaSimbolos.getEntrada(indice).setTipo(tipo);
     }
 
-    public void completarConTipos(String tipo){
+    /** Set de nuevo tipo para la variable local (Se usa como var comunitaria para cuando no se puede instanciar inmediatamente el tipo debido a la recursion de los estados) */
+    public void setTipoGlobal(String tipo) {
+        this.tipo = tipo;
+    }
 
+    /** Para la lista previamente cargada con los ids de las variables, les setea el tipo dado. */
+    public void completarConTipos(String tipo){
        for(int idVariable : variables){
            tablaSimbolos.getEntrada(idVariable).setTipo(tipo);
        }
        vaciarListaVariables();
     }
 
-    public void vaciarListaVariables(){
-        if (!variables.isEmpty()){
-            variables.clear();
-        }
+
+
+    // -- Getters
+
+    /** @param indice
+     * @return  el Token asociado en la Tabla de Simbolos */
+    public Token getEntradaTablaSimb(int indice) {
+        return this.tablaSimbolos.getEntrada(indice);
     }
 
-    public void setRaiz(ParserVal raiz){
-        this.raiz = (Nodo) raiz.obj;
-    }
+    /** @return  el tipo del Token asociado al indice */
+    public String getTipoFromTS(int indice) {
+        return this.tablaSimbolos.getEntrada(indice).getTipo(); }
 
-    public void imprimirArbol(Nodo nodo, int nivel){
-        if (nodo == null) {
+    /** Devuelve el utimo tipo que fue seteado en el Analizador. Se usa como un aux*/
+    public String getTipo() { return  this.tipo;}
 
-            return;
-        }
-        for (int i=0; i<nivel; i ++){
-            System.out.print("   ");
-        }
-        System.out.println(" └─ " + (nodo.getLexema().toString()) + " "); // mostrar datos del nodo
-        nivel++;
-        imprimirArbol(nodo.getHijoIzquierdo(),nivel); //recorre subarbol izquierdo
-        imprimirArbol(nodo.getHijoDerecho(),nivel); //recorre subarbol derecho
-        nivel--;
-    }
+    /** Devuelve la tabla de simbolos */
+    public TablaSimbolos getTS() {
+        return this.tablaSimbolos;}
+
+
+
+    // -- Creacion del ARBOL SINTACTICO
 
     public ParserVal modificarHijo(ParserVal arbolSentencias, Nodo nuevo){
         System.out.println("");
@@ -98,43 +127,6 @@ public class AnalizadorSintactico {
         return new ParserVal(n);
     }
 
-    public void agregarNuevoNodo(Nodo n, Nodo nuevo){
-        if (n.getHijoDerecho() == null){
-            n.setHijoDerecho(nuevo);
-        } else {
-            agregarNuevoNodo(n.getHijoDerecho(),nuevo);
-        }
-    }
-
-    public void eliminarEntrada(int indice){this.tablaSimbolos.eliminarEntrada(indice);}
-    public String getTipoFromTS(int indice) { return this.tablaSimbolos.getEntrada(indice).getTipo(); }
-
-    public void addErrorSintactico(String nuevo) {
-        erroresSintacticos.add(nuevo);
-    }
-
-    public void addAnalisis(String nuevo) {
-        analisisSintactico.add(nuevo);
-    }
-
-    public void clearTipo(){
-        this.tipo = null;
-    }
-    public void setTipoGlobal(String tipo) {
-        this.tipo = tipo;
-    }
-    public String getTipo() { return  this.tipo;}
-
-    public void verificarRangoEnteroLargo(int indice) {
-
-        String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
-        Long numero = Long.parseLong(lexema);
-
-        if (numero == 2147483648L) {
-            this.tablaSimbolos.eliminarEntrada(indice);    // Se elimina la entrada de la tabla de símbolos.
-            this.addErrorSintactico("ERROR SINTÁCTICO (Línea " + this.analizadorLexico.LINEA + "): la constante LONG está fuera de rango.");
-        }
-    }
     public Nodo crearHoja(int indice){
 
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
@@ -152,18 +144,6 @@ public class AnalizadorSintactico {
             i.setTipo( tipoResultante( (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
             return i;
         }
-    }
-
-    public String tipoResultante(Nodo izq, Nodo der){
-        System.out.println("nodo izquierdo  " + izq.getLexema() + " ES  " + izq.getTipo());
-        System.out.println("nodo derecho  " + der.getLexema() + "  ES  " + der.getTipo());
-        if (izq.getTipo() != null && izq.getTipo() != null )
-            if(izq.getTipo().equals(der.getTipo())){
-                System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
-                return izq.getTipo();
-            }
-        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
-        return null;
     }
 
     public Nodo crearNodoControl(String identificador, ParserVal hijo){
@@ -186,21 +166,32 @@ public class AnalizadorSintactico {
         }
     }
 
-    public void modificarLexema(int indice, String ambito){
-        String nuevoLex = getEntradaTablaSimb(indice).getLexema() + ambito;
-        getEntradaTablaSimb(indice).setLexema(nuevoLex);
-    }
-    public Atributo getEntradaTablaSimb(int indice){
-        return this.tablaSimbolos.getEntrada(indice);
-    }
-
-    public void setNegativoTablaSimb(int indice) {
-        String sinSigno = this.tablaSimbolos.getEntrada(indice).getLexema();
-        this.tablaSimbolos.getEntrada(indice).setLexema("-" + sinSigno);
+    public void agregarNuevoNodo(Nodo n, Nodo nuevo){
+        if (n.getHijoDerecho() == null){
+            n.setHijoDerecho(nuevo);
+        } else {
+            agregarNuevoNodo(n.getHijoDerecho(),nuevo);
+        }
     }
 
-    public TablaSimbolos getTS(){ return this.tablaSimbolos;}
 
+
+    // -- Deleters
+
+    public void eliminarEntrada(int indice){this.tablaSimbolos.eliminarEntrada(indice);}
+
+    public void clearTipo(){
+        this.tipo = null;
+    }
+    public void vaciarListaVariables(){
+        if (!variables.isEmpty()){
+            variables.clear();
+        }
+    }
+
+
+
+    // -- Printers
 
     public void imprimirTablaSimbolos() {
         System.out.println();
@@ -210,9 +201,6 @@ public class AnalizadorSintactico {
 
     }
 
-    /**
-     * Método para imprimir los errores sintácticos.
-     */
     public void imprimirErroresSintacticos() {
 
         Path path = Paths.get("salida_archivo/ejecucion_reciente.txt");
@@ -237,9 +225,6 @@ public class AnalizadorSintactico {
         }
     }
 
-    /**
-     * Método para imprimir el análisis sintáctico.
-     */
     public void imprimirAnalisisSintactico() {
 
         System.out.println("   🔎  ANALISIS SINTÁCTICO    ");
@@ -252,23 +237,62 @@ public class AnalizadorSintactico {
         System.out.println();
     }
 
-
-    /**
-     * Método para imprimir el análisis léxico.
-     */
     public void imprimirAnalisisLexico() {
         System.out.println();
         System.out.println("|                       ANÁLIZADOR LÉXICO                  |");
-        ArrayList<Atributo> listaTokens = this.analizadorLexico.getListaTokens();
+        ArrayList<Token> listaTokens = this.analizadorLexico.getListaTokens();
 
-        for (Atributo token : listaTokens) {
+        for (Token token : listaTokens) {
             System.out.println("----------------------------------");
             System.out.println("Tipo : " + token.getTipo());
             System.out.println("Lexema: " + token.getLexema());
         }
     }
 
+    public void imprimirArbol(Nodo nodo, int nivel){
+        if (nodo == null) {
 
+            return;
+        }
+        for (int i=0; i<nivel; i ++){
+            System.out.print("   ");
+        }
+        System.out.println(" └─ " + (nodo.getLexema().toString()) + " "); // mostrar datos del nodo
+        nivel++;
+        imprimirArbol(nodo.getHijoIzquierdo(),nivel); //recorre subarbol izquierdo
+        imprimirArbol(nodo.getHijoDerecho(),nivel); //recorre subarbol derecho
+        nivel--;
+    }
+
+
+
+    // -- Otros
+    public void verificarRangoEnteroLargo(int indice) {
+
+        String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
+        Long numero = Long.parseLong(lexema);
+
+        if (numero == 2147483648L) {
+            this.tablaSimbolos.eliminarEntrada(indice);    // Se elimina la entrada de la tabla de símbolos.
+            this.addErrorSintactico("SyntaxError FUERA DE RANGO (Línea " + this.analizadorLexico.LINEA + "): CONST LONG");
+        }
+    }
+    public String tipoResultante(Nodo izq, Nodo der){
+        System.out.println("nodo izquierdo  " + izq.getLexema() + " ES  " + izq.getTipo());
+        System.out.println("nodo derecho  " + der.getLexema() + "  ES  " + der.getTipo());
+        if (izq.getTipo() != null && izq.getTipo() != null )
+            if(izq.getTipo().equals(der.getTipo())){
+                System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
+                return izq.getTipo();
+            }
+        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
+        return null;
+    }
+
+
+
+
+    // -- Analizador Sintactico START
 
     public void start() {
         System.out.println("________________________________________________");

@@ -21,8 +21,8 @@
   14             | id cte error
   15             | id error
 
-  16  bloque_sentencias_For : sentencias_For
-  17                        | bloque_sentencias_For sentencias_For
+  16  bloq_sentencias_For : sentencias_For
+  17                      | bloq_sentencias_For sentencias_For
 
   18  sentencia : declarativas
   19            | ejecutables
@@ -138,10 +138,10 @@
  103                | cuerpo_then_for
  104                | cuerpo_Else_for error
 
- 105  cuerpo_then_for : then '{' bloque_sentencias_For '}'
+ 105  cuerpo_then_for : then '{' bloq_sentencias_For '}'
  106                  | then sentencias_For
 
- 107  cuerpo_Else_for : Else '{' bloque_sentencias_For '}'
+ 107  cuerpo_Else_for : Else '{' bloq_sentencias_For '}'
  108                  | Else sentencias_For
 
  109  sentencia_if_funcion : If condicion_if cuerpo_If_funcion end_if ';'
@@ -192,7 +192,7 @@
 
  142  condicion_for : id comparador cte
 
- 143  cola_For : '{' bloque_sentencias_For '}' ';'
+ 143  cola_For : '{' bloq_sentencias_For '}' ';'
  144           | sentencias_For
 
  145  signo : '+'
@@ -2818,7 +2818,7 @@ state 247
 
 
 state 248
-	cola_For : '{' . bloque_sentencias_For '}' ';'  (143)
+	cola_For : '{' . bloq_sentencias_For '}' ';'  (143)
 
 	id  shift 4
 	If  shift 247
@@ -2836,7 +2836,7 @@ state 248
 	.  error
 
 	declaracion_const  goto 19
-	bloque_sentencias_For  goto 290
+	bloq_sentencias_For  goto 290
 	sentencias_For  goto 291
 	declarativas  goto 250
 	tipo  goto 22
@@ -3225,8 +3225,8 @@ state 289
 
 
 state 290
-	bloque_sentencias_For : bloque_sentencias_For . sentencias_For  (17)
-	cola_For : '{' bloque_sentencias_For . '}' ';'  (143)
+	bloq_sentencias_For : bloq_sentencias_For . sentencias_For  (17)
+	cola_For : '{' bloq_sentencias_For . '}' ';'  (143)
 
 	id  shift 4
 	If  shift 247
@@ -3264,7 +3264,7 @@ state 290
 
 
 state 291
-	bloque_sentencias_For : sentencias_For .  (16)
+	bloq_sentencias_For : sentencias_For .  (16)
 
 	.  reduce 16
 
@@ -3532,7 +3532,7 @@ state 317
 
 
 state 318
-	cuerpo_then_for : then . '{' bloque_sentencias_For '}'  (105)
+	cuerpo_then_for : then . '{' bloq_sentencias_For '}'  (105)
 	cuerpo_then_for : then . sentencias_For  (106)
 
 	id  shift 4
@@ -3571,7 +3571,7 @@ state 318
 
 
 state 319
-	cuerpo_Else_for : Else . '{' bloque_sentencias_For '}'  (107)
+	cuerpo_Else_for : Else . '{' bloq_sentencias_For '}'  (107)
 	cuerpo_Else_for : Else . sentencias_For  (108)
 
 	id  shift 4
@@ -3638,14 +3638,14 @@ state 322
 
 
 state 323
-	cola_For : '{' bloque_sentencias_For '}' . ';'  (143)
+	cola_For : '{' bloq_sentencias_For '}' . ';'  (143)
 
 	';'  shift 363
 	.  error
 
 
 state 324
-	bloque_sentencias_For : bloque_sentencias_For sentencias_For .  (17)
+	bloq_sentencias_For : bloq_sentencias_For sentencias_For .  (17)
 
 	.  reduce 17
 
@@ -3936,7 +3936,7 @@ state 354
 
 
 state 355
-	cuerpo_then_for : then '{' . bloque_sentencias_For '}'  (105)
+	cuerpo_then_for : then '{' . bloq_sentencias_For '}'  (105)
 
 	id  shift 4
 	If  shift 247
@@ -3954,7 +3954,7 @@ state 355
 	.  error
 
 	declaracion_const  goto 19
-	bloque_sentencias_For  goto 378
+	bloq_sentencias_For  goto 378
 	sentencias_For  goto 291
 	declarativas  goto 250
 	tipo  goto 22
@@ -3980,7 +3980,7 @@ state 356
 
 
 state 357
-	cuerpo_Else_for : Else '{' . bloque_sentencias_For '}'  (107)
+	cuerpo_Else_for : Else '{' . bloq_sentencias_For '}'  (107)
 
 	id  shift 4
 	If  shift 247
@@ -3998,7 +3998,7 @@ state 357
 	.  error
 
 	declaracion_const  goto 19
-	bloque_sentencias_For  goto 379
+	bloq_sentencias_For  goto 379
 	sentencias_For  goto 291
 	declarativas  goto 250
 	tipo  goto 22
@@ -4051,7 +4051,7 @@ state 362
 
 
 state 363
-	cola_For : '{' bloque_sentencias_For '}' ';' .  (143)
+	cola_For : '{' bloq_sentencias_For '}' ';' .  (143)
 
 	.  reduce 143
 
@@ -4224,8 +4224,8 @@ state 377
 
 
 state 378
-	bloque_sentencias_For : bloque_sentencias_For . sentencias_For  (17)
-	cuerpo_then_for : then '{' bloque_sentencias_For . '}'  (105)
+	bloq_sentencias_For : bloq_sentencias_For . sentencias_For  (17)
+	cuerpo_then_for : then '{' bloq_sentencias_For . '}'  (105)
 
 	id  shift 4
 	If  shift 247
@@ -4263,8 +4263,8 @@ state 378
 
 
 state 379
-	bloque_sentencias_For : bloque_sentencias_For . sentencias_For  (17)
-	cuerpo_Else_for : Else '{' bloque_sentencias_For . '}'  (107)
+	bloq_sentencias_For : bloq_sentencias_For . sentencias_For  (17)
+	cuerpo_Else_for : Else '{' bloq_sentencias_For . '}'  (107)
 
 	id  shift 4
 	If  shift 247
@@ -4519,13 +4519,13 @@ state 395
 
 
 state 396
-	cuerpo_then_for : then '{' bloque_sentencias_For '}' .  (105)
+	cuerpo_then_for : then '{' bloq_sentencias_For '}' .  (105)
 
 	.  reduce 105
 
 
 state 397
-	cuerpo_Else_for : Else '{' bloque_sentencias_For '}' .  (107)
+	cuerpo_Else_for : Else '{' bloq_sentencias_For '}' .  (107)
 
 	.  reduce 107
 
