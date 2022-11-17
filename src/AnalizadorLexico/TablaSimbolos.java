@@ -200,4 +200,14 @@ public class TablaSimbolos {
         }
     }
 
+    public int existeEntrada(String lexema){
+
+        for(int i = 0; i < registroTokens.size(); i++) {
+            if (registroTokens.get(i).getLexema().equals(lexema)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }

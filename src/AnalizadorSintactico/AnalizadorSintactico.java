@@ -1,6 +1,5 @@
 package AnalizadorSintactico;
 import AnalizadorLexico.*;
-import AnalizadorLexico.AccionesSemanticas.AccionesSimples.RangoEntero;
 import ArbolSintactico.GenerarCodigo;
 import ArbolSintactico.Nodo;
 import ArbolSintactico.NodoBinario;
@@ -12,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class AnalizadorSintactico {
@@ -25,9 +23,9 @@ public class AnalizadorSintactico {
     private String tipo;
     private Nodo raiz;
 
-    private ArrayList<Integer> refVariables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
+    private ArrayList<Integer> variables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
 
-    private HashMap<String, Integer> variables;
+
 
 
     public AnalizadorSintactico(AnalizadorLexico l, Parser p){
@@ -38,25 +36,36 @@ public class AnalizadorSintactico {
         tablaSimbolos = l.getTablaSimbolos();
         tipo = "";
         raiz = null;
-        refVariables =  new ArrayList<Integer>();
-        variables = new HashMap<String, Integer> ();
+        variables =  new ArrayList<Integer>();
+
 
 
     }
 
     public void addListaVariables(int refTS){
-        refVariables.add(refTS);
+        variables.add(refTS);
     }
 
     public void setUso(String uso, int indice){
        tablaSimbolos.getEntrada(indice).setUso(uso);
     }
 
+    public void setTipoEnIndex(String tipo, int indice){
+        tablaSimbolos.getEntrada(indice).setTipo(tipo);
+    }
+
     public void completarConTipos(String tipo){
-        System.out.println("ENTRAAAAAAAAAAAAAAAAAAAAAAAAAA   EL TIPO ES "+ tipo);
-       for(int idVariable : refVariables){
+
+       for(int idVariable : variables){
            tablaSimbolos.getEntrada(idVariable).setTipo(tipo);
        }
+       vaciarListaVariables();
+    }
+
+    public void vaciarListaVariables(){
+        if (!variables.isEmpty()){
+            variables.clear();
+        }
     }
 
     public void setRaiz(ParserVal raiz){
@@ -96,6 +105,8 @@ public class AnalizadorSintactico {
             agregarNuevoNodo(n.getHijoDerecho(),nuevo);
         }
     }
+
+    public void eliminarEntrada(int indice){this.tablaSimbolos.eliminarEntrada(indice);}
     public String getTipoFromTS(int indice) { return this.tablaSimbolos.getEntrada(indice).getTipo(); }
 
     public void addErrorSintactico(String nuevo) {
@@ -106,10 +117,14 @@ public class AnalizadorSintactico {
         analisisSintactico.add(nuevo);
     }
 
-    public void setTipo(String tipo) {
+    public void clearTipo(){
+        this.tipo = null;
+    }
+    public void setTipoGlobal(String tipo) {
         this.tipo = tipo;
     }
     public String getTipo() { return  this.tipo;}
+
     public void verificarRangoEnteroLargo(int indice) {
 
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
@@ -129,7 +144,7 @@ public class AnalizadorSintactico {
     }
 
     public Nodo crearNodo(String identificador, ParserVal hijoIzq, ParserVal hijoDer){
-        if (hijoDer == null){                                                   // POR QUE??? EL IZQUIERD0 NO?
+        if (hijoDer == null){                                                   // TODO POR QUE??? EL IZQUIERD0 NO?
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
             return i;
         } else {
@@ -140,8 +155,8 @@ public class AnalizadorSintactico {
     }
 
     public String tipoResultante(Nodo izq, Nodo der){
-        System.out.println("nodo izquierdo " + izq.getLexema() + "tipo  " + izq.getTipo());
-        System.out.println("nodo derecho " + der.getLexema() + "tipo  " + der.getTipo());
+        System.out.println("nodo izquierdo  " + izq.getLexema() + " ES  " + izq.getTipo());
+        System.out.println("nodo derecho  " + der.getLexema() + "  ES  " + der.getTipo());
         if (izq.getTipo() != null && izq.getTipo() != null )
             if(izq.getTipo().equals(der.getTipo())){
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
@@ -171,6 +186,10 @@ public class AnalizadorSintactico {
         }
     }
 
+    public void modificarLexema(int indice, String ambito){
+        String nuevoLex = getEntradaTablaSimb(indice).getLexema() + ambito;
+        getEntradaTablaSimb(indice).setLexema(nuevoLex);
+    }
     public Atributo getEntradaTablaSimb(int indice){
         return this.tablaSimbolos.getEntrada(indice);
     }
@@ -179,6 +198,8 @@ public class AnalizadorSintactico {
         String sinSigno = this.tablaSimbolos.getEntrada(indice).getLexema();
         this.tablaSimbolos.getEntrada(indice).setLexema("-" + sinSigno);
     }
+
+    public TablaSimbolos getTS(){ return this.tablaSimbolos;}
 
 
     public void imprimirTablaSimbolos() {
@@ -251,6 +272,7 @@ public class AnalizadorSintactico {
 
     public void start() {
         System.out.println("________________________________________________");
+        parser.activarAmbito();
         parser.setLexico(this.analizadorLexico);
         parser.setSintactico(this);
         System.out.println();
@@ -258,7 +280,7 @@ public class AnalizadorSintactico {
         if (parser.yyparse() == 0) {
 
             System.out.println(" \n \n ✅ EJECUCION DEL PARSER FINALIZADA \n \n  ");
-            imprimirAnalisisLexico();
+        //    imprimirAnalisisLexico();
             System.out.println("\n \n 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 \n ");
             imprimirAnalisisSintactico();
             imprimirTablaSimbolos();
@@ -279,6 +301,8 @@ public class AnalizadorSintactico {
         GenerarCodigo g = new GenerarCodigo(analizadorLexico);
         g.generacionDeCodigo();
     }
+
+
 }
 
 

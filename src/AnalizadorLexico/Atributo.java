@@ -63,8 +63,8 @@ public class Atributo {
     @Override
     public String toString() {
 
-        String s = String.format("%5s %5s %10s %10s %1s %5s %1s %5s ",
-                                "TOKEN", idToken, lexema, "#linea", nroLinea, "tipo", tipo, uso);
+        String s = String.format("%5s %5s %10s %10s %1s %6s %6s ",
+                                "TOKEN", idToken, lexema, "#linea", nroLinea, tipo, uso);
         return(s) ;
     }
 
