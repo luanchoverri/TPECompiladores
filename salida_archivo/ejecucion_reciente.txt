@@ -406,3 +406,7 @@ SyntaxError. ENC_FUN/PARAMS (Línea 12): el identificador ya ha sido utilizado.
 
 
 |--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
