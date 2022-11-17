@@ -118,18 +118,39 @@ lista_de_variables : id lista_de_variables	{ sintactico.addErrorSintactico("Synt
                    ;
 
 
-encabezado_func : fun id '('	     { sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
-				        Atributo id = sintactico.getEntradaTablaSimb($2.ival);
-				        id.setUso("id fun");
-                                        id.setTipo(sintactico.getTipo());
-				      }
+encabezado_func : fun id '('
+				       {	sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
+  						Atributo id = sintactico.getEntradaTablaSimb($2.ival);
+                                                id.setTipo(sintactico.getTipo());
+
+                                      		String lexema = sintactico.getEntradaTablaSimb($2.ival).getLexema();
+                                      		int existente = enAmbito($2);
+                                      		if (existente < 0) { // no existe el id en el ambito
+                                      			sintactico.modificarLexema($2.ival, this.ambito);
+                                      			sintactico.setUso("func", $2.ival);
+                                      			agregarAmbito(lexema);
+                                      		} else {
+                                      			sintactico.addErrorSintactico("SyntaxError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
+                                      		}
+                                      }
+
                 | fun   '(' error   { sintactico.addErrorSintactico("SyntaxError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): problema en la definición de la función."); }
                 ;
 
-parametro : tipo id        {String type = $1.sval;
-                            Atributo id = sintactico.getEntradaTablaSimb($2.ival);
-                            id.setUso("param");
-                            id.setTipo(type);}
+parametro : tipo id       {
+				    String type = $1.sval;
+				    Atributo id = sintactico.getEntradaTablaSimb($2.ival);
+				    id.setTipo(type);
+
+				    int existente = enAmbito($2);
+				    if (existente < 0) {
+					sintactico.modificarLexema($2.ival, this.ambito);
+					sintactico.setUso("param", $2.ival);
+				    } else {
+					sintactico.addErrorSintactico("SyntaxError. ENC_FUN/PARAMS (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
+				    }
+
+                            }
 	  | 	id  error { sintactico.addErrorSintactico("SyntaxError. PARAM(Línea " + AnalizadorLexico.LINEA + "): falta TIPO en parametros."); }
 	  ;
 
