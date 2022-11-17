@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class AnalizadorSintactico {
@@ -49,6 +48,10 @@ public class AnalizadorSintactico {
 
     public void setUso(String uso, int indice){
        tablaSimbolos.getEntrada(indice).setUso(uso);
+    }
+
+    public void setTipoEnIndex(String tipo, int indice){
+        tablaSimbolos.getEntrada(indice).setTipo(tipo);
     }
 
     public void completarConTipos(String tipo){
@@ -114,7 +117,10 @@ public class AnalizadorSintactico {
         analisisSintactico.add(nuevo);
     }
 
-    public void setTipo(String tipo) {
+    public void clearTipo(){
+        this.tipo = null;
+    }
+    public void setTipoGlobal(String tipo) {
         this.tipo = tipo;
     }
     public String getTipo() { return  this.tipo;}
@@ -296,6 +302,8 @@ public class AnalizadorSintactico {
         GenerarCodigo g = new GenerarCodigo(this.tablaSimbolos);
         g.generacionDeCodigo();
     }
+
+
 }
 
 

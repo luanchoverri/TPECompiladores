@@ -200,3 +200,205 @@ SyntaxError. (Línea 3): falta una ',' entre identIficadores.
 =======
 SyntaxError. (Línea 5): variable ya declarada.
 >>>>>>> rama_fran
+
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN (Línea 6): el identificador ya ha sido utilizado.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN (Línea 6): el identificador ya ha sido utilizado.
+
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 11): el identificador ya ha sido utilizado.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 11): el identificador ya ha sido utilizado.
+SyntaxError. COLA_FUN(Línea 11): falta TIPO 
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 11): el identificador ya ha sido utilizado.
+SyntaxError. COLA_FUN(Línea 11): falta TIPO 
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 11): el identificador ya ha sido utilizado.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 11): el identificador ya ha sido utilizado.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 2): falta el tipo de variable
+SyntaxError. (Línea 2): falta una ',' entre identIficadores.
+SyntaxError. (Línea 3): falta el tipo de variable
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 3): variable ya declarada.
+SyntaxError. (Línea 4): falta el tipo de variable
+SyntaxError. (Línea 4): falta una ',' entre identIficadores.
+SyntaxError. (Línea 4): variable ya declarada.
+SyntaxError. (Línea 4): falta una ',' entre identIficadores.
+SyntaxError. (Línea 4): variable ya declarada.
+SyntaxError. (Línea 5): falta el tipo de variable
+SyntaxError. (Línea 5): falta una ',' entre identIficadores.
+SyntaxError. (Línea 5): variable ya declarada.
+SyntaxError. (Línea 5): falta una ',' entre identIficadores.
+SyntaxError. (Línea 5): variable ya declarada.
+SyntaxError. (Línea 6): falta el tipo de variable
+SyntaxError. (Línea 6): falta una ',' entre identIficadores.
+SyntaxError. (Línea 6): variable ya declarada.
+SyntaxError. (Línea 6): falta una ',' entre identIficadores.
+SyntaxError. (Línea 6): variable ya declarada.
+SyntaxError. (Línea 8): falta el tipo de variable
+SyntaxError. (Línea 8): falta una ',' entre identIficadores.
+SyntaxError. (Línea 8): falta una ',' entre identIficadores.
+SyntaxError. (Línea 8): falta una ',' entre identIficadores.
+SyntaxError. (Línea 8): variable ya declarada.
+SyntaxError. (Línea 9): falta el tipo de variable
+SyntaxError. (Línea 9): falta una ',' entre identIficadores.
+SyntaxError. (Línea 9): falta una ',' entre identIficadores.
+SyntaxError. (Línea 9): falta una ',' entre identIficadores.
+SyntaxError. (Línea 9): variable ya declarada.
+SyntaxError. (Línea 9): falta una ',' entre identIficadores.
+SyntaxError. (Línea 9): variable ya declarada.
+SyntaxError. (Línea 10): falta el tipo de variable
+SyntaxError. (Línea 10): falta una ',' entre identIficadores.
+SyntaxError. (Línea 10): variable ya declarada.
+SyntaxError. (Línea 10): falta una ',' entre identIficadores.
+SyntaxError. (Línea 10): variable ya declarada.
+SyntaxError. (Línea 10): falta una ',' entre identIficadores.
+SyntaxError. (Línea 10): variable ya declarada.
+SyntaxError. (Línea 10): falta una ',' entre identIficadores.
+SyntaxError. (Línea 10): variable ya declarada.
+SyntaxError. (Línea 11): falta el tipo de variable
+SyntaxError. (Línea 11): falta una ',' entre identIficadores.
+SyntaxError. (Línea 11): variable ya declarada.
+SyntaxError. (Línea 11): falta una ',' entre identIficadores.
+SyntaxError. (Línea 11): variable ya declarada.
+SyntaxError. (Línea 11): falta una ',' entre identIficadores.
+SyntaxError. (Línea 11): variable ya declarada.
+SyntaxError. (Línea 11): falta una ',' entre identIficadores.
+SyntaxError. (Línea 11): variable ya declarada.
+SyntaxError. (Línea 12): falta el tipo de variable
+SyntaxError. (Línea 12): falta una ',' entre identIficadores.
+SyntaxError. (Línea 12): variable ya declarada.
+SyntaxError. (Línea 12): falta una ',' entre identIficadores.
+SyntaxError. (Línea 12): variable ya declarada.
+SyntaxError. (Línea 12): falta una ',' entre identIficadores.
+SyntaxError. (Línea 12): variable ya declarada.
+SyntaxError. (Línea 12): falta una ',' entre identIficadores.
+SyntaxError. (Línea 12): variable ya declarada.
+SyntaxError. (Línea 13): falta el tipo de variable
+SyntaxError. (Línea 13): falta una ',' entre identIficadores.
+SyntaxError. (Línea 13): falta una ',' entre identIficadores.
+SyntaxError. (Línea 13): variable ya declarada.
+SyntaxError. (Línea 13): falta una ',' entre identIficadores.
+SyntaxError. (Línea 13): variable ya declarada.
+SyntaxError. (Línea 14): falta el tipo de variable
+SyntaxError. (Línea 14): falta una ',' entre identIficadores.
+SyntaxError. (Línea 14): variable ya declarada.
+SyntaxError. (Línea 14): falta una ',' entre identIficadores.
+SyntaxError. (Línea 14): variable ya declarada.
+SyntaxError. (Línea 14): falta una ',' entre identIficadores.
+SyntaxError. (Línea 14): variable ya declarada.
+SyntaxError. (Línea 17): falta el tipo de variable
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 11): el identificador ya ha sido utilizado.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 11): el identificador ya ha sido utilizado.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 11): el identificador ya ha sido utilizado.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 12): el identificador ya ha sido utilizado.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 12): el identificador ya ha sido utilizado.
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. ENC_FUN/PARAMS (Línea 12): el identificador ya ha sido utilizado.
+
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
