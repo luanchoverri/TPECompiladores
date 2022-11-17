@@ -4,228 +4,97 @@
 | ERRORES SINTACTICOS: ---| (!)
 
 
-SyntaxError. (Línea 4): falta ';' al final de la declaración de variable.
-
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 2): falta el tipo de variable
-SyntaxError. (Línea 3): falta el tipo de variable
-SyntaxError. (Línea 4): falta el tipo de variable
-SyntaxError. (Línea 5): falta el tipo de variable
-SyntaxError. (Línea 6): falta el tipo de variable
-SyntaxError. (Línea 7): falta el tipo de variable
-SyntaxError. (Línea 9): falta el tipo de variable
-SyntaxError. (Línea 10): falta el tipo de variable
-SyntaxError. (Línea 11): falta el tipo de variable
-SyntaxError. (Línea 12): falta el tipo de variable
-SyntaxError. (Línea 13): falta el tipo de variable
-SyntaxError. (Línea 14): falta el tipo de variable
-SyntaxError. (Línea 15): falta el tipo de variable
-SyntaxError. (Línea 18): falta el tipo de variable
-
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 2): falta el tipo de variable
-SyntaxError. (Línea 3): falta el tipo de variable
-SyntaxError. (Línea 4): falta el tipo de variable
-SyntaxError. (Línea 5): falta el tipo de variable
-SyntaxError. (Línea 6): falta el tipo de variable
-SyntaxError. (Línea 7): falta el tipo de variable
-SyntaxError. (Línea 9): falta el tipo de variable
-SyntaxError. (Línea 10): falta el tipo de variable
-SyntaxError. (Línea 11): falta el tipo de variable
-SyntaxError. (Línea 12): falta el tipo de variable
-SyntaxError. (Línea 13): falta el tipo de variable
-SyntaxError. (Línea 14): falta el tipo de variable
-SyntaxError. (Línea 15): falta el tipo de variable
-SyntaxError. (Línea 18): falta el tipo de variable
+*** AMBITO ANTES: $
+*** ESTOY EN ENAMBITO
+*** AMBITOAUX: $
+*** ENAMBITO: lex g amb [Ljava.lang.String;@1d56ce6a
+*********** $
+*** EN ENAMBITO: CON LEXEMA: g$
+*** AMBITO DESPUES: $#g
+SyntaxError. If3 (Línea 8): no se permiten sentencias continue fuera de una sentencia for 
+*** AMBITO ANTES: $#g
+*** ESTOY EN ENAMBITO
+*** AMBITOAUX: $#g
+*** ENAMBITO: lex a amb [Ljava.lang.String;@246b179d
+*********** $
+*********** g
+*** EN ENAMBITO: CON LEXEMA: a$#g
+*** EN ENAMBITO: CON LEXEMA: a$
+*** AMBITO DESPUES: $#g#a
+*** AMBITO ANTES: $#g#a
+*** ESTOY EN ENAMBITO
+*** AMBITOAUX: $#g#a
+*** ENAMBITO: lex f amb [Ljava.lang.String;@7a07c5b4
+*********** $
+*********** g
+*********** a
+*** EN ENAMBITO: CON LEXEMA: f$#g#a
+*** EN ENAMBITO: CON LEXEMA: f$#g
+*** EN ENAMBITO: CON LEXEMA: f$
+*** AMBITO DESPUES: $#g#a#f
+*** AMBITO ANTES: $
+*** ESTOY EN ENAMBITO
+*** AMBITOAUX: $
+*** ENAMBITO: lex a amb [Ljava.lang.String;@26a1ab54
+*********** $
+*** EN ENAMBITO: CON LEXEMA: a$
+*** AMBITO DESPUES: $#a
+*** AMBITO ANTES: $#a
+*** ESTOY EN ENAMBITO
+*** AMBITOAUX: $#a
+*** ENAMBITO: lex f amb [Ljava.lang.String;@3d646c37
+*********** $
+*********** a
+*** EN ENAMBITO: CON LEXEMA: f$#a
+*** EN ENAMBITO: CON LEXEMA: f$
+*** AMBITO DESPUES: $#a#f
+*** AMBITO ANTES: $#a#f
+*** ESTOY EN ENAMBITO
+*** AMBITOAUX: $#a#f
+*** ENAMBITO: lex g amb [Ljava.lang.String;@41cf53f9
+*********** $
+*********** a
+*********** f
+*** EN ENAMBITO: CON LEXEMA: g$#a#f
+*** EN ENAMBITO: CON LEXEMA: g$#a
+*** EN ENAMBITO: CON LEXEMA: g$
+SyntaxError. ENC_FUN (Línea 28): el identificador ya ha sido utilizado.
+*** AMBITO DESPUES: $#a#f#g
 
 
 
 | ERRORES SINTACTICOS: ---| (!)
 
 
-SyntaxError. (Línea 2): falta el tipo de variable
-SyntaxError. (Línea 3): falta el tipo de variable
-SyntaxError. (Línea 4): falta el tipo de variable
-SyntaxError. (Línea 5): falta el tipo de variable
-SyntaxError. (Línea 6): falta el tipo de variable
-SyntaxError. (Línea 7): falta el tipo de variable
-SyntaxError. (Línea 9): falta el tipo de variable
-SyntaxError. (Línea 10): falta el tipo de variable
-SyntaxError. (Línea 11): falta el tipo de variable
-SyntaxError. (Línea 12): falta el tipo de variable
-SyntaxError. (Línea 13): falta el tipo de variable
-SyntaxError. (Línea 14): falta el tipo de variable
-SyntaxError. (Línea 15): falta el tipo de variable
-SyntaxError. (Línea 18): falta el tipo de variable
-
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. If3 (Línea 8): no se permiten sentencias continue fuera de una sentencia for 
+SyntaxError. ENC_FUN (Línea 12): el identificador ya ha sido utilizado.
+SyntaxError. ENC_FUN (Línea 28): el identificador ya ha sido utilizado.
 
 
 
 | ERRORES SINTACTICOS: ---| (!)
 
 
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 5): variable ya declarada.
 
 
 
 | ERRORES SINTACTICOS: ---| (!)
 
 
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 5): variable ya declarada.
 
 
 
 | ERRORES SINTACTICOS: ---| (!)
 
 
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 5): variable ya declarada.
+SyntaxError. (Línea 8): variable ya declarada.
 
 
 
 | ERRORES SINTACTICOS: ---| (!)
 
 
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
-SyntaxError. (Línea 4): falta el tipo de variable
-
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
-SyntaxError. (Línea 4): falta el tipo de variable
-
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
-SyntaxError. (Línea 4): falta el tipo de variable
-
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
-SyntaxError. (Línea 4): falta el tipo de variable
-
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
-SyntaxError. (Línea 4): falta el tipo de variable
-
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
-
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
-
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
-
-
-
-| ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. (Línea 3): falta una ',' entre identIficadores.
+SyntaxError. (Línea 5): variable ya declarada.

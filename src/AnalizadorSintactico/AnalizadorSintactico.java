@@ -102,6 +102,8 @@ public class AnalizadorSintactico {
             agregarNuevoNodo(n.getHijoDerecho(),nuevo);
         }
     }
+
+    public void eliminarEntrada(int indice){this.tablaSimbolos.eliminarEntrada(indice);}
     public String getTipoFromTS(int indice) { return this.tablaSimbolos.getEntrada(indice).getTipo(); }
 
     public void addErrorSintactico(String nuevo) {
@@ -177,6 +179,10 @@ public class AnalizadorSintactico {
         }
     }
 
+    public void modificarLexema(int indice, String ambito){
+        String nuevoLex = getEntradaTablaSimb(indice).getLexema() + ambito;
+        getEntradaTablaSimb(indice).setLexema(nuevoLex);
+    }
     public Atributo getEntradaTablaSimb(int indice){
         return this.tablaSimbolos.getEntrada(indice);
     }
@@ -185,6 +191,8 @@ public class AnalizadorSintactico {
         String sinSigno = this.tablaSimbolos.getEntrada(indice).getLexema();
         this.tablaSimbolos.getEntrada(indice).setLexema("-" + sinSigno);
     }
+
+    public TablaSimbolos getTS(){ return this.tablaSimbolos;}
 
 
     public void imprimirTablaSimbolos() {
@@ -257,6 +265,7 @@ public class AnalizadorSintactico {
 
     public void start() {
         System.out.println("________________________________________________");
+        parser.activarAmbito();
         parser.setLexico(this.analizadorLexico);
         parser.setSintactico(this);
         System.out.println();
