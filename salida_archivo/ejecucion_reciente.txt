@@ -1,13 +1,108 @@
 
 
 
-
-|--- Sin errores SINTACTICOS ---| (OK)
-
+| ERRORES SINTACTICOS: ---| (!)
 
 
-|--- Sin errores SINTACTICOS ---| (OK)
+SyntaxError. (Línea 3): la variable utilizada no corresponde a este for loop
+SyntaxError. (Línea 3): la variable utilizada no corresponde a este for loop
+el ambito es $#for0
+el ambito es $
 
 
 
-|--- Sin errores SINTACTICOS ---| (OK)
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): COND la variable utilizada no corresponde a este for loop
+SyntaxError. (Línea 3): OP la variable utilizada no corresponde a este for loop
+el ambito es $#for0
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): COND la variable utilizada no corresponde a este for loop
+AMBITOEXIST $
+SyntaxError. (Línea 3): OP la variable utilizada no corresponde a este for loop
+el ambito es $#for0
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): COND la variable utilizada no corresponde a este for loop
+Aux i$#for0
+AMBITOEXIST $
+SyntaxError. (Línea 3): OP la variable utilizada no corresponde a este for loop
+el ambito es $#for0
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): COND la variable utilizada no corresponde a este for loop
+AMBITOEXIST $$#for0
+SyntaxError. (Línea 3): OP la variable utilizada no corresponde a este for loop
+el ambito es $#for0
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 3): COND la variable utilizada no corresponde a este for loop
+AMBITOEXIST $$#for0
+SyntaxError. (Línea 3): OP la variable utilizada no corresponde a este for loop
+el ambito es $#for0
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+AMBITOEXIST $$#for0   this.Amb $#for0
+SyntaxError. (Línea 3): COND la variable utilizada no corresponde a este for loop
+AMBITOEXIST $$#for0
+SyntaxError. (Línea 3): OP la variable utilizada no corresponde a este for loop
+el ambito es $#for0
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+AMBITOEXIST $$#for0   this.Amb $#for0
+SyntaxError. (Línea 3): COND la variable utilizada no corresponde a este for loop
+AMBITOEXIST $$#for0
+SyntaxError. (Línea 3): OP la variable utilizada no corresponde a este for loop
+el ambito es $#for0
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+AMBITOEXIST $#for0   this.Amb $#for0
+AMBITOEXIST $$#for0
+SyntaxError. (Línea 3): OP la variable utilizada no corresponde a este for loop
+el ambito es $#for0
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+el ambito es $#for0
+el ambito es $

@@ -111,7 +111,7 @@ lista_de_variables : id lista_de_variables	{
 							sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores.");
 						 	int existente = enAmbito($1);
 							if (existente < 0) {
-								sintactico.setLexemaEnIndex($1.ival, this.ambito);
+								sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUso("var", $1.ival);
 							} else {
@@ -121,7 +121,7 @@ lista_de_variables : id lista_de_variables	{
                    | id ',' lista_de_variables	{
 							int existente = enAmbito($1);
 							if (existente < 0) {
-								sintactico.setLexemaEnIndex($1.ival, this.ambito);
+								sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUso("var", $1.ival);
 							} else {
@@ -131,7 +131,7 @@ lista_de_variables : id lista_de_variables	{
                    | id				{
                    					int existente = enAmbito($1);
                    					if (existente < 0) {
-                   						sintactico.setLexemaEnIndex($1.ival, this.ambito);
+                   						sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
                    						sintactico.addListaVariables($1.ival);
 							    	sintactico.setUso("var", $1.ival);
                    					} else {
@@ -146,7 +146,7 @@ parametro : tipo id	{
 				int existente = enAmbito($2);
 				if (existente < 0) {
 					sintactico.setTipoEnIndex($1.sval, $2.ival);
-					sintactico.setLexemaEnIndex($2.ival, this.ambito);
+					sintactico.setLexemaEnIndex($2.ival, "~"+this.ambito);
 					sintactico.setUso("param", $2.ival);
 				} else {
 					sintactico.addErrorSintactico("SyntaxError. ENC_FUN/PARAMS (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
@@ -189,7 +189,7 @@ encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 								String lexema = sintactico.getEntradaTablaSimb($2.ival).getLexema();
 								int existente = enAmbito($2);
 								if (existente < 0) { // no existe el id en el ambito
-									sintactico.setLexemaEnIndex($2.ival, this.ambito);
+									sintactico.setLexemaEnIndex($2.ival, "~"+this.ambito);
 									sintactico.setUso("func", $2.ival);
 									agregarAmbito(lexema);
 								} else {
@@ -285,9 +285,9 @@ salida : out '(' cadena ')' ';'		{ $$ = new ParserVal(sintactico.crearNodoContro
 
 // ------------------------------------------- SENTENCIAS IF ---------------------------------------------------------
 // TODO listo
-sentencia_If : If condicion_if cuerpo_If end_if ';'		 {	$$ = new ParserVal(sintactico.crearNodo("if",$2,$3));
+sentencia_If : If condicion_if cuerpo_If PR_end_if ';'		 {	$$ = new ParserVal(sintactico.crearNodo("if",$2,$3));
 									sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
-             | If condicion_if then cuerpo_If end_if error	{ sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             | If condicion_if then cuerpo_If PR_end_if error	{ sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
              | If condicion_if then cuerpo_If error    		{ sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
              ;
 
@@ -305,18 +305,18 @@ cuerpo_If: cuerpo_Then cuerpo_Else	{$$ = new ParserVal(sintactico.crearNodo("cue
 	;
 
 // TODO listo REVISAR ERRORES
-cuerpo_Then : then '{' bloque_ejecutables '}'	{$$ = new ParserVal(sintactico.crearNodoControl("then", $3));}
-	  |   then ejecutables			{$$ = new ParserVal(sintactico.crearNodoControl("then", $2));}
+cuerpo_Then : PR_then '{' bloque_ejecutables '}'	{$$ = new ParserVal(sintactico.crearNodoControl("then", $3));}
+	  |  PR_then ejecutables			{$$ = new ParserVal(sintactico.crearNodoControl("then", $2));}
           ;
 
 // TODO listo
-cuerpo_Else : Else '{' bloque_ejecutables'}'	{$$ = new ParserVal(sintactico.crearNodoControl("else", $3));}
-	    | Else ejecutables 			{$$ = new ParserVal(sintactico.crearNodoControl("else", $2));}
+cuerpo_Else : PR_else '{' bloque_ejecutables'}'	{$$ = new ParserVal(sintactico.crearNodoControl("else", $3));}
+	    | PR_else ejecutables 			{$$ = new ParserVal(sintactico.crearNodoControl("else", $2));}
 	    ;
 
-sentencia_if_for : If condicion_if cuerpo_If_for end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
+sentencia_if_for : If condicion_if cuerpo_If_for PR_end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
 								   $$ = new ParserVal(sintactico.crearNodo("if",$2,$3));}
-            	 | If condicion_if cuerpo_If_for end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+            	 | If condicion_if cuerpo_If_for PR_end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
              	 | If condicion_if cuerpo_If_for error    	{ sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
              	 ;
 
@@ -325,17 +325,17 @@ cuerpo_If_for : cuerpo_then_for cuerpo_Else_for	{$$ = new ParserVal(sintactico.c
 	      | cuerpo_Else_for error		{sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
               ;
 
-cuerpo_then_for : then '{' bloq_sentencias_For'}'	{$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
-	    	| then sentencias_For 			{$$ = new ParserVal(sintactico.crearNodoControl("then",$2));}
+cuerpo_then_for : PR_then '{' bloq_sentencias_For'}'	{$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
+	    	| PR_then sentencias_For 			{$$ = new ParserVal(sintactico.crearNodoControl("then",$2));}
             	;
 
-cuerpo_Else_for : Else '{' bloq_sentencias_For'}'	{$$ = new ParserVal(sintactico.crearNodoControl("else",$3));}
-	    	| Else sentencias_For 			{$$ = new ParserVal(sintactico.crearNodoControl("else",$2));}
+cuerpo_Else_for : PR_else '{' bloq_sentencias_For'}'	{$$ = new ParserVal(sintactico.crearNodoControl("else",$3));}
+	    	| PR_else sentencias_For 			{$$ = new ParserVal(sintactico.crearNodoControl("else",$2));}
             	;
 
-sentencia_if_funcion : If condicion_if cuerpo_If_funcion end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
+sentencia_if_funcion : If condicion_if cuerpo_If_funcion PR_end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
 									   $$ = new ParserVal(sintactico.crearNodo("if",$2,$3));}
-             	     | If condicion_if cuerpo_If_funcion end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             	     | If condicion_if cuerpo_If_funcion PR_end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
              	     | If condicion_if cuerpo_If_funcion error		{ sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
                      ;
 
@@ -344,18 +344,18 @@ cuerpo_If_funcion :  cuerpo_then_funcion cuerpo_Else_funcion	{$$ = new ParserVal
 		  | cuerpo_Else_funcion error 			{sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
 		  ;
 
-cuerpo_then_funcion : then '{' bloq_ejecutables_fun'}' {$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
-		    | then ejecutables_funcion 				{$$ = new ParserVal(sintactico.crearNodoControl("then",$2));}
+cuerpo_then_funcion : PR_then '{' bloq_ejecutables_fun'}' {$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
+		    | PR_then ejecutables_funcion 				{$$ = new ParserVal(sintactico.crearNodoControl("then",$2));}
 		    ;
 
-cuerpo_Else_funcion : Else '{' bloq_ejecutables_fun'}' {$$ = new ParserVal(sintactico.crearNodoControl("else",$3));}
-		    | Else ejecutables_funcion 				{$$ = new ParserVal(sintactico.crearNodoControl("else",$2));}
+cuerpo_Else_funcion : PR_else '{' bloq_ejecutables_fun'}' {$$ = new ParserVal(sintactico.crearNodoControl("else",$3));}
+		    | PR_else ejecutables_funcion 				{$$ = new ParserVal(sintactico.crearNodoControl("else",$2));}
 		    ;
 
-sentencia_if_for_fun : If condicion_if cuerpo_If_for_fun end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
+sentencia_if_for_fun : If condicion_if cuerpo_If_for_fun PR_end_if ';'     { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
 									  $$ = new ParserVal(sintactico.crearNodo("if",$2,$3));
 									}
-             	     | If condicion_if cuerpo_If_for_fun end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
+             	     | If condicion_if cuerpo_If_for_fun PR_end_if error   { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
              	     | If condicion_if cuerpo_If_for_fun error     	{sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
                      ;
 
@@ -364,25 +364,37 @@ cuerpo_If_for_fun : then_if_for_fun else_if_for_fun	{$$ = new ParserVal(sintacti
 	          | else_if_for_fun error		{sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
 	          ;
 
-then_if_for_fun : then '{' bloq_for_funcion '}'	{$$ = new ParserVal(sintactico.crearNodoControl("then", $3));}
-		| then sentencias_For_funcion	{$$ = new ParserVal(sintactico.crearNodoControl("then", $2));}
+then_if_for_fun : PR_then '{' bloq_for_funcion '}'	{$$ = new ParserVal(sintactico.crearNodoControl("then", $3));}
+		| PR_then sentencias_For_funcion	{$$ = new ParserVal(sintactico.crearNodoControl("then", $2));}
 		 ;
 
-else_if_for_fun : Else '{' bloq_for_funcion '}'	{$$ = new ParserVal(sintactico.crearNodoControl("else", $3));}
-                | Else sentencias_For_funcion	{$$ = new ParserVal(sintactico.crearNodoControl("else", $2));}
+else_if_for_fun : PR_else '{' bloq_for_funcion '}'	{$$ = new ParserVal(sintactico.crearNodoControl("else", $3));}
+                | PR_else sentencias_For_funcion	{$$ = new ParserVal(sintactico.crearNodoControl("else", $2));}
                 ;
+PR_then: then {this.contadorIf++; agregarAmbito("if-then"+contadorIf);}
+	;
+
+PR_else: Else {this.ambito = borrarAmbito(this.ambito); agregarAmbito("if-else"+this.contadorIf);}
+	;
+
+PR_end_if: end_if {this.ambito = borrarAmbito(this.ambito);}
+	;
+
 // ------------------------------------------- FIN SENTENCIAS IF ---------------------------------------------------------
 
 // ------------------------------------------- SENTENCIAS WHEN ---------------------------------------------------------
 // TODO listo
-sentencia_when : when '(' condicion_for ')' cuerpo_when ';'	{ sintactico.addAnalisis("Se reconocio una sentencia when");
+sentencia_when : when '(' condicion_when ')' cuerpo_when ';'	{ sintactico.addAnalisis("Se reconocio una sentencia when");
 								  $$ = new ParserVal(sintactico.crearNodo("when", $3, $5));}
-               | when condicion_for ')' cuerpo_when ';' error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta abrir paréntesis la condicion"); }
-               | when '(' condicion_for  cuerpo_when';' error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta paréntesis de cierre en la condicion."); }
+               | when condicion_when ')' cuerpo_when ';' error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta abrir paréntesis la condicion"); }
+               | when '(' condicion_when  cuerpo_when';' error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta paréntesis de cierre en la condicion."); }
                ;
 
+condicion_when: expresion_relacional {$$ = $1; agregarAmbito("when"+this.contadorWhen); this.contadorWhen++;}
+	      ;
+
 // TODO listo
-cuerpo_when : then '{' sentencia '}'	{$$ = new ParserVal(sintactico.crearNodoControl("then",$3));}
+cuerpo_when : then '{' sentencia '}'	{$$ = new ParserVal(sintactico.crearNodoControl("then",$3)); this.ambito = borrarAmbito(this.ambito); }
             | then '{' sentencia error       { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar la llave del bloque."); }
             | then  sentencia '}' error      { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir la llave del bloque"); }
             ;
@@ -398,24 +410,57 @@ encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se
 	       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 	       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 	       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-               | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");}
+               | id ':' For '(' detalles_for ')' cola_For	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");
+               													int existente = enAmbito($1);
+               													if (existente < 0 ) {
+               														sintactico.setLexemaEnIndex($1.ival,"~"+this.ambito);
+               														sintactico.setUso("tag",$1.ival);
+               														$$ = new ParserVal( sintactico.crearNodo("for-etiquetado", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearNodo("For",$5,$7))));
+               													} else {
+               														sintactico.addErrorSintactico("SyntaxError. FOR(Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
+               													}
+               												}
 		;
 
  // TODO listo
-detalles_for: asignacion_for ';' cond_op_for {$$ = new ParserVal(sintactico.crearNodo("encabezado for",$1, $3));}
+detalles_for: asignacion_for ';' cond_op_for {$$ = new ParserVal(sintactico.crearNodo("encabezado for",$1, $3));
+
+						sintactico.addErrorSintactico("el ambito es "+this.ambito);
+						}
 		;
 // TODO listo
 cond_op_for : condicion_for ';' operacion_for {$$ = new ParserVal(sintactico.crearNodo("condicion y operacion for",  $1, $3));}
 
 // TODO listo (lo del arbol sintactico)
 // TODO FRAN chquear que el id este declarado COMO FOR_VAR en el mismo ambito(pq tiene que ser si o si ese).
-condicion_for :  id comparador cte	{	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
-						ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
-						$$ = new ParserVal(sintactico.crearNodoControl("cond", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
+condicion_for :  id comparador cte	{
+						int existente = enAmbito($1);
+						if (existente >= 0) {
+							if (sintactico.getEntradaTablaSimb(existente).getUso().equals("for_var")) {
+								String lexExistente = sintactico.getEntradaTablaSimb(existente).getLexema();
+								String [] aux = lexExistente.split("~");
+
+								String ambitoExistente = aux[1];
+
+								if ( ambitoExistente.equals(this.ambito)) {
+									ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
+									ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
+									$$ = new ParserVal(sintactico.crearNodoControl("cond", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
+									sintactico.eliminarEntrada($1.ival);
+								} else {
+									sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada no corresponde a este for loop");
+								}
+							} else {
+								sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada en la condicion debe ser la declarada en el for loop.");
+							}
+						} else {
+							sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable usada no ha sido declarada.");
+						}
+
 				     	} //TODO para en un futuro expandirla y coparar con expresion
 	      ;
 // TODO listo
-cola_For : '{' bloq_sentencias_For '}' ';'	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
+cola_For : '{' bloq_sentencias_For '}' ';'	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2)); this.ambito = borrarAmbito(this.ambito); sintactico.addErrorSintactico("el ambito es "+this.ambito);}
 	 |  sentencias_For  			{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
 	 ;
 
@@ -438,13 +483,14 @@ sentencias_For  : asignacion
 expresion_For : encabezado_For
               ;
 
-cola_For_funcion : '{' bloq_for_funcion '}' ';' {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
+cola_For_funcion : '{' bloq_for_funcion '}' ';' {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));this.ambito = borrarAmbito(this.ambito); sintactico.addErrorSintactico("el ambito es "+this.ambito);}
 		 |  sentencias_For_funcion 	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
 		 ;
 
 // TODO FRAN chquear que el id este declarado (VER OTRO FOR).
 sentencia_for_funcion :  For '(' detalles_for ')' cola_For_funcion 	{	sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
                         							$$ = new ParserVal(sintactico.crearNodo("For",$3,$5));
+
 									}
 		       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For_funcion 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 		       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
@@ -453,13 +499,45 @@ sentencia_for_funcion :  For '(' detalles_for ')' cola_For_funcion 	{	sintactico
 			;
 // TODO listo
 // TODO FRAN cheuqear que NO exista el id y ponerle uso "for_var"
-asignacion_for: id op_asignacion cte {	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
-					ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
-					$$ = new ParserVal(sintactico.crearNodoControl("asignacionFor",new ParserVal(sintactico.crearNodo("=:",identificador,constante))));}
+asignacion_for: id op_asignacion cte {
+					agregarAmbito("for"+this.contadorFor);
+					this.contadorFor++;
+					int existente = enAmbito($1);
+					if (existente < 0){
+						sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
+						sintactico.setUso("for_var", $1.ival);
+						ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
+						ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
+						$$ = new ParserVal(sintactico.crearNodoControl("asignacionFor",new ParserVal(sintactico.crearNodo("=:",identificador,constante))));
+					} else {
+						sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): la variable utilizada para el for loop ya ha sido declarada.");
+					}
+				   }
+
+
 	      ;
 // TODO listo
 // TODO FRAN chequear que exista el id y que ademas tenga el uso "for_var" eliminar duplicado.
-operacion_for: signo id		{	$$ = new ParserVal(sintactico.crearNodoControl("operacionFor",new ParserVal(sintactico.crearNodo($1.sval,new ParserVal(sintactico.crearHoja($2.ival)),null))));}
+operacion_for: signo id		{
+					int existente = enAmbito($2);
+					if (existente >= 0) {
+						if (sintactico.getEntradaTablaSimb(existente).getUso().equals("for_var")) {
+							String lexExistente = sintactico.getEntradaTablaSimb(existente).getLexema();
+							String [] aux = lexExistente.split("~");
+                                                        String ambitoExistente = aux[1];
+							if ( ambitoExistente.equals(this.ambito)) {
+								$$ = new ParserVal(sintactico.crearNodoControl("operacionFor",new ParserVal(sintactico.crearNodo($1.sval,new ParserVal(sintactico.crearHoja(existente)),null))));
+								sintactico.eliminarEntrada($2.ival);
+							} else {
+								sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): OP la variable utilizada no corresponde a este for loop");
+							}
+						} else {
+							sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): OP la variable utilizada en la condicion debe ser la declarada en el for loop.");
+						}
+					} else {
+						sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): OP la variable usada no ha sido declarada.");
+					}
+					}
 	      ;
 
 sentencias_For_funcion : asignacion
@@ -557,8 +635,11 @@ tipo : i32	{ $$.sval = new String("i32"); }
 private AnalizadorLexico lexico;
 private AnalizadorSintactico sintactico;
 private String ambito;
+private int contadorFor;
+private int contadorIf;
+private int contadorWhen;
 
-public void activarAmbito(){this.ambito = "$";} // $ va a simblizar el ambito global.
+public void activarAmbito(){this.ambito = "$"; this.contadorFor = 0; this.contadorIf = 0; this.contadorWhen = 0;} // $ va a simblizar el ambito global.
 
 public void setLexico(AnalizadorLexico lexico) { this.lexico = lexico; }
 
@@ -602,7 +683,7 @@ public int enAmbito(ParserVal pv){
 
 	String [] aux = ambitoAux.split("#");
 	for (int i = 0 ; i < aux.length ; i++){
-		int existente = sintactico.getTS().existeEntrada(lexema + ambitoAux);
+		int existente = sintactico.getTS().existeEntrada(lexema + "~"+ambitoAux);
 		if (existente >= 0 ){
 			return existente;
 		}

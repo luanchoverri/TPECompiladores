@@ -1,10 +1,12 @@
 program
 {
+    for(i=:1 ; i < 3 ; -i){
+                        continue;
+    };
 
-   i32 a,f,g;
-   f32 f;
 
-   a =: 3 + 1;
+
+
 }
 
 
