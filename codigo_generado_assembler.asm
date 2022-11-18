@@ -27,12 +27,39 @@ invoke MessageBox, NULL, addr error, addr error, MB_OK
 invoke ExitProcess, 0
 _label0: 
 push 0
-MOV a$,EAX
-FSTP a$
+FSTP f
+FLD _5_4
+FSTP f
+FLD 5.4
+FSTP f
+pop AX
+CMP 1,0
+JNE _label1
+invoke MessageBox, NULL, addr error, addr error, MB_OK
+invoke ExitProcess, 0
+_label1: 
+push 0
+MOV e,EAX
+FSTP e
+MOV EAX,3
+MOV e,EAX
+FLD 3
+FSTP e
+pop AX
+CMP 1,0
+JNE _label2
+invoke MessageBox, NULL, addr error, addr error, MB_OK
+invoke ExitProcess, 0
+_label2: 
+push 0
+MOV g$,EAX
+FSTP g$
 MOV EAX,1
-MOV a$,EAX
+MOV g$,EAX
 FLD 1
-FSTP a$
+FSTP g$
+FLD i
+FLD 1
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

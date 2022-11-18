@@ -46,7 +46,7 @@ decl_const : id op_asignacion cte	{
 						if (existente < 0) {
 							int i = $1.ival;
 							sintactico.setTipoEnIndex(sintactico.getTipoFromTS($3.ival), i);
-							sintactico.setUso("const", i);
+							sintactico.setUsoEnIndex("const", i);
 							$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($3.ival))));
 						} else {
 							sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
@@ -113,7 +113,7 @@ lista_de_variables : id lista_de_variables	{
 							if (existente < 0) {
 								sintactico.setLexemaEnIndex($1.ival, this.ambito);
 								sintactico.addListaVariables($1.ival);
-								sintactico.setUso("var", $1.ival);
+								sintactico.setUsoEnIndex("var", $1.ival);
 							} else {
 								sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
 							}
@@ -123,7 +123,7 @@ lista_de_variables : id lista_de_variables	{
 							if (existente < 0) {
 								sintactico.setLexemaEnIndex($1.ival, this.ambito);
 								sintactico.addListaVariables($1.ival);
-								sintactico.setUso("var", $1.ival);
+								sintactico.setUsoEnIndex("var", $1.ival);
 							} else {
 								sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
 							}
@@ -133,7 +133,7 @@ lista_de_variables : id lista_de_variables	{
                    					if (existente < 0) {
                    						sintactico.setLexemaEnIndex($1.ival, this.ambito);
                    						sintactico.addListaVariables($1.ival);
-							    	sintactico.setUso("var", $1.ival);
+							    	sintactico.setUsoEnIndex("var", $1.ival);
                    					} else {
                    						sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
                    					}
@@ -147,7 +147,7 @@ parametro : tipo id	{
 				if (existente < 0) {
 					sintactico.setTipoEnIndex($1.sval, $2.ival);
 					sintactico.setLexemaEnIndex($2.ival, this.ambito);
-					sintactico.setUso("param", $2.ival);
+					sintactico.setUsoEnIndex("param", $2.ival);
 				} else {
 					sintactico.addErrorSintactico("SyntaxError. ENC_FUN/PARAMS (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
 				}
@@ -190,7 +190,7 @@ encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 								int existente = enAmbito($2);
 								if (existente < 0) { // no existe el id en el ambito
 									sintactico.setLexemaEnIndex($2.ival, this.ambito);
-									sintactico.setUso("func", $2.ival);
+									sintactico.setUsoEnIndex("func", $2.ival);
 									agregarAmbito(lexema);
 								} else {
 									sintactico.addErrorSintactico("SyntaxError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
@@ -390,7 +390,7 @@ cuerpo_when : then '{' sentencia '}'	{$$ = new ParserVal(sintactico.crearNodoCon
 
 // ------------------------------------------- SENTENCIAS FOR ---------------------------------------------------------
 
-// TODO REVISAR ERRORES
+// TODO REVISAR ERRORES DEL ARBOL
 // TODO FRAN en la del id chequear que no exista todavia en el ambito. Agregar y setear uso como "tag", agregar dentro del ambito del for?
 encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
 							  	$$ = new ParserVal(sintactico.crearNodo("For",$3,$5));
@@ -409,9 +409,19 @@ cond_op_for : condicion_for ';' operacion_for {$$ = new ParserVal(sintactico.cre
 
 // TODO listo (lo del arbol sintactico)
 // TODO FRAN chquear que el id este declarado COMO FOR_VAR en el mismo ambito(pq tiene que ser si o si ese).
-condicion_for :  id comparador cte	{	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
-						ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
-						$$ = new ParserVal(sintactico.crearNodoControl("cond", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
+condicion_for :  id comparador cte	{
+						String typeOP2 = sintactico.getTipoFromTS($3.ival);
+						String typeOP1 = sintactico.getTipoFromTS($1.ival);
+						//if (typeOP1.equals(typeOP2)) {
+
+							ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
+                                                	ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
+                                                	$$ = new ParserVal(sintactico.crearNodoControl("cond", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
+						//}else{
+							sintactico.addAnalisis("SyntaxError. se reconoce FOR pero hay un problema de tipos en la condicion " + AnalizadorLexico.LINEA);
+					//	}
+
+
 				     	} //TODO para en un futuro expandirla y coparar con expresion
 	      ;
 // TODO listo
@@ -451,9 +461,13 @@ sentencia_for_funcion :  For '(' detalles_for ')' cola_For_funcion 	{	sintactico
 		       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 		       | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");}
 			;
-// TODO listo
-// TODO FRAN cheuqear que NO exista el id y ponerle uso "for_var"
-asignacion_for: id op_asignacion cte {	ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
+// TODO listo arbol tipo y uso
+// TODO FRAN cheuqear que NO exista el id
+
+asignacion_for: id op_asignacion cte {
+					sintactico.setTipoEnIndex(sintactico.getTipoFromTS($3.ival), $1.ival);
+					sintactico.setUsoEnIndex("for_var", $1.ival);
+					ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
 					ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
 					$$ = new ParserVal(sintactico.crearNodoControl("asignacionFor",new ParserVal(sintactico.crearNodo("=:",identificador,constante))));}
 	      ;

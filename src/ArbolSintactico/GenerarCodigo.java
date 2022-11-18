@@ -873,8 +873,8 @@ public class GenerarCodigo{
 
     /**
      * Metodo para cargar las variables auxiliares, segun el uso que corresponda (IMPLEMENTAR)
-     * @param k
-     * @param v
+     * @param
+     * @param
      */
 
     /*private void cargarVariablesAuxiliares(String k, Simbolo v) { // En los parametros deberiamos pasarle para poder acceder a los tipos (nodo ??)
@@ -931,36 +931,36 @@ public class GenerarCodigo{
     // -------------------- GENERACION DE CODIGO (SALIDA) -------------------- //
 
     public void generacionDeCodigo(Nodo nodo) {
-        try {
-            String ruta = "codigo_generado_assembler.asm";
-            String contenido;
-            StringBuilder code = new StringBuilder();
-            File file = new File(ruta);
-
-            // Si el archivo no existe es creado
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            // this.cargarVariablesAuxiliares(); // Cargar las variables auxiliares (IMPLEMENTAR)
-            code.append(";------------ CODE ------------\r\n");
-            code.append(".code\r\n");
-            this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
-            this.generarCodigoLeido(nodo); // Carga el codigo completo
-            this.assemblerCode.append(";------------ FIN ------------\n");
-            this.assemblerCode.append("invoke ExitProcess, 0\n");
-			this.assemblerCode.append("end start");
-            System.out.println("CODIGO RE ENOJADO (DEBUG FURIOSO):"+"\n"+"\n"+this.assemblerCode.toString());
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            // Leo el codigo fuente
-            contenido = this.inicio.toString()+code.toString();
-            bw.write(contenido);
-            contenido = this.assemblerCode.toString();
-            bw.write(contenido);
-            bw.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            String ruta = "codigo_generado_assembler.asm";
+//            String contenido;
+//            StringBuilder code = new StringBuilder();
+//            File file = new File(ruta);
+//
+//            // Si el archivo no existe es creado
+//
+//            if (!file.exists()) {
+//                file.createNewFile();
+//            }
+//            // this.cargarVariablesAuxiliares(); // Cargar las variables auxiliares (IMPLEMENTAR)
+//            code.append(";------------ CODE ------------\r\n");
+//            code.append(".code\r\n");
+//            this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
+//            this.generarCodigoLeido(nodo); // Carga el codigo completo
+//            this.assemblerCode.append(";------------ FIN ------------\n");
+//            this.assemblerCode.append("invoke ExitProcess, 0\n");
+//			this.assemblerCode.append("end start");
+//            System.out.println("CODIGO RE ENOJADO (DEBUG FURIOSO):"+"\n"+"\n"+this.assemblerCode.toString());
+//            FileWriter fw = new FileWriter(file);
+//            BufferedWriter bw = new BufferedWriter(fw);
+//            // Leo el codigo fuente
+//            contenido = this.inicio.toString()+code.toString();
+//            bw.write(contenido);
+//            contenido = this.assemblerCode.toString();
+//            bw.write(contenido);
+//            bw.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

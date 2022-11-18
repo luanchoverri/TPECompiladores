@@ -69,7 +69,7 @@ public class AnalizadorSintactico {
     }
 
     /** Setea el nuevo USO para el Token que corresponde a ese indice en la Tabla de Simbolos */
-    public void setUso(String uso, int indice){
+    public void setUsoEnIndex(String uso, int indice){
         tablaSimbolos.getEntrada(indice).setUso(uso);
     }
 
@@ -272,7 +272,7 @@ public class AnalizadorSintactico {
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
         Long numero = Long.parseLong(lexema);
 
-        if (numero == 2147483648L) {
+        if(numero == 2147483648L) {
             this.tablaSimbolos.eliminarEntrada(indice);    // Se elimina la entrada de la tabla de símbolos.
             this.addErrorSintactico("SyntaxError FUERA DE RANGO (Línea " + this.analizadorLexico.LINEA + "): CONST LONG");
         }
