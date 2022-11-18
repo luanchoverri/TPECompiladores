@@ -3,6 +3,7 @@ package Main;
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorSintactico.AnalizadorSintactico;
 import AnalizadorSintactico.Parser;
+import ArbolSintactico.GenerarCodigo;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -64,7 +64,7 @@ public class NodoBinario extends Nodo {
 				return true;
 			}
 		}
-		if (this.hijoIzquierdo.esHoja() && this.hijoDerecho.esHoja())
+		if (this.hijoIzquierdo != null && this.hijoDerecho != null && this.hijoIzquierdo.esHoja() && this.hijoDerecho.esHoja())
 			return true;
 		return false;
 	}

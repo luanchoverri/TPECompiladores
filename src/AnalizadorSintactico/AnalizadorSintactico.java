@@ -323,7 +323,7 @@ public class AnalizadorSintactico {
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-        g.generacionDeCodigo();
+        g.generacionDeCodigo(this.raiz);
     }
 
 

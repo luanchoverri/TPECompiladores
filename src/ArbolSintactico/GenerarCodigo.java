@@ -7,20 +7,24 @@ import java.util.Stack;
 
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.TablaSimbolos;
+import AnalizadorLexico.Token;
 
 public class GenerarCodigo{
 
     private StringBuilder assemblerCode; //  Usamos StringBuilder ya que la cadena de caracteres va a cambiar frecuentemente, ya que hacemos cada caso dentro de esta. (no sincro)
     private StringBuilder inicio;
+    private StringBuilder datosPrecarga;
     private TablaSimbolos tablaSimbolos;
     private int contadorEtiquetaLabel = 0;
     private int contadorAux = 0;
+
     private Stack <String> pila;
     private Stack <String> pilaFor;
 
     public GenerarCodigo(AnalizadorLexico l){
         this.assemblerCode = new StringBuilder("");
         this.inicio = new StringBuilder("");
+        this.datosPrecarga = new StringBuilder("");
         this.pila = new Stack<>();
         this.pilaFor = new Stack<>();
         tablaSimbolos = l.getTablaSimbolos();
@@ -29,7 +33,8 @@ public class GenerarCodigo{
 
 
     private void cargarLibrerias () {
-		this.inicio.append(".386\r\n" +
+		this.inicio.append(";------------ INCLUDES y LIBRERIAS ------------\r\n" +
+                ".386\r\n" +
 				".model flat, stdcall\r\n" +
 				".stack 200h\r\n"+
 				"option casemap :none\r\n" +
@@ -40,15 +45,16 @@ public class GenerarCodigo{
 				"includelib \\masm32\\lib\\user32.lib\r\n" +
 				"include \\masm32\\include\\masm32.inc\n" +
 				"includelib \\masm32\\lib\\masm32.lib\n"+
+                ";------------ DATA ------------\n"+
 				".data\n"+
-                "errorOverflow db 'ERROR EN LA EJECUCION: Overflow de de datos de punto flotante (f32)',0 \n" +
-				"errorDivCeroEntero db 'ERROR EN LA EJECUCION: Division por cero para datos enteros',0 \n" +
-                "errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para datos de punto flotante',0 \n" +
+                ";------------ ERRORES DE EJECUCION ------------\n"+
+                "errorOverflow db 'ERROR EN LA EJECUCION: Overflow de de datosPrecarga de punto flotante (f32)',0 \n" +
+				"errorDivCeroEntero db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga enteros',0 \n" +
+                "errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga de punto flotante',0 \n" +
 				"errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n" +
                 "flagTry dw 0,0\n");
 
 	}
-
 
     // -------------- REVISAR QUE OPERACIONES O LLAMADOS A FUNCIONES FALTARIAN
     // -------------- REVISAR SETEO DE USO, GET PADRE, GET VALOR, GET PARAMETRO, COMPARACIONES
@@ -478,15 +484,15 @@ public class GenerarCodigo{
 
         String aux = "aux" + contadorAux;
         this.contadorAux++;
-        String labelContinuar = "_label" + this.contadorEtiquetaLabel;
+        String labelContinuar = "_label" + this.contadorEtiquetaLabel; // Casos: (THEN, Condicion TRUE en un FOR, es decir, ejecuta lo de adentro del FOR)
         this.contadorEtiquetaLabel++;
-        String labelFalso = "_label" + this.contadorEtiquetaLabel;
+        String labelFalso = "_label" + this.contadorEtiquetaLabel; // Casos: (ELSE, Condicion FALSE en un FOR, es decir corta el FOR)
         this.contadorEtiquetaLabel++;
       //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
         if (nodo.getTipo() == "i32") {
             this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
-            this.assemblerCode.append("JLE " + labelFalso + "\n");
+            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR
+            this.assemblerCode.append("JLE " + labelFalso + "\n"); // Si NO ES MAYOR (CASO JLE CUANDO ES <=) (ELSE O FALSE DE FOR), salto a la etiqueta labelFalso y ejecuto las instrucciones debajo
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
@@ -546,7 +552,7 @@ public class GenerarCodigo{
 		this.assemblerCode.append("JMP "+label + "\n");
 		String labelAux= this.pila.pop();
 		this.assemblerCode.append(labelAux + ":\n");
-		this.pila.push(label);
+		this.pila.push(label); // aca sera el pop de AX???
     }
 
 
@@ -797,27 +803,37 @@ public class GenerarCodigo{
    // }
 
     private void asignacionAssembler(Nodo nodo) {
-        //if (this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getUso()=="Nombre de funcion") { // ESTO DEBERIA SER PARA LA DEFINION DE FUNCIONES Y PROGRAMA (PROGRAM, FUN, ETC) ???
-			//if (nodo.getHijoDerechoerecho().getPadre()==null) {
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoDerecho().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        if (t.getUso() == "func"){
+            String label="_label"+contadorEtiquetaLabel;
+			contadorEtiquetaLabel++;
+        }
+        //.getUso()=="Nombre de funcion") { // ESTO DEBERIA SER PARA LA DEFINION DE FUNCIONES Y PROGRAMA (PROGRAM, FUN, ETC) ???
+			//if (nodo.getHijoDerechoerecho().getParametro()==null) { // EL PARAMETRO SE RELACIONA CON EL AMBITO EN LA GRAMATICA??
 				// Chequeo de recursion mutua????
-				String label="_label"+contadorEtiquetaLabel;
-				contadorEtiquetaLabel++;
-			//	this.assemblerCode.append("pop AX" + "\n");
-			//	this.assemblerCode.append("CMP AX,"+nodo.getHijoDerecho().getValor() + "\n");
-			//	this.assemblerCode.append("JNE " + label + "\n");
-			//	this.assemblerCode.append("invoke MessageBox, NULL, addr error, addr error, MB_OK" + "\n");
-			//	this.assemblerCode.append("invoke ExitProcess, 0" + "\n");
-			//	this.assemblerCode.append(label+": \n");
-			//	this.assemblerCode.append("push "+nodo.getValor()+"\n");
 
-				if (nodo.getHijoIzquierdo().getTipo()=="i32") {
+                String label="_label"+contadorEtiquetaLabel;
+			    contadorEtiquetaLabel++;
+
+
+                this.assemblerCode.append("pop AX" + "\n"); // pop? porqueeeeekslodngbklsdg donde se hace el push????
+				this.assemblerCode.append("CMP 1,"+nodo.getHijoDerecho().getValor() + "\n");
+				this.assemblerCode.append("JNE " + label + "\n");
+				this.assemblerCode.append("invoke MessageBox, NULL, addr error, addr error, MB_OK" + "\n");
+				this.assemblerCode.append("invoke ExitProcess, 0" + "\n");
+				this.assemblerCode.append(label+": \n");
+				this.assemblerCode.append("push "+nodo.getValor()+"\n");
+
+
+            if (nodo.getHijoIzquierdo().getTipo().equals("i32")) {
 					//this.assemblerCode.append("MOV EAX,"+nodo.getHijoDerechoerecho().getParametro()+"\n");
 					//if ((this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()==null)) {
 				//		this.assemblerCode.append("call _"+nodo.getHijoDerecho().getLexema());}
 				//	else {
 				//		this.assemblerCode.append("call _"+this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()+"\n");}
 					this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+",EAX" + "\n");
-				}
+			}
 
 			//	else { // PUNTO FLOTANTE (32 BITS)
 
@@ -838,7 +854,7 @@ public class GenerarCodigo{
 			}
 	//	}
 	//	else {
-			if (nodo.getHijoIzquierdo().getTipo()=="i32") { // Asignacion de tipo ENTERO LARGO (32 BITS)
+			if (nodo.getHijoIzquierdo().getTipo().equals("i32")) { // Asignacion de tipo ENTERO LARGO (32 BITS)
 				this.assemblerCode.append("MOV EAX"+","+nodo.getHijoDerecho().getLexema()+"\n");
 				this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+","+"EAX"+"\n");
             }
@@ -855,15 +871,53 @@ public class GenerarCodigo{
 	//	}
     }
 
+    /**
+     * Metodo para cargar las variables auxiliares, segun el uso que corresponda (IMPLEMENTAR)
+     * @param k
+     * @param v
+     */
 
-
-
-
-
-
-
-
-
+    /*private void cargarVariablesAuxiliares(String k, Simbolo v) { // En los parametros deberiamos pasarle para poder acceder a los tipos (nodo ??)
+        if (v.getUso() == "VS") { // segun el tipo generamos el assembler para las variables auxiliares
+            String aux = "_" + k;
+            this.datosPrecarga.append(aux.replace('.', '_').replace('-', '_'));
+            this.datosPrecarga.append(" dd " + k);
+            this.datosPrecarga.append("\n");
+        } else {
+            if (v.getUso() == "variableP") {
+                this.datosPrecarga.append(k);
+                this.datosPrecarga.append(" dw ?,?");
+                this.datosPrecarga.append("\n");
+            } else {
+                if (v.getUso() != "") {
+                    if (v.getTipo() == "CADENA") {
+                        this.datosPrecarga.append(k.replace(' ', '_'));
+                        this.datosPrecarga.append(" db '" + k + "'" + ",0");
+                        this.datosPrecarga.append("\n");
+                    } else {
+                        this.datosPrecarga.append(k);
+                        if (v.getTipo() == "LONG") {
+                            this.datosPrecarga.append(" dd ?,?");
+                            this.datosPrecarga.append("\n");
+                        } else {
+                            if (v.getTipo() == "SINGLE") {
+                                this.datosPrecarga.append(" dd ?,?");
+                                this.datosPrecarga.append("\n");
+                            } else {
+                                if (v.getTipo() == "CADENA") {
+                                    this.datosPrecarga.append(" db '" + k + "'" + ",0");
+                                    this.datosPrecarga.append("\n");
+                                } else {
+                                    this.datosPrecarga.append(" db '" + k + "'" + ",0");
+                                    this.datosPrecarga.append("\n");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }*/
 
 
 
@@ -876,10 +930,11 @@ public class GenerarCodigo{
 
     // -------------------- GENERACION DE CODIGO (SALIDA) -------------------- //
 
-    public void generacionDeCodigo() {
+    public void generacionDeCodigo(Nodo nodo) {
         try {
             String ruta = "codigo_generado_assembler.asm";
             String contenido;
+            StringBuilder code = new StringBuilder();
             File file = new File(ruta);
 
             // Si el archivo no existe es creado
@@ -887,11 +942,19 @@ public class GenerarCodigo{
             if (!file.exists()) {
                 file.createNewFile();
             }
+            // this.cargarVariablesAuxiliares(); // Cargar las variables auxiliares (IMPLEMENTAR)
+            code.append(";------------ CODE ------------\r\n");
+            code.append(".code\r\n");
             this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
+            this.generarCodigoLeido(nodo); // Carga el codigo completo
+            this.assemblerCode.append(";------------ FIN ------------\n");
+            this.assemblerCode.append("invoke ExitProcess, 0\n");
+			this.assemblerCode.append("end start");
+            System.out.println("CODIGO RE ENOJADO (DEBUG FURIOSO):"+"\n"+"\n"+this.assemblerCode.toString());
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
             // Leo el codigo fuente
-            contenido = this.inicio.toString();
+            contenido = this.inicio.toString()+code.toString();
             bw.write(contenido);
             contenido = this.assemblerCode.toString();
             bw.write(contenido);

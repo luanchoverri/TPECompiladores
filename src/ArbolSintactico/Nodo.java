@@ -4,7 +4,9 @@ public abstract class Nodo {
 
 	protected String lexema;
 	protected int valor;
+	protected String parametro;
 	private String tipo;
+
 
 	public int getValor(){
 		return this.valor;
@@ -28,6 +30,14 @@ public abstract class Nodo {
 
 	public void addLexema(String lexemaNuevo) {
 		this.lexema = lexemaNuevo;
+	}
+
+	public void setParametro(String parametro) {
+		this.parametro = parametro;
+	}
+
+	public String getParametro() {
+		return this.parametro;
 	}
 
 	public abstract boolean esHoja();
