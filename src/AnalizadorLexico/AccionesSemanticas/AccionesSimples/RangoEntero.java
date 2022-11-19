@@ -17,8 +17,12 @@ public class RangoEntero extends AccionSemanticaSimple {
        AnalizadorLexico lexico = this.getAnalizadorLexico();
 
         try {
-            if (buffer.equals("0")) // Si es cero, retorna true
+            if (buffer.equals("0")) { // Si es cero, retorna true
+                int idToken = lexico.getIdToken("cte");
+                lexico.setTokenActual(idToken);
+                lexico.agregarRegistro(buffer, idToken);
                 return true;
+            }
             long intBuffer = Long.parseLong(buffer);
             if (!(intBuffer <= MAXIMO_ENTERO_LARGO) || !(intBuffer >= MINIMO_ENTERO_LARGO))
                 throw new Exception("FUERA DE RANGO"); // genero la excepcion

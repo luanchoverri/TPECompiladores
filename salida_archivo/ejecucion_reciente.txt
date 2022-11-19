@@ -1,0 +1,84 @@
+Hora de ejecucion: nov. 19 2022, 01:10:15 a. m.
+
+
+
+-----------------------------------------------------------------
+
+|--- CODIGO FUENTE ---|
+
+
+program
+{
+    i32 a;
+    i32 a;
+    a =: 0;
+    i32 b;
+    j=:3;
+
+    fun f (i32 k): i32{
+        i32 a;
+        i32 c;
+        return (k);
+        if (b < k) then {
+                b =: k;
+            } else {
+                k =: b;
+            } end_if;
+    }
+
+    if (a < c) then {
+        a =: b;
+    } else {
+        c =: a;
+    } end_if;
+
+
+    fun f (i32 p): i32{
+
+
+            return (p);
+
+        }
+
+    when ( a < 5 ) then { z=:3;};
+
+    a =: f(1);
+    a =: g();
+    a =: b();
+
+    a =: for (i =: 0; i < 3; +i){
+        break 3;
+    } else 5;
+
+    etiquetita: for (j =: 0; j < 2; +j){
+            continue: etiquetita;
+        };
+}
+
+
+
+$
+
+-----------------------------------------------------------------
+
+
+
+
+|--- Sin errores LEXICOS ---| (OK)
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 4): variable ya declarada.
+SyntaxError. (Línea 7): variable no declarada.
+SyntaxError. (Línea 10): variable ya declarada.
+SyntaxError. (Línea 20): variable no declarada.
+SyntaxError. (Línea 23): variable no declarada.
+SyntaxError. ENC_FUN (Línea 27): el identificador ya ha sido utilizado.
+SyntaxError. (Línea 34): variable no declarada.
+SyntaxError. (Línea 37): funcion no declarada.
+SyntaxError. (Línea 38): el identificador no corresponde a una funcion.
+el ambito es $#for0
+SyntaxError. (Línea 42): Falta el ; al final del bloque del for
+el ambito es $#for1

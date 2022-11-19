@@ -40,7 +40,6 @@ lista_de_asignacion_const : decl_const					{$$ = new ParserVal(sintactico.crearN
                           ;
 
 // TODO listo el tipo y uso de la cte inferido en el id de la variable
-// TODO fran chequear que no exista ya el id
 decl_const : id op_asignacion cte	{
 						int existente = enAmbito($1);
 						if (existente < 0) {
@@ -266,12 +265,28 @@ asignacion : id op_asignacion expresion ';'	{
 								sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
 							}
 					  	}
-           | id op_asignacion expresion  error	{ sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la ASIG."); }
-           | id op_asignacion for_else_cte';'	{ $$ = new ParserVal(sintactico.crearNodo("=:", $1, $3));}
 
+           | id op_asignacion expresion  error	{ sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la ASIG."); }
+           | id op_asignacion for_else_cte';'	{int existente = enAmbito($1);
+						if (existente >= 0) {
+							ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
+							$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
+							sintactico.eliminarEntrada($1.ival);
+						} else {
+							sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
+						}}
+	   | id op_asignacion invocacion_funcion {int existente = enAmbito($1);
+						if (existente >= 0) {
+							ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
+							$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
+							sintactico.eliminarEntrada($1.ival);
+						} else {
+							sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
+						}}
            ;
 
-for_else_cte : expresion_For Else cte	{ $$ = new ParserVal(sintactico.crearNodo("else", $1, $3));} //TODO Aca tambien nodo de control???
+
+for_else_cte : expresion_For Else cte	{ $$ = new ParserVal(sintactico.crearNodo("else", $1, new ParserVal(sintactico.crearHoja($3.ival))));} //TODO Aca tambien nodo de control???
 	     | expresion_For error	{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
 	     ;
 
@@ -402,37 +417,27 @@ cuerpo_when : then '{' sentencia '}'	{$$ = new ParserVal(sintactico.crearNodoCon
 
 // ------------------------------------------- SENTENCIAS FOR ---------------------------------------------------------
 
-// TODO REVISAR ERRORES
-// TODO FRAN en la del id chequear que no exista todavia en el ambito. Agregar y setear uso como "tag", agregar dentro del ambito del for?
 encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
 							  	$$ = new ParserVal(sintactico.crearNodo("For",$3,$5));
+							  	this.ambito = borrarAmbito(this.ambito);
 							}
-	       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For     detalles_for ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+	       | For     detalles_for 		cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
                | id ':' For '(' detalles_for ')' cola_For	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");
-               													int existente = enAmbito($1);
-               													if (existente < 0 ) {
-               														sintactico.setLexemaEnIndex($1.ival,"~"+this.ambito+"#for"+(this.contadorFor-1));
-               														sintactico.setUso("tag",$1.ival);
-               														$$ = new ParserVal( sintactico.crearNodo("for-etiquetado", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearNodo("For",$5,$7))));
-               													} else {
-               														sintactico.addErrorSintactico("SyntaxError. FOR(Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
-               													}
-               													agregarAmbito(this.contadorFor-1);
-														int existente = enAmbito($1);
-														if (existente >= 0) {
-															if (sintactico.getEntradaTablaSimb(existente).getUso().equals("tag")) {
-																$$ = new ParserVal(sintactico.crearNodoControl("continue", new ParserVal(sintactico.crearHoja(existente))));
-																sintactico.eliminarEntrada($1.ival);
-															} else {
-																sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador utilizado no es una etiqueta.");
-															}
-														} else {
-															sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): etiqueta invalida");
-														}
-														this.ambito = borrarAmbito(this.ambito);
-               												}
+
+									int existente = enAmbito($1);
+									if (existente >= 0) {
+										if (sintactico.getEntradaTablaSimb(existente).getUso().equals("tag")) {
+											$$ = new ParserVal( sintactico.crearNodo("for-etiquetado", new ParserVal(sintactico.crearHoja(existente)), new ParserVal(sintactico.crearNodo("For",$5,$7))));
+											sintactico.eliminarEntrada($1.ival);
+										} else {
+											sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador utilizado no es una etiqueta.");
+										}
+									} else {
+										sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): etiqueta invalida");
+									}
+									this.ambito = borrarAmbito(this.ambito);
+								}
 		;
 
  // TODO listo
@@ -445,7 +450,6 @@ detalles_for: asignacion_for ';' cond_op_for {$$ = new ParserVal(sintactico.crea
 cond_op_for : condicion_for ';' operacion_for {$$ = new ParserVal(sintactico.crearNodo("condicion y operacion for",  $1, $3));}
 
 // TODO listo (lo del arbol sintactico)
-// TODO FRAN chquear que el id este declarado COMO FOR_VAR en el mismo ambito(pq tiene que ser si o si ese).
 condicion_for :  id comparador cte	{
 						int existente = enAmbito($1);
 						if (existente >= 0) {
@@ -473,8 +477,9 @@ condicion_for :  id comparador cte	{
 				     	} //TODO para en un futuro expandirla y coparar con expresion
 	      ;
 // TODO listo
-cola_For : '{' bloq_sentencias_For '}' ';'	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2)); this.ambito = borrarAmbito(this.ambito); sintactico.addErrorSintactico("el ambito es "+this.ambito);}
+cola_For : '{' bloq_sentencias_For '}' ';'	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
 	 |  sentencias_For  			{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
+	 | '{' bloq_sentencias_For '}' error { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): Falta el ; al final del bloque del for");}
 	 ;
 
 signo : '+' {$$.sval = new String("+");}
@@ -496,22 +501,35 @@ sentencias_For  : asignacion
 expresion_For : encabezado_For
               ;
 
-cola_For_funcion : '{' bloq_for_funcion '}' ';' {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));this.ambito = borrarAmbito(this.ambito); sintactico.addErrorSintactico("el ambito es "+this.ambito);}
+cola_For_funcion : '{' bloq_for_funcion '}' ';' {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
 		 |  sentencias_For_funcion 	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
+		 | '{' bloq_for_funcion '}' error { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): falta ; al final del bloque del for."); }
 		 ;
 
-// TODO FRAN chquear que el id este declarado (VER OTRO FOR).
 sentencia_for_funcion :  For '(' detalles_for ')' cola_For_funcion 	{	sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
                         							$$ = new ParserVal(sintactico.crearNodo("For",$3,$5));
-
+										this.ambito = borrarAmbito(this.ambito);
 									}
-		       | For     id op_asignacion cte ';' condicion_for ';' signo id ')' 	cola_For_funcion 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-		       | For     id op_asignacion cte ';' condicion_for ';' signo id 		cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-		       | For '(' id op_asignacion cte ':'   condicion_for ':' signo id ')' 	cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR3(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-		       | id ':' For '(' id op_asignacion cte ';' condicion_for ';' signo id ')' cola_For_funcion	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");}
+		       | For     detalles_for ')' 	cola_For_funcion 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+		       | For     detalles_for 		cola_For_funcion	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
+		       | id ':' For '(' detalles_for ')' cola_For_funcion	{
+		       									sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");
+											int existente = enAmbito($1);
+											if (existente >= 0) {
+												if (sintactico.getEntradaTablaSimb(existente).getUso().equals("tag")) {
+													$$ = new ParserVal( sintactico.crearNodo("for-etiquetado", new ParserVal(sintactico.crearHoja(existente)), new ParserVal(sintactico.crearNodo("For",$5,$7))));
+													sintactico.eliminarEntrada($1.ival);
+												} else {
+													sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador utilizado no es una etiqueta.");
+												}
+											} else {
+												sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): etiqueta invalida");
+											}
+											this.ambito = borrarAmbito(this.ambito);
+										}
+
 			;
 // TODO listo
-// TODO FRAN cheuqear que NO exista el id y ponerle uso "for_var"
 asignacion_for: id op_asignacion cte {
 					agregarAmbito("for"+this.contadorFor);
 					this.contadorFor++;
@@ -530,7 +548,6 @@ asignacion_for: id op_asignacion cte {
 
 	      ;
 // TODO listo
-// TODO FRAN chequear que exista el id y que ademas tenga el uso "for_var" eliminar duplicado.
 operacion_for: signo id		{
 					int existente = enAmbito($2);
 					if (existente >= 0) {
@@ -570,6 +587,7 @@ bloq_for_funcion : sentencias_For_funcion 			{	$$ = new ParserVal(sintactico.cre
 									ParserVal modificado = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));
 									$$ = modificado;
 								}
+		 | error {sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): no se permiten cuerpos de for vacios.");}
                  ;
 
 // ------------------------------------------- FIN SENTENCIAS FOR ---------------------------------------------------------
@@ -581,7 +599,6 @@ sentencia_BREAK : BREAK ';'	{	sintactico.addAnalisis("Se reconocio una sentencia
                 | BREAK error   {	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de BREAK."); }
                 ;
 // TODO listo
-// TODO FRAN en la del id chequear que exista con el uso "tag", eliminar duplicado? CHEQUEAR AMBITO(SOLO SUPERFICIAL)
 sentencia_CONTINUE : CONTINUE ';'		{
 							sintactico.addAnalisis("Se reconocio una sentencia continue (Línea " + AnalizadorLexico.LINEA + ")");
 							$$ = new ParserVal(sintactico.crearNodoControl("continue",null));}
@@ -590,7 +607,7 @@ sentencia_CONTINUE : CONTINUE ';'		{
 							if (existente < 0 ) {
 								sintactico.setLexemaEnIndex($3.ival,"~"+this.ambito);
 								sintactico.setUso("tag",$3.ival);
-								$$ = new ParserVal(sintactico.crearNodoControl("continue", new ParserVal(sintactico.crearHoja(existente))));
+								$$ = new ParserVal(sintactico.crearNodoControl("continue", new ParserVal(sintactico.crearHoja($3.ival))));
 							} else {
 								sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
 							}
@@ -599,9 +616,34 @@ sentencia_CONTINUE : CONTINUE ';'		{
                    | CONTINUE error		{ 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
                    ;
 
-// TODO FRAN chequear que exista el id en el ambito. Si es de uso != "func" lanzar error de id no es una funcion.
-invocacion_funcion: id '(' list_parametros_Inv ')' ';'  { $$ = new ParserVal(sintactico.crearNodoFunc($1.ival, $3));}
-		  | id '(' ')' ';' 			{ $$ = new ParserVal(sintactico.crearNodoFunc($1.ival, null));}
+invocacion_funcion: id '(' list_parametros_Inv ')' ';'  {
+								int existente = enAmbito($1);
+								if (existente >= 0) {
+									if (sintactico.getEntradaTablaSimb(existente).getUso().equals("func")) {
+										$$ = new ParserVal(sintactico.crearNodoFunc(existente, $3));
+										sintactico.eliminarEntrada($1.ival);
+									} else {
+										sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador no corresponde a una funcion.");
+									}
+								} else {
+									sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): funcion no declarada.");
+								}
+
+							}
+		  | id '(' ')' ';' 			{
+		  						int existente = enAmbito($1);
+								if (existente >= 0) {
+									if (sintactico.getEntradaTablaSimb(existente).getUso().equals("func")) {
+										$$ = new ParserVal(sintactico.crearNodoFunc($1.ival, null));
+										sintactico.eliminarEntrada($1.ival);
+									} else {
+										sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador no corresponde a una funcion.");
+									}
+								} else {
+									sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): funcion no declarada.");
+								}
+
+		 					 }
 		  ;
 
 list_parametros_Inv : factor ',' factor	{$$ = new ParserVal(sintactico.crearNodo("param", $1, $3));}
@@ -623,11 +665,19 @@ termino : termino '*' factor	{$$ = new ParserVal(sintactico.crearNodo("*",$1,$3)
         | factor
         ;
 
-// TODO FRAN chequear que exista id en el ambito.
-factor : id  		{ 	$$ = new ParserVal(sintactico.crearHoja($1.ival));}
+factor : id  		{
+				int existente = enAmbito($1);
+				if (existente >= 0) {
+					$$ = new ParserVal(sintactico.crearHoja(existente));
+					sintactico.eliminarEntrada($1.ival);
+				} else {
+					sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): variable no declarada.");
+				}
+				}
        | cte		{
+
 				String type = sintactico.getTipoFromTS($1.ival);
-				if (type.equals("LONG"))
+				if (type.equals("i32"))
 				     sintactico.verificarRangoEnteroLargo($1.ival);
 				$$ = new ParserVal(sintactico.crearHoja($1.ival));
                   	}
@@ -705,7 +755,6 @@ public int enAmbito(ParserVal pv){
 	String [] aux = ambitoAux.split("#");
 	for (int i = 0 ; i < aux.length ; i++){
 		int existente = sintactico.getTS().existeEntrada(lexema + "~"+ambitoAux);
-		sintactico.addErrorSintactico("LEX "+ lexema +" // BUSCANDO EN "+ambitoAux+ " // existente: "+existente);
 		if (existente >= 0 ){
 			return existente;
 		}
