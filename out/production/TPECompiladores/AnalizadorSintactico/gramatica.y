@@ -413,12 +413,25 @@ encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se
                | id ':' For '(' detalles_for ')' cola_For	{ sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");
                													int existente = enAmbito($1);
                													if (existente < 0 ) {
-               														sintactico.setLexemaEnIndex($1.ival,"~"+this.ambito);
+               														sintactico.setLexemaEnIndex($1.ival,"~"+this.ambito+"#for"+(this.contadorFor-1));
                														sintactico.setUso("tag",$1.ival);
                														$$ = new ParserVal( sintactico.crearNodo("for-etiquetado", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearNodo("For",$5,$7))));
                													} else {
                														sintactico.addErrorSintactico("SyntaxError. FOR(Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
                													}
+               													agregarAmbito(this.contadorFor-1);
+														int existente = enAmbito($1);
+														if (existente >= 0) {
+															if (sintactico.getEntradaTablaSimb(existente).getUso().equals("tag")) {
+																$$ = new ParserVal(sintactico.crearNodoControl("continue", new ParserVal(sintactico.crearHoja(existente))));
+																sintactico.eliminarEntrada($1.ival);
+															} else {
+																sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador utilizado no es una etiqueta.");
+															}
+														} else {
+															sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): etiqueta invalida");
+														}
+														this.ambito = borrarAmbito(this.ambito);
                												}
 		;
 
@@ -573,7 +586,15 @@ sentencia_CONTINUE : CONTINUE ';'		{
 							sintactico.addAnalisis("Se reconocio una sentencia continue (Línea " + AnalizadorLexico.LINEA + ")");
 							$$ = new ParserVal(sintactico.crearNodoControl("continue",null));}
                    | CONTINUE ':' id ';'	{ 	sintactico.addAnalisis("Se reconocio una sentencia continue con etiquetado(Línea " + AnalizadorLexico.LINEA + ")");
-                   					$$ = new ParserVal(sintactico.crearNodoControl("continue", new ParserVal(sintactico.crearHoja($3.ival))));}
+                   					int existente = enAmbito($3);
+							if (existente < 0 ) {
+								sintactico.setLexemaEnIndex($3.ival,"~"+this.ambito);
+								sintactico.setUso("tag",$3.ival);
+								$$ = new ParserVal(sintactico.crearNodoControl("continue", new ParserVal(sintactico.crearHoja(existente))));
+							} else {
+								sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
+							}
+                   					}
                    | CONTINUE id ';' error	{ 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'CONTINUE."); }
                    | CONTINUE error		{ 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
                    ;
@@ -684,6 +705,7 @@ public int enAmbito(ParserVal pv){
 	String [] aux = ambitoAux.split("#");
 	for (int i = 0 ; i < aux.length ; i++){
 		int existente = sintactico.getTS().existeEntrada(lexema + "~"+ambitoAux);
+		sintactico.addErrorSintactico("LEX "+ lexema +" // BUSCANDO EN "+ambitoAux+ " // existente: "+existente);
 		if (existente >= 0 ){
 			return existente;
 		}

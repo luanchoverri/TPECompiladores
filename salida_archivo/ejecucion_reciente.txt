@@ -106,3 +106,181 @@ el ambito es $
 
 el ambito es $#for0
 el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+el ambito es $#for0
+el ambito es $
+SyntaxError. (Línea 7): OP la variable usada no ha sido declarada.
+el ambito es $#for1
+el ambito es $
+SyntaxError. (Línea 13): OP la variable utilizada en la condicion debe ser la declarada en el for loop.
+el ambito es $#for2
+el ambito es $
+el ambito es $#for3
+SyntaxError. (Línea 19): COND la variable utilizada no corresponde a este for loop
+el ambito es $#for3#for4
+el ambito es $#for3
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+el ambito es $#f#for0
+el ambito es $#f
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+el ambito es $#f#for0
+SyntaxError. (Línea 7): etiqueta invalida
+el ambito es $#f
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+SyntaxError. (Línea 6): COND la variable usada no ha sido declarada.
+SyntaxError. (Línea 7): etiqueta invalida
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+el ambito es $#for0
+SyntaxError. (Línea 7): etiqueta invalida
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+el ambito es $#for0
+SyntaxError. (Línea 7): etiqueta invalida
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+el ambito es $#for0
+SyntaxError. (Línea 7): etiqueta invalida
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+el ambito es $#for0
+AMBITO CONT	$#for0
+SyntaxError. (Línea 7): etiqueta invalida
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+el ambito es $#for0
+AMBITO CONT	$#for0
+EXIST -1
+SyntaxError. (Línea 7): etiqueta invalida
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+BUSCANDO EN $#for0// existente: -1
+BUSCANDO EN $// existente: -1
+BUSCANDO EN $#for0// existente: 2
+BUSCANDO EN $#for0// existente: 2
+el ambito es $#for0
+AMBITO CONT	$#for0
+BUSCANDO EN $#for0// existente: -1
+BUSCANDO EN $// existente: -1
+EXIST -1
+SyntaxError. (Línea 7): etiqueta invalida
+el ambito es $
+BUSCANDO EN $// existente: -1
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+LEX i // BUSCANDO EN $#for0 // existente: -1
+LEX i // BUSCANDO EN $ // existente: -1
+LEX i // BUSCANDO EN $#for0 // existente: 2
+LEX i // BUSCANDO EN $#for0 // existente: 2
+el ambito es $#for0
+AMBITO CONT	$#for0
+LEX this // BUSCANDO EN $#for0 // existente: -1
+LEX this // BUSCANDO EN $ // existente: -1
+EXIST -1
+SyntaxError. (Línea 7): etiqueta invalida
+el ambito es $
+LEX this // BUSCANDO EN $ // existente: -1
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+LEX i // BUSCANDO EN $#for0 // existente: -1
+LEX i // BUSCANDO EN $ // existente: -1
+LEX i // BUSCANDO EN $#for0 // existente: 1
+LEX i // BUSCANDO EN $#for0 // existente: 1
+el ambito es $#for0
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+LEX i // BUSCANDO EN $#for0 // existente: -1
+LEX i // BUSCANDO EN $ // existente: -1
+LEX i // BUSCANDO EN $#for0 // existente: 1
+LEX i // BUSCANDO EN $#for0 // existente: 1
+el ambito es $#for0
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+LEX i // BUSCANDO EN $#for0 // existente: -1
+LEX i // BUSCANDO EN $ // existente: -1
+LEX i // BUSCANDO EN $#for0 // existente: 1
+LEX i // BUSCANDO EN $#for0 // existente: 1
+el ambito es $#for0
+LEX a // BUSCANDO EN $#for0 // existente: -1
+LEX a // BUSCANDO EN $ // existente: -1
+SyntaxError. (Línea 7): no se permiten sentencias declarativas adentro del For
+LEX a // BUSCANDO EN $#for0 // existente: 4
+el ambito es $
+
+
+
+| ERRORES SINTACTICOS: ---| (!)
+
+
+LEX i // BUSCANDO EN $#for0 // existente: -1
+LEX i // BUSCANDO EN $ // existente: -1
+LEX i // BUSCANDO EN $#for0 // existente: 1
+LEX i // BUSCANDO EN $#for0 // existente: 1
+el ambito es $#for0
