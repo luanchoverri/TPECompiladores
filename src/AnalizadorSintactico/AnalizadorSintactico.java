@@ -312,7 +312,7 @@ public class AnalizadorSintactico {
         if (parser.yyparse() == 0) {
 
             System.out.println(" \n \n ✅ EJECUCION DEL PARSER FINALIZADA \n \n  ");
-        //    imprimirAnalisisLexico();
+            imprimirAnalisisLexico();
             System.out.println("\n \n 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 \n ");
             imprimirAnalisisSintactico();
             imprimirTablaSimbolos();
@@ -320,7 +320,7 @@ public class AnalizadorSintactico {
         else
             System.out.println(" \n \n ❌ EL PARSER NO PUDO TERMINAR \n \n ");
 
-       // analizadorLexico.imprimirErrores();
+        analizadorLexico.imprimirErrores();
 
         this.imprimirErroresSintacticos();
         analizadorLexico.setPosArchivo(0);
@@ -330,8 +330,8 @@ public class AnalizadorSintactico {
 
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
-        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-        g.generacionDeCodigo(this.raiz);
+//        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+//        g.generacionDeCodigo(this.raiz);
     }
 
 
