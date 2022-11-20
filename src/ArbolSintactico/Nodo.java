@@ -52,4 +52,13 @@ public abstract class Nodo {
 
 	public abstract void descolgarHijos();
 
+	@Override
+	public String toString() {
+		return "Nodo{" +
+				"lexema='" + lexema + '\'' +
+				", valor=" + valor +
+				", parametro='" + parametro + '\'' +
+				", tipo='" + tipo + '\'' +
+				'}';
+	}
 }

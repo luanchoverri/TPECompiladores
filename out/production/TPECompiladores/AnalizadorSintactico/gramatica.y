@@ -390,7 +390,7 @@ cuerpo_when : then '{' sentencia '}'	{$$ = new ParserVal(sintactico.crearNodoCon
 
 // ------------------------------------------- SENTENCIAS FOR ---------------------------------------------------------
 
-// TODO REVISAR ERRORES
+// TODO REVISAR ERRORES DEL ARBOL
 // TODO FRAN en la del id chequear que no exista todavia en el ambito. Agregar y setear uso como "tag", agregar dentro del ambito del for?
 encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
 							  	$$ = new ParserVal(sintactico.crearNodo("For",$3,$5));

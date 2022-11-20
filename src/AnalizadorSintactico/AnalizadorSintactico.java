@@ -127,6 +127,18 @@ public class AnalizadorSintactico {
         return new ParserVal(n);
     }
 
+    public String tipoResultante(Nodo izq, Nodo der){
+        System.out.println("nodo izq " + izq.toString());
+        System.out.println("nodo der " + der.toString());
+        if (izq.getTipo() != null && izq.getTipo() != null )
+            if(izq.getTipo().equals(der.getTipo())){
+                System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
+                return izq.getTipo();
+            }
+        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
+        return null;
+    }
+
     public Nodo crearHoja(int indice){
 
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
@@ -136,12 +148,18 @@ public class AnalizadorSintactico {
     }
 
     public Nodo crearNodo(String identificador, ParserVal hijoIzq, ParserVal hijoDer){
-        if (hijoDer == null){                                                   // TODO POR QUE??? EL IZQUIERD0 NO?
+
+
+        if (hijoDer == null){
+
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
             return i;
         } else {
+            System.out.println("EL NODO IZQ ES " + hijoIzq.toString());
+            System.out.println("EL NODO DER ES " + hijoDer.toString()); // TODO POR QUE??? EL IZQUIERD0 NO?
             Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
             i.setTipo( tipoResultante( (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
+            System.out.println("EL NODO RESULTANTE ES " + i.toString());
             return i;
         }
     }
@@ -277,17 +295,7 @@ public class AnalizadorSintactico {
             this.addErrorSintactico("SyntaxError FUERA DE RANGO (Línea " + this.analizadorLexico.LINEA + "): CONST LONG");
         }
     }
-    public String tipoResultante(Nodo izq, Nodo der){
-        System.out.println("nodo izquierdo  " + izq.getLexema() + " ES  " + izq.getTipo());
-        System.out.println("nodo derecho  " + der.getLexema() + "  ES  " + der.getTipo());
-        if (izq.getTipo() != null && izq.getTipo() != null )
-            if(izq.getTipo().equals(der.getTipo())){
-                System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
-                return izq.getTipo();
-            }
-        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
-        return null;
-    }
+
 
 
 
