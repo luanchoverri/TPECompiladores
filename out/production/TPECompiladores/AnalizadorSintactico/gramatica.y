@@ -35,8 +35,9 @@ declaracion_const : Const lista_de_asignacion_const ';'		{ sintactico.addAnalisi
                   | Const ';'                           error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): No se reconoce una lista de constantes.");}
                   ;
 
-lista_de_asignacion_const : decl_const					{$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $1, null));} //TODO fijarse nombre
-                          | lista_de_asignacion_const ',' decl_const	{$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $3, $1));}
+lista_de_asignacion_const : decl_const					{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));} //TODO fijarse nombre
+                          | lista_de_asignacion_const ',' decl_const	{ParserVal modificado = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));
+                                                                         $$ = modificado;}
                           ;
 
 // TODO listo el tipo y uso de la cte inferido en el id de la variable
