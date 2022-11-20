@@ -619,7 +619,7 @@ sentencia_CONTINUE : CONTINUE ';'		{
                    					int existente = enAmbito($3);
 							if (existente < 0 ) {
 								sintactico.setLexemaEnIndex($3.ival,"~"+this.ambito);
-								sintactico.setUso("tag",$3.ival);
+								sintactico.setUsoEnIndex("tag",$3.ival);
 								$$ = new ParserVal(sintactico.crearNodoControl("continue", new ParserVal(sintactico.crearHoja($3.ival))));
 							} else {
 								sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");

@@ -1,0 +1,45 @@
+Hora de ejecucion: nov. 20 2022, 07:41:04 p. m.
+
+
+
+-----------------------------------------------------------------
+
+|--- CODIGO FUENTE ---|
+
+
+program
+{
+    i32 a, b, c;
+    f32 d;
+    const e =: 3,  f =: 5.4;
+
+    fun fun1 ( i32 g ): i32 {
+        g =: 1;
+        return(g);
+    }
+
+   fun fun2 (i32 h, f32 i ):f32 {
+           h =: 1 + i;
+           return(h);
+   }
+
+   fun fun3 (i32 j, f32 k, i32 l): i32 {
+        return(j);
+   }
+
+
+
+
+
+}$
+
+-----------------------------------------------------------------
+
+
+
+
+|--- Sin errores LEXICOS ---| (OK)
+
+
+
+|--- Sin errores SINTACTICOS ---| (OK)
