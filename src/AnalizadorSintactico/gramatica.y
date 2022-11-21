@@ -23,8 +23,8 @@ programa : encabezado_prog bloque_sentencias	{$$ = new ParserVal(sintactico.crea
 encabezado_prog : id
                 ;
 //TODO listo
-bloque_sentencias : bloque_sentencias '{' sentencia '}'	{$$ = new ParserVal(sintactico.crearNodoControl("primera_sentencia", $3));}
-		  | '{' sentencia '}' 			{$$ = new ParserVal(sintactico.crearNodoControl("primera_sentencia", $2));}
+bloque_sentencias : bloque_sentencias '{' sentencia '}'	{$$ = $3;}
+		  | '{' sentencia '}' 			{$$ = $2;}
 		  | '{' sentencia    			{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar el bloque.");}
 		  |  sentencia '}'   			{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir el bloque.");}
 		  ;
@@ -35,8 +35,9 @@ declaracion_const : Const lista_de_asignacion_const ';'		{ sintactico.addAnalisi
                   | Const ';'                           error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): No se reconoce una lista de constantes.");}
                   ;
 
-lista_de_asignacion_const : decl_const					{$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $1, null));} //TODO fijarse nombre
-                          | lista_de_asignacion_const ',' decl_const	{$$ = new ParserVal(sintactico.crearNodo("declaracion_constante", $3, $1));}
+lista_de_asignacion_const : decl_const					{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));} //TODO fijarse nombre
+                          | lista_de_asignacion_const ',' decl_const	{ParserVal modificado = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $3, null));
+                                                                         $$ = modificado;}
                           ;
 
 // TODO listo el tipo y uso de la cte inferido en el id de la variable
@@ -46,6 +47,7 @@ decl_const : id op_asignacion cte	{
 							int i = $1.ival;
 							sintactico.setTipoEnIndex(sintactico.getTipoFromTS($3.ival), i);
 							sintactico.setUsoEnIndex("const", i);
+							sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
 							$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($3.ival))));
 						} else {
 							sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
@@ -64,10 +66,10 @@ bloq_sentencias_For : sentencias_For 			     	{$$ = new ParserVal(sintactico.cre
 
 
 // TODO listo
-sentencia : declarativas 		{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
+sentencia : declarativas 		{$$ = new ParserVal(sintactico.crearNodo("declarativa", $1, null));}
           | ejecutables  		{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
-          | sentencia declarativas	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));}
-          | sentencia ejecutables	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));;}
+          | sentencia declarativas	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("declarativa", $2, null));}
+          | sentencia ejecutables	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));}
           ;
 
 
@@ -199,6 +201,7 @@ encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 									sintactico.setLexemaEnIndex($2.ival, "~"+this.ambito);
 									sintactico.setUsoEnIndex("func", $2.ival);
 									agregarAmbito(lexema);
+									$$ = new ParserVal(lexema);
 								} else {
 									sintactico.addErrorSintactico("SyntaxError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
 								}
@@ -210,7 +213,9 @@ encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 								}
 	  ;
 
-declaracion_func :  encab_fun  cola_func {$$ = $2;}
+declaracion_func :  encab_fun  cola_func {
+						sintactico.agregarArbolFuncion($2,$1.sval);
+					}
 		 ;
 
 
@@ -248,11 +253,11 @@ bloque_sentencias_funcion: bloque_sentencias_funcion ejecutables_funcion	{
 											$$ = modificado;
 										}
 			 | bloque_sentencias_funcion declarativas	{
-										ParserVal modificado = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));
+										ParserVal modificado = sintactico.modificarHijo($1, sintactico.crearNodo("declarativa", $2, null));
 										$$ = modificado;
 									}
 			 | ejecutables_funcion {$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
-			 | declarativas {$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
+			 | declarativas {$$ = new ParserVal(sintactico.crearNodo("declarativa", $1, null));}
 			 ;
 
 
