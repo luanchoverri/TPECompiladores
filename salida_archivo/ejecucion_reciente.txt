@@ -1,4 +1,4 @@
-Hora de ejecucion: nov. 20 2022, 07:53:33 p. m.
+Hora de ejecucion: nov. 20 2022, 10:09:07 p. m.
 
 
 
@@ -7,30 +7,26 @@ Hora de ejecucion: nov. 20 2022, 07:53:33 p. m.
 |--- CODIGO FUENTE ---|
 
 
-program
-{
-    i32 a, b, c;
-    f32 d;
-    const e =: 3,  f =: 5.4;
+program{
 
-    fun fun1 ( i32 g ): i32 {
-        g =: 1;
-        return(g);
-    }
+    i32 b;
 
-   fun fun2 (i32 h, f32 i ):f32 {
-           h =: 1 + i;
-           return(h);
-   }
-
-   fun fun3 (i32 j, f32 k, i32 l): i32 {
-        return(j);
-   }
+    b =: b+1;
+    i32 a;
+    fun fun3 (i32 j, f32 k, i32 l): i32 {
+            return(j);
+            const z=:1, l=:2;
+            fun fun2 (i32 h, f32 i ):f32 {
+                            h =: 1 + i;
+                            return(h);
+                    }
+       }
+    i32 f;
 
 
+    f =: 4;
 
-
-
+    f =: fun2();
 }$
 
 -----------------------------------------------------------------
@@ -41,5 +37,7 @@ program
 |--- Sin errores LEXICOS ---| (OK)
 
 
+| ERRORES SINTACTICOS: ---| (!)
 
-|--- Sin errores SINTACTICOS ---| (OK)
+
+SyntaxError. (Línea 20): funcion no declarada.

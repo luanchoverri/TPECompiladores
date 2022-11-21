@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class AnalizadorSintactico {
@@ -24,6 +26,7 @@ public class AnalizadorSintactico {
     private Nodo raiz;
     private ArrayList<Integer> variables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
 
+    private HashMap<String,Nodo> arbolesFunciones;
 
     public AnalizadorSintactico(AnalizadorLexico l, Parser p){
         analizadorLexico = l;
@@ -34,7 +37,21 @@ public class AnalizadorSintactico {
         tipo = "";
         raiz = null;
         variables =  new ArrayList<Integer>();
+        arbolesFunciones = new HashMap<>();
 
+    }
+
+    public void agregarArbolFuncion(ParserVal arbol, String nombreFuncion){
+        Nodo n = (Nodo) arbol.obj;
+        this.arbolesFunciones.put(nombreFuncion,n);
+    }
+
+    public void imprimirArbolesFuncion(){
+        for (Map.Entry<String,Nodo> entry : this.arbolesFunciones.entrySet()){
+            System.out.println("");
+            System.out.println("ARBOL DE LA FUNCION "+entry.getKey());
+            imprimirArbol(entry.getValue(),0);
+        }
     }
 
     // -- Adders
@@ -120,22 +137,43 @@ public class AnalizadorSintactico {
         System.out.println("");
         System.out.println("");
         System.out.println("");
+
         Nodo n = (Nodo) arbolSentencias.obj;
-        System.out.println("ARBOL DE SENTENCIAS ANTES DE AGREGAR SENTENCIA");
-        imprimirArbol(n,0);
+        if (n.getLexema().equals("declarativa")){// en este caso la primera sentencia era declarativa, por lo que aun no se genero un arbol
+
+            if (n.getHijoIzquierdo()!= null && n.getHijoIzquierdo().getLexema().equals("lista_ctes")) {
+
+                n = n.getHijoIzquierdo().getHijoIzquierdo();
+                agregarNuevoNodo(n, nuevo);
+                return new ParserVal(n);
+            }
+
+            n = nuevo;
+            return new ParserVal(n);
+        }
+
+        if (nuevo.getLexema().equals("declarativa")) {
+            if (nuevo.getHijoIzquierdo() != null && nuevo.getHijoIzquierdo().getLexema().equals("lista_ctes")) {
+                nuevo = nuevo.getHijoIzquierdo().getHijoIzquierdo();
+            } else {
+                return new ParserVal(n); // las declarativas que no tienen que ver con lista-ctes no se agregan al arbol.
+            }
+
+        }
+
         agregarNuevoNodo(n, nuevo);
         return new ParserVal(n);
     }
 
     public String tipoResultante(Nodo izq, Nodo der){
-        System.out.println("nodo izq " + izq.toString());
-        System.out.println("nodo der " + der.toString());
-        if (izq.getTipo() != null && izq.getTipo() != null )
-            if(izq.getTipo().equals(der.getTipo())){
-                System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
-                return izq.getTipo();
-            }
-        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
+//        System.out.println("nodo izq " + izq.toString());
+//        System.out.println("nodo der " + der.toString());
+//        if (izq.getTipo() != null && izq.getTipo() != null )
+//            if(izq.getTipo().equals(der.getTipo())){
+//                System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
+//                return izq.getTipo();
+//            }
+//        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
         return null;
     }
 
@@ -330,6 +368,7 @@ public class AnalizadorSintactico {
 
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
+        imprimirArbolesFuncion();
 //        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
 //        g.generacionDeCodigo(this.raiz);
     }

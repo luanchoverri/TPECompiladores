@@ -39,12 +39,12 @@ public class NodoHijo extends Nodo {
 
     @Override
     public Nodo getHijoIzquierdo() {
-        return null;
+        return this.nodoHijo;
     }
 
     @Override
     public Nodo getHijoDerecho() {
-        return this.nodoHijo;
+        return null;
     }
 
     @Override
