@@ -166,14 +166,14 @@ public class AnalizadorSintactico {
     }
 
     public String tipoResultante(Nodo izq, Nodo der){
-//        System.out.println("nodo izq " + izq.toString());
-//        System.out.println("nodo der " + der.toString());
-//        if (izq.getTipo() != null && izq.getTipo() != null )
-//            if(izq.getTipo().equals(der.getTipo())){
-//                System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
-//                return izq.getTipo();
-//            }
-//        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
+        System.out.println("nodo izq " + izq.toString());
+        System.out.println("nodo der " + der.toString());
+        if (izq.getTipo() != null && izq.getTipo() != null )
+            if(izq.getTipo().equals(der.getTipo())){
+                System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
+                return izq.getTipo();
+            }
+        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
         return null;
     }
 
