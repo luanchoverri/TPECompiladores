@@ -225,6 +225,7 @@ public class AnalizadorSintactico {
             return i;
         }
         Nodo i = new NodoHijo(hijo.obj, identificador);
+      //NO  i.setTipo(((Nodo)hijo.obj).getTipo());
         return i;
     }
 
@@ -380,6 +381,13 @@ public class AnalizadorSintactico {
 
     }
 
+    public void checkRetorno(ParserVal hijo, String ultimoSetFun){
+
+        if(!((Nodo)hijo.obj).getTipo().equals(ultimoSetFun)){
+            this.addAnalisis("SemanticError. El TIPO DE RETORNO no coincide (Línea " + this.analizadorLexico.LINEA + ")" );
+        }
+        clearTipo();
+    }
 
 
 
