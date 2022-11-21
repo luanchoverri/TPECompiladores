@@ -7,6 +7,8 @@ import java.util.Vector;
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorSintactico.AnalizadorSintactico;
 import AnalizadorLexico.Token;
+import ArbolSintactico.NodoHijo;
+
 
 %}
 
@@ -113,6 +115,7 @@ lista_de_variables : id lista_de_variables	{
 						 	int existente = enAmbito($1);
 							if (existente < 0) {
 								sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
+								System.out.println("PRINT. Lista de variables se agrega " + sintactico.getEntradaTablaSimb($1.ival).toString() );
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUsoEnIndex("var", $1.ival);
 							} else {
@@ -123,6 +126,7 @@ lista_de_variables : id lista_de_variables	{
 							int existente = enAmbito($1);
 							if (existente < 0) {
 								sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
+								System.out.println("PRINT. Lista de variables se agrega " + sintactico.getEntradaTablaSimb($1.ival).toString() );
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUsoEnIndex("var", $1.ival);
 							} else {
@@ -133,6 +137,7 @@ lista_de_variables : id lista_de_variables	{
                    					int existente = enAmbito($1);
                    					if (existente < 0) {
                    						sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
+                   						System.out.println("PRINT. Lista de variables se agrega " + sintactico.getEntradaTablaSimb($1.ival).toString() );
                    						sintactico.addListaVariables($1.ival);
 							    	sintactico.setUsoEnIndex("var", $1.ival);
                    					} else {
@@ -149,6 +154,7 @@ parametro : tipo id	{
 					sintactico.setTipoEnIndex($1.sval, $2.ival);
 					sintactico.setLexemaEnIndex($2.ival, "~"+this.ambito);
 					sintactico.setUsoEnIndex("param", $2.ival);
+					System.out.println("PRINT. PARAM se agrega " + sintactico.getEntradaTablaSimb($2.ival).toString() );
 					sintactico.addListaVariables($2.ival);
 
 				} else {
@@ -184,11 +190,6 @@ lista_parametros:
 
 encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 								sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
-
-
-
-
-
 
 								String lexema = sintactico.getEntradaTablaSimb($2.ival).getLexema();
 								sintactico.setUsoParam(lexema);
@@ -658,24 +659,37 @@ invocacion_funcion: id '(' list_parametros_Inv ')' ';'  {
 								}
 
 							}
-		  | id '(' ')' ';' 			{
-		  						int existente = enAmbito($1);
-								if (existente >= 0) {
-									if (sintactico.getEntradaTablaSimb(existente).getUso().equals("func")) {
-										$$ = new ParserVal(sintactico.crearNodoFunc($1.ival, null));
-										sintactico.eliminarEntrada($1.ival);
-									} else {
-										sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador no corresponde a una funcion.");
-									}
-								} else {
-									sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): funcion no declarada.");
-								}
-
-		 					 }
+//		  | id '(' ')' ';' 			{
+//		  						int existente = enAmbito($1);
+//								if (existente >= 0) {
+//									if (sintactico.getEntradaTablaSimb(existente).getUso().equals("func")) {
+//										$$ = new ParserVal(sintactico.crearNodoFunc($1.ival, null));
+//										sintactico.eliminarEntrada($1.ival);
+//									} else {
+//										sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): el identificador no corresponde a una funcion.");
+//									}
+//								} else {
+//									sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): funcion no declarada.");
+//								}
+//
+//		 					 }
 		  ;
 
-list_parametros_Inv : factor ',' factor
-		    | factor
+list_parametros_Inv :
+		    |factor ',' factor {
+		    				$$ = new ParserVal(sintactico.crearNodoParam("paramInv", $1, $3));
+		    				NodoHijo aux = (NodoHijo)$1.obj;
+						sintactico.addListaVariables(aux.getRefTablaSimbolos());
+						NodoHijo aux1 = (NodoHijo)$3.obj;
+                                                sintactico.addListaVariables(aux1.getRefTablaSimbolos());
+
+					}
+		    | factor		{	$$ = new ParserVal(sintactico.crearNodoParam("paramInv", $1, null));
+
+		    				NodoHijo aux = (NodoHijo)$1.obj;
+                                         	sintactico.addListaVariables(aux.getRefTablaSimbolos());
+
+		 			   }
 		    ;
 
 // TODO listo
@@ -696,7 +710,7 @@ termino : termino '*' factor	{$$ = new ParserVal(sintactico.crearNodo("*",$1,$3)
 factor : id  		{
 				int existente = enAmbito($1);
 				if (existente >= 0) {
-					sintactico.addListaVariables($1.ival);
+
 					$$ = new ParserVal(sintactico.crearHoja(existente));
 					sintactico.eliminarEntrada($1.ival);
 				} else {
@@ -708,12 +722,12 @@ factor : id  		{
 				String type = sintactico.getTipoFromTS($1.ival);
 				if (type.equals("i32"))
 				     sintactico.verificarRangoEnteroLargo($1.ival);
-				sintactico.addListaVariables($1.ival);
+
 				$$ = new ParserVal(sintactico.crearHoja($1.ival));
                   	}
        | '-' cte	{
 				sintactico.setNegativoTablaSimb($2.ival);
-				sintactico.addListaVariables($2.ival);
+
 				$$ = new ParserVal(sintactico.crearHoja($1.ival));
                    	}
        ;

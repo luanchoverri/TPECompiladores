@@ -212,17 +212,15 @@ public class TablaSimbolos {
         return -1;
     }
 
-    public int existeUso(String uso){
 
-        for(int i = 0; i < registroTokens.size(); i++) {
+    public ArrayList<Token> obtenerParamPorUso(String uso) {
+        ArrayList<Token> salida = new ArrayList<Token>();
+        for (int i = 0; i < registroTokens.size(); i++) {
             String usoActual = registroTokens.get(i).getUso();
-            if (usoActual != null  && usoActual.equals(uso) ){
-
-                    return i;
-
+            if(usoActual != null && usoActual.contains(uso)){
+                salida.add(registroTokens.get(i));
             }
         }
-        return -1;
+        return salida;
     }
-
 }

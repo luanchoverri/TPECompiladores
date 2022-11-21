@@ -108,8 +108,11 @@ public class AnalizadorSintactico {
        vaciarListaVariables();
     }
     public void setUsoParam(String idFun){
+        System.out.println("---------- SET USO PARAM") ;
         for(int i=0;i<variables.size(); i++){
+
             Token param = getEntradaTablaSimb(variables.get(i));
+            System.out.println("LISTA DE VAR TIENE   " + param.toString());
             param.setUso(param.getUso()+"~"+idFun+"~"+i);
         }
     }
@@ -184,7 +187,7 @@ public class AnalizadorSintactico {
                 return izq.getTipo();
             }
 
-        this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
+        this.addAnalisis("SemanticError. LOS TIPOS NO COINCIDEN (Línea " + AnalizadorLexico.LINEA + " )" );
         return null;
     }
 
@@ -224,6 +227,16 @@ public class AnalizadorSintactico {
         Nodo i = new NodoHijo(hijo.obj, identificador);
         return i;
     }
+
+    public Nodo crearNodoParam(String identificador, ParserVal izq, ParserVal der){
+        if (der == null){
+            Nodo i = new NodoBinario(izq.obj,null, identificador);
+            return i;
+        }
+        Nodo i = new NodoBinario(izq.obj, der.obj, identificador);
+        return i;
+    }
+
 
     public Nodo crearNodoFunc(int indice, ParserVal hijo){
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
@@ -348,21 +361,22 @@ public class AnalizadorSintactico {
 
     public void checkParametros(String idFun){
 
-        for (int i = 1; i < variables.size() ; i++) {
-            int ref = variables.get(i);
-            Token paramInvocado = tablaSimbolos.getEntrada(variables.get(i));
-            System.out.println("kkkkkkkkkk param invocado " + paramInvocado.toString());
-            int refPF = tablaSimbolos.existeUso("param"+"~"+idFun+"~"+i);
-            if(refPF != -1){
-                Token paramFormal = tablaSimbolos.getEntrada(refPF);
-                if(!paramFormal.getTipo().equals(paramInvocado.getTipo())){
-                    this.addAnalisis("El parametro invocado " + paramInvocado.getLexema() + " no corresponde al tipo formal (Línea " + this.analizadorLexico.LINEA );
+            String nombFun = idFun.split("~")[0];
+            ArrayList<Token> parametros = tablaSimbolos.obtenerParamPorUso("param"+"~"+nombFun);
+            if(parametros.size() != variables.size()  ){
+
+                this.addErrorSintactico("SemanticError. El NUMERO de parametros no corresponde al de la funcion invocada (Línea " + this.analizadorLexico.LINEA + ")" );
+                this.addAnalisis("SemanticError. El NUMERO de parametros no corresponde al de la funcion invocada (Línea " + this.analizadorLexico.LINEA + ")" + "variables size " + variables.size() + " parametros size de" + nombFun + " es " + parametros.size());
+            }else {
+                for (int i = 0; i < variables.size() ; i++) {
+                    Token paramInvocado = tablaSimbolos.getEntrada(variables.get(i));
+                    if(!parametros.get(i).getTipo().equals(paramInvocado.getTipo())){
+                        this.addErrorSintactico("SemanticError. El TIPO de los parametros no coincide (Línea " + this.analizadorLexico.LINEA + ")" );
+                        this.addAnalisis("SemanticError. El TIPO de los parametros no coincide (Línea " + this.analizadorLexico.LINEA + ")" );
+                    }
                 }
-            }else{
-                this.addAnalisis("El parametro invocado " + paramInvocado.getLexema() + " no se encuentra en el orden requerido (Línea " + this.analizadorLexico.LINEA );
             }
-        }
-        vaciarListaVariables();
+            vaciarListaVariables();
 
     }
 

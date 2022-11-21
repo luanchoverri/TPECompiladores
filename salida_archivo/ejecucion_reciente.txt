@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-Hora de ejecucion: nov. 21 2022, 03:03:08 p. m.
-=======
-Hora de ejecucion: nov. 20 2022, 10:09:07 p. m.
->>>>>>> release
+Hora de ejecucion: nov. 21 2022, 05:53:57 p. m.
 
 
 
@@ -11,23 +7,6 @@ Hora de ejecucion: nov. 20 2022, 10:09:07 p. m.
 |--- CODIGO FUENTE ---|
 
 
-<<<<<<< HEAD
-program
-{
-    i32 a, b;
-    f32 d;
-
-    a =: 1 ;
-    d =: 1.3;
-
-    fun fun1 ( i32 g ): i32 {
-        g =: 1;
-        return(g);
-    }
-
-
-    d =: fun1(b);
-=======
 program{
 
     i32 b;
@@ -37,19 +16,17 @@ program{
     fun fun3 (i32 j, f32 k, i32 l): i32 {
             return(j);
             const z=:1, l=:2;
-            fun fun2 (i32 h, f32 i ):f32 {
-                            h =: 1 + i;
-                            return(h);
-                    }
        }
     i32 f;
-
+     fun fun2 (i32 h, f32 i ):f32 {
+                h =: 1 + i;
+                return(h);
+        }
 
     f =: 4;
->>>>>>> release
+}
 
-    f =: fun2();
-}$
+$
 
 -----------------------------------------------------------------
 
@@ -59,7 +36,5 @@ program{
 |--- Sin errores LEXICOS ---| (OK)
 
 
-| ERRORES SINTACTICOS: ---| (!)
 
-
-SyntaxError. (Línea 20): funcion no declarada.
+|--- Sin errores SINTACTICOS ---| (OK)
