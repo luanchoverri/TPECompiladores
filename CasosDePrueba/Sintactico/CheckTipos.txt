@@ -1,9 +1,17 @@
 program
 {
-    i32 a;
+    i32 a, b;
     f32 d;
 
-    a =: 1 + 3.2;
-    d =: 1 + a;
+    a =: 1 ;
+    d =: 1.3;
+
+    fun fun1 ( i32 g ): i32 {
+        g =: 1;
+        return(g);
+    }
+
+
+    d =: fun1(b);
 
 }

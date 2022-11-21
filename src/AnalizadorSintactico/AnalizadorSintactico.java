@@ -90,6 +90,12 @@ public class AnalizadorSintactico {
        }
        vaciarListaVariables();
     }
+    public void setUsoParam(String idFun){
+        for(int i=0;i<variables.size(); i++){
+            Token param = getEntradaTablaSimb(variables.get(i));
+            param.setUso(param.getUso()+"~"+idFun+"~"+i);
+        }
+    }
 
 
 
@@ -111,6 +117,10 @@ public class AnalizadorSintactico {
     /** Devuelve la tabla de simbolos */
     public TablaSimbolos getTS() {
         return this.tablaSimbolos;}
+
+    public ArrayList<Integer> getVariables() {
+        return variables;
+    }
 
 
 
@@ -135,6 +145,7 @@ public class AnalizadorSintactico {
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
                 return izq.getTipo();
             }
+
         this.addAnalisis("ERROR DE TIPOS (Línea " + AnalizadorLexico.LINEA + " )" );
         return null;
     }
@@ -151,7 +162,8 @@ public class AnalizadorSintactico {
 
 
         if (hijoDer == null){
-
+            System.out.println("EL NODO IZQ ES " + hijoIzq.toString());
+            System.out.println("EL NODO DER ES NULL" );
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
             return i;
         } else {
@@ -160,7 +172,9 @@ public class AnalizadorSintactico {
             Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
             i.setTipo( tipoResultante( (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
             System.out.println("EL NODO RESULTANTE ES " + i.toString());
+
             return i;
+
         }
     }
 
@@ -175,13 +189,11 @@ public class AnalizadorSintactico {
 
     public Nodo crearNodoFunc(int indice, ParserVal hijo){
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
-        if (hijo == null) {
-            Nodo i = new NodoHijo(null, lexema, indice);
-            return i;
-        } else {
-            Nodo i = new NodoHijo(hijo.obj, lexema, indice);
-            return i;
-        }
+
+        Nodo i = new NodoHijo(hijo.obj, lexema, indice);
+        i.setTipo(this.tablaSimbolos.getEntrada(indice).getTipo());
+        return i;
+
     }
 
     public void agregarNuevoNodo(Nodo n, Nodo nuevo){
@@ -296,6 +308,25 @@ public class AnalizadorSintactico {
         }
     }
 
+    public void checkParametros(String idFun){
+
+        for (int i = 1; i < variables.size() ; i++) {
+            int ref = variables.get(i);
+            Token paramInvocado = tablaSimbolos.getEntrada(variables.get(i));
+            System.out.println("kkkkkkkkkk param invocado " + paramInvocado.toString());
+            int refPF = tablaSimbolos.existeUso("param"+"~"+idFun+"~"+i);
+            if(refPF != -1){
+                Token paramFormal = tablaSimbolos.getEntrada(refPF);
+                if(!paramFormal.getTipo().equals(paramInvocado.getTipo())){
+                    this.addAnalisis("El parametro invocado " + paramInvocado.getLexema() + " no corresponde al tipo formal (Línea " + this.analizadorLexico.LINEA );
+                }
+            }else{
+                this.addAnalisis("El parametro invocado " + paramInvocado.getLexema() + " no se encuentra en el orden requerido (Línea " + this.analizadorLexico.LINEA );
+            }
+        }
+        vaciarListaVariables();
+
+    }
 
 
 
@@ -312,7 +343,7 @@ public class AnalizadorSintactico {
         if (parser.yyparse() == 0) {
 
             System.out.println(" \n \n ✅ EJECUCION DEL PARSER FINALIZADA \n \n  ");
-            imprimirAnalisisLexico();
+            //imprimirAnalisisLexico();
             System.out.println("\n \n 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 \n ");
             imprimirAnalisisSintactico();
             imprimirTablaSimbolos();

@@ -145,9 +145,9 @@ parametro : tipo id	{
 				int existente = enAmbito($2);
 				if (existente < 0) {
 					sintactico.setTipoEnIndex($1.sval, $2.ival);
-
 					sintactico.setLexemaEnIndex($2.ival, "~"+this.ambito);
 					sintactico.setUsoEnIndex("param", $2.ival);
+					sintactico.addListaVariables($2.ival);
 
 				} else {
 					sintactico.addErrorSintactico("SyntaxError. ENC_FUN/PARAMS (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
@@ -183,14 +183,19 @@ lista_parametros:
 encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 								sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
 
-                                                                sintactico.setTipoEnIndex(sintactico.getTipo(), $2.ival);
-                                                                sintactico.clearTipo();
+
+
+
 
 
 								String lexema = sintactico.getEntradaTablaSimb($2.ival).getLexema();
+								sintactico.setUsoParam(lexema);
+								sintactico.vaciarListaVariables();
+
 								int existente = enAmbito($2);
 								if (existente < 0) { // no existe el id en el ambito
-
+									sintactico.setTipoEnIndex(sintactico.getTipo(), $2.ival);
+                                                                        sintactico.clearTipo();
 									sintactico.setLexemaEnIndex($2.ival, "~"+this.ambito);
 									sintactico.setUsoEnIndex("func", $2.ival);
 									agregarAmbito(lexema);
@@ -270,22 +275,25 @@ asignacion : id op_asignacion expresion ';'	{
 					  	}
 
            | id op_asignacion expresion  error	{ sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la ASIG."); }
-           | id op_asignacion for_else_cte';'	{int existente = enAmbito($1);
+           | id op_asignacion for_else_cte';'	{
+           					int existente = enAmbito($1);
 						if (existente >= 0) {
 							ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
 							$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
 							sintactico.eliminarEntrada($1.ival);
 						} else {
-							sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
-						}}
-	   | id op_asignacion invocacion_funcion {int existente = enAmbito($1);
-						if (existente >= 0) {
-							ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
-							$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
-							sintactico.eliminarEntrada($1.ival);
-						} else {
-							sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
-						}}
+							sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");}
+						}
+	   | id op_asignacion invocacion_funcion {
+	   						int existente = enAmbito($1);
+							if (existente >= 0) {
+								ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
+								$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
+								sintactico.eliminarEntrada($1.ival);
+							} else {
+								sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
+							}
+						 }
            ;
 
 
@@ -632,7 +640,9 @@ sentencia_CONTINUE : CONTINUE ';'		{
 invocacion_funcion: id '(' list_parametros_Inv ')' ';'  {
 								int existente = enAmbito($1);
 								if (existente >= 0) {
-									if (sintactico.getEntradaTablaSimb(existente).getUso().equals("func")) {
+									Token idFuncInvocada = sintactico.getEntradaTablaSimb(existente);
+									if (idFuncInvocada.getUso().equals("func")) {
+										sintactico.checkParametros(idFuncInvocada.getLexema());
 										$$ = new ParserVal(sintactico.crearNodoFunc(existente, $3));
 										sintactico.eliminarEntrada($1.ival);
 									} else {
@@ -659,8 +669,8 @@ invocacion_funcion: id '(' list_parametros_Inv ')' ';'  {
 		 					 }
 		  ;
 
-list_parametros_Inv : factor ',' factor	{$$ = new ParserVal(sintactico.crearNodo("param", $1, $3));}
-		    | factor  		{$$ = new ParserVal(sintactico.crearNodo("param", $1, null));}
+list_parametros_Inv : factor ',' factor
+		    | factor
 		    ;
 
 // TODO listo
@@ -681,6 +691,7 @@ termino : termino '*' factor	{$$ = new ParserVal(sintactico.crearNodo("*",$1,$3)
 factor : id  		{
 				int existente = enAmbito($1);
 				if (existente >= 0) {
+					sintactico.addListaVariables($1.ival);
 					$$ = new ParserVal(sintactico.crearHoja(existente));
 					sintactico.eliminarEntrada($1.ival);
 				} else {
@@ -692,10 +703,12 @@ factor : id  		{
 				String type = sintactico.getTipoFromTS($1.ival);
 				if (type.equals("i32"))
 				     sintactico.verificarRangoEnteroLargo($1.ival);
+				sintactico.addListaVariables($1.ival);
 				$$ = new ParserVal(sintactico.crearHoja($1.ival));
                   	}
        | '-' cte	{
 				sintactico.setNegativoTablaSimb($2.ival);
+				sintactico.addListaVariables($2.ival);
 				$$ = new ParserVal(sintactico.crearHoja($1.ival));
                    	}
        ;
@@ -722,6 +735,8 @@ private String ambito;
 private int contadorFor;
 private int contadorIf;
 private int contadorWhen;
+
+
 
 public void activarAmbito(){this.ambito = "$"; this.contadorFor = 0; this.contadorIf = 0; this.contadorWhen = 0;} // $ va a simblizar el ambito global.
 
