@@ -187,16 +187,20 @@ public class AnalizadorSintactico {
         return new ParserVal(n);
     }
 
+
     public String tipoResultante(String id, Nodo izq, Nodo der){
 //        System.out.println("nodo izq " + izq.toString());
 //        System.out.println("nodo der " + der.toString());
+
         if (izq.getTipo() != null && izq.getTipo() != null )
             if(izq.getTipo().equals(der.getTipo())){
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
                 return izq.getTipo();
             }
 
+
         this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: "+tablaSimbolos.getTipoToken(tablaSimbolos.getIdToken(id)) +" (Línea " + AnalizadorLexico.LINEA + " )" );
+
         return null;
     }
 
@@ -498,8 +502,8 @@ public class AnalizadorSintactico {
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         imprimirArbolesFuncion();
-//        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-//        g.generacionDeCodigo(this.raiz);
+        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+        g.generacionDeCodigo(this.raiz);
     }
 
     public void start() {

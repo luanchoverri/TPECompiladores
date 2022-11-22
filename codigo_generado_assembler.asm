@@ -20,46 +20,26 @@ errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funcione
 flagTry dw 0,0
 ;------------ CODE ------------
 .code
-pop AX
-CMP 1,0
-JNE _label0
-invoke MessageBox, NULL, addr error, addr error, MB_OK
-invoke ExitProcess, 0
-_label0: 
-push 0
-FSTP f
-FLD _5_4
-FSTP f
-FLD 5.4
-FSTP f
-pop AX
-CMP 1,0
-JNE _label1
-invoke MessageBox, NULL, addr error, addr error, MB_OK
-invoke ExitProcess, 0
-_label1: 
-push 0
-MOV e,EAX
-FSTP e
-MOV EAX,3
-MOV e,EAX
-FLD 3
-FSTP e
-pop AX
-CMP 1,0
-JNE _label2
-invoke MessageBox, NULL, addr error, addr error, MB_OK
-invoke ExitProcess, 0
-_label2: 
-push 0
-MOV g$,EAX
-FSTP g$
 MOV EAX,1
-MOV g$,EAX
-FLD 1
-FSTP g$
-FLD i
-FLD 1
+MOV a~$,EAX
+MOV EAX, a~$
+CMP EAX, 3
+JGE _label1
+MOV @aux0,1 
+JMP _label0
+_label1:
+MOV @aux0, 0 
+_label0:
+MOV EAX, @aux0
+CMP EAX,  0
+JE _label2
+MOV EAX,b~$
+MOV a~$,EAX
+JMP _label3
+_label2:
+MOV EAX,a~$
+MOV c~$,EAX
+_label3:
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start
