@@ -229,6 +229,17 @@ public class TablaSimbolos {
         return -1;
     }
 
+    public int existeEntradaContainsTag(String lexema){
+
+        for(int i = 0; i < registroTokens.size(); i++) {
+            if (registroTokens.get(i).getLexema().contains(lexema) && registroTokens.get(i).getUso().equals("tag")){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
 
     public ArrayList<Token> obtenerParamPorUso(String uso) {
         ArrayList<Token> salida = new ArrayList<Token>();

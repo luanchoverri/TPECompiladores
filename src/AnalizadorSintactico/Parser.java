@@ -22,11 +22,11 @@ package AnalizadorSintactico;
 
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.Token;
-import ArbolSintactico.Nodo;
 import ArbolSintactico.NodoHijo;
+import ArbolSintactico.Nodo;
 
 
-//#line 26 "Parser.java"
+//#line 27 "Parser.java"
 
 
 
@@ -907,7 +907,7 @@ final static String yyrule[] = {
 "tipo : f32",
 };
 
-//#line 756 "gramatica.y"
+//#line 758 "gramatica.y"
 
 private AnalizadorLexico lexico;
 private AnalizadorSintactico sintactico;
@@ -971,7 +971,7 @@ public int enAmbito(ParserVal pv){
 	return -1;
 }
 
-//#line 902 "Parser.java"
+//#line 903 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1126,49 +1126,49 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 18 "gramatica.y"
+//#line 19 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("raiz", val_peek(0))); sintactico.setRaiz(yyval); }
 break;
 case 3:
-//#line 25 "gramatica.y"
-{yyval = val_peek(1);}
-break;
-case 4:
 //#line 26 "gramatica.y"
 {yyval = val_peek(1);}
 break;
-case 5:
+case 4:
 //#line 27 "gramatica.y"
+{yyval = val_peek(1);}
+break;
+case 5:
+//#line 28 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar el bloque.");}
 break;
 case 6:
-//#line 28 "gramatica.y"
+//#line 29 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir el bloque.");}
 break;
 case 7:
-//#line 31 "gramatica.y"
+//#line 32 "gramatica.y"
 { sintactico.addAnalisis("Se reconoció una declaración de CONSTANTE. (Línea " + AnalizadorLexico.LINEA + ")");
 							  	  yyval = new ParserVal(sintactico.crearNodoControl("lista_ctes", val_peek(1)));}
 break;
 case 8:
-//#line 33 "gramatica.y"
+//#line 34 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ; al final de la declaracion de constantes.");}
 break;
 case 9:
-//#line 34 "gramatica.y"
+//#line 35 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): No se reconoce una lista de constantes.");}
 break;
 case 10:
-//#line 37 "gramatica.y"
+//#line 38 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 11:
-//#line 38 "gramatica.y"
+//#line 39 "gramatica.y"
 {ParserVal modificado = sintactico.modificarHijo(val_peek(2), sintactico.crearNodo("sentencia", val_peek(0), null));
                                                                          yyval = modificado;}
 break;
 case 12:
-//#line 43 "gramatica.y"
+//#line 44 "gramatica.y"
 {
 						int existente = enAmbito(val_peek(2));
 						if (existente < 0) {
@@ -1184,43 +1184,43 @@ case 12:
 					}
 break;
 case 13:
-//#line 56 "gramatica.y"
+//#line 57 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta constante luego de la asignacion.");}
 break;
 case 14:
-//#line 57 "gramatica.y"
+//#line 58 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta el operador asignacion luego del identificador.");}
 break;
 case 15:
-//#line 58 "gramatica.y"
+//#line 59 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta la asignacion luego del identificador.");}
 break;
 case 16:
-//#line 62 "gramatica.y"
+//#line 63 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 17:
-//#line 63 "gramatica.y"
+//#line 64 "gramatica.y"
 {yyval = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 18:
-//#line 68 "gramatica.y"
+//#line 69 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("declarativa", val_peek(0), null));}
 break;
 case 19:
-//#line 69 "gramatica.y"
+//#line 70 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 20:
-//#line 70 "gramatica.y"
+//#line 71 "gramatica.y"
 {yyval = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("declarativa", val_peek(0), null));}
 break;
 case 21:
-//#line 71 "gramatica.y"
+//#line 72 "gramatica.y"
 {yyval = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 22:
-//#line 75 "gramatica.y"
+//#line 76 "gramatica.y"
 {
 							String type = val_peek(2).sval;
 						 	sintactico.completarConTipos(type);
@@ -1228,7 +1228,7 @@ case 22:
 						  }
 break;
 case 23:
-//#line 80 "gramatica.y"
+//#line 81 "gramatica.y"
 {
              						sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el tipo de variable");
              					  	sintactico.addAnalisis("Se reconoció declaraciónes de variable SIN TIPO. (Línea " + (AnalizadorLexico.LINEA-1) + ")");
@@ -1236,28 +1236,28 @@ case 23:
              					  }
 break;
 case 27:
-//#line 91 "gramatica.y"
+//#line 92 "gramatica.y"
 {
 							ParserVal modificado = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("sentencia", val_peek(0), null));
 							yyval = modificado;
 						     }
 break;
 case 28:
-//#line 95 "gramatica.y"
+//#line 96 "gramatica.y"
 {
 							yyval = new ParserVal(sintactico.crearNodo("sentencia", val_peek(0), null));
 						     }
 break;
 case 34:
-//#line 105 "gramatica.y"
+//#line 106 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
 break;
 case 35:
-//#line 106 "gramatica.y"
+//#line 107 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
 break;
 case 36:
-//#line 110 "gramatica.y"
+//#line 111 "gramatica.y"
 {
 							sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores.");
 						 	int existente = enAmbito(val_peek(1));
@@ -1271,7 +1271,7 @@ case 36:
 						}
 break;
 case 37:
-//#line 121 "gramatica.y"
+//#line 122 "gramatica.y"
 {
 							int existente = enAmbito(val_peek(2));
 							if (existente < 0) {
@@ -1285,7 +1285,7 @@ case 37:
 						  }
 break;
 case 38:
-//#line 132 "gramatica.y"
+//#line 133 "gramatica.y"
 {
                    					int existente = enAmbito(val_peek(0));
                    					if (existente < 0) {
@@ -1299,7 +1299,7 @@ case 38:
                    				  }
 break;
 case 39:
-//#line 147 "gramatica.y"
+//#line 148 "gramatica.y"
 {
 				int existente = enAmbito(val_peek(0));
 				if (existente < 0) {
@@ -1315,24 +1315,24 @@ case 39:
 			}
 break;
 case 40:
-//#line 161 "gramatica.y"
+//#line 162 "gramatica.y"
 { sintactico.addErrorSintactico("SematicError. PARAM(Línea " + AnalizadorLexico.LINEA + "): falta TIPO en parametros."); }
 break;
 case 41:
-//#line 165 "gramatica.y"
+//#line 166 "gramatica.y"
 {
 				sintactico.setTipoGlobal(val_peek(0).sval);
 			}
 break;
 case 42:
-//#line 168 "gramatica.y"
+//#line 169 "gramatica.y"
 {
 				sintactico.addErrorSintactico("SematicError. ENCAB_FUN(Línea " + AnalizadorLexico.LINEA + "): falta tipo de funcion ");
 	 	 		sintactico.addAnalisis("Se reconoce declaracion de funcion pero falta tipo (Línea " + AnalizadorLexico.LINEA + ")");
 			}
 break;
 case 43:
-//#line 174 "gramatica.y"
+//#line 175 "gramatica.y"
 {
 					sintactico.addAnalisis("Se reconoce cuerpo de funcion (Línea " + AnalizadorLexico.LINEA + ")");
 					this.ambito = borrarAmbito(this.ambito);
@@ -1340,11 +1340,11 @@ case 43:
  				}
 break;
 case 47:
-//#line 184 "gramatica.y"
+//#line 185 "gramatica.y"
 { sintactico.addAnalisis("Se reconocen mas parametros de los deseados en la funcion (Línea " + AnalizadorLexico.LINEA + ")");}
 break;
 case 48:
-//#line 187 "gramatica.y"
+//#line 188 "gramatica.y"
 {
 								sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
 
@@ -1366,96 +1366,96 @@ case 48:
 							}
 break;
 case 49:
-//#line 206 "gramatica.y"
+//#line 207 "gramatica.y"
 {
 	 								sintactico.addAnalisis("Se reconoce declaracion de funcion pero falta identificacion (Línea " + AnalizadorLexico.LINEA + ")");
 							   		sintactico.addErrorSintactico("SematicError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): funcion sin identificar.");
 								}
 break;
 case 50:
-//#line 212 "gramatica.y"
+//#line 213 "gramatica.y"
 {
 						sintactico.agregarArbolFuncion(val_peek(0),val_peek(1).sval);
 						sintactico.clearTipo();
 					}
 break;
 case 51:
-//#line 219 "gramatica.y"
+//#line 220 "gramatica.y"
 { sintactico.addAnalisis("Se reconoce retorno de funcion(Línea " + AnalizadorLexico.LINEA + ") ");
 						   	  sintactico.checkRetorno(val_peek(2), sintactico.getTipo());
 						   	  yyval = new ParserVal(sintactico.crearNodoControl("return",val_peek(2)));}
 break;
 case 52:
-//#line 222 "gramatica.y"
+//#line 223 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN1 (Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
 break;
 case 53:
-//#line 223 "gramatica.y"
+//#line 224 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN2(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
 break;
 case 54:
-//#line 224 "gramatica.y"
+//#line 225 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN3(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
 break;
 case 55:
-//#line 225 "gramatica.y"
+//#line 226 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. RETURN_FUN4(Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
 break;
 case 63:
-//#line 237 "gramatica.y"
+//#line 238 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
 break;
 case 64:
-//#line 238 "gramatica.y"
+//#line 239 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
 break;
 case 65:
-//#line 242 "gramatica.y"
+//#line 243 "gramatica.y"
 {
 									ParserVal modificado = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("sentencia", val_peek(0), null));
 									yyval = modificado;
 								}
 break;
 case 66:
-//#line 246 "gramatica.y"
+//#line 247 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 67:
-//#line 249 "gramatica.y"
+//#line 250 "gramatica.y"
 {
 											ParserVal modificado = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("sentencia", val_peek(0), null));
 											yyval = modificado;
 										}
 break;
 case 68:
-//#line 253 "gramatica.y"
+//#line 254 "gramatica.y"
 {
 										ParserVal modificado = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("declarativa", val_peek(0), null));
 										yyval = modificado;
 									}
 break;
 case 69:
-//#line 257 "gramatica.y"
+//#line 258 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 70:
-//#line 258 "gramatica.y"
+//#line 259 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("declarativa", val_peek(0), null));}
 break;
 case 71:
-//#line 263 "gramatica.y"
+//#line 264 "gramatica.y"
 { yyval.sval = new String("=:"); }
 break;
 case 72:
-//#line 264 "gramatica.y"
+//#line 265 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. OP1(Línea " + (AnalizadorLexico.LINEA) + "): error en el op de ASIG"); }
 break;
 case 73:
-//#line 265 "gramatica.y"
+//#line 266 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): error en el op de ASIG"); }
 break;
 case 74:
-//#line 269 "gramatica.y"
+//#line 270 "gramatica.y"
 {
 							int existente = enAmbito(val_peek(3));
 							if (existente >= 0) {
@@ -1468,11 +1468,11 @@ case 74:
 					  	}
 break;
 case 75:
-//#line 280 "gramatica.y"
+//#line 281 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la ASIG."); }
 break;
 case 76:
-//#line 282 "gramatica.y"
+//#line 283 "gramatica.y"
 {
            					int existente = enAmbito(val_peek(3));
 						if (existente >= 0) {
@@ -1484,7 +1484,7 @@ case 76:
 						}
 break;
 case 77:
-//#line 291 "gramatica.y"
+//#line 292 "gramatica.y"
 {
 	   						int existente = enAmbito(val_peek(2));
 							if (existente >= 0) {
@@ -1497,282 +1497,283 @@ case 77:
 						 }
 break;
 case 78:
-//#line 304 "gramatica.y"
+//#line 305 "gramatica.y"
 { yyval = new ParserVal(sintactico.crearNodo("else", val_peek(2), new ParserVal(sintactico.crearHoja(val_peek(0).ival))));}
 break;
 case 79:
-//#line 305 "gramatica.y"
+//#line 306 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
 break;
 case 80:
-//#line 308 "gramatica.y"
+//#line 309 "gramatica.y"
 { yyval = new ParserVal(sintactico.crearNodoControl("out", new ParserVal(sintactico.crearHoja(val_peek(2).ival))));}
 break;
 case 81:
-//#line 309 "gramatica.y"
+//#line 310 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
 break;
 case 82:
-//#line 310 "gramatica.y"
+//#line 311 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): cierre erróneo de la lista de parámetros de out."); }
 break;
 case 83:
-//#line 311 "gramatica.y"
+//#line 312 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): los parámetros de out deben estar entre paréntesis."); }
 break;
 case 84:
-//#line 312 "gramatica.y"
+//#line 313 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): se esperaba out, se encontró '('."); }
 break;
 case 85:
-//#line 313 "gramatica.y"
+//#line 314 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta declarar una cadena para PRINT."); }
 break;
 case 86:
-//#line 318 "gramatica.y"
+//#line 319 "gramatica.y"
 {	yyval = new ParserVal(sintactico.crearNodo("if",val_peek(3),val_peek(2)));
 									sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")"); }
 break;
 case 87:
-//#line 320 "gramatica.y"
+//#line 321 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
 break;
 case 88:
-//#line 321 "gramatica.y"
+//#line 322 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
 break;
 case 89:
-//#line 325 "gramatica.y"
+//#line 326 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("condicionIf",val_peek(1)));}
 break;
 case 90:
-//#line 326 "gramatica.y"
-{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
-break;
-case 91:
 //#line 327 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
 break;
-case 92:
+case 91:
 //#line 328 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
 break;
+case 92:
+//#line 329 "gramatica.y"
+{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta PARENTESIS EN If "); }
+break;
 case 93:
-//#line 332 "gramatica.y"
+//#line 333 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("cuerpo-if", val_peek(1), val_peek(0)));}
 break;
 case 94:
-//#line 333 "gramatica.y"
+//#line 334 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("cuerpo-if", val_peek(0), null));}
 break;
 case 95:
-//#line 334 "gramatica.y"
+//#line 335 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta bloque then."); }
 break;
 case 96:
-//#line 338 "gramatica.y"
+//#line 339 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("then", val_peek(1)));}
 break;
 case 97:
-//#line 339 "gramatica.y"
+//#line 340 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("then", val_peek(0)));}
 break;
 case 98:
-//#line 343 "gramatica.y"
+//#line 344 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("else", val_peek(1)));}
 break;
 case 99:
-//#line 344 "gramatica.y"
+//#line 345 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("else", val_peek(0)));}
 break;
 case 100:
-//#line 347 "gramatica.y"
+//#line 348 "gramatica.y"
 { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
 								   yyval = new ParserVal(sintactico.crearNodo("if",val_peek(3),val_peek(2)));}
 break;
 case 101:
-//#line 349 "gramatica.y"
+//#line 350 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
 break;
 case 102:
-//#line 350 "gramatica.y"
+//#line 351 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
 break;
 case 103:
-//#line 353 "gramatica.y"
+//#line 354 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("cuerpo-if",val_peek(1),val_peek(0)));}
 break;
 case 104:
-//#line 354 "gramatica.y"
+//#line 355 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("cuerpo-if",val_peek(0),null));}
 break;
 case 105:
-//#line 355 "gramatica.y"
+//#line 356 "gramatica.y"
 {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
 break;
 case 106:
-//#line 358 "gramatica.y"
+//#line 359 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("then",val_peek(1)));}
 break;
 case 107:
-//#line 359 "gramatica.y"
+//#line 360 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("then",val_peek(0)));}
 break;
 case 108:
-//#line 362 "gramatica.y"
+//#line 363 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("else",val_peek(1)));}
 break;
 case 109:
-//#line 363 "gramatica.y"
+//#line 364 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("else",val_peek(0)));}
 break;
 case 110:
-//#line 366 "gramatica.y"
+//#line 367 "gramatica.y"
 { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
 									   yyval = new ParserVal(sintactico.crearNodo("if",val_peek(3),val_peek(2)));}
 break;
 case 111:
-//#line 368 "gramatica.y"
+//#line 369 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
 break;
 case 112:
-//#line 369 "gramatica.y"
+//#line 370 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
 break;
 case 113:
-//#line 372 "gramatica.y"
+//#line 373 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("cuerpo-if",val_peek(1),val_peek(0)));}
 break;
 case 114:
-//#line 373 "gramatica.y"
+//#line 374 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("cuerpo-if",val_peek(0),null));}
 break;
 case 115:
-//#line 374 "gramatica.y"
+//#line 375 "gramatica.y"
 {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
 break;
 case 116:
-//#line 377 "gramatica.y"
+//#line 378 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("then",val_peek(1)));}
 break;
 case 117:
-//#line 378 "gramatica.y"
+//#line 379 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("then",val_peek(0)));}
 break;
 case 118:
-//#line 381 "gramatica.y"
+//#line 382 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("else",val_peek(1)));}
 break;
 case 119:
-//#line 382 "gramatica.y"
+//#line 383 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("else",val_peek(0)));}
 break;
 case 120:
-//#line 385 "gramatica.y"
+//#line 386 "gramatica.y"
 { sintactico.addAnalisis("Se reconoció una sentencia If. (Línea " + AnalizadorLexico.LINEA + ")");
 									  yyval = new ParserVal(sintactico.crearNodo("if",val_peek(3),val_peek(2)));
 									}
 break;
 case 121:
-//#line 388 "gramatica.y"
+//#line 389 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. If1 (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de end_if."); }
 break;
 case 122:
-//#line 389 "gramatica.y"
+//#line 390 "gramatica.y"
 {sintactico.addErrorSintactico("SyntaxError. If2 (Línea " + AnalizadorLexico.LINEA + "): falta cierre end_if; "); }
 break;
 case 123:
-//#line 392 "gramatica.y"
+//#line 393 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("cuerpo-if",val_peek(1),val_peek(0)));}
 break;
 case 124:
-//#line 393 "gramatica.y"
+//#line 394 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("cuerpo-if",val_peek(0),null));}
 break;
 case 125:
-//#line 394 "gramatica.y"
+//#line 395 "gramatica.y"
 {sintactico.addErrorSintactico("SyntaxError. If4 (Línea " + AnalizadorLexico.LINEA + "): falta el bloque then.");}
 break;
 case 126:
-//#line 397 "gramatica.y"
+//#line 398 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("then", val_peek(1)));}
 break;
 case 127:
-//#line 398 "gramatica.y"
+//#line 399 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("then", val_peek(0)));}
 break;
 case 128:
-//#line 401 "gramatica.y"
+//#line 402 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("else", val_peek(1)));}
 break;
 case 129:
-//#line 402 "gramatica.y"
+//#line 403 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("else", val_peek(0)));}
 break;
 case 130:
-//#line 404 "gramatica.y"
+//#line 405 "gramatica.y"
 {this.contadorIf++; agregarAmbito("if-then"+contadorIf);}
 break;
 case 131:
-//#line 407 "gramatica.y"
+//#line 408 "gramatica.y"
 {this.ambito = borrarAmbito(this.ambito); agregarAmbito("if-else"+this.contadorIf);}
 break;
 case 132:
-//#line 410 "gramatica.y"
+//#line 411 "gramatica.y"
 {this.ambito = borrarAmbito(this.ambito);}
 break;
 case 133:
-//#line 417 "gramatica.y"
+//#line 418 "gramatica.y"
 { sintactico.addAnalisis("Se reconocio una sentencia when");
 								  yyval = new ParserVal(sintactico.crearNodo("when", val_peek(3), val_peek(1)));}
 break;
 case 134:
-//#line 419 "gramatica.y"
+//#line 420 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta abrir paréntesis la condicion"); }
 break;
 case 135:
-//#line 420 "gramatica.y"
+//#line 421 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta paréntesis de cierre en la condicion."); }
 break;
 case 136:
-//#line 423 "gramatica.y"
+//#line 424 "gramatica.y"
 {yyval = val_peek(0); agregarAmbito("when"+this.contadorWhen); this.contadorWhen++;}
 break;
 case 137:
-//#line 427 "gramatica.y"
+//#line 428 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("then",val_peek(1))); this.ambito = borrarAmbito(this.ambito); }
 break;
 case 138:
-//#line 428 "gramatica.y"
+//#line 429 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar la llave del bloque."); }
 break;
 case 139:
-//#line 429 "gramatica.y"
+//#line 430 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta abrir la llave del bloque"); }
 break;
 case 140:
-//#line 436 "gramatica.y"
+//#line 437 "gramatica.y"
 {	sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
 							  	yyval = new ParserVal(sintactico.crearNodo("For",val_peek(2),val_peek(0)));
 							  	this.ambito = borrarAmbito(this.ambito);
 							}
 break;
 case 141:
-//#line 440 "gramatica.y"
+//#line 441 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 break;
 case 142:
-//#line 441 "gramatica.y"
+//#line 442 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 break;
 case 143:
-//#line 442 "gramatica.y"
+//#line 443 "gramatica.y"
 { sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");
 
-									int existente = enAmbito(val_peek(6));
+									int existente = sintactico.encontrarTag(val_peek(6).ival, this.ambito);
 									if (existente >= 0) {
 										if (sintactico.getEntradaTablaSimb(existente).getUso().equals("tag")) {
-											yyval = new ParserVal( sintactico.crearNodo("for-etiquetado", new ParserVal(sintactico.crearHoja(existente)), new ParserVal(sintactico.crearNodo("For",val_peek(2),val_peek(0)))));
+											ParserVal nodoTag = new ParserVal(sintactico.crearNodoControl("etiqueta", new ParserVal(sintactico.crearHoja(existente))));
+											yyval = new ParserVal( sintactico.crearNodo("for-etiquetado", nodoTag , new ParserVal(sintactico.crearNodo("For",val_peek(2),val_peek(0)))));
 											sintactico.eliminarEntrada(val_peek(6).ival);
 										} else {
 											sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador utilizado no es una etiqueta.");
@@ -1784,17 +1785,17 @@ case 143:
 								}
 break;
 case 144:
-//#line 460 "gramatica.y"
+//#line 462 "gramatica.y"
 {	yyval = new ParserVal(sintactico.crearNodo("encabezado for",val_peek(2), val_peek(0)));
 							sintactico.addErrorSintactico("SematicError. El ambito es "+this.ambito);
 						}
 break;
 case 145:
-//#line 465 "gramatica.y"
+//#line 467 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("condicion y operacion for",  val_peek(2), val_peek(0)));}
 break;
 case 146:
-//#line 469 "gramatica.y"
+//#line 471 "gramatica.y"
 {
 						int existente = enAmbito(val_peek(2));
 						if (existente >= 0) {
@@ -1829,62 +1830,62 @@ case 146:
 				     	}
 break;
 case 147:
-//#line 503 "gramatica.y"
+//#line 505 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("cuerpoFor",val_peek(2)));}
 break;
 case 148:
-//#line 504 "gramatica.y"
+//#line 506 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("cuerpoFor",val_peek(0)));}
 break;
 case 149:
-//#line 505 "gramatica.y"
+//#line 507 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): Falta el ; al final del bloque del for");}
 break;
 case 150:
-//#line 508 "gramatica.y"
+//#line 510 "gramatica.y"
 {yyval.sval = new String("+");}
 break;
 case 151:
-//#line 509 "gramatica.y"
+//#line 511 "gramatica.y"
 {yyval.sval = new String("-");}
 break;
 case 159:
-//#line 520 "gramatica.y"
+//#line 522 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
 break;
 case 160:
-//#line 521 "gramatica.y"
+//#line 523 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten retornos fuera de una funcion"); }
 break;
 case 162:
-//#line 527 "gramatica.y"
+//#line 529 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("cuerpoFor",val_peek(2)));}
 break;
 case 163:
-//#line 528 "gramatica.y"
+//#line 530 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("cuerpoFor",val_peek(0)));}
 break;
 case 164:
-//#line 529 "gramatica.y"
+//#line 531 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): falta ; al final del bloque del for."); }
 break;
 case 165:
-//#line 532 "gramatica.y"
+//#line 534 "gramatica.y"
 {	sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
                         							yyval = new ParserVal(sintactico.crearNodo("For",val_peek(2),val_peek(0)));
 										this.ambito = borrarAmbito(this.ambito);
 									}
 break;
 case 166:
-//#line 536 "gramatica.y"
+//#line 538 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 break;
 case 167:
-//#line 537 "gramatica.y"
+//#line 539 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
 break;
 case 168:
-//#line 538 "gramatica.y"
+//#line 540 "gramatica.y"
 {
 		       									sintactico.addAnalisis("Se reconocio una sentencia for con etiqueta(Línea " + AnalizadorLexico.LINEA + ")");
 											int existente = enAmbito(val_peek(6));
@@ -1902,7 +1903,7 @@ case 168:
 										}
 break;
 case 169:
-//#line 557 "gramatica.y"
+//#line 559 "gramatica.y"
 {
 					agregarAmbito("for"+this.contadorFor);
 					this.contadorFor++;
@@ -1921,7 +1922,7 @@ case 169:
 				   }
 break;
 case 170:
-//#line 578 "gramatica.y"
+//#line 580 "gramatica.y"
 {
 					int existente = enAmbito(val_peek(0));
 					if (existente >= 0) {
@@ -1950,67 +1951,67 @@ case 170:
 					}
 break;
 case 179:
-//#line 614 "gramatica.y"
+//#line 616 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
 break;
 case 180:
-//#line 618 "gramatica.y"
+//#line 620 "gramatica.y"
 {	yyval = new ParserVal(sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 181:
-//#line 619 "gramatica.y"
+//#line 621 "gramatica.y"
 {
 									ParserVal modificado = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("sentencia", val_peek(0), null));
 									yyval = modificado;
 								}
 break;
 case 182:
-//#line 623 "gramatica.y"
+//#line 625 "gramatica.y"
 {sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): no se permiten cuerpos de for vacios.");}
 break;
 case 183:
-//#line 628 "gramatica.y"
+//#line 630 "gramatica.y"
 {	sintactico.addAnalisis("Se reconocio una sentencia break (Línea " + AnalizadorLexico.LINEA + ")");
 					yyval = new ParserVal(sintactico.crearNodoControl("break",null));}
 break;
 case 184:
-//#line 630 "gramatica.y"
+//#line 632 "gramatica.y"
 {	sintactico.addAnalisis("Se reconocio una sentencia break con retorno de valor (Línea " + AnalizadorLexico.LINEA + ")");
-                			yyval = new ParserVal(sintactico.crearNodoControl("break", new ParserVal(sintactico.crearHoja(val_peek(1).ival))));}
+                			yyval = new ParserVal(sintactico.crearNodoControl("breakValor", new ParserVal(sintactico.crearHoja(val_peek(1).ival))));}
 break;
 case 185:
-//#line 632 "gramatica.y"
+//#line 634 "gramatica.y"
 {	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de BREAK."); }
 break;
 case 186:
-//#line 635 "gramatica.y"
+//#line 637 "gramatica.y"
 {
 							sintactico.addAnalisis("Se reconocio una sentencia continue (Línea " + AnalizadorLexico.LINEA + ")");
 							yyval = new ParserVal(sintactico.crearNodoControl("continue",null));}
 break;
 case 187:
-//#line 638 "gramatica.y"
+//#line 640 "gramatica.y"
 { 	sintactico.addAnalisis("Se reconocio una sentencia continue con etiquetado(Línea " + AnalizadorLexico.LINEA + ")");
                    					int existente = enAmbito(val_peek(1));
 							if (existente < 0 ) {
 								sintactico.setLexemaEnIndex(val_peek(1).ival,"~"+this.ambito);
 								sintactico.setUsoEnIndex("tag",val_peek(1).ival);
-								yyval = new ParserVal(sintactico.crearNodoControl("continue", new ParserVal(sintactico.crearHoja(val_peek(1).ival))));
+								yyval = new ParserVal(sintactico.crearNodoControl("continueEtiquetado", new ParserVal(sintactico.crearHoja(val_peek(1).ival))));
 							} else {
 								sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
 							}
                    					}
 break;
 case 188:
-//#line 648 "gramatica.y"
+//#line 650 "gramatica.y"
 { 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'CONTINUE."); }
 break;
 case 189:
-//#line 649 "gramatica.y"
+//#line 651 "gramatica.y"
 { 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
 break;
 case 190:
-//#line 652 "gramatica.y"
+//#line 654 "gramatica.y"
 {
 								int existente = enAmbito(val_peek(4));
 								if (existente >= 0) {
@@ -2029,7 +2030,7 @@ case 190:
 							}
 break;
 case 192:
-//#line 685 "gramatica.y"
+//#line 687 "gramatica.y"
 {
 		    				yyval = new ParserVal(sintactico.crearNodoParam("paramInv", val_peek(2), val_peek(0)));
 		    				NodoHijo aux = (NodoHijo)val_peek(2).obj;
@@ -2040,7 +2041,7 @@ case 192:
 					}
 break;
 case 193:
-//#line 693 "gramatica.y"
+//#line 695 "gramatica.y"
 {	yyval = new ParserVal(sintactico.crearNodoParam("paramInv", val_peek(0), null));
 
 		    				NodoHijo aux = (NodoHijo)val_peek(0).obj;
@@ -2049,23 +2050,23 @@ case 193:
 		 			   }
 break;
 case 194:
-//#line 702 "gramatica.y"
+//#line 704 "gramatica.y"
 { yyval = new ParserVal(sintactico.crearNodo(val_peek(1).sval, val_peek(2), val_peek(0)));}
 break;
 case 195:
-//#line 706 "gramatica.y"
+//#line 708 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo(val_peek(1).sval, val_peek(2), val_peek(0))); }
 break;
 case 197:
-//#line 711 "gramatica.y"
+//#line 713 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("*",val_peek(2),val_peek(0)));}
 break;
 case 198:
-//#line 712 "gramatica.y"
+//#line 714 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("/",val_peek(2),val_peek(0)));}
 break;
 case 200:
-//#line 716 "gramatica.y"
+//#line 718 "gramatica.y"
 {
 				int existente = enAmbito(val_peek(0));
 				if (existente >= 0) {
@@ -2078,7 +2079,7 @@ case 200:
 				}
 break;
 case 201:
-//#line 726 "gramatica.y"
+//#line 728 "gramatica.y"
 {
 
 				String type = sintactico.getTipoFromTS(val_peek(0).ival);
@@ -2089,7 +2090,7 @@ case 201:
                   	}
 break;
 case 202:
-//#line 734 "gramatica.y"
+//#line 736 "gramatica.y"
 {
 				sintactico.setNegativoTablaSimb(val_peek(0).ival);
 
@@ -2097,38 +2098,38 @@ case 202:
                    	}
 break;
 case 203:
-//#line 742 "gramatica.y"
+//#line 744 "gramatica.y"
 { yyval.sval = new String("<") ; }
 break;
 case 204:
-//#line 743 "gramatica.y"
+//#line 745 "gramatica.y"
 { yyval.sval = new String(">") ; }
 break;
 case 205:
-//#line 744 "gramatica.y"
+//#line 746 "gramatica.y"
 { yyval.sval = new String("<="); }
 break;
 case 206:
-//#line 745 "gramatica.y"
+//#line 747 "gramatica.y"
 { yyval.sval = new String(">="); }
 break;
 case 207:
-//#line 746 "gramatica.y"
+//#line 748 "gramatica.y"
 { yyval.sval = new String("=") ; }
 break;
 case 208:
-//#line 747 "gramatica.y"
+//#line 749 "gramatica.y"
 { yyval.sval = new String("=!"); }
 break;
 case 209:
-//#line 751 "gramatica.y"
+//#line 753 "gramatica.y"
 { yyval.sval = new String("i32"); }
 break;
 case 210:
-//#line 752 "gramatica.y"
+//#line 754 "gramatica.y"
 { yyval.sval = new String("f32"); }
 break;
-//#line 2054 "Parser.java"
+//#line 2056 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
