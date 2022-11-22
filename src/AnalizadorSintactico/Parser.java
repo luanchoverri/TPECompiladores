@@ -1996,7 +1996,7 @@ case 187:
 							if (existente < 0 ) {
 								sintactico.setLexemaEnIndex(val_peek(1).ival,"~"+this.ambito);
 								sintactico.setUsoEnIndex("tag",val_peek(1).ival);
-								yyval = new ParserVal(sintactico.crearNodoControl("continueEtiquetado", new ParserVal(sintactico.crearHoja(val_peek(1).ival))));
+								yyval = new ParserVal(sintactico.crearNodoControl("continue-etiqueta", new ParserVal(sintactico.crearHoja(val_peek(1).ival))));
 							} else {
 								sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
 							}

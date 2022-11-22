@@ -3,12 +3,9 @@ program
     i32 a, b, c;
 	a =: 1;
 
-    t1: for(i=:1 ; i < 3 ; -i){
-        if(i < 1) then{
-            break 2;
-            continue: t1;
-        }
-         end_if;
+    franchu: for(i=:1 ; i < 3 ; -i){
+        a =: i;
+        continue: franchu;
     };
 
 }$ 
@@ -21,17 +18,14 @@ program
  
  
  Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
- Se reconocio una sentencia break con retorno de valor (Línea 8)
- Se reconocio una sentencia continue con etiquetado(Línea 9)
- Se reconoció una sentencia If. (Línea 11)
- Se reconocio una sentencia for con etiqueta(Línea 12)
+ Se reconocio una sentencia continue con etiquetado(Línea 8)
+ Se reconocio una sentencia for con etiqueta(Línea 9)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
  
  
  SematicError. El ambito es $#for0
- SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: PALABRA RESERVADA (Línea 11 )
   
  
  
@@ -46,9 +40,7 @@ TOKEN   258          1     #linea 4    i32   null
 TOKEN   257   i~$#for0     #linea 6    i32 for_var 
 TOKEN   258          1     #linea 6    i32   null 
 TOKEN   258          3     #linea 6    i32    i32 
-TOKEN   258          1     #linea 7    i32   null 
-TOKEN   258          2     #linea 8    i32   null 
-TOKEN   257 t1~$#for0#if-then1     #linea 9   null    tag  
+TOKEN   257 franchu~$#for0     #linea 8   null    tag  
  
  
  
@@ -61,7 +53,7 @@ TOKEN   257 t1~$#for0#if-then1     #linea 9   null    tag
         └─ sentencia 
            └─ for-etiquetado 
               └─ etiqueta 
-                 └─ t1~$#for0#if-then1 
+                 └─ franchu~$#for0 
               └─ For 
                  └─ encabezado for 
                     └─ asignacionFor 
@@ -81,20 +73,13 @@ TOKEN   257 t1~$#for0#if-then1     #linea 9   null    tag
                                 └─ uno 
                  └─ cuerpoFor 
                     └─ sentencia 
-                       └─ if 
-                          └─ condicionIf 
-                             └─ < 
-                                └─ i~$#for0 
-                                └─ 1 
-                          └─ cuerpo-if 
-                             └─ then 
-                                └─ sentencia 
-                                   └─ breakValor 
-                                      └─ 2 
-                                   └─ sentencia 
-                                      └─ continueEtiquetado 
-                                         └─ t1~$#for0#if-then1 
+                       └─ =: 
+                          └─ a~$ 
+                          └─ i~$#for0 
+                       └─ sentencia 
+                          └─ continue-etiqueta 
+                             └─ franchu~$#for0 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: nov. 22 2022, 03:15:39 p. m.
+ Hora de ejecucion: nov. 22 2022, 03:50:33 p. m.

@@ -642,7 +642,7 @@ sentencia_CONTINUE : CONTINUE ';'		{
 							if (existente < 0 ) {
 								sintactico.setLexemaEnIndex($3.ival,"~"+this.ambito);
 								sintactico.setUsoEnIndex("tag",$3.ival);
-								$$ = new ParserVal(sintactico.crearNodoControl("continueEtiquetado", new ParserVal(sintactico.crearHoja($3.ival))));
+								$$ = new ParserVal(sintactico.crearNodoControl("continue-etiqueta", new ParserVal(sintactico.crearHoja($3.ival))));
 							} else {
 								sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
 							}

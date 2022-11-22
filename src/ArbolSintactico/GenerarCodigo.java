@@ -181,6 +181,14 @@ public class GenerarCodigo{
                         encabezadoForAssembler(nodo);
                         break;
 
+                    case ("for-etiquetado"):
+                        forEtiquetadoAssembler(nodo);
+                        break;
+
+                    case ("etiqueta"):
+                        etiquetaAssembler(nodo);
+                        break;
+
                     case ("For"):
                         forAssembler(nodo);
                         break;
@@ -193,6 +201,10 @@ public class GenerarCodigo{
 
                     case ("continue"):
                         continueAssembler(nodo);
+                        break;
+
+                    case ("continue-etiqueta"):
+                        continueEtiquetaAssembler(nodo);
                         break;
 
                     case ("return"):
@@ -220,6 +232,11 @@ public class GenerarCodigo{
 
     private void continueAssembler(Nodo nodo) {
 		this.assemblerCode.append("JMP " + this.pilaFor.peek()  + "\n");
+    }
+
+    private void continueEtiquetaAssembler(Nodo nodo) {
+        String tag = "_" + nodo.getHijoIzquierdo().getLexema().split("~")[0];
+        this.assemblerCode.append("JMP " + tag + "\n");
     }
 
     private void breakAssembler(Nodo nodo) {
@@ -275,6 +292,13 @@ public class GenerarCodigo{
     private void encabezadoForAssembler(Nodo nodo){
 
     }
+
+    private void etiquetaAssembler(Nodo nodo){
+        String tag = "_"+nodo.getHijoIzquierdo().getLexema().split("~")[0];
+        this.assemblerCode.append(tag + ":\n");
+    }
+
+    private void forEtiquetadoAssembler(Nodo nodo){}
 
     private void forAssembler(Nodo nodo){
 

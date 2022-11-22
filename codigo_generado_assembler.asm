@@ -22,23 +22,34 @@ flagTry dw 0,0
 .code
 MOV EAX,1
 MOV a~$,EAX
-MOV EAX, a~$
-CMP EAX, 3
-JGE _label1
-MOV @aux0,1 
-JMP _label0
-_label1:
-MOV @aux0, 0 
+_franchu:
+MOV EAX,1
+MOV i~$#for0,EAX
 _label0:
-MOV EAX, @aux0
-CMP EAX,  0
-JE _label2
-MOV EAX,b~$
-MOV a~$,EAX
-JMP _label3
+MOV EAX, i~$#for0
+CMP EAX, 3
+JGE _label2
+MOV @aux0,1 
+JMP _label1
 _label2:
-MOV EAX,a~$
-MOV c~$,EAX
+MOV @aux0, 0 
+_label1:
+MOV EAX, @aux0
+CMP EAX, 0 
+JE _label3
+JNE _label4
+_label5:
+MOV EAX,i~$#for0
+SUB EAX,uno
+MOV @aux1,EAX
+MOV EAX,@aux1
+MOV i~$#for0,EAX
+JMP _label0
+_label4:
+MOV EAX,i~$#for0
+MOV a~$,EAX
+JMP _franchu
+JMP _label5
 _label3:
 ;------------ FIN ------------
 invoke ExitProcess, 0

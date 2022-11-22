@@ -532,8 +532,8 @@ public class AnalizadorSintactico {
 
         this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
 
-//        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-//        g.generacionDeCodigo(this.raiz);
+        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+        g.generacionDeCodigo(this.raiz);
     }
 
 
