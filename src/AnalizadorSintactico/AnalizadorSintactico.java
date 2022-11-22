@@ -502,8 +502,8 @@ public class AnalizadorSintactico {
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         imprimirArbolesFuncion();
-        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-        g.generacionDeCodigo(this.raiz);
+    //    GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+     //   g.generacionDeCodigo(this.raiz);
     }
 
     public void start() {
@@ -515,12 +515,11 @@ public class AnalizadorSintactico {
         String estadoParser ;
 
         if (parser.yyparse() == 0) {
-            estadoParser = (" \n \n ✅ EJECUCION DEL PARSER FINALIZADA 😏🍀 \n ") ;
+            estadoParser = (" \n \n  EJECUCION DEL PARSER FINALIZADA  \n ") ;
         }
         else
-            estadoParser = (" \n \n ❌ EL PARSER NO PUDO TERMINAR \n ");
+            estadoParser = (" \n \n EL PARSER NO PUDO TERMINAR \n ");
 
-        //   analizadorLexico.imprimirErrores();
 
         analizadorLexico.setPosArchivo(0);
         analizadorLexico.setBuffer("");

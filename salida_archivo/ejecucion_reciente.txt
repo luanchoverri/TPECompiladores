@@ -1,29 +1,7 @@
-<<<<<<< HEAD
 program{
-=======
-Hora de ejecucion: nov. 22 2022, 03:03:49 a. m.
 
+    i32 b;
 
-
------------------------------------------------------------------
-
-|--- CODIGO FUENTE ---|
-
-
-program
-{
-    i32 a, b, c;
-	a =: 1;
->>>>>>> release
-
-    for(i=:1 ; i < 3 ; -i){
-        if(i < 1) then{
-            break 2;
-        }
-         end_if;
-    };
-
-<<<<<<< HEAD
     b =: b+1;
     i32 a;
 
@@ -31,11 +9,6 @@ program
          return(j*2);
          const z=:1, l=:2;
     }
-=======
-}$
-
------------------------------------------------------------------
->>>>>>> release
 
 
 
@@ -52,7 +25,7 @@ program
     f =: fun3();
 }$ 
  
- ✅ EJECUCION DEL PARSER FINALIZADA 😏🍀 
+  EJECUCION DEL PARSER FINALIZADA  
   
  |||||||||||||||||||||||||||||||||||||||||||||| 
  
@@ -85,9 +58,8 @@ program
  
  
   
- 🟡🟡🟡🟡🟡 TABLA DE SIMBOLOS 🟡🟡🟡🟡🟡 
+              TABLA DE SIMBOLOS              
 
-<<<<<<< HEAD
 TOKEN   257    program     #linea 1   null   null 
 TOKEN   257        b~$     #linea 3    i32    var 
 TOKEN   258          1     #linea 5    i32   null 
@@ -156,10 +128,4 @@ TOKEN   257          f     #linea 25   null   null
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: nov. 22 2022, 02:12:25 a. m.
-=======
-| ERRORES SINTACTICOS: ---| (!)
-
-
-el ambito es $#for0
->>>>>>> release
+ Hora de ejecucion: nov. 22 2022, 03:18:08 a. m.

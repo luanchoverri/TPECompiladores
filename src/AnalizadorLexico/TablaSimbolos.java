@@ -211,7 +211,7 @@ public class TablaSimbolos {
 
     public void imprimir(BufferedWriter bw) throws IOException {
         bw.write(" \n \n \n ");
-        bw.write(" \n 🟡🟡🟡🟡🟡 TABLA DE SIMBOLOS 🟡🟡🟡🟡🟡 \n");
+        bw.write(" \n              TABLA DE SIMBOLOS              \n");
         for(Token token : registroTokens){
             bw.write("\n");
             bw.write(token.toString());
