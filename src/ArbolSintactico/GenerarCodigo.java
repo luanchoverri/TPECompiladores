@@ -18,19 +18,28 @@ public class GenerarCodigo{
     private int contadorEtiquetaLabel = 0;
     private int contadorAux = 0;
 
-    private Stack <String> pila;
+    private Stack <String> pilaControl;
     private Stack <String> pilaFor;
 
     public GenerarCodigo(AnalizadorLexico l){
         this.assemblerCode = new StringBuilder("");
         this.inicio = new StringBuilder("");
         this.datosPrecarga = new StringBuilder("");
-        this.pila = new Stack<>();
+        this.pilaControl = new Stack<>();
         this.pilaFor = new Stack<>();
         tablaSimbolos = l.getTablaSimbolos();
     }
 
 
+    public void imprimirTablaSimbolosAssembler() {
+        System.out.println();
+        if (this.tablaSimbolos.isEmpty())
+            System.out.println("|----- TABLA DE SIMBOLOS ASSEMBLER VACIA ------|");
+        else {
+            System.out.println("|----- TABLA DE SIMBOLOS ASSEMBLER ------|");
+        }this.tablaSimbolos.imprimir();
+
+    }
 
     private void cargarLibrerias () {
 		this.inicio.append(";------------ INCLUDES y LIBRERIAS ------------\r\n" +
@@ -56,16 +65,14 @@ public class GenerarCodigo{
 
 	}
 
-    // -------------- REVISAR QUE OPERACIONES O LLAMADOS A FUNCIONES FALTARIAN
-    // -------------- REVISAR SETEO DE USO, GET PADRE, GET VALOR, GET PARAMETRO, COMPARACIONES
-    // -------------- REVISAR LLAMADOS A FUNCIONES, CODIGO CONTINUE
-    // -------------- REVISAR ENCABEZADO DE PROGRAMA Y DE FUNCIONES CUANDO SE DECLARAN LAS VARIABLES
-    // -------------- CONST?????
-    // -------------- REVISAR SI FALTA AGREGAR ALGO AL SWITCH CASE
-    // -------------- FALTA REVISAR LA ESTRUCTURA DE ASSEMBLER EN SI PARA LA EJECUCION CORRECTA DEL CODIGO
-    // -------------- DEBUG TODO
-    // -------------- REVISION GENERAL
-    // -------------- CASOS DE PRUEBA
+    // -------------- FALTA returnAssembler
+    // -------------- FALTA funciones en general
+    // -------------- FALTA cargar variables auxiliares de la tabla de simbolos
+    // -------------- FALTA out
+    // -------------- FALTA Casos de prueba
+    // -------------- FALTA arreglar el archivo de salida
+    // -------------- FALTA FOR como valor de asignacion
+    // -------------- FALTA ARREGLAR OPERACION FOR (-/+) -> GRAMATICA
 
     public void generarCodigoLeido(Nodo nodo) {
 
@@ -75,8 +82,7 @@ public class GenerarCodigo{
             if (nodo.getHijoDerecho() != null)
                 generarCodigoLeido(nodo.getHijoDerecho());
 
-            if (nodo.hijosSonHoja()) {
-
+                if (nodo.hijosSonHoja()) {
                 switch (nodo.getLexema()) {
 
                     // Asignacion
@@ -131,6 +137,10 @@ public class GenerarCodigo{
 
                     // Sentencias de control
 
+                    case ("condicionIf"):
+                        condicionIfAssembler(nodo);
+                        break;
+
                     case ("if"):
                         ifAssembler(nodo);
                         break;
@@ -141,6 +151,38 @@ public class GenerarCodigo{
 
                     case ("else"):
                         elseAssembler(nodo);
+                        break;
+
+                    case ("cuerpo-if"):
+                        cuerpoAssembler(nodo);
+                        break;
+
+                    case ("cuerpoFor"):
+                        cuerpoForAssembler(nodo);
+                        break;
+
+                    case ("asignacionFor"):
+                        asignacionForAssembler(nodo);
+                        break;
+
+                    case ("operacionFor"):
+                        operacionForAssembler(nodo);
+                        break;
+
+                    case ("condicionFor"):
+                        condicionForAssembler(nodo);
+                        break;
+
+                    case ("condicion y operacion for"):
+                        condicionYOperacionForAssembler(nodo);
+                        break;
+
+                    case ("encabezado for"):
+                        encabezadoForAssembler(nodo);
+                        break;
+
+                    case ("For"):
+                        forAssembler(nodo);
                         break;
 
                     // Funciones
@@ -161,28 +203,82 @@ public class GenerarCodigo{
                         outAssembler(nodo);
                         break;
                 }
+                nodo.descolgarHijos();
             }
         }
-    }
+
+        }
+
 
     private void outAssembler(Nodo nodo) {
-    }
-
-
-
-    private void returnAssembler(Nodo nodo) { // FALTA
 
     }
 
-    private void continueAssembler(Nodo nodo) { // FALTA
+    private void returnAssembler(Nodo nodo) {
+
     }
 
-    private void breakAssembler(Nodo nodo) { // Corte para los FOR cuando se encuentra un BREAK
-        if (!this.pilaFor.isEmpty()) {
-			this.assemblerCode.append("JMP " + this.pilaFor.peek()  + "\n");
-		};
+    private void continueAssembler(Nodo nodo) {
+		this.assemblerCode.append("JMP " + this.pilaFor.peek()  + "\n");
     }
 
+    private void breakAssembler(Nodo nodo) {
+        String labelBreak = this.pilaFor.pop();
+		this.assemblerCode.append("JMP " + this.pilaFor.peek()  + "\n");
+        this.pilaFor.push(labelBreak);
+    }
+
+    private void asignacionForAssembler(Nodo nodo){
+        String label = "_label" + this.contadorEtiquetaLabel;
+		this.contadorEtiquetaLabel++;
+        this.pilaFor.push(label);
+        this.assemblerCode.append(label+":\n");
+    }
+
+    private void condicionForAssembler(Nodo nodo){
+        String labelFalso = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+        String labelVerdadero = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+        String labelBucle = "_label" + this.contadorEtiquetaLabel;
+        this.contadorEtiquetaLabel++;
+        this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema()+"\n");
+		this.assemblerCode.append("CMP EAX, 0 \n");
+        this.assemblerCode.append("JE " + labelFalso + "\n"); // Salta a labelFalso si es Igual
+        this.assemblerCode.append("JNE "+labelVerdadero+"\n"); // Salta a labelVerdadero si NO es Igual
+        this.assemblerCode.append(labelBucle+ ":\n"); // Continua el bucle
+        String condicionLabelPilaFor = this.pilaFor.pop();
+        this.pilaFor.push(labelFalso);
+        this.pilaFor.push(labelBucle);
+        this.pilaFor.push(labelVerdadero);
+        this.pilaFor.push(condicionLabelPilaFor);
+    }
+
+    private void operacionForAssembler(Nodo nodo){
+        String labelCondicion = this.pilaFor.pop();
+        this.assemblerCode.append("JMP "+labelCondicion+"\n");
+        String labelVerdadero = this.pilaFor.pop();
+        this.assemblerCode.append(labelVerdadero+ ":\n");
+    }
+
+    private void cuerpoForAssembler(Nodo nodo){
+        String labelBucle = this.pilaFor.pop();
+        this.assemblerCode.append("JMP "+labelBucle+"\n");
+        String labelFalso = this.pilaFor.pop();
+        this.assemblerCode.append(labelFalso+ ":\n");
+    }
+
+    private void condicionYOperacionForAssembler(Nodo nodo){
+
+    }
+
+    private void encabezadoForAssembler(Nodo nodo){
+
+    }
+
+    private void forAssembler(Nodo nodo){
+
+    }
 
     private void distintoAssembler(Nodo nodo) {
 
@@ -192,116 +288,95 @@ public class GenerarCodigo{
         this.contadorEtiquetaLabel++;
         String labelFalso = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
-      //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-        if (nodo.getTipo() == "i32") {
+
+        if (nodo.getTipo().equals("i32")) {
             this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
             this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
-            this.assemblerCode.append("JE " + labelFalso + "\n");
+            this.assemblerCode.append("JE " + labelFalso + "\n"); // Salta a labelFalso si es Igual
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
             this.assemblerCode.append("MOV " + aux + ", 0 \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-        //    s.setUso("variable");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarCompDistinto");
         } else {
-            String mem2bytes = "aux" + contadorAux;
-            this.contadorAux++;
-         //   Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-        //    s2.setUso("variableP");
-          //  this.tablaDeSimbolos.put(mem2bytes, s2);
 
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            }
-            this.assemblerCode.append("FCOMPP \n");
+            if(nodo.getTipo().equals("f32")){
+            String mem2bytes = "@aux" + contadorAux;
+            this.contadorAux++;
+
+            this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCompDistinto");
+            this.assemblerCode.append("FCOMPP "+"\n");
             this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
             this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
             this.assemblerCode.append("SAHF \n");
             this.assemblerCode.append("JE " + labelFalso + "\n");
-            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("FLD1 "+"\n");
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
             this.assemblerCode.append("FLDZ \n");
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-          //  s.setUso("variable");
-        //    s.setTipo("f32");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompDistinto");
         }
-      //  this.tablaDeSimbolos.put(aux, s);
-        //nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-       // nodo.setLexema(aux);
+    }
+            int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+            Token t = this.tablaSimbolos.getEntrada(idLexema);
+            nodo.setTipo(t.getTipo());
+            nodo.setLexema(aux);
 
     }
 
-
     private void igualAssembler(Nodo nodo) {
 
-        String aux = "aux" + contadorAux;
+        String aux = "@aux" + contadorAux;
         this.contadorAux++;
         String labelContinuar = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
         String labelFalso = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
-    //    Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-        if (nodo.getTipo() == "i32") {
+
+
+        if (nodo.getTipo().equals("i32")) {
             this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
             this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
-            this.assemblerCode.append("JNE " + labelFalso + "\n");
+            this.assemblerCode.append("JNE " + labelFalso + "\n"); // Salta a labelFalso si no es igual
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
             this.assemblerCode.append("MOV " + aux + ", 0 \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-          //  s.setUso("variable");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarCompIgual");
+
         } else {
-            String mem2bytes = "aux" + contadorAux;
+            if(nodo.getTipo().equals("f32")){
+
+
+            String mem2bytes = "@aux" + contadorAux;
             this.contadorAux++;
-         //   Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-           // s2.setUso("variableP");
-           // this.tablaDeSimbolos.put(mem2bytes, s2);
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            }
-            this.assemblerCode.append("FCOMPP \n");
+            this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCompIgual");
+
+            this.assemblerCode.append("FCOMPP "+ "\n");
             this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
             this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
             this.assemblerCode.append("SAHF \n");
             this.assemblerCode.append("JNE " + labelFalso + "\n");
-            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("FLD1 "+"\n");
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
             this.assemblerCode.append("FLDZ \n");
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-          //  s.setUso("variable");
-          //  s.setTipo("f32");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompIgual");
         }
-       // this.tablaDeSimbolos.put(aux, s);
-       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-       // nodo.setLexema(aux);
-
+        }
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        nodo.setTipo(t.getTipo());
+        nodo.setLexema(aux);
     }
-
 
     private void mayorIgualAssembler(Nodo nodo) {
 
@@ -311,8 +386,8 @@ public class GenerarCodigo{
         this.contadorEtiquetaLabel++;
         String labelFalso = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
-     //   Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-        if (nodo.getTipo() == "i32") {
+
+        if (nodo.getTipo().equals("i32")) {
             this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
             this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
             this.assemblerCode.append("JL " + labelFalso + "\n");
@@ -321,89 +396,72 @@ public class GenerarCodigo{
             this.assemblerCode.append(labelFalso + ":\n");
             this.assemblerCode.append("MOV " + aux + ", 0 \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-           // s.setUso("variable");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarCompMayorIgual");
+
         } else {
-            String mem2bytes = "aux" + contadorAux;
+            if(nodo.getTipo().equals("f32")){
+
+            String mem2bytes = "@aux" + contadorAux;
             this.contadorAux++;
-         //   Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-           // s2.setUso("variableP");
-           // this.tablaDeSimbolos.put(mem2bytes, s2);
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            }
+            this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCompMayorIgual");
+
+            this.assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema()+"\n");
+            this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema()+"\n");
             this.assemblerCode.append("FCOMPP \n");
             this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("MOV EAX," + mem2bytes + "\n");
             this.assemblerCode.append("SAHF \n");
             this.assemblerCode.append("JB " + labelFalso + "\n");
-            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("FLD1 "+"\n");
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
             this.assemblerCode.append("FLDZ \n");
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-           // s.setUso("variable");
-         //   s.setTipo("f32");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompMayorIgual");
         }
-       // this.tablaDeSimbolos.put(aux, s);
-       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+    }
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        nodo.setTipo(t.getTipo());
         nodo.setLexema(aux);
 
     }
-
 
     private void menorIgualAssembler(Nodo nodo) {
 
-        String aux = "aux" + contadorAux;
+        String aux = "@aux" + contadorAux;
         this.contadorAux++;
         String labelContinuar = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
         String labelFalso = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
-     //   Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-        if (nodo.getTipo() == "i32") {
+
+        if (nodo.getTipo().equals("i32")) {
             this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
             this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
-            this.assemblerCode.append("JG " + labelFalso + "\n");
+            this.assemblerCode.append("JG " + labelFalso + "\n"); // Salta a labelFalso si es Mayor
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
             this.assemblerCode.append("MOV " + aux + ", 0 \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-          //  s.setUso("variable");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarCompMenorIgual");
         } else {
-            String mem2bytes = "aux" + contadorAux;
+            if (nodo.getTipo().equals("f32")){
+
+
+            String mem2bytes = "@aux" + contadorAux;
             this.contadorAux++;
-          //  Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-          //  s2.setUso("variableP");
-         //   this.tablaDeSimbolos.put(mem2bytes, s2);
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            }
-            this.assemblerCode.append("FCOMPP \n");
+            this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCompMenorIgual");
+            this.assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema()+"\n");
+            this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema()+"\n");
+            this.assemblerCode.append("FCOMPP "+"\n");
             this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("MOV EAX," + mem2bytes + "\n");
             this.assemblerCode.append("SAHF \n");
-            this.assemblerCode.append("JA " + labelFalso + "\n");
+            this.assemblerCode.append("JA " + labelFalso + "\n"); // Salta a labelFalso si es Mayor
             this.assemblerCode.append("FLD1\n");
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
@@ -411,464 +469,320 @@ public class GenerarCodigo{
             this.assemblerCode.append("FLDZ \n");
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-          //  s.setUso("variable");
-           // s.setTipo("f32");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompMenorIgual");
         }
-       // this.tablaDeSimbolos.put(aux, s);
-       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        nodo.setTipo(t.getTipo());
         nodo.setLexema(aux);
-
     }
-
+    }
 
     private void menorAssembler(Nodo nodo) {
 
-        String aux = "aux" + contadorAux;
+        String aux = "@aux" + contadorAux;
         this.contadorAux++;
         String labelContinuar = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
         String labelFalso = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
-    //    Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-        if (nodo.getTipo() == "i32") {
+        if (nodo.getTipo().equals("i32")) {
             this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
             this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
-            this.assemblerCode.append("JGE " + labelFalso + "\n");
-            this.assemblerCode.append("MOV " + aux + ",1 \n");
-            this.assemblerCode.append("JMP " + labelContinuar + "\n");
+            this.assemblerCode.append("JGE " + labelFalso + "\n"); // Si es Mayor o Igual, salto a labelFalso
+            this.assemblerCode.append("MOV " + aux + ",1 \n"); // Guardo en aux un 1
+            this.assemblerCode.append("JMP " + labelContinuar + "\n"); // Continuo la ejecucion
             this.assemblerCode.append(labelFalso + ":\n");
-            this.assemblerCode.append("MOV " + aux + ", 0 \n");
+            this.assemblerCode.append("MOV " + aux + ", 0 \n"); // Al ser falso, seteo un 0 en aux
             this.assemblerCode.append(labelContinuar + ":\n");
-         //   s.setUso("variable");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarCompMenor");
         } else {
-            String mem2bytes = "aux" + contadorAux;
+            if(nodo.getTipo().equals("f32")){
+
+
+            String mem2bytes = "@aux" + contadorAux;
             this.contadorAux++;
-         //   Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-          //  s2.setUso("variableP");
-           // this.tablaDeSimbolos.put(mem2bytes, s2);
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            }
+            this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCompMenor");
+            this.assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema()+"\n");
+            this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema()+"\n");
             this.assemblerCode.append("FCOMPP \n");
             this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("MOV EAX," + mem2bytes + "\n");
             this.assemblerCode.append("SAHF \n");
-            this.assemblerCode.append("JAE " + labelFalso + "\n");
-            this.assemblerCode.append("FLD1\n");
+            this.assemblerCode.append("JAE " + labelFalso + "\n"); // Si es mayor o Igual, salta a labelFalso
+            this.assemblerCode.append("FLD1\n"); // Setea un 1
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
             this.assemblerCode.append("FLDZ \n");
             this.assemblerCode.append("FSTP " + aux + " \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-          //  s.setUso("variable");
-            //s.setTipo("f32");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompMenor");
         }
-      //  this.tablaDeSimbolos.put(aux, s);
-       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+    }
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        nodo.setTipo(t.getTipo());
         nodo.setLexema(aux);
 
     }
 
-
     private void mayorAssembler(Nodo nodo) {
 
-        String aux = "aux" + contadorAux;
+        String aux = "@aux" + contadorAux;
         this.contadorAux++;
         String labelContinuar = "_label" + this.contadorEtiquetaLabel; // Casos: (THEN, Condicion TRUE en un FOR, es decir, ejecuta lo de adentro del FOR)
         this.contadorEtiquetaLabel++;
         String labelFalso = "_label" + this.contadorEtiquetaLabel; // Casos: (ELSE, Condicion FALSE en un FOR, es decir corta el FOR)
         this.contadorEtiquetaLabel++;
-      //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-        if (nodo.getTipo() == "i32") {
+
+        if (nodo.getTipo().equals("i32")) {
+
             this.assemblerCode.append("MOV EAX, " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR
+            this.assemblerCode.append("CMP EAX, " + nodo.getHijoDerecho().getLexema() + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
             this.assemblerCode.append("JLE " + labelFalso + "\n"); // Si NO ES MAYOR (CASO JLE CUANDO ES <=) (ELSE O FALSE DE FOR), salto a la etiqueta labelFalso y ejecuto las instrucciones debajo
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
             this.assemblerCode.append("MOV " + aux + ", 0 \n");
             this.assemblerCode.append(labelContinuar + ":\n");
-           // s.setUso("variable");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarCompMayor");
         } else {
-            String mem2bytes = "aux" + contadorAux;
-            this.contadorAux++;
-        //    Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-          //  s2.setUso("variableP");
-           // this.tablaDeSimbolos.put(mem2bytes, s2);
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
+            if (nodo.getTipo().equals("f32")){
+
+
+                String mem2bytes = "@aux" + contadorAux;
+                this.contadorAux++;
+                this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCompMayor");
+
                 this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            }
-            this.assemblerCode.append("FCOMPP \n");
-            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
-            this.assemblerCode.append("SAHF \n");
-            this.assemblerCode.append("JBE " + labelFalso + "\n");
-            this.assemblerCode.append("FLD1\n");
-            this.assemblerCode.append("FSTP " + aux + " \n");
-            this.assemblerCode.append("JMP " + labelContinuar + "\n");
-            this.assemblerCode.append(labelFalso + ":\n");
-            this.assemblerCode.append("FLDZ \n");
-            this.assemblerCode.append("FSTP " + aux + " \n");
-            this.assemblerCode.append(labelContinuar + ":\n");
-          //  s.setUso("variable");
-           // s.setTipo("f32");
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+                this.assemblerCode.append("FCOMPP " + "\n");
+                this.assemblerCode.append("FSTSW " + mem2bytes + "\n"); // guarda el valor de la comparacion en mem2bytes
+                this.assemblerCode.append("MOV EAX," + mem2bytes + "\n"); // Guardo el valor de mem2bytes (de la comparacion anterior) en EAX
+                this.assemblerCode.append("SAHF \n"); // Toma de EAX el estado de la comparacion
+                this.assemblerCode.append("JBE " + labelFalso + "\n"); // Si es menor o igual, va al labelFalso
+                this.assemblerCode.append("FLD1\n"); // Carga un 1 en ST
+                this.assemblerCode.append("FSTP " + aux + " \n"); // Carga el valor de la pila en aux
+                this.assemblerCode.append("JMP " + labelContinuar + "\n"); // Continua la ejecucion
+                this.assemblerCode.append(labelFalso + ":\n");
+                this.assemblerCode.append("FLDZ " + "\n"); // Carga un 0 en ST
+                this.assemblerCode.append("FSTP " + aux + " \n"); // Carga el valor de la pila en aux
+                this.assemblerCode.append(labelContinuar + ":\n");
+                this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompMayor");
         }
-      //  this.tablaDeSimbolos.put(aux, s);
-       // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
+        }
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        nodo.setTipo(t.getTipo());
+        nodo.setLexema(aux);
+    }
+
+    private void elseAssembler(Nodo nodo) {
+
+	}
+
+	private void thenAssembler(Nodo nodo) {
+		String label = "_label"+contadorEtiquetaLabel;
+		contadorEtiquetaLabel++;
+		this.assemblerCode.append("JMP "+label + "\n");
+		String labelAux= this.pilaControl.pop();
+		this.assemblerCode.append(labelAux + ":\n");
+		this.pilaControl.push(label);
+	}
+
+	private void condicionIfAssembler(Nodo nodo) {
+		String label="_label"+contadorEtiquetaLabel;
+		contadorEtiquetaLabel++;
+		if (nodo.getHijoIzquierdo().getTipo().equals("i32")) {
+            System.out.println("ENTREEE IFFDFIJBSDKFG");
+			this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema()+"\n");
+			this.assemblerCode.append("CMP EAX,  0"+"\n");
+		} else {
+            if (nodo.getHijoIzquierdo().getTipo().equals("f32")){
+			String mem2bytes= "@aux"+contadorAux;
+			this.contadorAux++;
+
+            this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCondIf");
+			this.assemblerCode.append("FLDZ "+"\n");
+            this.assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema()+"\n");
+			this.assemblerCode.append("FCOMPP "+"\n");
+			this.assemblerCode.append("FSTSW " + mem2bytes + "\n" );
+			this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+			this.assemblerCode.append("SAHF "+"\n");
+		    }
+        }
+		this.assemblerCode.append("JE " + label + "\n");
+		this.pilaControl.push(label);
+	}
+
+    private void ifAssembler(Nodo nodo){
+        String label=this.pilaControl.pop();
+		this.assemblerCode.append(label+":\n");
+    }
+
+	private void cuerpoAssembler(Nodo nodo) {
+	}
+
+    private void divisionAssembler(Nodo nodo) {
+
+        String aux = "@aux" + contadorAux;
+        this.contadorAux++;
+        if (nodo.getTipo().equals("i32")) {
+
+            String label = "_label" + contadorEtiquetaLabel;
+            contadorEtiquetaLabel++;
+
+            // Controlamos la division por CERO
+
+            this.assemblerCode.append("MOV EAX, " + nodo.getHijoDerecho().getLexema() + "\n"); // Es el hijo derecho porque tomamos el divisor
+            this.assemblerCode.append("CMP EAX, 0 \n"); // COMPARA EL VALOR DE EAX CON 0 (MENOR, MAYOR O IGUAL)
+            this.assemblerCode.append("JNE " + label + "\n"); // Si no es igual, salto a la etiqueta label correspondiente
+
+            // Es igual a cero, entonces genero un mensaje de error
+
+            this.assemblerCode.append("invoke MessageBox, NULL, addr errorDiv, addr program, MB_OK\n"); // DIVISION POR CERO CONTROL
+            this.assemblerCode.append("invoke ExitProcess, 0\n");
+
+            // Si no es igual a cero, sigo la ejecucion
+
+            this.assemblerCode.append(label + ":\n");
+            this.assemblerCode.append("MOV aux_EDX "+","+"EDX"+"\n"); // El dividendo debe estar en EDX ; Cociente en EAX ; Resto en EDX
+            this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoIzquierdo().getLexema()+"\n"); // Movemos el valor del nodo IZQUIERDO a EAX
+            this.assemblerCode.append("CDQ "+"\n"); // Extendemos el signo de EAX en EDX para comtemplar los numeros negativos
+            this.assemblerCode.append("MOV EBX "+","+nodo.getHijoDerecho().getLexema()+"\n"); // Movemos el valor del nodo DERECHO a EBX
+            this.assemblerCode.append("IDIV EBX"+"\n"); // Dividimos EAX por EBX
+            this.assemblerCode.append("MOV EDX, aux_EDX" + "\n"); // Guardamos en EDX el resto de la division en la instruccion anterior
+            this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarDiv");
+
+        } else {
+
+            if(nodo.getTipo().equals("f32")){
+
+                String label = "_label" + contadorEtiquetaLabel;
+                contadorEtiquetaLabel++;
+                String mem2bytes = "@aux" + contadorAux;
+                this.contadorAux++;
+
+                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n"); // Introduce una copia de
+                                                                                              // memoria en ST
+                this.assemblerCode.append("FLDZ " + "\n"); // Introduce el numero cero en ST (tope de la pila)
+                this.assemblerCode.append("FCOMPP " + "\n"); // Compara el divisor con 0
+                this.assemblerCode.append("FSTSW " + mem2bytes + "\n"); // Setea el flag
+                this.assemblerCode.append("MOV EAX," + mem2bytes + "\n"); // Guarda el flag en EAX
+                this.assemblerCode.append("SAHF \n"); // Toma de EAX el estado de la comparacion
+                this.assemblerCode.append("JNE " + label + "\n"); // Si no es igual a cero, salta a la etiqueta label correspondiente, sino tira mensaje de error
+                this.assemblerCode.append("invoke MessageBox, NULL, addr errorDiv, addr program, MB_OK\n");
+                this.assemblerCode.append("invoke ExitProcess, 0\n");
+
+                // Si no es cero
+
+                this.assemblerCode.append(label + ":\n");
+                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+                this.assemblerCode.append("FIDIV" + nodo.getHijoDerecho().getLexema() + "\n");
+                this.assemblerCode.append("FSTP " + aux + "\n");
+                this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarDiv");
+
+            }
+        }
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        nodo.setTipo(t.getTipo());
         nodo.setLexema(aux);
 
     }
 
-
-    private void elseAssembler(Nodo nodo) { // REVISAR
-        String label=this.pila.pop();
-		this.assemblerCode.append(label+":\n");
-    }
-
-
-    private void thenAssembler(Nodo nodo) {
-        String label="_label"+contadorEtiquetaLabel;
-		contadorEtiquetaLabel++;
-		//desapilo label1 y apilo label2
-		this.assemblerCode.append("JMP "+label + "\n");
-		String labelAux= this.pila.pop();
-		this.assemblerCode.append(labelAux + ":\n");
-		this.pila.push(label); // aca sera el pop de AX???
-    }
-
-
-    private void ifAssembler(Nodo nodo) { // REVISAR
-        if (!this.pila.empty()) {
-			String labelAux= this.pila.pop();
-			this.assemblerCode.append(labelAux + ":\n");
-		}
-    }
-
-
-    private void divisionAssembler(Nodo nodo) {
-
-        String aux = "aux" + contadorAux;
-        this.contadorAux++;
-        if (nodo.getTipo() == "i32") {
-            String label = "_label" + contadorEtiquetaLabel;
-            contadorEtiquetaLabel++;
-            this.assemblerCode.append("MOV EAX, " + nodo.getHijoDerecho().getLexema() + "\n");
-            this.assemblerCode.append("CMP EAX, 0 \n"); // COMPARA EL VALOR DE EAX CON 0 (MENOR, MAYOR O IGUAL)
-            this.assemblerCode.append("JNE " + label + "\n");
-            this.assemblerCode.append("invoke MessageBox, NULL, addr errorDiv, addr program, MB_OK\n"); // DIVISION POR CERO CONTROL
-            this.assemblerCode.append("invoke ExitProcess, 0\n");
-            this.assemblerCode.append(label + ":\n");
-            this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoIzquierdo().getLexema()+"\n");
-            this.assemblerCode.append("MOV "+"EDX"+","+" 0"+"\n");
-            this.assemblerCode.append("MOV EBX, " + nodo.getHijoDerecho().getLexema() + "\n");
-            this.assemblerCode.append("IDIV EBX\n");
-            this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
-          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-          //  s.setUso("variable");
-           // this.tablaDeSimbolos.put(aux, s);
-           // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-            nodo.setLexema(aux);
-        } else {
-            String label = "_label" + contadorEtiquetaLabel;
-            contadorEtiquetaLabel++;
-            String mem2bytes = "aux" + contadorAux;
-            this.contadorAux++;
-          //  Simbolo s2 = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-            //s2.setUso("variableP");
-           // this.tablaDeSimbolos.put(mem2bytes, s2);
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-            this.assemblerCode.append("FLDZ\n");
-            this.assemblerCode.append("FCOMPP \n");
-            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
-            this.assemblerCode.append("SAHF \n");
-            this.assemblerCode.append("JNE " + label + "\n");
-            this.assemblerCode.append("invoke MessageBox, NULL, addr errorDiv, addr program, MB_OK\n");
-            this.assemblerCode.append("invoke ExitProcess, 0\n");
-            this.assemblerCode.append(label + ":\n");
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            }
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-            this.assemblerCode.append("FDIV"+"\n");
-            this.assemblerCode.append("FSTP "+aux+"\n");
-
-          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-          //  s.setUso("variable");
-          //  s.setTipo("SINGLE");
-           // this.tablaDeSimbolos.put(aux, s);
-            //nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-            nodo.setLexema(aux);
-        }
-
-    }
-
-
     private void multiplicacionAssembler(Nodo nodo) {
 
-        String aux = "aux" + contadorAux;
+        String aux = "@aux" + contadorAux;
         this.contadorAux++;
-        if (nodo.getTipo() == "i32") {
-            String label = "_label" + contadorEtiquetaLabel;
-            contadorEtiquetaLabel++;
+        if (nodo.getTipo().equals("i32")) {
+
             this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoIzquierdo().getLexema()+"\n");
             this.assemblerCode.append("IMUL "+"EAX"+","+nodo.getHijoDerecho().getLexema()+"\n");
-            this.assemblerCode.append("JNO " + label + "\n");
-        //    this.assemblerCode.append("invoke MessageBox, NULL, addr errorOv, addr program, MB_OK\n");
-          //  this.assemblerCode.append("invoke ExitProcess, 0\n");
-            this.assemblerCode.append(label + ":\n");
             this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
-          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-           // s.setUso("variable");
-           // this.tablaDeSimbolos.put(aux, s);
-           // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-            nodo.setLexema(aux);
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarMult");
 
-        } else { // SI ES PUNTO FLOTANTE (32 BITS) - f32
-
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
+        }else{
+            if (nodo.getTipo().equals("f32")){
+                this.assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema()+"\n");
+                this.assemblerCode.append("FIMUL" + "\n");
+                this.assemblerCode.append("FSTP "+aux+"\n");
+                this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarMult");
             }
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            }
-            this.assemblerCode.append("FMUL" + "\n");
-            this.assemblerCode.append("FSTP "+aux+"\n");
-
-          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-          //  s.setUso("variable");
-           // s.setTipo("SINGLE");
-           // this.tablaDeSimbolos.put(aux, s);
-           // nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-            nodo.setLexema(aux);
         }
-
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        nodo.setTipo(t.getTipo());
+        nodo.setLexema(aux);
     }
-
 
     private void restaAssembler(Nodo nodo) {
 
-        String aux = "aux" + contadorAux;
+        String aux = "@aux" + contadorAux;
         this.contadorAux++;
-        if (nodo.getTipo() == "i32") { // ENTERO LARGO (32 BITS)
+        if (nodo.getTipo().equals("i32")) {
 
-            //if (this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getUso() == "Nombre de funcion") {
-              //  this.assemblerCode.append("MOV EAX," + nodo.getHijoIzquierdo().getParametro());
-                //this.assemblerCode.append("\n");
-                //this.assemblerCode.append("call _" + nodo.getHijoIzquierdo().getLexema());
-                //this.assemblerCode.append("\n");
-                //this.assemblerCode.append("SUB EAX," + nodo.getHijoDerecho().getLexema());
-                //this.assemblerCode.append("\n");
-            } else {
-               // if (this.tablaSimbolos.get(nodo.getHijoDerecho().getLexema()).getUso() == "Nombre de funcion") {
-                  //  this.assemblerCode.append("MOV EAX," + nodo.getHijoDerecho().getParametro());
-                    //this.assemblerCode.append("\n");
-                    //this.assemblerCode.append("call _" + nodo.getHijoDerecho().getLexema());
-                    //this.assemblerCode.append("\n");
-                    //this.assemblerCode.append("SUB EAX," + nodo.getHijoIzquierdo().getLexema());
-                    //this.assemblerCode.append("\n");
-
-//                } else {
-                    this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoIzquierdo().getLexema()+"\n");
-                    this.assemblerCode.append("SUB "+"EAX"+","+nodo.getHijoDerecho().getLexema()+"\n");
-                }
-         //  }
+            this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoIzquierdo().getLexema()+"\n");
+            this.assemblerCode.append("SUB "+"EAX"+","+nodo.getHijoDerecho().getLexema()+"\n");
             this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
-          //  Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-            //s.setUso("variable");
-           // this.tablaSimbolos.put(aux, s);
-            //nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-            //nodo.setLexema(aux);
-
-
-       // } else { // SI ES PUNTO FLOTANTE (32 BITS) - f32
-
-
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
-            }
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-            this.assemblerCode.append("FSUB"+"\n");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarSub");
+        }else{
+            this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema()+"\n");
+            this.assemblerCode.append("FSUB "+ nodo.getHijoDerecho().getLexema()+"\n");
             this.assemblerCode.append("FSTP "+aux+"\n");
-         //   Simbolo s = new Simbolo(0, 0, this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-           // s.setUso("variable");
-            //s.setTipo("SINGLE");
-            //this.tablaDeSimbolos.put(aux, s);
-            //nodo.setTipo(this.tablaDeSimbolos.get(nodo.getHijoI().getLexema()).getTipo());
-            nodo.setLexema(aux);
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarSub");
         }
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        nodo.setTipo(t.getTipo());
+        nodo.setLexema(aux);
 
-   // }
+    }
 
     private void sumaAssembler(Nodo nodo) {
-        String aux = "aux" + contadorAux; // Variables auxiliares para guardar los valores de las operaciones a medida que se procesa
+        String aux = "@aux" + contadorAux;
         this.contadorAux++;
-        if (nodo.getTipo() == "i32") { // Si es suma ENTERO (32 bits)
+        if (nodo.getTipo().equals("i32")) {
 
-            //if (this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getUso() == "Nombre de funcion") { // ESTO DEBERIA SER PARA LA DEFINION DE FUNCIONES Y PROGRAMA (PROGRAM, FUN, ETC) ???
-               // this.assemblerCode.append("MOV EAX," + nodo.getHijoIzquierdo().getParametro() + "\n");
-             //   this.assemblerCode.append("call _" + nodo.getHijoIzquierdo().getLexema() + "\n");
-               // this.assemblerCode.append("ADD EAX," + nodo.getHijoDerecho().getLexema() + "\n");
-            //} else {
-              //  if (this.tablaSimbolos.get(nodo.getHijoDerecho().getLexema()).getUso() == "Nombre de funcion") {
-               //     this.assemblerCode.append("MOV EAX," + nodo.getHijoDerecho().getParametro() + "\n");
-
-                //    this.assemblerCode.append("call _" + nodo.getHijoDerecho().getLexema()+"\n");
-                  //  this.assemblerCode.append("ADD EAX," + nodo.getHijoIzquierdo().getLexema()+"\n");
-               // } else {
-                    this.assemblerCode.append("MOV "+"EAX"+","+ nodo.getHijoIzquierdo().getLexema() + "\n"); // Realiza la suma (OK)
-                    this.assemblerCode.append("ADD "+"EAX"+","+ nodo.getHijoDerecho().getLexema()+"\n"); // Realiza la suma (OK)
-                //}
-            //}
-            this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n"); // Realiza la suma (OK)
-           // Simbolo s = new Simbolo(0, 0, this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getTipo());
-          //  s.setUso("variable");
-            //this.tablaSimbolos.put(aux, s);
-            //nodo.setTipo(this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getTipo());
-          //  nodo.setLexema(aux);
-
-         } else { // PUNTO FLOTANTE (32 BITS)
-
-            if (nodo.getHijoDerecho().getLexema().contains(".")) {
-                this.assemblerCode
-                        .append("FLD _" + nodo.getHijoDerecho().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
-                this.assemblerCode.append("FLD " + nodo.getHijoDerecho().getLexema() + "\n");
-            }
-
-
-            if (nodo.getHijoIzquierdo().getLexema().contains(".")) {
-                this.assemblerCode.append(
-                        "FLD _" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            } else {
+            this.assemblerCode.append("MOV "+"EAX"+","+ nodo.getHijoIzquierdo().getLexema() + "\n");
+            this.assemblerCode.append("ADD "+"EAX"+","+ nodo.getHijoDerecho().getLexema()+"\n");
+            this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
+            this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarAdd");
+        }else{
+            if (nodo.getTipo().equals("f32")) {
                 this.assemblerCode.append("FLD " + nodo.getHijoIzquierdo().getLexema() + "\n");
+                this.assemblerCode.append("FADD " + nodo.getHijoDerecho().getLexema() + "\n");
+                this.assemblerCode.append("FSTP "+ aux + "\n");
+                this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarAdd");
             }
-
         }
-           // this.assemblerCode.append("FADD"+"\n");
-          //  this.assemblerCode.append("FSTP "+aux+"\n");
-          //  Simbolo s = new Simbolo(0, 0, this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getTipo());
-           // s.setUso("variable");
-           // s.setTipo("SINGLE");
-           // this.tablaSimbolos.put(aux, s);
-           // nodo.setTipo(this.tablaSimbolos.get(nodo.getHijoIzquierdo().getLexema()).getTipo());
-           // nodo.setLexema(aux);
-        }
-   // }
+        int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
+        Token t = this.tablaSimbolos.getEntrada(idLexema);
+        nodo.setTipo(t.getTipo());
+        nodo.setLexema(aux);
+    }
 
     private void asignacionAssembler(Nodo nodo) {
         int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoDerecho().getLexema());
         Token t = this.tablaSimbolos.getEntrada(idLexema);
-        if (t.getUso() == "func"){
-            String label="_label"+contadorEtiquetaLabel;
-			contadorEtiquetaLabel++;
-        }
-        //.getUso()=="Nombre de funcion") { // ESTO DEBERIA SER PARA LA DEFINION DE FUNCIONES Y PROGRAMA (PROGRAM, FUN, ETC) ???
-			//if (nodo.getHijoDerechoerecho().getParametro()==null) { // EL PARAMETRO SE RELACIONA CON EL AMBITO EN LA GRAMATICA??
-				// Chequeo de recursion mutua????
-
+        if ((t.getUso() != null) && t.getUso().equals("func")){
                 String label="_label"+contadorEtiquetaLabel;
 			    contadorEtiquetaLabel++;
-
-
-                this.assemblerCode.append("pop AX" + "\n"); // pop? porqueeeeekslodngbklsdg donde se hace el push????
-				this.assemblerCode.append("CMP 1,"+nodo.getHijoDerecho().getValor() + "\n");
-				this.assemblerCode.append("JNE " + label + "\n");
-				this.assemblerCode.append("invoke MessageBox, NULL, addr error, addr error, MB_OK" + "\n");
-				this.assemblerCode.append("invoke ExitProcess, 0" + "\n");
-				this.assemblerCode.append(label+": \n");
-				this.assemblerCode.append("push "+nodo.getValor()+"\n");
-
-
-            if (nodo.getHijoIzquierdo().getTipo().equals("i32")) {
-					//this.assemblerCode.append("MOV EAX,"+nodo.getHijoDerechoerecho().getParametro()+"\n");
-					//if ((this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()==null)) {
-				//		this.assemblerCode.append("call _"+nodo.getHijoDerecho().getLexema());}
-				//	else {
-				//		this.assemblerCode.append("call _"+this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()+"\n");}
-					this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+",EAX" + "\n");
-			}
-
-			//	else { // PUNTO FLOTANTE (32 BITS)
-
-				//	this.assemblerCode.append("FLD "+nodo.getHijoDerechoerecho().getParametro()+"\n");
-				//	if ((this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()==null)) {
-			//			this.assemblerCode.append("call _"+nodo.getHijoDerechoerecho().getLexema());}
-				//	else {
-					//	this.assemblerCode.append("call _"+this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getP()+"\n");}
-
-					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n"); // Co-procesador (solo para f32)
-			//	}
-				//this.assemblerCode.append("pop BX"+"\n");
-		//	}
-		//	else
-			{
-			//	this.tablaSimbolos.get(nodo.getHijoIzquierdozquierdo().getLexema()).setP(nodo.getHijoDerechoerecho().getLexema());
-			//	this.tablaSimbolos.get(nodo.getHijoIzquierdozquierdo().getLexema()).setUso("Nombre de funcion");
-			}
-	//	}
-	//	else {
-			if (nodo.getHijoIzquierdo().getTipo().equals("i32")) { // Asignacion de tipo ENTERO LARGO (32 BITS)
-				this.assemblerCode.append("MOV EAX"+","+nodo.getHijoDerecho().getLexema()+"\n");
-				this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+","+"EAX"+"\n");
+        }
+        else {
+            if (nodo.getHijoIzquierdo().getTipo().equals("i32")) { // a(izq) =:(raiz) 1(der);
+				this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoDerecho().getLexema()+"\n"); // 1
+				this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+","+"EAX"+"\n"); // a =: 1
             }
-			else{
-			//	if(this.tablaSimbolos.get(nodo.getHijoDerechoerecho().getLexema()).getUso()=="VS"){ // SI ES ASIGNACION DEL LADO DERECHO FLOTANTE
-					this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
-					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
-				}
-			//	else{ // SI ES ASIGNACION DEL LADO DERECHO ENTERO
-					this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema()+"\n");
-					this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
-			//	}
-			//}
-	//	}
+            else{
+                if (nodo.getHijoIzquierdo().getTipo().equals("f32")) { // a(izq) =: (raiz) 1.5(der)
+                    this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema()+"\n");
+                    this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
+                } // FALTA EL CASO DEL FOR HACER
+            }
+        }
     }
 
     /**
@@ -931,36 +845,36 @@ public class GenerarCodigo{
     // -------------------- GENERACION DE CODIGO (SALIDA) -------------------- //
 
     public void generacionDeCodigo(Nodo nodo) {
-//        try {
-//            String ruta = "codigo_generado_assembler.asm";
-//            String contenido;
-//            StringBuilder code = new StringBuilder();
-//            File file = new File(ruta);
-//
-//            // Si el archivo no existe es creado
-//
-//            if (!file.exists()) {
-//                file.createNewFile();
-//            }
-//            // this.cargarVariablesAuxiliares(); // Cargar las variables auxiliares (IMPLEMENTAR)
-//            code.append(";------------ CODE ------------\r\n");
-//            code.append(".code\r\n");
-//            this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
-//            this.generarCodigoLeido(nodo); // Carga el codigo completo
-//            this.assemblerCode.append(";------------ FIN ------------\n");
-//            this.assemblerCode.append("invoke ExitProcess, 0\n");
-//			this.assemblerCode.append("end start");
-//            System.out.println("CODIGO RE ENOJADO (DEBUG FURIOSO):"+"\n"+"\n"+this.assemblerCode.toString());
-//            FileWriter fw = new FileWriter(file);
-//            BufferedWriter bw = new BufferedWriter(fw);
-//            // Leo el codigo fuente
-//            contenido = this.inicio.toString()+code.toString();
-//            bw.write(contenido);
-//            contenido = this.assemblerCode.toString();
-//            bw.write(contenido);
-//            bw.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+           String ruta = "codigo_generado_assembler.asm";
+           String contenido;
+           StringBuilder code = new StringBuilder();
+           File file = new File(ruta);
+
+           // Si el archivo no existe es creado
+
+           if (!file.exists()) {
+               file.createNewFile();
+           }
+           // this.cargarVariablesAuxiliares(); // Cargar las variables auxiliares (IMPLEMENTAR)
+           code.append(";------------ CODE ------------\r\n");
+           code.append(".code\r\n");
+           this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
+           this.generarCodigoLeido(nodo); // Carga el codigo completo
+           this.assemblerCode.append(";------------ FIN ------------\n");
+           this.assemblerCode.append("invoke ExitProcess, 0\n");
+			this.assemblerCode.append("end start");
+           System.out.println("CODIGO RE ENOJADO (DEBUG FURIOSO):"+"\n"+"\n"+this.assemblerCode.toString());
+           FileWriter fw = new FileWriter(file);
+           BufferedWriter bw = new BufferedWriter(fw);
+           // Leo el codigo fuente
+           contenido = this.inicio.toString()+code.toString();
+           bw.write(contenido);
+           contenido = this.assemblerCode.toString();
+           bw.write(contenido);
+           bw.close();
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
     }
 }

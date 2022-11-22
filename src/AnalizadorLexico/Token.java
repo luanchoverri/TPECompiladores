@@ -30,10 +30,19 @@ public class Token {
         this.uso = null;
     }
 
+    public Token(String lexema, String tipo, String uso) {
+        this.id = 0;
+        this.lexema = lexema;
+        this.nroLinea = 0;
+        this.tipo = tipo;
+        this.uso = null;
+    }
 
-    // -- MÉTODOS -- // 
 
-    // Getters 
+
+    // -- MÉTODOS -- //
+
+    // Getters
 
     public int getId() {
         return this.id;

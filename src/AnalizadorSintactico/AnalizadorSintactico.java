@@ -166,8 +166,8 @@ public class AnalizadorSintactico {
     }
 
     public String tipoResultante(Nodo izq, Nodo der){
-        System.out.println("nodo izq " + izq.toString());
-        System.out.println("nodo der " + der.toString());
+       // System.out.println("nodo izq " + izq.toString());
+       // System.out.println("nodo der " + der.toString());
         if (izq.getTipo() != null && izq.getTipo() != null )
             if(izq.getTipo().equals(der.getTipo())){
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
@@ -369,8 +369,8 @@ public class AnalizadorSintactico {
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         imprimirArbolesFuncion();
-//        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-//        g.generacionDeCodigo(this.raiz);
+        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+        g.generacionDeCodigo(this.raiz);
     }
 
 

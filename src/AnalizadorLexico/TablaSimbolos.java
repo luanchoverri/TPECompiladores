@@ -179,6 +179,11 @@ public class TablaSimbolos {
         this.registroTokens.add(registro);
     }
 
+    public void agregarRegistroAssembler(String lexema, String tipo, String uso){
+        Token registro = new Token(lexema, tipo, uso);
+        this.registroTokens.add(registro);
+    }
+
     public int size(){
        return registroTokens.size();
     }

@@ -2,4 +2,12 @@ program
 {
     i32 a, b, c;
 	a =: 1;
+
+    for(i=:1 ; i < 3 ; -i){
+        if(i < 1) then{
+            break 2;
+        }
+         end_if;
+    };
+
 }
