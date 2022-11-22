@@ -629,7 +629,7 @@ bloq_for_funcion : sentencias_For_funcion 			{	$$ = new ParserVal(sintactico.cre
 sentencia_BREAK : BREAK ';'	{	sintactico.addAnalisis("Se reconocio una sentencia break (Línea " + AnalizadorLexico.LINEA + ")");
 					$$ = new ParserVal(sintactico.crearNodoControl("break",null));}
                 | BREAK cte ';'	{	sintactico.addAnalisis("Se reconocio una sentencia break con retorno de valor (Línea " + AnalizadorLexico.LINEA + ")");
-                			$$ = new ParserVal(sintactico.crearNodoControl("breakValor", new ParserVal(sintactico.crearHoja($2.ival))));}
+                			$$ = new ParserVal(sintactico.crearNodoControl("break", new ParserVal(sintactico.crearHoja($2.ival))));}
                 | BREAK error   {	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de BREAK."); }
                 ;
 // TODO listo
@@ -641,7 +641,7 @@ sentencia_CONTINUE : CONTINUE ';'		{
 							if (existente < 0 ) {
 								sintactico.setLexemaEnIndex($3.ival,"~"+this.ambito);
 								sintactico.setUsoEnIndex("tag",$3.ival);
-								$$ = new ParserVal(sintactico.crearNodoControl("continueEtiquetado", new ParserVal(sintactico.crearHoja($3.ival))));
+								$$ = new ParserVal(sintactico.crearNodoControl("continue", new ParserVal(sintactico.crearHoja($3.ival))));
 							} else {
 								sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
 							}

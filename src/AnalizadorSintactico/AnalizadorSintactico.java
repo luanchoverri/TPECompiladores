@@ -224,7 +224,9 @@ public class AnalizadorSintactico {
             System.out.println("EL NODO IZQ ES " + hijoIzq.toString());
             System.out.println("EL NODO DER ES " + hijoDer.toString()); // TODO POR QUE??? EL IZQUIERD0 NO?
             Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
-            i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
+            if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For")){
+                i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
+            }
             System.out.println("EL NODO RESULTANTE ES " + i.toString());
 
             return i;
