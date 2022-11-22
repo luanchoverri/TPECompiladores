@@ -19,16 +19,32 @@ public class Main {
         try {
             System.out.println("|--- Ingrese la ruta del archivo a analizar: ---|");
 
+
+            System.out.println("1. PARA IMPRIMIR POR CONSOLA");
+            System.out.println("2. Generar Archivo");
+
             try (
                 Scanner scanner = new Scanner(System.in)) {
                 String path = scanner.next();
-                String archivoEntrada = Files.readString(Paths.get(path));
+
+
+                Scanner reader = new Scanner(System.in);
+                int opcion = reader.nextInt();
+
+                String archivoEntrada = "";
+                 archivoEntrada = Files.readString(Paths.get(path));
 
                 Parser parser = new Parser();
                 AnalizadorLexico lexico = new AnalizadorLexico(archivoEntrada);
                 AnalizadorSintactico sintactico = new AnalizadorSintactico(lexico, parser);
 
-                sintactico.start();
+
+                if (opcion == 1){
+                    sintactico.startConsola();
+                } else {
+                    sintactico.start();
+                }
+
 
             }
         } catch (IOException e) {

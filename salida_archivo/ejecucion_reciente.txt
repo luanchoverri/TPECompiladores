@@ -1,12 +1,3 @@
-Hora de ejecucion: nov. 21 2022, 06:55:42 p. m.
-
-
-
------------------------------------------------------------------
-
-|--- CODIGO FUENTE ---|
-
-
 program{
 
     i32 b;
@@ -19,10 +10,11 @@ program{
          const z=:1, l=:2;
     }
 
-    i32 f;
+
 
     fun fun2 (i32 h, f32 i ):f32 {
-         h =: 1 + i;
+         i32 f;
+         h =: 1 + 1;
          return(h);
     }
 
@@ -31,17 +23,109 @@ program{
     }
 
     f =: fun3();
-}
+}$ 
+ 
+ ✅ EJECUCION DEL PARSER FINALIZADA 😏🍀 
+  
+ |||||||||||||||||||||||||||||||||||||||||||||| 
+ 
+ 🔎  ANALISIS SINTÁCTICO    
+ 
+ 
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 6)
+ Se reconocen mas parametros de los deseados en la funcion (Línea 8)
+ Se reconocio declaracion de funcion (Línea 8)
+ Se reconoce retorno de funcion(Línea 9) 
+ Se reconoció una declaración de CONSTANTE. (Línea 10)
+ Se reconoce cuerpo de funcion (Línea 11)
+ Se reconocio declaracion de funcion (Línea 15)
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 16)
+ Se reconoce retorno de funcion(Línea 18) 
+ Se reconoce cuerpo de funcion (Línea 19)
+ Se reconocio declaracion de funcion (Línea 21)
+ Se reconoce retorno de funcion(Línea 22) 
+ Se reconoce cuerpo de funcion (Línea 23)
+ 
+ 
+ ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
+ 
+ 
+ SemanticError. NO SE RECONOCE EL TIPO DE RETURN (Línea 18)
+ SemanticError. NO SE RECONOCE EL TIPO DE RETURN (Línea 22)
+ SematicError. (Línea 25): variable no declarada.
+  
+ 
+ 
+  
+ 🟡🟡🟡🟡🟡 TABLA DE SIMBOLOS 🟡🟡🟡🟡🟡 
 
-$
-
------------------------------------------------------------------
-
-
-
-
-|--- Sin errores LEXICOS ---| (OK)
-
-
-
-|--- Sin errores SINTACTICOS ---| (OK)
+TOKEN   257    program     #linea 1   null   null 
+TOKEN   257        b~$     #linea 3    i32    var 
+TOKEN   258          1     #linea 5    i32   null 
+TOKEN   257        a~$     #linea 6    i32    var 
+TOKEN   257     fun1~$     #linea 8    i32   func 
+TOKEN   257        j~$     #linea 8    i32 param~fun1~0 
+TOKEN   257        k~$     #linea 8    f32 param~fun1~1 
+TOKEN   257          l     #linea 8   null   null 
+TOKEN   258          2     #linea 9    i32   null 
+TOKEN   257   z~$#fun1     #linea 10    i32  const 
+TOKEN   258          1     #linea 10    i32   null 
+TOKEN   257   l~$#fun1     #linea 10    i32  const 
+TOKEN   258          2     #linea 10    i32   null 
+TOKEN   257     fun2~$     #linea 15    f32   func 
+TOKEN   257        h~$     #linea 15    i32 param~fun2~0 
+TOKEN   257        i~$     #linea 15    f32 param~fun2~1 
+TOKEN   257   f~$#fun2     #linea 16    i32    var 
+TOKEN   258          1     #linea 17    i32   null 
+TOKEN   258          1     #linea 17    i32   null 
+TOKEN   257     fun3~$     #linea 21    i32   func 
+TOKEN   258      100.0     #linea 22    f32   null 
+TOKEN   257          f     #linea 25   null   null  
+ 
+ 
+ 
+ --- ARBOL ---- 
+   └─ raiz 
+     └─ sentencia 
+        └─ =: 
+           └─ b~$ 
+           └─ + 
+              └─ b~$ 
+              └─ 1 
+        └─ sentencia 
+ 
+  ARBOL DE LA FUNCION fun1 
+  └─ sentencia 
+     └─ return 
+        └─ * 
+           └─ j~$ 
+           └─ 2 
+     └─ sentencia 
+        └─ =: 
+           └─ z~$#fun1 
+           └─ 1 
+        └─ sentencia 
+           └─ =: 
+              └─ l~$#fun1 
+              └─ 2 
+ 
+  ARBOL DE LA FUNCION fun2 
+  └─ sentencia 
+     └─ =: 
+        └─ h~$ 
+        └─ + 
+           └─ 1 
+           └─ 1 
+     └─ sentencia 
+        └─ return 
+           └─ h~$ 
+ 
+  ARBOL DE LA FUNCION fun3 
+  └─ sentencia 
+     └─ return 
+        └─ 100.0 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: nov. 22 2022, 02:12:25 a. m.

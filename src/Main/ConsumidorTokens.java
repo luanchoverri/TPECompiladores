@@ -46,7 +46,7 @@ public class ConsumidorTokens {
 
                 System.out.println("!!! ____________________________________________________________ !!!");
                 System.out.println("ERRORES");
-                lexico.imprimirErrores();
+               // lexico.imprimirErrores();
 
                 System.out.println("(Tabla) ---------------TABLA DE SIMBOLOS--------------- (Tabla)");
                 System.out.println("|-- TABLA DE SIMBOLOS --|");

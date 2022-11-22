@@ -14,8 +14,7 @@ program
    fun fun2 ( i32 k, f32 l ): f32 {
         k =: 1;
         return(l);
-    }
-
+   }
 
    d =: fun2(a);
 

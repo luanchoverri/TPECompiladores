@@ -147,6 +147,11 @@ public class AnalizadorLexico {
     public int getIdToken(String lexema) {
         return tablaSimbolos.getIdToken(lexema);
     }
+
+    public String getArchivo() {
+        return archivo;
+    }
+
     public void setTokenActual(int idToken) {
         this.tokenActual = idToken;
 
@@ -295,48 +300,6 @@ public class AnalizadorLexico {
         return this.tokensReconocidos;
     }
 
-    public void imprimirErrores() {
-        try {
-            String ruta = "salida_archivo/ejecucion_reciente.txt";
-            String contenido;
-            File file = new File(ruta);
-
-            // Si el archivo no existe es creado
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            // Leo el codigo fuente
-            String horaActual = DateTimeFormatter.ofPattern("MMM dd yyyy, hh:mm:ss a").format(LocalDateTime.now());
-            bw.write("Hora de ejecucion: " + horaActual);
-            bw.write("\n" + "\n" + "\n" + "\n" + "-----------------------------------------------------------------" + "\n" + "\n");
-            contenido = "|--- CODIGO FUENTE ---|" + "\n" + "\n" + "\n";
-            bw.write(contenido);
-            bw.write(archivo);
-            bw.write("\n" + "\n"+ "-----------------------------------------------------------------" + "\n");
-
-            if (this.errores.isEmpty()){
-                contenido = "\n" + "\n" + "\n" + "\n" +  "|--- Sin errores LEXICOS ---| (OK)";
-                bw.write(contenido);
-            }
-            else{
-                if (!(this.errores.isEmpty())){ // Si hay errores lexicos
-                    contenido = "\n" + "\n" + "\n" + "|--- ERRORES LÉXICOS: ---| (!)" + "\n" + "\n" + "\n";
-                    bw.write(contenido);
-                    for (int i = 0; i < this.errores.size(); i++){
-                        contenido = this.errores.get(i);
-                        bw.write(contenido);
-                    }
-                }
-            }
-            bw.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void imprimirTablaSimbolos() {
         System.out.println();

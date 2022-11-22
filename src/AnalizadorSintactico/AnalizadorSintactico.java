@@ -5,11 +5,16 @@ import ArbolSintactico.Nodo;
 import ArbolSintactico.NodoBinario;
 import ArbolSintactico.NodoHijo;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +56,16 @@ public class AnalizadorSintactico {
             System.out.println("");
             System.out.println("ARBOL DE LA FUNCION "+entry.getKey());
             imprimirArbol(entry.getValue(),0);
+        }
+    }
+
+    public void imprimirArbolesFuncion(BufferedWriter bw) throws IOException{
+        bw.write(" \n ");
+        for (Map.Entry<String,Nodo> entry : this.arbolesFunciones.entrySet()){
+
+            bw.write(" ARBOL DE LA FUNCION "+entry.getKey() + " \n");
+            imprimirArbol(entry.getValue(),0, bw);
+            bw.write(" \n ");
         }
     }
 
@@ -107,16 +122,14 @@ public class AnalizadorSintactico {
        }
        vaciarListaVariables();
     }
-    public void setUsoParam(String idFun){
-        System.out.println("---------- SET USO PARAM") ;
-        for(int i=0;i<variables.size(); i++){
 
+
+    public void setUsoParam(String idFun){
+        for(int i=0;i<variables.size(); i++){
             Token param = getEntradaTablaSimb(variables.get(i));
-            System.out.println("LISTA DE VAR TIENE   " + param.toString());
             param.setUso(param.getUso()+"~"+idFun+"~"+i);
         }
     }
-
 
 
     // -- Getters
@@ -137,10 +150,6 @@ public class AnalizadorSintactico {
     /** Devuelve la tabla de simbolos */
     public TablaSimbolos getTS() {
         return this.tablaSimbolos;}
-
-    public ArrayList<Integer> getVariables() {
-        return variables;
-    }
 
 
 
@@ -178,16 +187,16 @@ public class AnalizadorSintactico {
         return new ParserVal(n);
     }
 
-    public String tipoResultante(Nodo izq, Nodo der){
-        System.out.println("nodo izq " + izq.toString());
-        System.out.println("nodo der " + der.toString());
+    public String tipoResultante(String id, Nodo izq, Nodo der){
+//        System.out.println("nodo izq " + izq.toString());
+//        System.out.println("nodo der " + der.toString());
         if (izq.getTipo() != null && izq.getTipo() != null )
             if(izq.getTipo().equals(der.getTipo())){
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
                 return izq.getTipo();
             }
 
-        this.addAnalisis("SemanticError. LOS TIPOS NO COINCIDEN (Línea " + AnalizadorLexico.LINEA + " )" );
+        this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: "+tablaSimbolos.getTipoToken(tablaSimbolos.getIdToken(id)) +" (Línea " + AnalizadorLexico.LINEA + " )" );
         return null;
     }
 
@@ -211,7 +220,7 @@ public class AnalizadorSintactico {
             System.out.println("EL NODO IZQ ES " + hijoIzq.toString());
             System.out.println("EL NODO DER ES " + hijoDer.toString()); // TODO POR QUE??? EL IZQUIERD0 NO?
             Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
-            i.setTipo( tipoResultante( (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
+            i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
             System.out.println("EL NODO RESULTANTE ES " + i.toString());
 
             return i;
@@ -275,6 +284,10 @@ public class AnalizadorSintactico {
 
     // -- Printers
 
+    public void imprimirTablaSimbolos(BufferedWriter bw) throws IOException {
+        tablaSimbolos.imprimir(bw);
+    }
+
     public void imprimirTablaSimbolos() {
         System.out.println();
         if (this.tablaSimbolos.isEmpty())
@@ -283,45 +296,53 @@ public class AnalizadorSintactico {
 
     }
 
-    public void imprimirErroresSintacticos() {
+    public void imprimirErroresSintacticos(BufferedWriter bw) throws IOException {
 
-        Path path = Paths.get("salida_archivo/ejecucion_reciente.txt");
-        String contenido = "";
-        try {
-            if (this.erroresSintacticos.isEmpty()){
-                contenido = "\n" + "\n" + "\n" + "\n" +  "|--- Sin errores SINTACTICOS ---| (OK)";
-                Files.write(path, contenido.getBytes(), StandardOpenOption.APPEND);
-            }else{
-                if (!(this.erroresSintacticos.isEmpty())){ // Si hay errores sintacticos
-                    contenido = "\n" + "\n" + "\n" + "| ERRORES SINTACTICOS: ---| (!)" + "\n" + "\n" + "\n";
-                    Files.write(path, contenido.getBytes(), StandardOpenOption.APPEND);
-                    for (int i = 0; i < this.erroresSintacticos.size(); i++){
-                        contenido = this.erroresSintacticos.get(i);
-                        Files.write(path, contenido.getBytes(), StandardOpenOption.APPEND);
-                        Files.write(path, "\n".getBytes(), StandardOpenOption.APPEND);
-                    }
-                }
+        bw.write("\n \n ---- ERRORES SINTACTICOS Y SEMANTICOS ---  \n \n ");
+
+        if (this.erroresSintacticos.isEmpty()){
+            bw.write("\n vacio. \n ");
+        }else{
+            for (String dato : this.erroresSintacticos){
+                bw.write("\n ");
+                bw.write(dato);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        bw.write("\n ");
     }
 
-    public void imprimirAnalisisSintactico() {
+    public void imprimirLista(ArrayList<String> lista) {
 
-        System.out.println("   🔎  ANALISIS SINTÁCTICO    ");
+        System.out.println(" ");
 
         if (!this.analisisSintactico.isEmpty())
-            for (String dato : this.analisisSintactico)
+            for (String dato : lista)
                 System.out.println(dato);
         else
-            System.out.println("Análisis sintáctico vacío.");
+            System.out.println("vacío.");
         System.out.println();
     }
 
-    public void imprimirAnalisisLexico() {
+
+    public void imprimirAnalisisSintactico(BufferedWriter bw) throws IOException {
+
+        bw.write("\n \n 🔎  ANALISIS SINTÁCTICO    \n \n ");
+
+        if (!this.analisisSintactico.isEmpty())
+            for (String dato : this.analisisSintactico) {
+                bw.write("\n ");
+                bw.write(dato);
+            }
+        else
+            bw.write(" \n Análisis sintáctico vacío. \n");
+
+        bw.write("\n ");
+
+    }
+
+    public void imprimirAnalisisLexico(BufferedWriter bw) {
         System.out.println();
-        System.out.println("|                       ANÁLIZADOR LÉXICO                  |");
+        System.out.println("|  ANÁLIZADOR LÉXICO  |");
         ArrayList<Token> detectados = this.analizadorLexico.getListaTokens();
 
         for (Token t : detectados) {
@@ -346,6 +367,21 @@ public class AnalizadorSintactico {
         nivel--;
     }
 
+    public void imprimirArbol(Nodo nodo, int nivel, BufferedWriter bw ) throws IOException {
+        if (nodo == null) {
+            return;
+        }
+        for (int i=0; i<nivel; i ++){
+            bw.write("   ");
+
+        }
+        bw.write("  └─ " + nodo.getLexema().toString() + " \n"); // mostrar datos del nodo
+        nivel++;
+        imprimirArbol(nodo.getHijoIzquierdo(),nivel, bw); //recorre subarbol izquierdo
+        imprimirArbol(nodo.getHijoDerecho(),nivel, bw); //recorre subarbol derecho
+        nivel--;
+    }
+
 
 
     // -- Otros
@@ -365,15 +401,12 @@ public class AnalizadorSintactico {
             String nombFun = idFun.split("~")[0];
             ArrayList<Token> parametros = tablaSimbolos.obtenerParamPorUso("param"+"~"+nombFun);
             if(parametros.size() != variables.size()  ){
-
-                this.addErrorSintactico("SemanticError. El NUMERO de parametros no corresponde al de la funcion invocada (Línea " + this.analizadorLexico.LINEA + ")" );
-                this.addAnalisis("SemanticError. El NUMERO de parametros no corresponde al de la funcion invocada (Línea " + this.analizadorLexico.LINEA + ")" + "variables size " + variables.size() + " parametros size de" + nombFun + " es " + parametros.size());
+                this.addErrorSintactico("SemanticError. El NUMERO de parametros no corresponde con los funcion invocada (Línea " + this.analizadorLexico.LINEA + ")" );
             }else {
                 for (int i = 0; i < variables.size() ; i++) {
                     Token paramInvocado = tablaSimbolos.getEntrada(variables.get(i));
                     if(!parametros.get(i).getTipo().equals(paramInvocado.getTipo())){
-                        this.addErrorSintactico("SemanticError. El TIPO de los parametros no coincide (Línea " + this.analizadorLexico.LINEA + ")" );
-                        this.addAnalisis("SemanticError. El TIPO de los parametros no coincide (Línea " + this.analizadorLexico.LINEA + ")" );
+                        this.addErrorSintactico("SemanticError. LOS TIPOS DE LOS PARAMETROS FORMALES/REALES NO COICIDEN (Línea " + this.analizadorLexico.LINEA + ")" );
                     }
                 }
             }
@@ -384,44 +417,112 @@ public class AnalizadorSintactico {
     public void checkRetorno(ParserVal hijo, String ultimoSetFun){
 
         if(!((Nodo)hijo.obj).getTipo().equals(ultimoSetFun)){
-            this.addAnalisis("SemanticError. El TIPO DE RETORNO no coincide (Línea " + this.analizadorLexico.LINEA + ")" );
+            this.addErrorSintactico("SemanticError. NO SE RECONOCE EL TIPO DE RETURN (Línea " + this.analizadorLexico.LINEA + ")" );
         }
         clearTipo();
     }
 
+    public void analisisParser(String programa, String estadoParser ) {
+        try {
+            String ruta = "salida_archivo/ejecucion_reciente.txt";
+            String contenido;
+            File file = new File(ruta);
 
+            // Si el archivo no existe es creado
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            bw.write(programa);  // Leo el codigo fuente
+
+            bw.write(estadoParser);
+            bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| " ) ;
+
+            this.imprimirAnalisisSintactico(bw);
+            this.imprimirErroresSintacticos(bw);
+            this.imprimirTablaSimbolos(bw);
+
+            bw.write("\n --- ARBOL ---- \n ");
+
+            this.imprimirArbol(this.raiz, 0, bw);
+            this.imprimirArbolesFuncion(bw);
+
+            String horaActual = DateTimeFormatter.ofPattern("MMM dd yyyy, hh:mm:ss a").format(LocalDateTime.now());
+            bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| ") ;
+            bw.write(" \n Hora de ejecucion: " + horaActual);
+            bw.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // -- Analizador Sintactico START
 
-    public void start() {
+    public void startConsola() {
         System.out.println("________________________________________________");
         parser.activarAmbito();
         parser.setLexico(this.analizadorLexico);
         parser.setSintactico(this);
-        System.out.println();
 
         if (parser.yyparse() == 0) {
 
             System.out.println(" \n \n ✅ EJECUCION DEL PARSER FINALIZADA \n \n  ");
-            //imprimirAnalisisLexico();
+
             System.out.println("\n \n 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 \n ");
-            imprimirAnalisisSintactico();
-            imprimirTablaSimbolos();
+
+            // imprimirAnalisisLexico();
+
+
         }
         else
             System.out.println(" \n \n ❌ EL PARSER NO PUDO TERMINAR \n \n ");
 
-        analizadorLexico.imprimirErrores();
+     //   analizadorLexico.imprimirErrores();
 
-        this.imprimirErroresSintacticos();
         analizadorLexico.setPosArchivo(0);
         analizadorLexico.setBuffer("");
+
+        System.out.println(" \n \n 💜 Analisis Sintactico ");
+        imprimirLista(this.analisisSintactico);
+        System.out.println(" \n \n ❤️ Errores Sintacticos y Semanticos ");
+        imprimirLista(this.erroresSintacticos);
+        imprimirTablaSimbolos();
 
         System.out.println(" ");
 
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         imprimirArbolesFuncion();
+//        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+//        g.generacionDeCodigo(this.raiz);
+    }
+
+    public void start() {
+
+        parser.activarAmbito();
+        parser.setLexico(this.analizadorLexico);
+        parser.setSintactico(this);
+
+        String estadoParser ;
+
+        if (parser.yyparse() == 0) {
+            estadoParser = (" \n \n ✅ EJECUCION DEL PARSER FINALIZADA 😏🍀 \n ") ;
+        }
+        else
+            estadoParser = (" \n \n ❌ EL PARSER NO PUDO TERMINAR \n ");
+
+        //   analizadorLexico.imprimirErrores();
+
+        analizadorLexico.setPosArchivo(0);
+        analizadorLexico.setBuffer("");
+
+        this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
+
 //        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
 //        g.generacionDeCodigo(this.raiz);
     }

@@ -10,10 +10,11 @@ program{
          const z=:1, l=:2;
     }
 
-    i32 f;
+
 
     fun fun2 (i32 h, f32 i ):f32 {
-         h =: 1 + i;
+         i32 f;
+         h =: 1 + 1;
          return(h);
     }
 
@@ -23,4 +24,3 @@ program{
 
     f =: fun3();
 }
-

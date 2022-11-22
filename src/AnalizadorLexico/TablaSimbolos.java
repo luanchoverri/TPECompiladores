@@ -1,5 +1,7 @@
 package AnalizadorLexico;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -200,6 +202,16 @@ public class TablaSimbolos {
         for(Token token : registroTokens){
             System.out.println(token.toString());
         }
+    }
+
+    public void imprimir(BufferedWriter bw) throws IOException {
+        bw.write(" \n \n \n ");
+        bw.write(" \n 🟡🟡🟡🟡🟡 TABLA DE SIMBOLOS 🟡🟡🟡🟡🟡 \n");
+        for(Token token : registroTokens){
+            bw.write("\n");
+            bw.write(token.toString());
+        }
+        bw.write(" \n \n \n ");
     }
 
     public int existeEntrada(String lexema){
