@@ -3,11 +3,15 @@ package ArbolSintactico;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.TablaSimbolos;
 import AnalizadorLexico.Token;
+import com.sun.jdi.StackFrame;
 
 public class GenerarCodigo{
 
@@ -21,12 +25,15 @@ public class GenerarCodigo{
     private Stack <String> pilaControl;
     private Stack <String> pilaFor;
 
+    private Stack <String> pilaInvocaciones;
+
     public GenerarCodigo(AnalizadorLexico l){
         this.assemblerCode = new StringBuilder("");
         this.inicio = new StringBuilder("");
         this.datosPrecarga = new StringBuilder("");
         this.pilaControl = new Stack<>();
         this.pilaFor = new Stack<>();
+        this.pilaInvocaciones = new Stack<>();
         tablaSimbolos = l.getTablaSimbolos();
     }
 
@@ -56,23 +63,66 @@ public class GenerarCodigo{
 				"includelib \\masm32\\lib\\masm32.lib\n"+
                 ";------------ DATA ------------\n"+
 				".data\n"+
-                ";------------ ERRORES DE EJECUCION ------------\n"+
-                "errorOverflow db 'ERROR EN LA EJECUCION: Overflow de de datosPrecarga de punto flotante (f32)',0 \n" +
-				"errorDivCeroEntero db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga enteros',0 \n" +
-                "errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga de punto flotante',0 \n" +
-				"errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n" +
-                "flagTry dw 0,0\n");
+            ";------------ ERRORES DE EJECUCION ------------\n"+
+            "errorOverflow db 'ERROR EN LA EJECUCION: Overflow de de datosPrecarga de punto flotante (f32)',0 \n" +
+            "errorDivCeroEntero db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga enteros',0 \n" +
+            "errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga de punto flotante',0 \n" +
+            "errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n" +
+            "flagTry dw 0,0\n");
 
-	}
+}
 
-    // -------------- FALTA returnAssembler
-    // -------------- FALTA funciones en general
     // -------------- FALTA cargar variables auxiliares de la tabla de simbolos
     // -------------- FALTA out
     // -------------- FALTA Casos de prueba
     // -------------- FALTA arreglar el archivo de salida
     // -------------- FALTA FOR como valor de asignacion
-    // -------------- FALTA ARREGLAR OPERACION FOR (-/+) -> GRAMATICA
+
+    public void generarCodigoFunciones(HashMap<String, Nodo> arbolFunciones) {
+        for (Map.Entry<String,Nodo> funcion : arbolFunciones.entrySet()) {
+
+            String lexemaFunc = funcion.getValue().getLexema();
+            // encabezado assembler funcion
+            this.assemblerCode.append("PUBLIC "+"_"+lexemaFunc+"\n");
+            this.assemblerCode.append("_"+lexemaFunc+" PROC"+"\n");
+            ArrayList<Integer> params = tablaSimbolos.getParametros(lexemaFunc);
+
+            if (funcion.getValue().getTipo().equals("i32")) {
+                // obtenemos los parametros de la tabla
+                // [] no tiene param --> no hay que hacer nada
+                // [int] tiene 1 --> cargas EAX
+                // [int,int] tiene 2 --> cargas con el primero EAX y con el segundo en el otro reg
+                if (!params.isEmpty()){
+                    if (params.size() == 1){
+                        String lexParam = tablaSimbolos.getEntrada(params.get(0)).getLexema();
+                        this.assemblerCode.append("MOV "+ lexParam + ",EAX\n");
+                    } else {
+                        String lexParam1 = tablaSimbolos.getEntrada(params.get(0)).getLexema();
+                        String lexParam2 = tablaSimbolos.getEntrada(params.get(1)).getLexema();
+                        this.assemblerCode.append("MOV "+ lexParam1 + ",EAX\n");
+                        this.assemblerCode.append("MOV "+ lexParam2 + ",EBX\n");
+                    }
+                }
+            }
+            else { // f32 a
+                if (!params.isEmpty()){
+                    if (params.size() == 1){
+                        String lexParam = tablaSimbolos.getEntrada(params.get(0)).getLexema();
+                        this.assemblerCode.append("FSTP "+lexParam+"\n");
+                    } else {
+                        String lexParam1 = tablaSimbolos.getEntrada(params.get(0)).getLexema();
+                        String lexParam2 = tablaSimbolos.getEntrada(params.get(1)).getLexema();
+                        this.assemblerCode.append("FSTP "+lexParam1+"\n");
+                        this.assemblerCode.append("FSTP "+lexParam2+"\n");
+                    }
+                }
+            }
+            this.generarCodigoLeido(funcion.getValue());
+            this.assemblerCode.append("_"+lexemaFunc+" ENDP\n");
+        }
+        this.assemblerCode.append("start:\n");
+    }
+
 
     public void generarCodigoLeido(Nodo nodo) {
 
@@ -214,6 +264,10 @@ public class GenerarCodigo{
                     case ("out"):
                         outAssembler(nodo);
                         break;
+
+                    case ("paramInv"):
+                        paramAssembler(nodo);
+                        break;
                 }
                 nodo.descolgarHijos();
             }
@@ -221,13 +275,17 @@ public class GenerarCodigo{
 
         }
 
-
     private void outAssembler(Nodo nodo) {
-
+        this.assemblerCode.append("invoke MessageBox, NULL, addr "+nodo.getHijoIzquierdo().getLexema()+", addr "+"program"+", MB_OK");
     }
 
     private void returnAssembler(Nodo nodo) {
-
+        if (nodo.getTipo().equals("i32"))
+            assemblerCode.append("MOV EAX, "+ nodo.getHijoIzquierdo().getLexema()+"\n");
+        else {
+            assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema()+"\n");
+        }
+        this.assemblerCode.append("ret "+"\n");
     }
 
     private void continueAssembler(Nodo nodo) {
@@ -665,7 +723,7 @@ public class GenerarCodigo{
 
             // Es igual a cero, entonces genero un mensaje de error
 
-            this.assemblerCode.append("invoke MessageBox, NULL, addr errorDiv, addr program, MB_OK\n"); // DIVISION POR CERO CONTROL
+            this.assemblerCode.append("invoke MessageBox, NULL, addr errorDivCeroEntero, addr program, MB_OK\n"); // DIVISION POR CERO CONTROL
             this.assemblerCode.append("invoke ExitProcess, 0\n");
 
             // Si no es igual a cero, sigo la ejecucion
@@ -697,7 +755,7 @@ public class GenerarCodigo{
                 this.assemblerCode.append("MOV EAX," + mem2bytes + "\n"); // Guarda el flag en EAX
                 this.assemblerCode.append("SAHF \n"); // Toma de EAX el estado de la comparacion
                 this.assemblerCode.append("JNE " + label + "\n"); // Si no es igual a cero, salta a la etiqueta label correspondiente, sino tira mensaje de error
-                this.assemblerCode.append("invoke MessageBox, NULL, addr errorDiv, addr program, MB_OK\n");
+                this.assemblerCode.append("invoke MessageBox, NULL, addr errorDivCeroFlotante, addr program, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
 
                 // Si no es cero
@@ -788,12 +846,58 @@ public class GenerarCodigo{
         nodo.setLexema(aux);
     }
 
+    private void paramAssembler(Nodo nodo){
+        if (nodo.getHijoDerecho() != null){
+            if (nodo.getHijoDerecho().getTipo().equals("i32")){
+                this.assemblerCode.append("MOV EBX, "+nodo.getHijoDerecho().getLexema()+"\n");
+            } else {
+                this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema()+"\n");
+            }
+        }
+        if (nodo.getHijoIzquierdo().getTipo().equals("i32")){
+            this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema()+"\n");
+        } else {
+            this.assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema()+"\n");
+        }
+    }
+
     private void asignacionAssembler(Nodo nodo) {
         int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoDerecho().getLexema());
         Token t = this.tablaSimbolos.getEntrada(idLexema);
         if ((t.getUso() != null) && t.getUso().equals("func")){
-                String label="_label"+contadorEtiquetaLabel;
-			    contadorEtiquetaLabel++;
+
+            // chequeamos por recursion directa
+            if (!this.pilaInvocaciones.isEmpty() && this.pilaInvocaciones.peek().equals(t.getLexema())){
+                this.assemblerCode.append("invoke MessageBox, NULL, addr errorRecursion, addr program, MB_OK\n"); // DIVISION POR CERO CONTROL
+                this.assemblerCode.append("invoke ExitProcess, 0\n");
+            }
+
+            // cargamos los parametros
+            if (!nodo.getHijoDerecho().esHoja()){
+                if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho() != null){
+                    if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getTipo().equals("i32")){
+                        this.assemblerCode.append("MOV EBX, "+nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getLexema()+"\n");
+                    } else {
+                        this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getLexema()+"\n");
+                    }
+                }
+                if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getTipo().equals("i32")){
+                    this.assemblerCode.append("MOV EAX, "+nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getLexema()+"\n");
+                } else {
+                    this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getLexema()+"\n");
+                }
+            }
+
+            this.pilaInvocaciones.push(t.getLexema());
+            this.assemblerCode.append("call _"+t.getLexema());
+
+            if (nodo.getTipo().equals("i32")){
+                this.assemblerCode.append("MOV "+nodo.getHijoIzquierdo().getLexema()+","+"EAX"+"\n");
+            } else {
+                this.assemblerCode.append("FSTP "+nodo.getHijoIzquierdo().getLexema()+"\n");
+            }
+
+            this.pilaInvocaciones.pop();
         }
         else {
             if (nodo.getHijoIzquierdo().getTipo().equals("i32")) { // a(izq) =:(raiz) 1(der);
@@ -815,47 +919,28 @@ public class GenerarCodigo{
      * @param
      */
 
-    /*private void cargarVariablesAuxiliares(String k, Simbolo v) { // En los parametros deberiamos pasarle para poder acceder a los tipos (nodo ??)
-        if (v.getUso() == "VS") { // segun el tipo generamos el assembler para las variables auxiliares
-            String aux = "_" + k;
-            this.datosPrecarga.append(aux.replace('.', '_').replace('-', '_'));
-            this.datosPrecarga.append(" dd " + k);
-            this.datosPrecarga.append("\n");
-        } else {
-            if (v.getUso() == "variableP") {
-                this.datosPrecarga.append(k);
-                this.datosPrecarga.append(" dw ?,?");
+    private void cargarVariablesAuxiliares(int indice) { // En los parametros deberiamos pasarle para poder acceder a los tipos (nodo ??)
+        Token t = tablaSimbolos.getEntrada(indice);
+
+            if (tablaSimbolos.getTipoToken(indice).equals("CADENA DE CARACTERES")) {
+                this.datosPrecarga.append(t.getLexema().replace(' ', '_'));
+                this.datosPrecarga.append(" db '" + t.getLexema() + "'" + ",0");
                 this.datosPrecarga.append("\n");
             } else {
-                if (v.getUso() != "") {
-                    if (v.getTipo() == "CADENA") {
-                        this.datosPrecarga.append(k.replace(' ', '_'));
-                        this.datosPrecarga.append(" db '" + k + "'" + ",0");
-                        this.datosPrecarga.append("\n");
-                    } else {
-                        this.datosPrecarga.append(k);
-                        if (v.getTipo() == "LONG") {
-                            this.datosPrecarga.append(" dd ?,?");
-                            this.datosPrecarga.append("\n");
-                        } else {
-                            if (v.getTipo() == "SINGLE") {
-                                this.datosPrecarga.append(" dd ?,?");
-                                this.datosPrecarga.append("\n");
-                            } else {
-                                if (v.getTipo() == "CADENA") {
-                                    this.datosPrecarga.append(" db '" + k + "'" + ",0");
-                                    this.datosPrecarga.append("\n");
-                                } else {
-                                    this.datosPrecarga.append(" db '" + k + "'" + ",0");
-                                    this.datosPrecarga.append("\n");
-                                }
-                            }
-                        }
-                    }
-                }
+                this.datosPrecarga.append(t.getLexema());
+                this.datosPrecarga.append(" dd ?,?");
+                this.datosPrecarga.append("\n");
             }
+
+    }
+
+    private void cargarTablaSimbolos() {
+        for (int i = 0; i < tablaSimbolos.size(); i++){
+            cargarVariablesAuxiliares(i);
         }
-    }*/
+        this.datosPrecarga.append(".code\r\n");
+    }
+
 
 
 
@@ -880,11 +965,11 @@ public class GenerarCodigo{
            if (!file.exists()) {
                file.createNewFile();
            }
-           // this.cargarVariablesAuxiliares(); // Cargar las variables auxiliares (IMPLEMENTAR)
+            // Cargar las variables auxiliares (IMPLEMENTAR)
            code.append(";------------ CODE ------------\r\n");
-           code.append(".code\r\n");
            this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
            this.generarCodigoLeido(nodo); // Carga el codigo completo
+            this.cargarTablaSimbolos();
            this.assemblerCode.append(";------------ FIN ------------\n");
            this.assemblerCode.append("invoke ExitProcess, 0\n");
 			this.assemblerCode.append("end start");
@@ -892,7 +977,7 @@ public class GenerarCodigo{
            FileWriter fw = new FileWriter(file);
            BufferedWriter bw = new BufferedWriter(fw);
            // Leo el codigo fuente
-           contenido = this.inicio.toString()+code.toString();
+           contenido = this.inicio.toString()+this.datosPrecarga.toString()+code.toString();
            bw.write(contenido);
            contenido = this.assemblerCode.toString();
            bw.write(contenido);

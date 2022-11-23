@@ -239,6 +239,16 @@ public class TablaSimbolos {
         return -1;
     }
 
+    public ArrayList<Integer> getParametros(String funcion){
+        ArrayList<Integer> params = new ArrayList<>();
+        for(int i = 0; i < registroTokens.size(); i++) {
+            if (registroTokens.get(i).getUso() != null && registroTokens.get(i).getUso().contains("param~"+funcion)){
+                params.add(i);
+            }
+        }
+        return params;
+    }
+
 
 
     public ArrayList<Token> obtenerParamPorUso(String uso) {

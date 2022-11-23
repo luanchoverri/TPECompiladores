@@ -5,7 +5,7 @@ package AnalizadorSintactico;
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.Token;
 import ArbolSintactico.NodoHijo;
-import Nodo;
+import ArbolSintactico.Nodo;
 
 
 %}
@@ -189,8 +189,6 @@ encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 								sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
 
 								String lexema = sintactico.getEntradaTablaSimb($2.ival).getLexema();
-								sintactico.setUsoParam(lexema);
-								sintactico.vaciarListaVariables();
 
 								int existente = enAmbito($2);
 								if (existente < 0) { // no existe el id en el ambito
@@ -198,7 +196,9 @@ encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 									sintactico.setLexemaEnIndex($2.ival, "~"+this.ambito);
 									sintactico.setUsoEnIndex("func", $2.ival);
 									agregarAmbito(lexema);
-									$$ = new ParserVal(lexema);
+									sintactico.setUsoParam(sintactico.getEntradaTablaSimb($2.ival).getLexema());
+									sintactico.vaciarListaVariables();
+									$$ = new ParserVal($2.ival);
 								} else {
 									sintactico.addErrorSintactico("SematicError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
 								}
@@ -211,7 +211,10 @@ encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 	  ;
 
 declaracion_func :  encab_fun  cola_func {
-						sintactico.agregarArbolFuncion($2,$1.sval);
+						Token t = sintactico.getEntradaTablaSimb($1.ival);
+						Nodo n = sintactico.crearNodoControl(t.getLexema(), $2);
+						n.setTipo(t.getTipo());
+						sintactico.agregarArbolFuncion(new ParserVal(n),t.getLexema());
 						sintactico.clearTipo();
 					}
 		 ;
@@ -219,7 +222,10 @@ declaracion_func :  encab_fun  cola_func {
 
 ret_fun :  Return '(' expresion ')'  ';'	 	{ sintactico.addAnalisis("Se reconoce retorno de funcion(Línea " + AnalizadorLexico.LINEA + ") ");
 						   	  sintactico.checkRetorno($3, sintactico.getTipo());
-						   	  $$ = new ParserVal(sintactico.crearNodoControl("return",$3));}
+						   	  Nodo nodoRetorno = sintactico.crearNodoControl("return",$3);
+						   	  Nodo n = (Nodo) $3.obj;
+						   	  nodoRetorno.setTipo(n.getTipo());
+						   	  $$ = new ParserVal(nodoRetorno);}
         |  Return  	 expresion ')'  ';' error	{ sintactico.addErrorSintactico("SyntaxError. RETURN_FUN1 (Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
         |  Return '(' expresion   	';' error	{ sintactico.addErrorSintactico("SyntaxError. RETURN_FUN2(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
         |  Return  	 expresion   	';' error	{ sintactico.addErrorSintactico("SyntaxError. RETURN_FUN3(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
@@ -445,7 +451,7 @@ encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se
 									int existente = sintactico.encontrarTag($1.ival, this.ambito);
 									if (existente >= 0) {
 										if (sintactico.getEntradaTablaSimb(existente).getUso().equals("tag")) {
-											ParserVal nodoTag = new ParserVal(sintactico.crearNodoControl("etiqueta", new ParserVal(sintactico.crearHoja(existente)));
+											ParserVal nodoTag = new ParserVal(sintactico.crearNodoControl("etiqueta", new ParserVal(sintactico.crearHoja(existente))));
 											$$ = new ParserVal( sintactico.crearNodo("for-etiquetado", nodoTag , new ParserVal(sintactico.crearNodo("For",$5,$7))));
 											sintactico.eliminarEntrada($1.ival);
 										} else {
