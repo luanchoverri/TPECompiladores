@@ -993,17 +993,11 @@ public class GenerarCodigo{
 
 
 
-
-
-
-
-
-
     // -------------------- GENERACION DE CODIGO (SALIDA) -------------------- //
 
     public void generacionDeCodigo(Nodo nodo) {
         try {
-           String ruta = "codigo_generado_assembler.asm";
+           String ruta = "salida_archivo/codigo_generado_assembler.asm";
            String contenido;
            StringBuilder code = new StringBuilder();
            File file = new File(ruta);
@@ -1016,12 +1010,11 @@ public class GenerarCodigo{
             // Cargar las variables auxiliares (IMPLEMENTAR)
            code.append(";------------ CODE ------------\r\n");
            this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
-           this.generarCodigoLeido(nodo); // Carga el codigo completo
-            this.cargarTablaSimbolos();
+           this.generarCodigoLeido(nodo); // Carga el codigo completothis.cargarTablaSimbolos();
            this.assemblerCode.append(";------------ FIN ------------\n");
            this.assemblerCode.append("invoke ExitProcess, 0\n");
 			this.assemblerCode.append("end start");
-           System.out.println("CODIGO RE ENOJADO (DEBUG FURIOSO):"+"\n"+"\n"+this.assemblerCode.toString());
+
            FileWriter fw = new FileWriter(file);
            BufferedWriter bw = new BufferedWriter(fw);
            // Leo el codigo fuente

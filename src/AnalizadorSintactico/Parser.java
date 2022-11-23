@@ -970,8 +970,7 @@ public int enAmbito(ParserVal pv){
 	}
 	return -1;
 }
-
-//#line 903 "Parser.java"
+//#line 902 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -2135,7 +2134,7 @@ case 210:
 //#line 760 "gramatica.y"
 { yyval.sval = new String("f32"); }
 break;
-//#line 2062 "Parser.java"
+//#line 2061 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

@@ -193,7 +193,7 @@ public class AnalizadorSintactico {
             }
 
 
-        this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: "+tablaSimbolos.getTipoToken(tablaSimbolos.getIdToken(id)) +" (Línea " + AnalizadorLexico.LINEA + " )" );
+        this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: "+ id +" (Línea " + AnalizadorLexico.LINEA + " )" );
 
         return null;
     }
@@ -257,6 +257,16 @@ public class AnalizadorSintactico {
 
     }
 
+    public Nodo crearNodoFor(String identificador, ParserVal izq, ParserVal der){
+        if (der == null){
+            Nodo i = new NodoBinario(izq.obj,null, identificador);
+            return i;
+        }
+        Nodo i = new NodoBinario(izq.obj, der.obj, identificador);
+        return i;
+
+
+    }
     public void agregarNuevoNodo(Nodo n, Nodo nuevo){
         if (n.getHijoDerecho() == null){
             n.setHijoDerecho(nuevo);
@@ -467,44 +477,6 @@ public class AnalizadorSintactico {
 
     // -- Analizador Sintactico START
 
-    public void startConsola() {
-        System.out.println("________________________________________________");
-        parser.activarAmbito();
-        parser.setLexico(this.analizadorLexico);
-        parser.setSintactico(this);
-
-        if (parser.yyparse() == 0) {
-
-            System.out.println(" \n \n ✅ EJECUCION DEL PARSER FINALIZADA \n \n  ");
-
-            System.out.println("\n \n 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 \n ");
-
-            // imprimirAnalisisLexico();
-
-
-        }
-        else
-            System.out.println(" \n \n ❌ EL PARSER NO PUDO TERMINAR \n \n ");
-
-     //   analizadorLexico.imprimirErrores();
-
-        analizadorLexico.setPosArchivo(0);
-        analizadorLexico.setBuffer("");
-
-        System.out.println(" \n \n 💜 Analisis Sintactico ");
-        imprimirLista(this.analisisSintactico);
-        System.out.println(" \n \n ❤️ Errores Sintacticos y Semanticos ");
-        imprimirLista(this.erroresSintacticos);
-        imprimirTablaSimbolos();
-
-        System.out.println(" ");
-
-        System.out.println("🌳 ARBOL 🌳 ");
-        imprimirArbol(this.raiz,0);
-        imprimirArbolesFuncion();
-    //    GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-     //   g.generacionDeCodigo(this.raiz);
-    }
 
     public void start() {
 

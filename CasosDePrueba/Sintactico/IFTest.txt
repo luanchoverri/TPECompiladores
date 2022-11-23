@@ -31,7 +31,6 @@ program
 
         }
 
-    when ( a < 5 ) then { z=:3;};
 
     a =: f(1);
     a =: g();

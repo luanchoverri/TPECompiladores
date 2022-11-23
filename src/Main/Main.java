@@ -25,8 +25,6 @@ public class Main {
                 String path = scanner.next();
 
 
-
-
                 String archivoEntrada = "";
                  archivoEntrada = Files.readString(Paths.get(path));
 
@@ -35,10 +33,7 @@ public class Main {
                 AnalizadorSintactico sintactico = new AnalizadorSintactico(lexico, parser);
 
 
-                // ELEGIR SI POR CONSOLA O EN ARCHIVO Y COMENTAR EL OTRO
-               // sintactico.startConsola();
                 sintactico.start();
-
 
 
             }
