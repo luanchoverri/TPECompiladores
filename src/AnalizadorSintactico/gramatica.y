@@ -47,7 +47,7 @@ decl_const : id op_asignacion cte	{
 							int i = $1.ival;
 							sintactico.setTipoEnIndex(sintactico.getTipoFromTS($3.ival), i);
 							sintactico.setUsoEnIndex("const", i);
-							sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
+							sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
 							$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($3.ival))));
 						} else {
 							sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
@@ -112,7 +112,7 @@ lista_de_variables : id lista_de_variables	{
 							sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores.");
 						 	int existente = enAmbito($1);
 							if (existente < 0) {
-								sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
+								sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUsoEnIndex("var", $1.ival);
 							} else {
@@ -122,7 +122,7 @@ lista_de_variables : id lista_de_variables	{
                    | id ',' lista_de_variables	{
 							int existente = enAmbito($1);
 							if (existente < 0) {
-								sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
+								sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
 
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUsoEnIndex("var", $1.ival);
@@ -133,7 +133,7 @@ lista_de_variables : id lista_de_variables	{
                    | id				{
                    					int existente = enAmbito($1);
                    					if (existente < 0) {
-                   						sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
+                   						sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
 
                    						sintactico.addListaVariables($1.ival);
 							    	sintactico.setUsoEnIndex("var", $1.ival);
@@ -149,7 +149,7 @@ parametro : tipo id	{
 				int existente = enAmbito($2);
 				if (existente < 0) {
 					sintactico.setTipoEnIndex($1.sval, $2.ival);
-					sintactico.setLexemaEnIndex($2.ival, "~"+this.ambito);
+					sintactico.setLexemaEnIndex($2.ival, "@"+this.ambito);
 					sintactico.setUsoEnIndex("param", $2.ival);
 
 					sintactico.addListaVariables($2.ival);
@@ -193,7 +193,7 @@ encab_fun : fun id '('  lista_parametros  ')' asig_fun 		{
 								int existente = enAmbito($2);
 								if (existente < 0) { // no existe el id en el ambito
 									sintactico.setTipoEnIndex(sintactico.getTipo(), $2.ival);
-									sintactico.setLexemaEnIndex($2.ival, "~"+this.ambito);
+									sintactico.setLexemaEnIndex($2.ival, "@"+this.ambito);
 									sintactico.setUsoEnIndex("func", $2.ival);
 									agregarAmbito(lexema);
 									sintactico.setUsoParam(sintactico.getEntradaTablaSimb($2.ival).getLexema());
@@ -479,7 +479,7 @@ condicion_for :  id comparador cte	{
 						if (existente >= 0) {
 							if (sintactico.getEntradaTablaSimb(existente).getUso().equals("for_var")) {
 								String lexExistente = sintactico.getEntradaTablaSimb(existente).getLexema();
-								String [] aux = lexExistente.split("~");
+								String [] aux = lexExistente.split("@");
 
 								String ambitoExistente = aux[1];
 
@@ -569,7 +569,7 @@ asignacion_for: id op_asignacion cte {
 					if (existente < 0){
 						sintactico.setTipoEnIndex("i32", $1.ival);
 						sintactico.setTipoEnIndex("i32", $3.ival);
-						sintactico.setLexemaEnIndex($1.ival, "~"+this.ambito);
+						sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
 						sintactico.setUsoEnIndex("for_var", $1.ival);
 						ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
 						ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
@@ -588,7 +588,7 @@ operacion_for: signo id		{
 					if (existente >= 0) {
 						if (sintactico.getEntradaTablaSimb(existente).getUso().equals("for_var")) {
 							String lexExistente = sintactico.getEntradaTablaSimb(existente).getLexema();
-							String [] aux = lexExistente.split("~");
+							String [] aux = lexExistente.split("@");
                                                         String ambitoExistente = aux[1];
 							if ( ambitoExistente.equals(this.ambito)) {
 							 	// TODO FRAN HACER QUE LA OPERACION FOR TENGA UNA ASIGNACION ENTRE EL ID Y EL ID +/- 1 (+i ; -i)
@@ -646,7 +646,7 @@ sentencia_CONTINUE : CONTINUE ';'		{
                    | CONTINUE ':' id ';'	{ 	sintactico.addAnalisis("Se reconocio una sentencia continue con etiquetado(Línea " + AnalizadorLexico.LINEA + ")");
                    					int existente = enAmbito($3);
 							if (existente < 0 ) {
-								sintactico.setLexemaEnIndex($3.ival,"~"+this.ambito);
+								sintactico.setLexemaEnIndex($3.ival,"@"+this.ambito);
 								sintactico.setUsoEnIndex("tag",$3.ival);
 								$$ = new ParserVal(sintactico.crearNodoControl("continue-etiqueta", new ParserVal(sintactico.crearHoja($3.ival))));
 							} else {
@@ -783,13 +783,13 @@ public AnalizadorSintactico getSintactico() { return this.sintactico; }
 
 public void agregarAmbito(String nuevo) {
 
-	this.ambito = this.ambito + "#" + nuevo;
+	this.ambito = this.ambito + "_" + nuevo;
 
 }
 
 public String borrarAmbito(String ambito){
 	if (ambito.length() > 1) { // si es 1 solo tiene el ambito global
-		String [] aux = ambito.split("#"); // separo los elementos individuales del ambito
+		String [] aux = ambito.split("_"); // separo los elementos individuales del ambito
 		String last = aux[aux.length - 1 ]; // obtengo el ultimo, el que tengo que eliminar
 		return ambito.substring(0, ambito.length() - last.length() - 1);
 	}
@@ -813,9 +813,9 @@ public int enAmbito(ParserVal pv){
 	String lexema = sintactico.getEntradaTablaSimb(pv.ival).getLexema();
 	String ambitoAux = this.ambito;
 
-	String [] aux = ambitoAux.split("#");
+	String [] aux = ambitoAux.split("_");
 	for (int i = 0 ; i < aux.length ; i++){
-		int existente = sintactico.getTS().existeEntrada(lexema + "~"+ambitoAux);
+		int existente = sintactico.getTS().existeEntrada(lexema + "@"+ambitoAux);
 		if (existente >= 0 ){
 			return existente;
 		}

@@ -127,7 +127,7 @@ public class AnalizadorSintactico {
     public void setUsoParam(String idFun){
         for(int i=0;i<variables.size(); i++){
             Token param = getEntradaTablaSimb(variables.get(i));
-            param.setUso(param.getUso()+"~"+idFun+"~"+i);
+            param.setUso(param.getUso()+"@"+idFun+"@"+i);
         }
     }
 
@@ -273,7 +273,7 @@ public class AnalizadorSintactico {
 
     public int encontrarTag(int refTag, String ambito){
         String lexTag = this.tablaSimbolos.getEntrada(refTag).getLexema();
-        return this.tablaSimbolos.existeEntradaContainsTag(lexTag+"~"+ambito);
+        return this.tablaSimbolos.existeEntradaContainsTag(lexTag+"@"+ambito);
     }
 
 
@@ -408,8 +408,8 @@ public class AnalizadorSintactico {
 
     public void checkParametros(String idFun){
 
-            String nombFun = idFun.split("~")[0];
-            ArrayList<Token> parametros = tablaSimbolos.obtenerParamPorUso("param"+"~"+nombFun);
+            String nombFun = idFun.split("@")[0];
+            ArrayList<Token> parametros = tablaSimbolos.obtenerParamPorUso("param"+"@"+nombFun);
             if(parametros.size() != variables.size()  ){
                 this.addErrorSintactico("SemanticError. El NUMERO de parametros no corresponde con los funcion invocada (Línea " + this.analizadorLexico.LINEA + ")" );
             }else {

@@ -930,13 +930,13 @@ public AnalizadorSintactico getSintactico() { return this.sintactico; }
 
 public void agregarAmbito(String nuevo) {
 
-	this.ambito = this.ambito + "#" + nuevo;
+	this.ambito = this.ambito + "_" + nuevo;
 
 }
 
 public String borrarAmbito(String ambito){
 	if (ambito.length() > 1) { // si es 1 solo tiene el ambito global
-		String [] aux = ambito.split("#"); // separo los elementos individuales del ambito
+		String [] aux = ambito.split("_"); // separo los elementos individuales del ambito
 		String last = aux[aux.length - 1 ]; // obtengo el ultimo, el que tengo que eliminar
 		return ambito.substring(0, ambito.length() - last.length() - 1);
 	}
@@ -960,9 +960,9 @@ public int enAmbito(ParserVal pv){
 	String lexema = sintactico.getEntradaTablaSimb(pv.ival).getLexema();
 	String ambitoAux = this.ambito;
 
-	String [] aux = ambitoAux.split("#");
+	String [] aux = ambitoAux.split("_");
 	for (int i = 0 ; i < aux.length ; i++){
-		int existente = sintactico.getTS().existeEntrada(lexema + "~"+ambitoAux);
+		int existente = sintactico.getTS().existeEntrada(lexema + "@"+ambitoAux);
 		if (existente >= 0 ){
 			return existente;
 		}
@@ -1175,7 +1175,7 @@ case 12:
 							int i = val_peek(2).ival;
 							sintactico.setTipoEnIndex(sintactico.getTipoFromTS(val_peek(0).ival), i);
 							sintactico.setUsoEnIndex("const", i);
-							sintactico.setLexemaEnIndex(val_peek(2).ival, "~"+this.ambito);
+							sintactico.setLexemaEnIndex(val_peek(2).ival, "@"+this.ambito);
 							yyval = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja(val_peek(2).ival)), new ParserVal(sintactico.crearHoja(val_peek(0).ival))));
 						} else {
 							sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
@@ -1262,7 +1262,7 @@ case 36:
 							sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores.");
 						 	int existente = enAmbito(val_peek(1));
 							if (existente < 0) {
-								sintactico.setLexemaEnIndex(val_peek(1).ival, "~"+this.ambito);
+								sintactico.setLexemaEnIndex(val_peek(1).ival, "@"+this.ambito);
 								sintactico.addListaVariables(val_peek(1).ival);
 								sintactico.setUsoEnIndex("var", val_peek(1).ival);
 							} else {
@@ -1275,7 +1275,7 @@ case 37:
 {
 							int existente = enAmbito(val_peek(2));
 							if (existente < 0) {
-								sintactico.setLexemaEnIndex(val_peek(2).ival, "~"+this.ambito);
+								sintactico.setLexemaEnIndex(val_peek(2).ival, "@"+this.ambito);
 
 								sintactico.addListaVariables(val_peek(2).ival);
 								sintactico.setUsoEnIndex("var", val_peek(2).ival);
@@ -1289,7 +1289,7 @@ case 38:
 {
                    					int existente = enAmbito(val_peek(0));
                    					if (existente < 0) {
-                   						sintactico.setLexemaEnIndex(val_peek(0).ival, "~"+this.ambito);
+                   						sintactico.setLexemaEnIndex(val_peek(0).ival, "@"+this.ambito);
 
                    						sintactico.addListaVariables(val_peek(0).ival);
 							    	sintactico.setUsoEnIndex("var", val_peek(0).ival);
@@ -1304,7 +1304,7 @@ case 39:
 				int existente = enAmbito(val_peek(0));
 				if (existente < 0) {
 					sintactico.setTipoEnIndex(val_peek(1).sval, val_peek(0).ival);
-					sintactico.setLexemaEnIndex(val_peek(0).ival, "~"+this.ambito);
+					sintactico.setLexemaEnIndex(val_peek(0).ival, "@"+this.ambito);
 					sintactico.setUsoEnIndex("param", val_peek(0).ival);
 
 					sintactico.addListaVariables(val_peek(0).ival);
@@ -1353,7 +1353,7 @@ case 48:
 								int existente = enAmbito(val_peek(4));
 								if (existente < 0) { /* no existe el id en el ambito*/
 									sintactico.setTipoEnIndex(sintactico.getTipo(), val_peek(4).ival);
-									sintactico.setLexemaEnIndex(val_peek(4).ival, "~"+this.ambito);
+									sintactico.setLexemaEnIndex(val_peek(4).ival, "@"+this.ambito);
 									sintactico.setUsoEnIndex("func", val_peek(4).ival);
 									agregarAmbito(lexema);
 									sintactico.setUsoParam(sintactico.getEntradaTablaSimb(val_peek(4).ival).getLexema());
@@ -1807,7 +1807,7 @@ case 146:
 						if (existente >= 0) {
 							if (sintactico.getEntradaTablaSimb(existente).getUso().equals("for_var")) {
 								String lexExistente = sintactico.getEntradaTablaSimb(existente).getLexema();
-								String [] aux = lexExistente.split("~");
+								String [] aux = lexExistente.split("@");
 
 								String ambitoExistente = aux[1];
 
@@ -1917,7 +1917,7 @@ case 169:
 					if (existente < 0){
 						sintactico.setTipoEnIndex("i32", val_peek(2).ival);
 						sintactico.setTipoEnIndex("i32", val_peek(0).ival);
-						sintactico.setLexemaEnIndex(val_peek(2).ival, "~"+this.ambito);
+						sintactico.setLexemaEnIndex(val_peek(2).ival, "@"+this.ambito);
 						sintactico.setUsoEnIndex("for_var", val_peek(2).ival);
 						ParserVal identificador = new ParserVal(sintactico.crearHoja(val_peek(2).ival));
 						ParserVal constante = new ParserVal(sintactico.crearHoja(val_peek(0).ival));
@@ -1934,7 +1934,7 @@ case 170:
 					if (existente >= 0) {
 						if (sintactico.getEntradaTablaSimb(existente).getUso().equals("for_var")) {
 							String lexExistente = sintactico.getEntradaTablaSimb(existente).getLexema();
-							String [] aux = lexExistente.split("~");
+							String [] aux = lexExistente.split("@");
                                                         String ambitoExistente = aux[1];
 							if ( ambitoExistente.equals(this.ambito)) {
 							 	/* TODO FRAN HACER QUE LA OPERACION FOR TENGA UNA ASIGNACION ENTRE EL ID Y EL ID +/- 1 (+i ; -i)*/
@@ -2000,7 +2000,7 @@ case 187:
 { 	sintactico.addAnalisis("Se reconocio una sentencia continue con etiquetado(Línea " + AnalizadorLexico.LINEA + ")");
                    					int existente = enAmbito(val_peek(1));
 							if (existente < 0 ) {
-								sintactico.setLexemaEnIndex(val_peek(1).ival,"~"+this.ambito);
+								sintactico.setLexemaEnIndex(val_peek(1).ival,"@"+this.ambito);
 								sintactico.setUsoEnIndex("tag",val_peek(1).ival);
 								yyval = new ParserVal(sintactico.crearNodoControl("continue-etiqueta", new ParserVal(sintactico.crearHoja(val_peek(1).ival))));
 							} else {

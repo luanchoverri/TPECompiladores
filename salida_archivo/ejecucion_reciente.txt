@@ -2,7 +2,8 @@ program
 {
     f32 a, b, c;
 	a =: 1.0;
-
+    b =: a + 5.7;
+    c =: a * b + a / 1.5;
     for(i=:1 ; i < 3 ; -i){
         if(i < 1) then{
             break 2;
@@ -21,17 +22,17 @@ program
  
  
  Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
- Se reconocio una sentencia break con retorno de valor (Línea 8)
- Se reconocio una sentencia continue con etiquetado(Línea 9)
- Se reconoció una sentencia If. (Línea 11)
- Se reconocio sentencia FOR. (Línea 12)
+ Se reconocio una sentencia break con retorno de valor (Línea 9)
+ Se reconocio una sentencia continue con etiquetado(Línea 10)
+ Se reconoció una sentencia If. (Línea 12)
+ Se reconocio sentencia FOR. (Línea 13)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
  
  
- SematicError. El ambito es $#for0
- SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: PALABRA RESERVADA (Línea 11 )
+ SematicError. El ambito es $_for0
+ SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: PALABRA RESERVADA (Línea 12 )
   
  
  
@@ -39,16 +40,18 @@ program
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null   null 
-TOKEN   257        a~$     #linea 3    f32    var 
-TOKEN   257        b~$     #linea 3    f32    var 
-TOKEN   257        c~$     #linea 3    f32    var 
+TOKEN   257        a@$     #linea 3    f32    var 
+TOKEN   257        b@$     #linea 3    f32    var 
+TOKEN   257        c@$     #linea 3    f32    var 
 TOKEN   258        1.0     #linea 4    f32   null 
-TOKEN   257   i~$#for0     #linea 6    i32 for_var 
-TOKEN   258          1     #linea 6    i32   null 
-TOKEN   258          3     #linea 6    i32    i32 
+TOKEN   258        5.7     #linea 5    f32   null 
+TOKEN   258        1.5     #linea 6    f32   null 
+TOKEN   257   i@$_for0     #linea 7    i32 for_var 
 TOKEN   258          1     #linea 7    i32   null 
-TOKEN   258          2     #linea 8    i32   null 
-TOKEN   257 t1~$#for0#if-then1     #linea 9   null    tag  
+TOKEN   258          3     #linea 7    i32    i32 
+TOKEN   258          1     #linea 8    i32   null 
+TOKEN   258          2     #linea 9    i32   null 
+TOKEN   257 t1@$_for0_if-then1     #linea 10   null    tag  
  
  
  
@@ -56,42 +59,58 @@ TOKEN   257 t1~$#for0#if-then1     #linea 9   null    tag
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ a~$ 
+           └─ a@$ 
            └─ 1.0 
         └─ sentencia 
-           └─ For 
-              └─ encabezado for 
-                 └─ asignacionFor 
-                    └─ =: 
-                       └─ i~$#for0 
-                       └─ 1 
-                 └─ condicion y operacion for 
-                    └─ condicionFor 
-                       └─ < 
-                          └─ i~$#for0 
-                          └─ 3 
-                    └─ operacionFor 
-                       └─ =: 
-                          └─ i~$#for0 
-                          └─ - 
-                             └─ i~$#for0 
-                             └─ uno 
-              └─ cuerpoFor 
-                 └─ sentencia 
-                    └─ if 
-                       └─ condicionIf 
-                          └─ < 
-                             └─ i~$#for0 
+           └─ =: 
+              └─ b@$ 
+              └─ + 
+                 └─ a@$ 
+                 └─ 5.7 
+           └─ sentencia 
+              └─ =: 
+                 └─ c@$ 
+                 └─ + 
+                    └─ * 
+                       └─ a@$ 
+                       └─ b@$ 
+                    └─ / 
+                       └─ a@$ 
+                       └─ 1.5 
+              └─ sentencia 
+                 └─ For 
+                    └─ encabezado for 
+                       └─ asignacionFor 
+                          └─ =: 
+                             └─ i@$_for0 
                              └─ 1 
-                       └─ cuerpo-if 
-                          └─ then 
-                             └─ sentencia 
-                                └─ breakValor 
-                                   └─ 2 
-                                └─ sentencia 
-                                   └─ continue-etiqueta 
-                                      └─ t1~$#for0#if-then1 
+                       └─ condicion y operacion for 
+                          └─ condicionFor 
+                             └─ < 
+                                └─ i@$_for0 
+                                └─ 3 
+                          └─ operacionFor 
+                             └─ =: 
+                                └─ i@$_for0 
+                                └─ - 
+                                   └─ i@$_for0 
+                                   └─ uno 
+                    └─ cuerpoFor 
+                       └─ sentencia 
+                          └─ if 
+                             └─ condicionIf 
+                                └─ < 
+                                   └─ i@$_for0 
+                                   └─ 1 
+                             └─ cuerpo-if 
+                                └─ then 
+                                   └─ sentencia 
+                                      └─ breakValor 
+                                         └─ 2 
+                                      └─ sentencia 
+                                         └─ continue-etiqueta 
+                                            └─ t1@$_for0_if-then1 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: nov. 22 2022, 09:48:43 p. m.
+ Hora de ejecucion: nov. 22 2022, 11:27:58 p. m.
