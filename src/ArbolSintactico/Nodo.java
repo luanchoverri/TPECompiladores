@@ -4,7 +4,6 @@ public abstract class Nodo {
 
 	protected String lexema;
 	protected int valor;
-	protected String parametro;
 	private String tipo;
 
 
@@ -32,14 +31,6 @@ public abstract class Nodo {
 		this.lexema = lexemaNuevo;
 	}
 
-	public void setParametro(String parametro) {
-		this.parametro = parametro;
-	}
-
-	public String getParametro() {
-		return this.parametro;
-	}
-
 	public abstract boolean esHoja();
 
     public abstract Nodo getHijoIzquierdo ();
@@ -57,7 +48,6 @@ public abstract class Nodo {
 		return "Nodo{" +
 				"lexema='" + lexema + '\'' +
 				", valor=" + valor +
-				", parametro='" + parametro + '\'' +
 				", tipo='" + tipo + '\'' +
 				'}';
 	}

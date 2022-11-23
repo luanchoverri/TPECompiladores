@@ -2,18 +2,6 @@ package ArbolSintactico;
 
 public class NodoHijo extends Nodo {
 
-    /*
-     * Para la sentencia ELSE solo necesitamos 2 parametros, ya que el caso mas
-     * simple solo tendremos el cuerpo de sentencias, si tuvieramos otro IF se llama
-     * a NodoBinario
-     *
-     * Entonces para ELSE:
-     * -> en el nodo tendriamos el cuerpo (bloque de sentencias)
-     * -> y el lexema en este caso seria "ELSE"
-     *
-     *
-     */
-
     private Nodo nodoHijo;
     private Integer refTablaSimbolos;
 

@@ -9,10 +9,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -189,8 +185,6 @@ public class AnalizadorSintactico {
 
 
     public String tipoResultante(String id, Nodo izq, Nodo der){
-//        System.out.println("nodo izq " + izq.toString());
-//        System.out.println("nodo der " + der.toString());
 
         if (izq.getTipo() != null && izq.getTipo() != null )
             if(izq.getTipo().equals(der.getTipo())){
@@ -222,7 +216,7 @@ public class AnalizadorSintactico {
             return i;
         } else {
             System.out.println("EL NODO IZQ ES " + hijoIzq.toString());
-            System.out.println("EL NODO DER ES " + hijoDer.toString()); // TODO POR QUE??? EL IZQUIERD0 NO?
+            System.out.println("EL NODO DER ES " + hijoDer.toString());
             Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
             if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
                 i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));

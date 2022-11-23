@@ -11,7 +11,6 @@ import java.util.Stack;
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.TablaSimbolos;
 import AnalizadorLexico.Token;
-import com.sun.jdi.StackFrame;
 
 public class GenerarCodigo{
 
@@ -67,16 +66,9 @@ public class GenerarCodigo{
             "errorOverflow db 'ERROR EN LA EJECUCION: Overflow de de datosPrecarga de punto flotante (f32)',0 \n" +
             "errorDivCeroEntero db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga enteros',0 \n" +
             "errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga de punto flotante',0 \n" +
-            "errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n" +
-            "flagTry dw 0,0\n");
+            "errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n");
 
 }
-
-    // -------------- FALTA cargar variables auxiliares de la tabla de simbolos
-    // -------------- FALTA out
-    // -------------- FALTA Casos de prueba
-    // -------------- FALTA arreglar el archivo de salida
-    // -------------- FALTA FOR como valor de asignacion
 
     public void generarCodigoFunciones(HashMap<String, Nodo> arbolFunciones) {
         for (Map.Entry<String,Nodo> funcion : arbolFunciones.entrySet()) {
@@ -964,16 +956,10 @@ public class GenerarCodigo{
                 if (nodo.getHijoIzquierdo().getTipo().equals("f32")) { // a(izq) =: (raiz) 1.5(der)
                     this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
                     this.assemblerCode.append("FSTP "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-                } // FALTA EL CASO DEL FOR HACER
+                }
             }
         }
     }
-
-    /**
-     * Metodo para cargar las variables auxiliares, segun el uso que corresponda (IMPLEMENTAR)
-     * @param
-     * @param
-     */
 
     private void cargarVariablesAuxiliares(int indice) { // En los parametros deberiamos pasarle para poder acceder a los tipos (nodo ??)
         Token t = tablaSimbolos.getEntrada(indice);

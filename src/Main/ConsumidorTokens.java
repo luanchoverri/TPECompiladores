@@ -39,7 +39,7 @@ public class ConsumidorTokens {
                     System.out.println("(Info) ---------------ANALIZADOR LÉXICO--------------- (Info)");
                     for (Token t : detectados) {
 
-                        System.out.println("Tipo de token --> " + t.getId()); // Devuelve el id con el tipo de token?
+                        System.out.println("Tipo de token --> " + t.getId());
                         System.out.println("Lexema --> " + t.getLexema());
                     }
                 }
