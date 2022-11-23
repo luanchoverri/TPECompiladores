@@ -199,7 +199,7 @@ public class AnalizadorSintactico {
             }
 
 
-        this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: "+tablaSimbolos.getTipoToken(tablaSimbolos.getIdToken(id)) +" (Línea " + AnalizadorLexico.LINEA + " )" );
+        this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: "+ id +" (Línea " + AnalizadorLexico.LINEA + " )" );
 
         return null;
     }
@@ -263,6 +263,16 @@ public class AnalizadorSintactico {
 
     }
 
+    public Nodo crearNodoFor(String identificador, ParserVal izq, ParserVal der){
+        if (der == null){
+            Nodo i = new NodoBinario(izq.obj,null, identificador);
+            return i;
+        }
+        Nodo i = new NodoBinario(izq.obj, der.obj, identificador);
+        return i;
+
+
+    }
     public void agregarNuevoNodo(Nodo n, Nodo nuevo){
         if (n.getHijoDerecho() == null){
             n.setHijoDerecho(nuevo);

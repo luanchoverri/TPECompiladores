@@ -4,7 +4,7 @@ program
     f32 c, d;
 
     a =: 1 ;
-    d =: 1.3;
+    d =: 1.3 + 1;
 
     fun fun1 ( i32 g ): i32 {
         g =: 1;

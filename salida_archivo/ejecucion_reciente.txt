@@ -1,14 +1,8 @@
 program
 {
-    i32 a, b, c;
-	a =: 1;
 
-    t1: for(i=:1 ; i < 3 ; -i){
-        if(i < 1) then{
-            break 2;
-            continue: t1;
-        }
-         end_if;
+    SI: for(i=:1 ; i < 3 ; -i){
+            continue: NO;
     };
 
 }$ 
@@ -20,18 +14,15 @@ program
  🔎  ANALISIS SINTÁCTICO    
  
  
- Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
- Se reconocio una sentencia break con retorno de valor (Línea 8)
- Se reconocio una sentencia continue con etiquetado(Línea 9)
- Se reconoció una sentencia If. (Línea 11)
- Se reconocio una sentencia for con etiqueta(Línea 12)
+ Se reconocio una sentencia continue con etiquetado(Línea 5)
+ Se reconocio una sentencia for con etiqueta(Línea 6)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
  
  
  SematicError. El ambito es $#for0
- SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: PALABRA RESERVADA (Línea 11 )
+ SematicError. (Línea 6): etiqueta invalida
   
  
  
@@ -39,62 +30,18 @@ program
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null   null 
-TOKEN   257        a~$     #linea 3    i32    var 
-TOKEN   257        b~$     #linea 3    i32    var 
-TOKEN   257        c~$     #linea 3    i32    var 
+TOKEN   257         SI     #linea 4   null   null 
+TOKEN   257   i~$#for0     #linea 4    i32 for_var 
 TOKEN   258          1     #linea 4    i32   null 
-TOKEN   257   i~$#for0     #linea 6    i32 for_var 
-TOKEN   258          1     #linea 6    i32   null 
-TOKEN   258          3     #linea 6    i32    i32 
-TOKEN   258          1     #linea 7    i32   null 
-TOKEN   258          2     #linea 8    i32   null 
-TOKEN   257 t1~$#for0#if-then1     #linea 9   null    tag  
+TOKEN   258          3     #linea 4    i32    i32 
+TOKEN   257  NO~$#for0     #linea 5   null    tag  
  
  
  
  --- ARBOL ---- 
    └─ raiz 
      └─ sentencia 
-        └─ =: 
-           └─ a~$ 
-           └─ 1 
-        └─ sentencia 
-           └─ for-etiquetado 
-              └─ etiqueta 
-                 └─ t1~$#for0#if-then1 
-              └─ For 
-                 └─ encabezado for 
-                    └─ asignacionFor 
-                       └─ =: 
-                          └─ i~$#for0 
-                          └─ 1 
-                    └─ condicion y operacion for 
-                       └─ condicionFor 
-                          └─ < 
-                             └─ i~$#for0 
-                             └─ 3 
-                       └─ operacionFor 
-                          └─ =: 
-                             └─ i~$#for0 
-                             └─ - 
-                                └─ i~$#for0 
-                                └─ uno 
-                 └─ cuerpoFor 
-                    └─ sentencia 
-                       └─ if 
-                          └─ condicionIf 
-                             └─ < 
-                                └─ i~$#for0 
-                                └─ 1 
-                          └─ cuerpo-if 
-                             └─ then 
-                                └─ sentencia 
-                                   └─ breakValor 
-                                      └─ 2 
-                                   └─ sentencia 
-                                      └─ continueEtiquetado 
-                                         └─ t1~$#for0#if-then1 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: nov. 22 2022, 03:15:39 p. m.
+ Hora de ejecucion: nov. 22 2022, 11:48:15 p. m.
