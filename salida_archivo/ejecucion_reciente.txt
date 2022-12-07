@@ -1,0 +1,56 @@
+program{
+
+    i32 l;
+
+    const z=:1, l=:2.3, a=: .2;
+}$ 
+ 
+  EJECUCION DEL PARSER FINALIZADA  
+  
+ |||||||||||||||||||||||||||||||||||||||||||||| 
+ 
+ 🔎  ANALISIS SINTÁCTICO    
+ 
+ 
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
+ Se reconoció una declaración de CONSTANTE. (Línea 5)
+ 
+ 
+ ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
+ 
+ 
+ SemanticError. (Línea 5): variable ya declarada.
+  
+ 
+ 
+  
+              TABLA DE SIMBOLOS              
+
+TOKEN   257    program     #linea 1   null   null 
+TOKEN   257        l@$     #linea 3    i32    var 
+TOKEN   257        z@$     #linea 5    i32  const 
+TOKEN   258          1     #linea 5    i32   null 
+TOKEN   257          l     #linea 5   null   null 
+TOKEN   258        2.3     #linea 5    f32   null 
+TOKEN   257        a@$     #linea 5    f32  const 
+TOKEN   258         .2     #linea 5    f32   null  
+ 
+ 
+ 
+ --- ARBOL ---- 
+   └─ raiz 
+     └─ declarativa 
+        └─ lista_ctes 
+           └─ sentencia 
+              └─ =: 
+                 └─ z@$ 
+                 └─ 1 
+              └─ sentencia 
+                 └─ sentencia 
+                    └─ =: 
+                       └─ a@$ 
+                       └─ .2 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: nov. 23 2022, 12:17:31 a. m.
