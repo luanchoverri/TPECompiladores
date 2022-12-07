@@ -1,0 +1,63 @@
+<<<<<<< HEAD
+=======
+program
+{
+    i32 i;
+    i32 a;
+    << caso correcto
+    when ( i > 3 ) then { a =: i + 1; };
+
+
+
+}$ 
+ 
+  EJECUCION DEL PARSER FINALIZADA  
+  
+ |||||||||||||||||||||||||||||||||||||||||||||| 
+ 
+ 🔎  ANALISIS SINTÁCTICO    
+ 
+ 
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 4)
+ Se reconocio una sentencia when
+ 
+ 
+ ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
+ 
+ 
+ SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: PALABRA RESERVADA (Línea 6 )
+  
+ 
+ 
+  
+              TABLA DE SIMBOLOS              
+
+TOKEN   257    program     #linea 1   null   null 
+TOKEN   257        i@$     #linea 3    i32    var 
+TOKEN   257        a@$     #linea 4    i32    var 
+TOKEN   258          3     #linea 6    i32   null 
+TOKEN   258          1     #linea 6    i32   null  
+ 
+ 
+ 
+ --- ARBOL ---- 
+   └─ raiz 
+     └─ declarativa 
+        └─ when 
+           └─ condicionWhen 
+              └─ > 
+                 └─ i@$ 
+                 └─ 3 
+           └─ then 
+              └─ sentencia 
+                 └─ =: 
+                    └─ a@$ 
+                    └─ + 
+                       └─ i@$ 
+                       └─ 1 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: dic. 07 2022, 03:46:26 p. m.
+>>>>>>> 0e88fb6 (when funcionando)

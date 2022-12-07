@@ -1,0 +1,10 @@
+program
+{
+    i32 i;
+    i32 a;
+    << caso correcto
+    when ( i > 3 ) then { a =: i + 1; };
+
+
+
+}
