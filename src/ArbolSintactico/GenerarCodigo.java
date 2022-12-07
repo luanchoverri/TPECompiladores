@@ -180,10 +180,14 @@ public class GenerarCodigo{
                     // Sentencias de control
 
                     case ("condicionIf"):
+
+                    case ("condicionWhen"):
                         condicionIfAssembler(nodo);
                         break;
 
                     case ("if"):
+
+                    case ("when"):
                         ifAssembler(nodo);
                         break;
 

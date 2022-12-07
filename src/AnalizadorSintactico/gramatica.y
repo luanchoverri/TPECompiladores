@@ -427,7 +427,7 @@ sentencia_when : when '(' condicion_when ')' cuerpo_when ';'	{ sintactico.addAna
                | when '(' condicion_when  cuerpo_when';' error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta paréntesis de cierre en la condicion."); }
                ;
 
-condicion_when: expresion_relacional {$$ = $1; agregarAmbito("when"+this.contadorWhen); this.contadorWhen++;}
+condicion_when: expresion_relacional {$$ = new ParserVal(sintactico.crearNodoControl("condicionWhen",$1)); agregarAmbito("when"+this.contadorWhen); this.contadorWhen++;}
 	      ;
 
 // TODO listo

@@ -159,7 +159,7 @@ public class AnalizadorSintactico {
         Nodo n = (Nodo) arbolSentencias.obj;
         if (n.getLexema().equals("declarativa")){// en este caso la primera sentencia era declarativa, por lo que aun no se genero un arbol
 
-            if (n.getHijoIzquierdo()!= null && n.getHijoIzquierdo().getLexema().equals("lista_ctes")) {
+            if (n.getHijoIzquierdo()!= null && (n.getHijoIzquierdo().getLexema().equals("lista_ctes") || n.getHijoIzquierdo().getLexema().equals("when"))) {
 
                 n = n.getHijoIzquierdo().getHijoIzquierdo();
                 agregarNuevoNodo(n, nuevo);
@@ -171,7 +171,7 @@ public class AnalizadorSintactico {
         }
 
         if (nuevo.getLexema().equals("declarativa")) {
-            if (nuevo.getHijoIzquierdo() != null && nuevo.getHijoIzquierdo().getLexema().equals("lista_ctes")) {
+            if (n.getHijoIzquierdo()!= null && (n.getHijoIzquierdo().getLexema().equals("lista_ctes") || n.getHijoIzquierdo().getLexema().equals("when"))) {
                 nuevo = nuevo.getHijoIzquierdo().getHijoIzquierdo();
             } else {
                 return new ParserVal(n); // las declarativas que no tienen que ver con lista-ctes no se agregan al arbol.

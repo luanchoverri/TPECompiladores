@@ -1741,7 +1741,7 @@ case 135:
 break;
 case 136:
 //#line 430 "gramatica.y"
-{yyval = val_peek(0); agregarAmbito("when"+this.contadorWhen); this.contadorWhen++;}
+{yyval = new ParserVal(sintactico.crearNodoControl("condicionWhen",val_peek(0))); agregarAmbito("when"+this.contadorWhen); this.contadorWhen++;}
 break;
 case 137:
 //#line 434 "gramatica.y"
