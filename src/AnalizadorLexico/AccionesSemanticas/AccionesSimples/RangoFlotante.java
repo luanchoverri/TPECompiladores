@@ -18,9 +18,12 @@ public class RangoFlotante extends AccionSemanticaSimple {
     public boolean ejecutar(String buffer, char ultimoLeido) {
         AnalizadorLexico lexico = this.getAnalizadorLexico();
         try {
-            if (buffer.equals("0.0") || buffer.equals("0.") || buffer.equals(".0")) // Si es cualquier caso de cero, retorna true
+            if (buffer.equals("0.0") || buffer.equals("0.") || buffer.equals(".0")){ // Si es cualquier caso de cero, retorna true
+                int idToken = lexico.getIdToken("cte");
+                lexico.setTokenActual(idToken);
+                lexico.agregarRegistro(buffer, idToken);
                 return true;
-
+            }
             float floatBuffer = 0f;
                 if (buffer.contains("F")){
                     String[] parts = buffer.split("F");
