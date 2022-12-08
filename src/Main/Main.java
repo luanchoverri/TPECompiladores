@@ -33,7 +33,8 @@ public class Main {
                 AnalizadorSintactico sintactico = new AnalizadorSintactico(lexico, parser);
 
 
-                sintactico.start();
+              //  sintactico.start();
+                sintactico.startConsola();
 
 
             }

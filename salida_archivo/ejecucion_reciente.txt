@@ -1,0 +1,94 @@
+program
+{
+
+    i32 a;
+     a =:  for(i=:1 ; i < 3 ; +i){
+                if(i = 1) then{
+                      break 2;
+                }
+                end_if;
+           };else 3;
+
+}
+
+
+
+$ 
+ 
+  EJECUCION DEL PARSER FINALIZADA  
+  
+ |||||||||||||||||||||||||||||||||||||||||||||| 
+ 
+ 🔎  ANALISIS SINTÁCTICO    
+ 
+ 
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 4)
+ Se reconocio una sentencia break con retorno de valor (Línea 7)
+ Se reconoció una sentencia If. (Línea 9)
+ Se reconocio sentencia FOR. (Línea 10)
+ 
+ 
+ ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
+ 
+ 
+ SematicError. El ambito es $_for0
+ SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: if (Línea 9 )
+ SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: else (Línea 10 )
+ SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: =: (Línea 10 )
+  
+ 
+ 
+  
+              TABLA DE SIMBOLOS              
+
+TOKEN   257    program     #linea 1   null   null 
+TOKEN   257        a@$     #linea 4    i32    var 
+TOKEN   257   i@$_for0     #linea 5    i32 for_var 
+TOKEN   258          1     #linea 5    i32   null 
+TOKEN   258          3     #linea 5    i32    i32 
+TOKEN   258          1     #linea 6    i32   null 
+TOKEN   258          2     #linea 7    i32   null 
+TOKEN   258          3     #linea 10    i32   null  
+ 
+ 
+ 
+ --- ARBOL ---- 
+   └─ raiz 
+     └─ sentencia 
+        └─ =: 
+           └─ a@$ 
+           └─ else 
+              └─ For 
+                 └─ encabezado for 
+                    └─ asignacionFor 
+                       └─ =: 
+                          └─ i@$_for0 
+                          └─ 1 
+                    └─ condicion y operacion for 
+                       └─ condicionFor 
+                          └─ < 
+                             └─ i@$_for0 
+                             └─ 3 
+                       └─ operacionFor 
+                          └─ =: 
+                             └─ i@$_for0 
+                             └─ + 
+                                └─ i@$_for0 
+                                └─ uno 
+                 └─ cuerpoFor 
+                    └─ sentencia 
+                       └─ if 
+                          └─ condicionIf 
+                             └─ = 
+                                └─ i@$_for0 
+                                └─ 1 
+                          └─ cuerpo-if 
+                             └─ then 
+                                └─ sentencia 
+                                   └─ breakValor 
+                                      └─ 2 
+              └─ 3 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: dic. 07 2022, 07:20:15 p. m.

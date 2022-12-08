@@ -476,32 +476,71 @@ public class AnalizadorSintactico {
     }
 
     // -- Analizador Sintactico START
-
-
-    public void start() {
-
+    public void startConsola() {
+        System.out.println("________________________________________________");
         parser.activarAmbito();
         parser.setLexico(this.analizadorLexico);
         parser.setSintactico(this);
 
-        String estadoParser ;
-
         if (parser.yyparse() == 0) {
-            estadoParser = (" \n \n  EJECUCION DEL PARSER FINALIZADA  \n ") ;
+
+            System.out.println(" \n \n ✅ EJECUCION DEL PARSER FINALIZADA \n \n  ");
+
+            System.out.println("\n \n 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 \n ");
+
+            // imprimirAnalisisLexico();
+
+
         }
         else
-            estadoParser = (" \n \n EL PARSER NO PUDO TERMINAR \n ");
+            System.out.println(" \n \n ❌ EL PARSER NO PUDO TERMINAR \n \n ");
 
+        //   analizadorLexico.imprimirErrores();
 
         analizadorLexico.setPosArchivo(0);
         analizadorLexico.setBuffer("");
 
-        this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
+        System.out.println(" \n \n 💜 Analisis Sintactico ");
+        imprimirLista(this.analisisSintactico);
+        System.out.println(" \n \n ❤️ Errores Sintacticos y Semanticos ");
+        imprimirLista(this.erroresSintacticos);
+        imprimirTablaSimbolos();
 
-        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-        g.generarCodigoFunciones(arbolesFunciones);
-        g.generacionDeCodigo(this.raiz);
+        System.out.println(" ");
+
+        System.out.println("🌳 ARBOL 🌳 ");
+        imprimirArbol(this.raiz,0);
+        imprimirArbolesFuncion();
+       //   GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+          // g.generacionDeCodigo(this.raiz);
     }
+
+//    public void start() {
+//
+//        parser.activarAmbito();
+//        parser.setLexico(this.analizadorLexico);
+//        parser.setSintactico(this);
+//
+//        String estadoParser ;
+//
+//        if (parser.yyparse() == 0) {
+//            estadoParser = (" \n \n  EJECUCION DEL PARSER FINALIZADA  \n ") ;
+//        }
+//        else
+//            estadoParser = (" \n \n EL PARSER NO PUDO TERMINAR \n ");
+//
+//
+//        analizadorLexico.setPosArchivo(0);
+//        analizadorLexico.setBuffer("");
+//
+//        this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
+//
+//        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+//        g.generarCodigoFunciones(arbolesFunciones);
+//        g.generacionDeCodigo(this.raiz);
+//
+//
+//    }
 
 
 }
