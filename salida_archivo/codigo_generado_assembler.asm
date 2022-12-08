@@ -20,47 +20,14 @@ errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funcione
 _program dd ?,?
 _a@$ dd ?,?
 _b@$ dd ?,?
-_e@$ dd ?,?
 _c@$ dd ?,?
-_d@$ dd ?,?
-_fun1@$ dd ?,?
-_g@$ dd ?,?
-_fun2@$ dd ?,?
-_k@$ dd ?,?
-_l@$ dd ?,?
 .code
 ;------------ CODE ------------
-PUBLIC _fun2@$
-_fun2@$ PROC
-MOV _k@$,EAX
-FSTP _l@$
-MOV EAX,1
-MOV _k@$,EAX
-FLD _2_1
-ret 
-_fun2@$ ENDP
-PUBLIC _fun1@$
-_fun1@$ PROC
-MOV _g@$,EAX
-MOV EAX,1
-MOV _g@$,EAX
-MOV EAX, g@$
-ret 
-_fun1@$ ENDP
 start:
-MOV EAX,1
-MOV _a@$,EAX
-FLD _1_3
-FADD _1_1
-FSTP @aux0
-FLD @aux0
-FSTP _d@$
-FLD 5_1
-FSTP _c@$
-FLD _c@$
-MOV EAX, _b@$
-call _fun2@$
-FSTP _d@$
+FLD 1_0
+FSTP _a@$
+FLD 0_0
+FSTP _b@$
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

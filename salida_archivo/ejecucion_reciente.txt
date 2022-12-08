@@ -1,23 +1,9 @@
 program
 {
-    i32 a, b, e;
-    f32 c, d;
+    f32 a, b, c;
+    a =: 1.0;
+    b =: 0.0;
 
-    a =: 1 ;
-    d =: 1.3 + 1.1;
-
-    fun fun1 ( i32 g ): i32 {
-        g =: 1;
-        return(g);
-    }
-
-   fun fun2 ( i32 k, f32 l ): f32 {
-        k =: 1;
-        return(2.1);
-   }
-
-   c =: 5.1;
-   d =: fun2(b, c);
 
 }$ 
  
@@ -28,14 +14,7 @@ program
  🔎  ANALISIS SINTÁCTICO    
  
  
- Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
- Se reconoció declaraciónes de variable de tipo f32. (Línea 4)
- Se reconocio declaracion de funcion (Línea 9)
- Se reconoce retorno de funcion(Línea 11) 
- Se reconoce cuerpo de funcion (Línea 12)
- Se reconocio declaracion de funcion (Línea 14)
- Se reconoce retorno de funcion(Línea 16) 
- Se reconoce cuerpo de funcion (Línea 17)
+ Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -50,23 +29,11 @@ program
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null   null 
-TOKEN   257        a@$     #linea 3    i32    var 
-TOKEN   257        b@$     #linea 3    i32    var 
-TOKEN   257        e@$     #linea 3    i32    var 
-TOKEN   257        c@$     #linea 4    f32    var 
-TOKEN   257        d@$     #linea 4    f32    var 
-TOKEN   258          1     #linea 6    i32   null 
-TOKEN   258        1.3     #linea 7    f32   null 
-TOKEN   258        1.1     #linea 7    f32   null 
-TOKEN   257     fun1@$     #linea 9    i32   func 
-TOKEN   257        g@$     #linea 9    i32 param@fun1@$@0 
-TOKEN   258          1     #linea 10    i32   null 
-TOKEN   257     fun2@$     #linea 14    f32   func 
-TOKEN   257        k@$     #linea 14    i32 param@fun2@$@0 
-TOKEN   257        l@$     #linea 14    f32 param@fun2@$@1 
-TOKEN   258          1     #linea 15    i32   null 
-TOKEN   258        2.1     #linea 16    f32   null 
-TOKEN   258        5.1     #linea 19    f32   null  
+TOKEN   257        a@$     #linea 3    f32    var 
+TOKEN   257        b@$     #linea 3    f32    var 
+TOKEN   257        c@$     #linea 3    f32    var 
+TOKEN   258        1.0     #linea 4    f32   null 
+TOKEN   258        0.0     #linea 5    f32   null  
  
  
  
@@ -75,45 +42,12 @@ TOKEN   258        5.1     #linea 19    f32   null
      └─ sentencia 
         └─ =: 
            └─ a@$ 
-           └─ 1 
+           └─ 1.0 
         └─ sentencia 
            └─ =: 
-              └─ d@$ 
-              └─ + 
-                 └─ 1.3 
-                 └─ 1.1 
-           └─ sentencia 
-              └─ =: 
-                 └─ c@$ 
-                 └─ 5.1 
-              └─ sentencia 
-                 └─ =: 
-                    └─ d@$ 
-                    └─ fun2@$ 
-                       └─ paramInv 
-                          └─ b@$ 
-                          └─ c@$ 
- 
-  ARBOL DE LA FUNCION fun2@$ 
-  └─ fun2@$ 
-     └─ sentencia 
-        └─ =: 
-           └─ k@$ 
-           └─ 1 
-        └─ sentencia 
-           └─ return 
-              └─ 2.1 
- 
-  ARBOL DE LA FUNCION fun1@$ 
-  └─ fun1@$ 
-     └─ sentencia 
-        └─ =: 
-           └─ g@$ 
-           └─ 1 
-        └─ sentencia 
-           └─ return 
-              └─ g@$ 
+              └─ b@$ 
+              └─ 0.0 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 07 2022, 10:32:45 p. m.
+ Hora de ejecucion: dic. 08 2022, 06:01:52 p. m.
