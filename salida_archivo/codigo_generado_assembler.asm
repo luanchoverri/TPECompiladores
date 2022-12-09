@@ -23,19 +23,25 @@ _program dd ?,?
 _a@$ dd ?,?
 _b@$ dd ?,?
 _c@$ dd ?,?
-_d@$ dd ?,?
 _e@$ dd ?,?
-_f@$ dd ?,?
-_g@$ dd ?,?
-_3_4 dd ?,?
 _1_0 dd ?,?
-__3_5 dd ?,?
-__0 dd ?,?
+_0_0 dd ?,?
+_6_2 dd ?,?
 @aux0 dd ?,?
 @aux1 dd ?,?
+@aux2 dd ?,?
 .code
 ;------------ CODE ------------
 start:
+FLD _1_0
+FSTP _a@$
+FLD _0_0
+FSTP _b@$
+FLD _6_2
+FSTP _e@$
+FLD _a@$
+FIMUL _b@$
+FSTP @aux0
 FLD1
 FLDZ
 FCOM
@@ -46,28 +52,15 @@ JNE _label0
 invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
 invoke ExitProcess, 0
 _label0:
-FLD _3_4
-FDIV _1_0
-FST @aux0
-invoke MessageBox, NULL, addr ok, addr ok, MB_OK
-FLD @aux0
-FSTP _f@$
-FLDZ
-FLDZ
-FCOM
-FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
-JNE _label1
-invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
-invoke ExitProcess, 0
-_label1:
-FLD __3_5
-FDIV __0
+FLD _a@$
+FDIV _e@$
 FST @aux1
 invoke MessageBox, NULL, addr ok, addr ok, MB_OK
-FLD @aux1
-FSTP _d@$
+FLD @aux0
+FADD @aux1
+FSTP @aux2
+FLD @aux2
+FSTP _c@$
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

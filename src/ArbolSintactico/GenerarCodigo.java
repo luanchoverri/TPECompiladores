@@ -195,7 +195,7 @@ public class GenerarCodigo{
                         condicionIfAssembler(nodo);
                         break;
 
-                    case ("if"):
+                    case ("if"): // Si no entra en el "IF" entra al siguiente, es decir, al "WHEN"
 
                     case ("when"):
                         ifAssembler(nodo);
@@ -768,7 +768,11 @@ public class GenerarCodigo{
 
             // Controlamos la division por CERO
 
-            this.assemblerCode.append("MOV EAX, "+nodo.getHijoDerecho().getLexema()+"\n");
+            if(nodo.getHijoDerecho().getLexema().contains("@"))
+                this.assemblerCode.append("MOV EAX, "+"_"+nodo.getHijoDerecho().getLexema()+"\n");
+            else
+                this.assemblerCode.append("MOV EAX, "+nodo.getHijoDerecho().getLexema()+"\n");
+
             this.assemblerCode.append("CMP EAX, 0 \n"); // COMPARA EL VALOR DE EAX CON 0 (MENOR, MAYOR O IGUAL)
             this.assemblerCode.append("JNE " + label + "\n"); // Si no es igual, salto a la etiqueta label correspondiente
 
@@ -778,10 +782,19 @@ public class GenerarCodigo{
 
             // Si no es igual a cero, sigo la ejecucion
             this.assemblerCode.append(label + ":\n");
-            this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema()+"\n");
+            if(nodo.getHijoIzquierdo().getLexema().contains("@"))
+                this.assemblerCode.append("MOV EAX, "+"_"+nodo.getHijoIzquierdo().getLexema()+"\n");
+            else
+                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema()+"\n");
+
 			this.assemblerCode.append("CDQ\n");
             this.assemblerCode.append("MOV EDX, 0"+"\n");
-			this.assemblerCode.append("MOV EBX, "+nodo.getHijoDerecho().getLexema() +"\n");
+
+            if(nodo.getHijoDerecho().getLexema().contains("@"))
+                this.assemblerCode.append("MOV EBX, "+"_"+nodo.getHijoDerecho().getLexema()+"\n");
+            else
+                this.assemblerCode.append("MOV EBX, "+nodo.getHijoDerecho().getLexema()+"\n");
+
             this.assemblerCode.append("CDQ\n");
 			this.assemblerCode.append("IDIV EBX\n");
             this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
@@ -846,7 +859,7 @@ public class GenerarCodigo{
         }else{
             if (nodo.getTipo().equals("f32")){
                 this.assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-                this.assemblerCode.append("FIMUL" +"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+ "\n");
+                this.assemblerCode.append("FIMUL " +"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+ "\n");
                 this.assemblerCode.append("FSTP "+aux+"\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarMult");
             }
@@ -891,12 +904,12 @@ public class GenerarCodigo{
             this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarAdd");
         }else{
             if (nodo.getTipo().equals("f32")) {
-                if (nodo.getHijoIzquierdo().getLexema().startsWith("@")){
-                    this.assemblerCode.append("FLD " +nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_') + "\n");
+                if (nodo.getHijoIzquierdo().getLexema().contains("@")){
+                    this.assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_') + "\n");
                 }else {
                     this.assemblerCode.append("FLD " + "_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_') + "\n");
                 }
-                this.assemblerCode.append("FADD " +"_"+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n");
+                this.assemblerCode.append("FADD "+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n");
                 this.assemblerCode.append("FSTP "+ aux + "\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarAdd");
             }
@@ -938,32 +951,31 @@ public class GenerarCodigo{
             if (!nodo.getHijoDerecho().esHoja()){
                 if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho() != null){
                     if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getTipo().equals("i32")){
-
-
-
                         this.assemblerCode.append("MOV EBX, "+"_"+nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
                     } else {
-                        this.assemblerCode.append("FLD "+""+nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                        this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
                     }
                 }
                 if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getTipo().equals("i32")){
                     this.assemblerCode.append("MOV EAX, "+"_"+nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
                 } else {
-                    this.assemblerCode.append("FLD "+""+nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+                    this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
                 }
             }
-
             this.pilaInvocaciones.push(t.getLexema());
             this.assemblerCode.append("call _"+t.getLexema().replace('.','_').replace('-', '_')+"\n");
 
             if (nodo.getTipo().equals("i32")){
                 this.assemblerCode.append("MOV "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+","+"EAX"+"\n");
             } else {
-                this.assemblerCode.append("FSTP "+""+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+                this.assemblerCode.append("FSTP "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
             }
 
             this.pilaInvocaciones.pop();
         }
+
+        // Declaracion de constantes simples
+
         else {
             if (nodo.getHijoIzquierdo().getTipo().equals("i32")) { // a(izq) =:(raiz) 1(der); // aca puede traer conflictos el _ en algunos aux
                 if (nodo.getHijoIzquierdo().getLexema().contains("@")){
@@ -976,9 +988,16 @@ public class GenerarCodigo{
             else{
                 if (nodo.getHijoIzquierdo().getTipo().equals("f32")) { // a(izq) =: (raiz) 1.5(der)
                     if (nodo.getHijoIzquierdo().getLexema().contains("@")){
-                        this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                        if(nodo.getHijoDerecho().getLexema().contains("@"))
+                            this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                        else{
+                            this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                        }
                     }else {
-                        this.assemblerCode.append("FLD "+""+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                        if(nodo.getHijoDerecho().getLexema().contains("@"))
+                            this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                        else
+                            this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
                     }
                     this.assemblerCode.append("FSTP "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
                 }

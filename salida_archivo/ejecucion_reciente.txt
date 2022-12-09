@@ -1,12 +1,10 @@
 program
 {
-    i32 a,b,c;
-    f32 d,e,f,g;
-
-    f =: 3.4/1.0;
-    d =: -3.5/.0;
-
-
+    f32 a, b, c, e;
+    a =: 1.0;
+    b =: 0.0;
+    e =: 6.2;
+    c =: a * b + a / e;
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -16,8 +14,7 @@ program
  🔎  ANALISIS SINTÁCTICO    
  
  
- Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
- Se reconoció declaraciónes de variable de tipo f32. (Línea 4)
+ Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -32,17 +29,13 @@ program
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null   null 
-TOKEN   257        a@$     #linea 3    i32    var 
-TOKEN   257        b@$     #linea 3    i32    var 
-TOKEN   257        c@$     #linea 3    i32    var 
-TOKEN   257        d@$     #linea 4    f32    var 
-TOKEN   257        e@$     #linea 4    f32    var 
-TOKEN   257        f@$     #linea 4    f32    var 
-TOKEN   257        g@$     #linea 4    f32    var 
-TOKEN   258        3.4     #linea 6    f32   null 
-TOKEN   258        1.0     #linea 6    f32   null 
-TOKEN   258       -3.5     #linea 7    f32   null 
-TOKEN   258         .0     #linea 7    f32   null  
+TOKEN   257        a@$     #linea 3    f32    var 
+TOKEN   257        b@$     #linea 3    f32    var 
+TOKEN   257        c@$     #linea 3    f32    var 
+TOKEN   257        e@$     #linea 3    f32    var 
+TOKEN   258        1.0     #linea 4    f32   null 
+TOKEN   258        0.0     #linea 5    f32   null 
+TOKEN   258        6.2     #linea 6    f32   null  
  
  
  
@@ -50,17 +43,27 @@ TOKEN   258         .0     #linea 7    f32   null
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ f@$ 
-           └─ / 
-              └─ 3.4 
-              └─ 1.0 
+           └─ a@$ 
+           └─ 1.0 
         └─ sentencia 
            └─ =: 
-              └─ d@$ 
-              └─ / 
-                 └─ -3.5 
-                 └─ .0 
+              └─ b@$ 
+              └─ 0.0 
+           └─ sentencia 
+              └─ =: 
+                 └─ e@$ 
+                 └─ 6.2 
+              └─ sentencia 
+                 └─ =: 
+                    └─ c@$ 
+                    └─ + 
+                       └─ * 
+                          └─ a@$ 
+                          └─ b@$ 
+                       └─ / 
+                          └─ a@$ 
+                          └─ e@$ 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 09 2022, 02:59:21 a. m.
+ Hora de ejecucion: dic. 09 2022, 12:39:33 p. m.
