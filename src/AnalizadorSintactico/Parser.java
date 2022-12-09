@@ -907,7 +907,7 @@ final static String yyrule[] = {
 "tipo : f32",
 };
 
-//#line 764 "gramatica.y"
+//#line 768 "gramatica.y"
 
 private AnalizadorLexico lexico;
 private AnalizadorSintactico sintactico;
@@ -2097,44 +2097,48 @@ break;
 case 202:
 //#line 742 "gramatica.y"
 {
+
+				String type = sintactico.getTipoFromTS(val_peek(1).ival);
+				sintactico.setTipoEnIndex(type,val_peek(0).ival);
 				sintactico.setNegativoTablaSimb(val_peek(0).ival);
+
 
 				yyval = new ParserVal(sintactico.crearHoja(val_peek(1).ival));
                    	}
 break;
 case 203:
-//#line 750 "gramatica.y"
+//#line 754 "gramatica.y"
 { yyval.sval = new String("<") ; }
 break;
 case 204:
-//#line 751 "gramatica.y"
+//#line 755 "gramatica.y"
 { yyval.sval = new String(">") ; }
 break;
 case 205:
-//#line 752 "gramatica.y"
+//#line 756 "gramatica.y"
 { yyval.sval = new String("<="); }
 break;
 case 206:
-//#line 753 "gramatica.y"
+//#line 757 "gramatica.y"
 { yyval.sval = new String(">="); }
 break;
 case 207:
-//#line 754 "gramatica.y"
+//#line 758 "gramatica.y"
 { yyval.sval = new String("=") ; }
 break;
 case 208:
-//#line 755 "gramatica.y"
+//#line 759 "gramatica.y"
 { yyval.sval = new String("=!"); }
 break;
 case 209:
-//#line 759 "gramatica.y"
+//#line 763 "gramatica.y"
 { yyval.sval = new String("i32"); }
 break;
 case 210:
-//#line 760 "gramatica.y"
+//#line 764 "gramatica.y"
 { yyval.sval = new String("f32"); }
 break;
-//#line 2061 "Parser.java"
+//#line 2065 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

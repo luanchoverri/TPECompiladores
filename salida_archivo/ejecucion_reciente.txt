@@ -1,8 +1,10 @@
 program
 {
     f32 a, b, c;
-    a =: 1.0;
-    b =: 0.0;
+    i32 d,e,f;
+    d =: 1 + 1;
+    a =: 1.1 + 1.2;
+    e =: 2/1;
 
 
 }$ 
@@ -15,6 +17,7 @@ program
  
  
  Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 4)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -32,8 +35,15 @@ TOKEN   257    program     #linea 1   null   null
 TOKEN   257        a@$     #linea 3    f32    var 
 TOKEN   257        b@$     #linea 3    f32    var 
 TOKEN   257        c@$     #linea 3    f32    var 
-TOKEN   258        1.0     #linea 4    f32   null 
-TOKEN   258        0.0     #linea 5    f32   null  
+TOKEN   257        d@$     #linea 4    i32    var 
+TOKEN   257        e@$     #linea 4    i32    var 
+TOKEN   257        f@$     #linea 4    i32    var 
+TOKEN   258          1     #linea 5    i32   null 
+TOKEN   258          1     #linea 5    i32   null 
+TOKEN   258        1.1     #linea 6    f32   null 
+TOKEN   258        1.2     #linea 6    f32   null 
+TOKEN   258          2     #linea 7    i32   null 
+TOKEN   258          1     #linea 7    i32   null  
  
  
  
@@ -41,13 +51,23 @@ TOKEN   258        0.0     #linea 5    f32   null
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ a@$ 
-           └─ 1.0 
+           └─ d@$ 
+           └─ + 
+              └─ 1 
+              └─ 1 
         └─ sentencia 
            └─ =: 
-              └─ b@$ 
-              └─ 0.0 
+              └─ a@$ 
+              └─ + 
+                 └─ 1.1 
+                 └─ 1.2 
+           └─ sentencia 
+              └─ =: 
+                 └─ e@$ 
+                 └─ / 
+                    └─ 2 
+                    └─ 1 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 08 2022, 06:01:52 p. m.
+ Hora de ejecucion: dic. 08 2022, 10:47:18 p. m.
