@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.sound.sampled.AudioSystem;
+
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.TablaSimbolos;
 import AnalizadorLexico.Token;
@@ -48,7 +50,6 @@ public class GenerarCodigo{
 
     }
 
-    // TODO controlar division por cero assembler
     // TODO controlar los demas errores que debe generar y controlar el assembler
     // TODO realizar mas casos de prueba para probar los @aux
 
@@ -69,8 +70,8 @@ public class GenerarCodigo{
 				".data\n"+
             ";------------ ERRORES DE EJECUCION ------------\n"+
             "errorOverflow db 'ERROR EN LA EJECUCION: Overflow de de datosPrecarga de punto flotante (f32)',0 \n" +
-            "errorDivCeroEntero db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga enteros',0 \n" +
-            "errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para datosPrecarga de punto flotante',0 \n" +
+            "errorDivCeroEntero db 'ERROR EN LA EJECUCION: Division por cero para constante de enteros',0 \n" +
+            "errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para constante de punto flotante',0 \n" +
             "errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n"+
             "ok db 'OK',0 \n"+
             "mem2bytes dw ?\n"
@@ -778,8 +779,10 @@ public class GenerarCodigo{
             // Si no es igual a cero, sigo la ejecucion
             this.assemblerCode.append(label + ":\n");
             this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema()+"\n");
-			this.assemblerCode.append("MOV EDX, 0"+"\n");
-			this.assemblerCode.append("MOV EBX, "+nodo.getHijoDerecho().getLexema()+"\n");
+			this.assemblerCode.append("CDQ\n");
+            this.assemblerCode.append("MOV EDX, 0"+"\n");
+			this.assemblerCode.append("MOV EBX, "+nodo.getHijoDerecho().getLexema() +"\n");
+            this.assemblerCode.append("CDQ\n");
 			this.assemblerCode.append("IDIV EBX\n");
             this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
 			this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
@@ -790,30 +793,38 @@ public class GenerarCodigo{
 
                 String label = "_label" + contadorEtiquetaLabel;
                 contadorEtiquetaLabel++;
-               // String mem2bytes = "@aux" + contadorAux;
-                this.contadorAux++;
-                this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n");
-                this.assemblerCode.append("FLDZ\n");                    // Carga el número 0 en el tope de la pila.
-                this.assemblerCode.append("FCOM\n");                    // Compara el tope de ST(0) = 0 con ST(1) = b, a fin de determinar si el divisor es igual a cero.
-                this.assemblerCode.append("FSTSW mem2bytes\n"); // Setea el flag
-                this.assemblerCode.append("MOV AX, mem2bytes\n"); // Guarda el flag en EAX
-                this.assemblerCode.append("SAHF\n");                    // Almaceno en los 8 bits menos significativos del registro de indicadores el valor de AH, tomado de EAX (estado de la comparación).
-                this.assemblerCode.append("JE " + label + "\n"); // Si no es igual a cero, salta a la etiqueta label correspondiente, sino tira mensaje de error
+                String mem2bytes= "@aux"+contadorAux;
+		        this.contadorAux++;
+
+                // Realizo la comparacion
+
+                if (nodo.getHijoDerecho().getLexema().equals("0.0") || nodo.getHijoDerecho().getLexema().equals(".0") || nodo.getHijoDerecho().getLexema().equals("0.")){
+                    this.assemblerCode.append("FLDZ"+ "\n"); // Carga el número 0 en el tope de la pila.
+                }else
+                    this.assemblerCode.append("FLD1" + "\n"); // Carga el número 1 en el tope de la pila.
+
+                assemblerCode.append("FLDZ\n");                   // Carga el número 0 en el tope de la pila.
+                assemblerCode.append("FCOM\n");                  // Compara el tope de ST(0) = 0 con ST(1) = 1 o 0 segun el divisor que viene del nodo.
+                assemblerCode.append("FSTSW mem2bytes\n");      // Almacena la palabra de estado en memoria, es decir, el determinante de la comparación anterior.
+                assemblerCode.append("MOV AX, mem2bytes\n");   // Copio el estado de la comparación en EAX.
+                assemblerCode.append("SAHF\n");
+                this.assemblerCode.append("JNE " + label + "\n");
+
+                // Si es cero, emito mensaje de error
+
                 this.assemblerCode.append("invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
 
                 // Si no es cero
 
                 this.assemblerCode.append(label + ":\n");
-                if (nodo.getHijoIzquierdo().getLexema().startsWith("@")){
-                    this.assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_') + "\n");
-                }else {
-                    this.assemblerCode.append("FLD " + "_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_') + "\n");
-                }
-                this.assemblerCode.append("FIDIV " + "_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n");
-                this.assemblerCode.append("FSTP " + aux + "\n");
+                this.assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+                this.assemblerCode.append("FDIV "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                this.assemblerCode.append("FST "+aux+"\n");
+                this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarDiv");
-             //  this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarDiv");
+                this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarDiv");
+
 
             }
         }
@@ -922,7 +933,7 @@ public class GenerarCodigo{
 
             // chequeamos por recursion directa
             if (!this.pilaInvocaciones.isEmpty() && this.pilaInvocaciones.peek().equals(t.getLexema())){
-                this.assemblerCode.append("invoke MessageBox, NULL, addr errorRecursion, addr program, MB_OK\n"); // DIVISION POR CERO CONTROL
+                this.assemblerCode.append("invoke MessageBox, NULL, addr errorRecursion, addr errorRecursion, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
             }
 

@@ -34,7 +34,7 @@ public class Main {
 
 
               //  sintactico.start();
-                sintactico.startConsola();
+                sintactico.start();
 
 
             }

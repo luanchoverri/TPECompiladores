@@ -477,7 +477,7 @@ public class AnalizadorSintactico {
     }
 
     // -- Analizador Sintactico START
-    public void startConsola() {
+    /*public void startConsola() {
         System.out.println("________________________________________________");
         parser.activarAmbito();
         parser.setLexico(this.analizadorLexico);
@@ -512,36 +512,36 @@ public class AnalizadorSintactico {
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         imprimirArbolesFuncion();
-   //      GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-      //   g.generacionDeCodigo(this.raiz);
-    }
+         GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+         g.generacionDeCodigo(this.raiz);
+    }*/
 
-//    public void start() {
-//
-//        parser.activarAmbito();
-//        parser.setLexico(this.analizadorLexico);
-//        parser.setSintactico(this);
-//
-//        String estadoParser ;
-//
-//        if (parser.yyparse() == 0) {
-//            estadoParser = (" \n \n  EJECUCION DEL PARSER FINALIZADA  \n ") ;
-//        }
-//        else
-//            estadoParser = (" \n \n EL PARSER NO PUDO TERMINAR \n ");
-//
-//
-//        analizadorLexico.setPosArchivo(0);
-//        analizadorLexico.setBuffer("");
-//
-//        this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
-//
-//        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-//        g.generarCodigoFunciones(arbolesFunciones);
-//        g.generacionDeCodigo(this.raiz);
-//
-//
-//    }
+    public void start() {
+
+        parser.activarAmbito();
+        parser.setLexico(this.analizadorLexico);
+        parser.setSintactico(this);
+
+        String estadoParser ;
+
+        if (parser.yyparse() == 0) {
+            estadoParser = (" \n \n  EJECUCION DEL PARSER FINALIZADA  \n ") ;
+        }
+        else
+            estadoParser = (" \n \n EL PARSER NO PUDO TERMINAR \n ");
+
+
+        analizadorLexico.setPosArchivo(0);
+        analizadorLexico.setBuffer("");
+
+        this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
+
+        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+        g.generarCodigoFunciones(arbolesFunciones);
+        g.generacionDeCodigo(this.raiz);
+
+
+    }
 
 
 }
