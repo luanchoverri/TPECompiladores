@@ -187,7 +187,10 @@ public class AnalizadorSintactico {
     public String tipoResultante(String id, Nodo izq, Nodo der){
 
         if (izq.getTipo() != null && izq.getTipo() != null )
+            System.out.println("EL NODO IZQ ES " + izq.toString());
+            System.out.println("EL NODO DER ES " + der.toString());
             if(izq.getTipo().equals(der.getTipo())){
+
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
                 return izq.getTipo();
             }
@@ -210,13 +213,11 @@ public class AnalizadorSintactico {
 
 
         if (hijoDer == null){
-            System.out.println("EL NODO IZQ ES " + hijoIzq.toString());
-            System.out.println("EL NODO DER ES NULL" );
+
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
             return i;
         } else {
-            System.out.println("EL NODO IZQ ES " + hijoIzq.toString());
-            System.out.println("EL NODO DER ES " + hijoDer.toString());
+
             Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
             if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
                 i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
@@ -511,8 +512,8 @@ public class AnalizadorSintactico {
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         imprimirArbolesFuncion();
-       //   GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-          // g.generacionDeCodigo(this.raiz);
+   //      GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+      //   g.generacionDeCodigo(this.raiz);
     }
 
 //    public void start() {
