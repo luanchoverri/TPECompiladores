@@ -21,7 +21,7 @@ public class RangoFlotante extends AccionSemanticaSimple {
             if (buffer.equals("0.0") || buffer.equals("0.") || buffer.equals(".0")){ // Si es cualquier caso de cero, retorna true
                 int idToken = lexico.getIdToken("cte");
                 lexico.setTokenActual(idToken);
-                lexico.agregarRegistro(buffer, idToken);
+               lexico.agregarRegistro(buffer, idToken);
                 return true;
             }
             float floatBuffer = 0f;

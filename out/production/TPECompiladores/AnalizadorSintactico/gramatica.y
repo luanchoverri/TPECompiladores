@@ -741,13 +741,8 @@ factor : id  		{
 				$$ = new ParserVal(sintactico.crearHoja($1.ival));
                   	}
        | '-' cte	{
-
-				String type = sintactico.getTipoFromTS($1.ival);
-				sintactico.setTipoEnIndex(type,$2.ival);
 				sintactico.setNegativoTablaSimb($2.ival);
-
 				$$ = new ParserVal(sintactico.crearHoja($2.ival));
-
                    	}
        ;
 
