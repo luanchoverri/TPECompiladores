@@ -20,47 +20,53 @@ errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funcione
 ok db 'OK',0 
 mem2bytes dw ?
 _program dd ?,?
+_i@$ dd ?,?
 _a@$ dd ?,?
-_b@$ dd ?,?
-_c@$ dd ?,?
-_e@$ dd ?,?
+_j@$ dd ?,?
 _1_0 dd ?,?
-_0_0 dd ?,?
-_6_2 dd ?,?
-@aux0 dd ?,?
-@aux1 dd ?,?
-@aux2 dd ?,?
+_2_0 dd ?,?
+_4_0 dd ?,?
+_k@$ dd ?,?
+_l@$ dd ?,?
+_p@$_fun2 dd ?,?
+_q@$_fun2 dd ?,?
 .code
 ;------------ CODE ------------
+PUBLIC _fun1@$_fun2
+_fun1@$_fun2 PROC
+FSTP _p@$_fun2
+FSTP _q@$_fun2
+FLD _1_0
+FSTP _p@$_fun2
+FLD _q@$_fun2
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+ret 
+_fun1@$_fun2 ENDP
+PUBLIC _fun2@$
+_fun2@$ PROC
+FSTP _k@$
+FSTP _l@$
+FLD _1_0
+FSTP _k@$
+FLD _i@$
+FLD _k@$
+call _fun1@$_fun2
+FSTP _l@$
+FLD _l@$
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+ret 
+_fun2@$ ENDP
 start:
 FLD _1_0
+FSTP _i@$
+FLD _2_0
 FSTP _a@$
-FLD _0_0
-FSTP _b@$
-FLD _6_2
-FSTP _e@$
-FLD _a@$
-FIMUL _b@$
-FSTP @aux0
-FLD1
-FLDZ
-FCOM
-FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
-JNE _label0
-invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
-invoke ExitProcess, 0
-_label0:
-FLD _a@$
-FDIV _e@$
-FST @aux1
-invoke MessageBox, NULL, addr ok, addr ok, MB_OK
-FLD @aux0
-FADD @aux1
-FSTP @aux2
-FLD @aux2
-FSTP _c@$
+FLD _4_0
+FSTP _j@$
+FLD _j@$
+FLD _i@$
+call _fun2@$
+FSTP _a@$
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

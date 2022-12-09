@@ -86,6 +86,7 @@ public class GenerarCodigo{
             // encabezado assembler funcion
             this.assemblerCode.append("PUBLIC "+"_"+lexemaFunc+"\n");
             this.assemblerCode.append("_"+lexemaFunc+" PROC"+"\n");
+            this.pilaInvocaciones.push(lexemaFunc);
             ArrayList<Integer> params = tablaSimbolos.getParametros(lexemaFunc);
 
 
@@ -121,6 +122,7 @@ public class GenerarCodigo{
                 }
             this.generarCodigoLeido(funcion.getValue());
             this.assemblerCode.append("_"+lexemaFunc+" ENDP\n");
+            this.pilaInvocaciones.pop();
         }
         this.assemblerCode.append("start:\n");
     }
@@ -287,19 +289,21 @@ public class GenerarCodigo{
 
     private void returnAssembler(Nodo nodo) {
         if (nodo.getTipo().equals("i32"))
-            if (nodo.getHijoIzquierdo().getLexema().contains("@")){
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+            if (nodo.getHijoIzquierdo().getLexema().contains("@") || nodo.getHijoIzquierdo().getLexema().contains("_")){
+                this.assemblerCode.append("MOV EAX, _"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
             }else {
-                this.assemblerCode.append("MOV EAX, " + "_" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
+                this.assemblerCode.append("MOV EAX, "+ nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
             }
         else {
-            if (nodo.getHijoIzquierdo().getLexema().contains("@")){
-                assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
+            if (nodo.getHijoIzquierdo().getLexema().contains("@") || nodo.getHijoIzquierdo().getLexema().contains(".")){
                 assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+            }else {
+                assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
             }
         }
+        this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
         this.assemblerCode.append("ret "+"\n");
+
     }
 
     private void continueAssembler(Nodo nodo) {
@@ -923,7 +927,6 @@ public class GenerarCodigo{
     private void paramAssembler(Nodo nodo){
         if (nodo.getHijoDerecho() != null){
             if (nodo.getHijoDerecho().getTipo().equals("i32")){
-                this.assemblerCode.append("NODO:"+nodo.getHijoDerecho().getLexema()+"\n");
                 this.assemblerCode.append("MOV EBX, "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
             } else {
                 this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
@@ -962,7 +965,7 @@ public class GenerarCodigo{
                     this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
                 }
             }
-            this.pilaInvocaciones.push(t.getLexema());
+            //this.pilaInvocaciones.push(t.getLexema());
             this.assemblerCode.append("call _"+t.getLexema().replace('.','_').replace('-', '_')+"\n");
 
             if (nodo.getTipo().equals("i32")){
@@ -971,7 +974,7 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FSTP "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
             }
 
-            this.pilaInvocaciones.pop();
+            //this.pilaInvocaciones.pop();
         }
 
         // Declaracion de constantes simples
@@ -1008,28 +1011,29 @@ public class GenerarCodigo{
     private void cargarVariablesAuxiliares(int indice) { // En los parametros deberiamos pasarle para poder acceder a los tipos (nodo ??)
         Token t = tablaSimbolos.getEntrada(indice);
 
+        if (!t.getLexema().startsWith("fun")){
             if (tablaSimbolos.getTipoToken(indice).equals("CADENA DE CARACTERES")) {
-                this.datosPrecarga.append(""+t.getLexema().replace('.','_').replace('-', '_'));
+                this.datosPrecarga.append("" + t.getLexema().replace('.', '_').replace('-', '_'));
                 this.datosPrecarga.append(" db '" + t.getLexema() + "'" + ",0");
                 this.datosPrecarga.append("\n");
             } else {
-                if (!(t.getId() == 258)){
-                    if(t.getLexema().contains("@aux")){
+                if (!(t.getId() == 258)) {
+                    if (t.getLexema().contains("@aux")) {
                         this.datosPrecarga.append(t.getLexema());
-                    }else{
+                    } else {
                         this.datosPrecarga.append("_" + t.getLexema().replace('.', '_').replace('-', '_'));
                     }
                     this.datosPrecarga.append(" dd ?,?");
                     this.datosPrecarga.append("\n");
-                }
-                else{
-                    if(t.getLexema().contains(".")){
-                        this.datosPrecarga.append("_"+t.getLexema().replace('.', '_').replace('-', '_'));
+                } else {
+                    if (t.getLexema().contains(".")) {
+                        this.datosPrecarga.append("_" + t.getLexema().replace('.', '_').replace('-', '_'));
                         this.datosPrecarga.append(" dd ?,?");
                         this.datosPrecarga.append("\n");
                     }
                 }
             }
+        }
 
 
     }

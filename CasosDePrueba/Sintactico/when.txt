@@ -1,10 +1,26 @@
 program
 {
-    i32 i;
-    i32 a;
-    << caso correcto
-    when ( i > 3 ) then { a =: i + 1; };
+    f32 i;
+    f32 a;
+    f32 j;
 
+    i =: 1.0;
+    a =: 2.0;
+    j =: 4.0;
 
+    fun fun2 ( f32 k, f32 l ): f32 {
+            k =: 1.0;
+
+            fun fun1 ( f32 p, f32 q ): f32 {
+                        p =: 1.0;
+
+                        return(q);
+                }
+
+            l =: fun1(k,i);
+            return(l);
+    }
+
+    a =: fun2(i,j);
 
 }

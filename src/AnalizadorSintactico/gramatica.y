@@ -733,20 +733,29 @@ factor : id  		{
 				}
 				}
        | cte		{
+				String lexema = sintactico.getEntradaTablaSimb($1.ival).getLexema();
+                                int existente = sintactico.getTS().existeEntrada(lexema);
+				if (existente >= 0 && existente < $1.ival) {
+					$$ = new ParserVal(sintactico.crearHoja(existente));
+					sintactico.eliminarEntrada($1.ival);
+				} else {
+					String type = sintactico.getTipoFromTS($1.ival);
+					if (type.equals("i32"))
+					     sintactico.verificarRangoEnteroLargo($1.ival);
 
-				String type = sintactico.getTipoFromTS($1.ival);
-				if (type.equals("i32"))
-				     sintactico.verificarRangoEnteroLargo($1.ival);
-
-				$$ = new ParserVal(sintactico.crearHoja($1.ival));
+					$$ = new ParserVal(sintactico.crearHoja($1.ival));
+				}
                   	}
        | '-' cte	{
-
-
 				sintactico.setNegativoTablaSimb($2.ival);
-
-				$$ = new ParserVal(sintactico.crearHoja($2.ival));
-
+				String lexema = sintactico.getEntradaTablaSimb($2.ival).getLexema();
+				int existente = sintactico.getTS().existeEntrada(lexema);
+                                if (existente >= 0  && existente < $2.ival) {
+                                	$$ = new ParserVal(sintactico.crearHoja(existente));
+                                        sintactico.eliminarEntrada($2.ival);
+                                }else{
+					$$ = new ParserVal(sintactico.crearHoja($2.ival));
+				}
                    	}
        ;
 

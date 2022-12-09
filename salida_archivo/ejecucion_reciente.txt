@@ -1,10 +1,28 @@
 program
 {
-    f32 a, b, c, e;
-    a =: 1.0;
-    b =: 0.0;
-    e =: 6.2;
-    c =: a * b + a / e;
+    f32 i;
+    f32 a;
+    f32 j;
+
+    i =: 1.0;
+    a =: 2.0;
+    j =: 4.0;
+
+    fun fun2 ( f32 k, f32 l ): f32 {
+            k =: 1.0;
+
+            fun fun1 ( f32 p, f32 q ): f32 {
+                        p =: 1.0;
+
+                        return(q);
+                }
+
+            l =: fun1(k,i);
+            return(l);
+    }
+
+    a =: fun2(i,j);
+
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -15,13 +33,20 @@ program
  
  
  Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
+ Se reconoció declaraciónes de variable de tipo f32. (Línea 4)
+ Se reconoció declaraciónes de variable de tipo f32. (Línea 5)
+ Se reconocio declaracion de funcion (Línea 11)
+ Se reconocio declaracion de funcion (Línea 14)
+ Se reconoce retorno de funcion(Línea 17) 
+ Se reconoce cuerpo de funcion (Línea 18)
+ Se reconoce retorno de funcion(Línea 21) 
+ Se reconoce cuerpo de funcion (Línea 22)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
  
  
- vacio. 
- 
+ SemanticError. NO SE RECONOCE EL TIPO DE RETURN (Línea 21)
   
  
  
@@ -29,13 +54,18 @@ program
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null   null 
-TOKEN   257        a@$     #linea 3    f32    var 
-TOKEN   257        b@$     #linea 3    f32    var 
-TOKEN   257        c@$     #linea 3    f32    var 
-TOKEN   257        e@$     #linea 3    f32    var 
-TOKEN   258        1.0     #linea 4    f32   null 
-TOKEN   258        0.0     #linea 5    f32   null 
-TOKEN   258        6.2     #linea 6    f32   null  
+TOKEN   257        i@$     #linea 3    f32    var 
+TOKEN   257        a@$     #linea 4    f32    var 
+TOKEN   257        j@$     #linea 5    f32    var 
+TOKEN   258        1.0     #linea 7    f32   null 
+TOKEN   258        2.0     #linea 8    f32   null 
+TOKEN   258        4.0     #linea 9    f32   null 
+TOKEN   257     fun2@$     #linea 11    f32   func 
+TOKEN   257        k@$     #linea 11    f32 param@fun2@$@0 
+TOKEN   257        l@$     #linea 11    f32 param@fun2@$@1 
+TOKEN   257 fun1@$_fun2     #linea 14    f32   func 
+TOKEN   257   p@$_fun2     #linea 14    f32 param@fun1@$_fun2@0 
+TOKEN   257   q@$_fun2     #linea 14    f32 param@fun1@$_fun2@1  
  
  
  
@@ -43,27 +73,51 @@ TOKEN   258        6.2     #linea 6    f32   null
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ a@$ 
+           └─ i@$ 
            └─ 1.0 
         └─ sentencia 
            └─ =: 
-              └─ b@$ 
-              └─ 0.0 
+              └─ a@$ 
+              └─ 2.0 
            └─ sentencia 
               └─ =: 
-                 └─ e@$ 
-                 └─ 6.2 
+                 └─ j@$ 
+                 └─ 4.0 
               └─ sentencia 
                  └─ =: 
-                    └─ c@$ 
-                    └─ + 
-                       └─ * 
-                          └─ a@$ 
-                          └─ b@$ 
-                       └─ / 
-                          └─ a@$ 
-                          └─ e@$ 
+                    └─ a@$ 
+                    └─ fun2@$ 
+                       └─ paramInv 
+                          └─ i@$ 
+                          └─ j@$ 
+ 
+  ARBOL DE LA FUNCION fun1@$_fun2 
+  └─ fun1@$_fun2 
+     └─ sentencia 
+        └─ =: 
+           └─ p@$_fun2 
+           └─ 1.0 
+        └─ sentencia 
+           └─ return 
+              └─ q@$_fun2 
+ 
+  ARBOL DE LA FUNCION fun2@$ 
+  └─ fun2@$ 
+     └─ sentencia 
+        └─ =: 
+           └─ k@$ 
+           └─ 1.0 
+        └─ sentencia 
+           └─ =: 
+              └─ l@$ 
+              └─ fun1@$_fun2 
+                 └─ paramInv 
+                    └─ k@$ 
+                    └─ i@$ 
+           └─ sentencia 
+              └─ return 
+                 └─ l@$ 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 09 2022, 12:39:33 p. m.
+ Hora de ejecucion: dic. 09 2022, 02:27:47 p. m.
