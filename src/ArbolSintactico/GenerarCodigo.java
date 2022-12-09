@@ -793,8 +793,6 @@ public class GenerarCodigo{
 
                 String label = "_label" + contadorEtiquetaLabel;
                 contadorEtiquetaLabel++;
-                String mem2bytes= "@aux"+contadorAux;
-		        this.contadorAux++;
 
                 // Realizo la comparacion
 
@@ -823,7 +821,6 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FST "+aux+"\n");
                 this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarDiv");
-                this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarDiv");
 
 
             }

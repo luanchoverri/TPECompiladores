@@ -29,12 +29,10 @@ _f@$ dd ?,?
 _g@$ dd ?,?
 _3_4 dd ?,?
 _1_0 dd ?,?
-_3_5 dd ?,?
+__3_5 dd ?,?
 __0 dd ?,?
 @aux0 dd ?,?
 @aux1 dd ?,?
-@aux2 dd ?,?
-@aux3 dd ?,?
 .code
 ;------------ CODE ------------
 start:
@@ -64,11 +62,11 @@ JNE _label1
 invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
 invoke ExitProcess, 0
 _label1:
-FLD _3_5
+FLD __3_5
 FDIV __0
-FST @aux2
+FST @aux1
 invoke MessageBox, NULL, addr ok, addr ok, MB_OK
-FLD @aux2
+FLD @aux1
 FSTP _d@$
 ;------------ FIN ------------
 invoke ExitProcess, 0

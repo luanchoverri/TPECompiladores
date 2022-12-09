@@ -4,7 +4,7 @@ program
     f32 d,e,f,g;
 
     f =: 3.4/1.0;
-    d =: 3.5/.0;
+    d =: -3.5/.0;
 
 
 }$ 
@@ -41,7 +41,7 @@ TOKEN   257        f@$     #linea 4    f32    var
 TOKEN   257        g@$     #linea 4    f32    var 
 TOKEN   258        3.4     #linea 6    f32   null 
 TOKEN   258        1.0     #linea 6    f32   null 
-TOKEN   258        3.5     #linea 7    f32   null 
+TOKEN   258       -3.5     #linea 7    f32   null 
 TOKEN   258         .0     #linea 7    f32   null  
  
  
@@ -58,9 +58,9 @@ TOKEN   258         .0     #linea 7    f32   null
            └─ =: 
               └─ d@$ 
               └─ / 
-                 └─ 3.5 
+                 └─ -3.5 
                  └─ .0 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 09 2022, 02:55:21 a. m.
+ Hora de ejecucion: dic. 09 2022, 02:59:21 a. m.
