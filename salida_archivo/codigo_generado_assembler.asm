@@ -26,36 +26,11 @@ _j@$ dd ?,?
 _1_0 dd ?,?
 _2_0 dd ?,?
 _4_0 dd ?,?
-_k@$ dd ?,?
-_l@$ dd ?,?
-_p@$_fun2 dd ?,?
-_q@$_fun2 dd ?,?
+out0 db 'hola',0
+out1 db '¡Cadena /         	multilinea 1! ',0
+out2 db 'que onda',0
 .code
 ;------------ CODE ------------
-PUBLIC _fun1@$_fun2
-_fun1@$_fun2 PROC
-FSTP _p@$_fun2
-FSTP _q@$_fun2
-FLD _1_0
-FSTP _p@$_fun2
-FLD _q@$_fun2
-invoke MessageBox, NULL, addr ok, addr ok, MB_OK
-ret 
-_fun1@$_fun2 ENDP
-PUBLIC _fun2@$
-_fun2@$ PROC
-FSTP _k@$
-FSTP _l@$
-FLD _1_0
-FSTP _k@$
-FLD _i@$
-FLD _k@$
-call _fun1@$_fun2
-FSTP _l@$
-FLD _l@$
-invoke MessageBox, NULL, addr ok, addr ok, MB_OK
-ret 
-_fun2@$ ENDP
 start:
 FLD _1_0
 FSTP _i@$
@@ -63,10 +38,9 @@ FLD _2_0
 FSTP _a@$
 FLD _4_0
 FSTP _j@$
-FLD _j@$
-FLD _i@$
-call _fun2@$
-FSTP _a@$
+invoke MessageBox, NULL, addr out0, addr out0, MB_OK
+invoke MessageBox, NULL, addr out1, addr out1, MB_OK
+invoke MessageBox, NULL, addr out2, addr out2, MB_OK
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

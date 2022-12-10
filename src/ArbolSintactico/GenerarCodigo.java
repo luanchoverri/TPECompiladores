@@ -28,6 +28,7 @@ public class GenerarCodigo{
     private Stack <String> pilaFor;
 
     private Stack <String> pilaInvocaciones;
+    private ArrayList<String> cadenas;
 
     public GenerarCodigo(AnalizadorLexico l){
         this.assemblerCode = new StringBuilder("");
@@ -36,6 +37,7 @@ public class GenerarCodigo{
         this.pilaControl = new Stack<>();
         this.pilaFor = new Stack<>();
         this.pilaInvocaciones = new Stack<>();
+        this.cadenas = new ArrayList<>();
         tablaSimbolos = l.getTablaSimbolos();
     }
 
@@ -284,7 +286,8 @@ public class GenerarCodigo{
         }
 
     private void outAssembler(Nodo nodo) {
-        this.assemblerCode.append("invoke MessageBox, NULL, addr "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+", addr "+"program"+", MB_OK");
+        this.assemblerCode.append("invoke MessageBox, NULL, addr "+this.cadenas.get(0)+", addr "+this.cadenas.get(0)+", MB_OK\n");
+        this.cadenas.remove(0);
     }
 
     private void returnAssembler(Nodo nodo) {
@@ -1012,10 +1015,11 @@ public class GenerarCodigo{
         Token t = tablaSimbolos.getEntrada(indice);
 
         if (!t.getLexema().startsWith("fun")){
-            if (tablaSimbolos.getTipoToken(indice).equals("CADENA DE CARACTERES")) {
-                this.datosPrecarga.append("" + t.getLexema().replace('.', '_').replace('-', '_'));
+            if (t.getUso() != null && t.getUso().equals("cadena")) {
+                this.datosPrecarga.append("out"+this.cadenas.size());
                 this.datosPrecarga.append(" db '" + t.getLexema() + "'" + ",0");
                 this.datosPrecarga.append("\n");
+                this.cadenas.add("out"+this.cadenas.size());
             } else {
                 if (!(t.getId() == 258)) {
                     if (t.getLexema().contains("@aux")) {
@@ -1066,8 +1070,9 @@ public class GenerarCodigo{
 
            code.append(";------------ CODE ------------\r\n");
            this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
-           this.generarCodigoLeido(nodo); // Carga el codigo completothis.cargarTablaSimbolos();
-           this.cargarTablaSimbolos();// Cargar las variables auxiliares (IMPLEMENTAR)
+            this.cargarTablaSimbolos();// Cargar las variables auxiliares (IMPLEMENTAR)
+            this.generarCodigoLeido(nodo); // Carga el codigo completothis.cargarTablaSimbolos();
+
            this.assemblerCode.append(";------------ FIN ------------\n");
            this.assemblerCode.append("invoke ExitProcess, 0\n");
 			this.assemblerCode.append("end start");

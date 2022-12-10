@@ -8,20 +8,10 @@ program
     a =: 2.0;
     j =: 4.0;
 
-    fun fun2 ( f32 k, f32 l ): f32 {
-            k =: 1.0;
-
-            fun fun1 ( f32 p, f32 q ): f32 {
-                        p =: 1.0;
-
-                        return(q);
-                }
-
-            l =: fun1(k,i);
-            return(l);
-    }
-
-    a =: fun2(i,j);
+    out('hola');
+    out('¡Cadena /
+         	multilinea 1! ');
+    out('que onda');
 
 }$ 
  
@@ -35,18 +25,13 @@ program
  Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
  Se reconoció declaraciónes de variable de tipo f32. (Línea 4)
  Se reconoció declaraciónes de variable de tipo f32. (Línea 5)
- Se reconocio declaracion de funcion (Línea 11)
- Se reconocio declaracion de funcion (Línea 14)
- Se reconoce retorno de funcion(Línea 17) 
- Se reconoce cuerpo de funcion (Línea 18)
- Se reconoce retorno de funcion(Línea 21) 
- Se reconoce cuerpo de funcion (Línea 22)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
  
  
- SemanticError. NO SE RECONOCE EL TIPO DE RETURN (Línea 21)
+ vacio. 
+ 
   
  
  
@@ -60,12 +45,9 @@ TOKEN   257        j@$     #linea 5    f32    var
 TOKEN   258        1.0     #linea 7    f32   null 
 TOKEN   258        2.0     #linea 8    f32   null 
 TOKEN   258        4.0     #linea 9    f32   null 
-TOKEN   257     fun2@$     #linea 11    f32   func 
-TOKEN   257        k@$     #linea 11    f32 param@fun2@$@0 
-TOKEN   257        l@$     #linea 11    f32 param@fun2@$@1 
-TOKEN   257 fun1@$_fun2     #linea 14    f32   func 
-TOKEN   257   p@$_fun2     #linea 14    f32 param@fun1@$_fun2@0 
-TOKEN   257   q@$_fun2     #linea 14    f32 param@fun1@$_fun2@1  
+TOKEN   272       hola     #linea 11   null cadena 
+TOKEN   272 ¡Cadena /         	multilinea 1!      #linea 13   null cadena 
+TOKEN   272   que onda     #linea 14   null cadena  
  
  
  
@@ -84,40 +66,15 @@ TOKEN   257   q@$_fun2     #linea 14    f32 param@fun1@$_fun2@1
                  └─ j@$ 
                  └─ 4.0 
               └─ sentencia 
-                 └─ =: 
-                    └─ a@$ 
-                    └─ fun2@$ 
-                       └─ paramInv 
-                          └─ i@$ 
-                          └─ j@$ 
- 
-  ARBOL DE LA FUNCION fun1@$_fun2 
-  └─ fun1@$_fun2 
-     └─ sentencia 
-        └─ =: 
-           └─ p@$_fun2 
-           └─ 1.0 
-        └─ sentencia 
-           └─ return 
-              └─ q@$_fun2 
- 
-  ARBOL DE LA FUNCION fun2@$ 
-  └─ fun2@$ 
-     └─ sentencia 
-        └─ =: 
-           └─ k@$ 
-           └─ 1.0 
-        └─ sentencia 
-           └─ =: 
-              └─ l@$ 
-              └─ fun1@$_fun2 
-                 └─ paramInv 
-                    └─ k@$ 
-                    └─ i@$ 
-           └─ sentencia 
-              └─ return 
-                 └─ l@$ 
+                 └─ out 
+                    └─ hola 
+                 └─ sentencia 
+                    └─ out 
+                       └─ ¡Cadena /         	multilinea 1!  
+                    └─ sentencia 
+                       └─ out 
+                          └─ que onda 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 09 2022, 02:27:47 p. m.
+ Hora de ejecucion: dic. 10 2022, 07:35:39 p. m.
