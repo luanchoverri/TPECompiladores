@@ -75,7 +75,7 @@ public class GenerarCodigo{
             "ok db 'OK',0 \n"+
             "mem2bytes dw ?\n"+
             "_maxFloat dq 3.402823466E38\n"+
-            "_minFloat dq -1.175494351E-38\n"
+            "_minFloat dq -3.402823466E38\n"
             );
 
 }
@@ -915,23 +915,31 @@ public class GenerarCodigo{
 
     }
 
+    public String getLexAssembler(Nodo nodo){
+        if (nodo.getLexema().startsWith("@"))
+            return nodo.getLexema();
+        else
+            if(nodo.getLexema().contains("@"))
+                return "_"+nodo.getLexema();
+
+        if(nodo.getLexema().contains("."))
+            return "_"+nodo.getLexema().replace('.', '_').replace('-', '_').replace("+","");
+
+        return nodo.getLexema();
+    }
+
     private void sumaAssembler(Nodo nodo) {
         String aux = "@aux" + contadorAux;
         this.contadorAux++;
         if (nodo.getTipo().equals("i32")) {
-
-            this.assemblerCode.append("MOV "+"EAX"+","+ ""+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_') + "\n");
-            this.assemblerCode.append("ADD "+"EAX"+","+ ""+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+            this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
+            this.assemblerCode.append("ADD "+"EAX"+","+getLexAssembler(nodo.getHijoDerecho())+"\n");
             this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
             this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarAdd");
         }else{
             if (nodo.getTipo().equals("f32")) {
-                if (nodo.getHijoIzquierdo().getLexema().contains("@")){
-                    this.assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","") + "\n");
-                }else {
-                    this.assemblerCode.append("FLD " + "_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","") + "\n");
-                }
-                this.assemblerCode.append("FADD "+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n");
+                this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
+                this.assemblerCode.append("FADD "+ getLexAssembler(nodo.getHijoDerecho())+"\n");
                 this.assemblerCode.append("FSTP "+ aux + "\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarAdd");
             }

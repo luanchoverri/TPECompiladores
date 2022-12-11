@@ -1,11 +1,12 @@
 program
 {
-    f32 a, b, c, e, f;
-    b =: 8.3;
-    c =: 2.3 * 2.0;
-    e =: -8.3;
-    f =: e / c + b / 1.;
-    a =: 3.9/.0;
+    f32 g,h,i,j,k,z;
+    j =: 11.4;
+    i =: 10.2 + 1.8;
+    g =: i + j;
+    k =: g + 1.2;
+    z =: 1.0 + g;
+    out('OK');
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -40,18 +41,18 @@ program
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null   null 
-TOKEN   257        a@$     #linea 3    f32    var 
-TOKEN   257        b@$     #linea 3    f32    var 
-TOKEN   257        c@$     #linea 3    f32    var 
-TOKEN   257        e@$     #linea 3    f32    var 
-TOKEN   257        f@$     #linea 3    f32    var 
-TOKEN   258        8.3     #linea 4    f32   null 
-TOKEN   258        2.3     #linea 5    f32   null 
-TOKEN   258        2.0     #linea 5    f32   null 
-TOKEN   258       -8.3     #linea 6    f32   null 
-TOKEN   258         1.     #linea 7    f32   null 
-TOKEN   258        3.9     #linea 8    f32   null 
-TOKEN   258         .0     #linea 8    f32   null  
+TOKEN   257        g@$     #linea 3    f32    var 
+TOKEN   257        h@$     #linea 3    f32    var 
+TOKEN   257        i@$     #linea 3    f32    var 
+TOKEN   257        j@$     #linea 3    f32    var 
+TOKEN   257        k@$     #linea 3    f32    var 
+TOKEN   257        z@$     #linea 3    f32    var 
+TOKEN   258       11.4     #linea 4    f32   null 
+TOKEN   258       10.2     #linea 5    f32   null 
+TOKEN   258        1.8     #linea 5    f32   null 
+TOKEN   258        1.2     #linea 7    f32   null 
+TOKEN   258        1.0     #linea 8    f32   null 
+TOKEN   272         OK     #linea 9   null cadena  
  
  
  
@@ -59,35 +60,36 @@ TOKEN   258         .0     #linea 8    f32   null
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ b@$ 
-           └─ 8.3 
+           └─ j@$ 
+           └─ 11.4 
         └─ sentencia 
            └─ =: 
-              └─ c@$ 
-              └─ * 
-                 └─ 2.3 
-                 └─ 2.0 
+              └─ i@$ 
+              └─ + 
+                 └─ 10.2 
+                 └─ 1.8 
            └─ sentencia 
               └─ =: 
-                 └─ e@$ 
-                 └─ -8.3 
+                 └─ g@$ 
+                 └─ + 
+                    └─ i@$ 
+                    └─ j@$ 
               └─ sentencia 
                  └─ =: 
-                    └─ f@$ 
+                    └─ k@$ 
                     └─ + 
-                       └─ / 
-                          └─ e@$ 
-                          └─ c@$ 
-                       └─ / 
-                          └─ b@$ 
-                          └─ 1. 
+                       └─ g@$ 
+                       └─ 1.2 
                  └─ sentencia 
                     └─ =: 
-                       └─ a@$ 
-                       └─ / 
-                          └─ 3.9 
-                          └─ .0 
+                       └─ z@$ 
+                       └─ + 
+                          └─ 1.0 
+                          └─ g@$ 
+                    └─ sentencia 
+                       └─ out 
+                          └─ OK 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 11 2022, 02:02:17 a. m.
+ Hora de ejecucion: dic. 11 2022, 11:51:46 a. m.
