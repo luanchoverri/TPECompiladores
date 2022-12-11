@@ -20,7 +20,7 @@ programa : encabezado_prog bloque_sentencias	{$$ = new ParserVal(sintactico.crea
 	 ;
 
 
-encabezado_prog : id
+encabezado_prog : id {sintactico.setUsoEnIndex("program",$1.ival);}
                 ;
 //TODO listo
 bloque_sentencias : bloque_sentencias '{' sentencia '}'	{$$ = $3;}
@@ -576,6 +576,7 @@ asignacion_for: id op_asignacion cte {
 						sintactico.setUsoEnIndex("for_var", $1.ival);
 						ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
 						ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
+						sintactico.setUsoEnIndex("cte",$3.ival);
 						$$ = new ParserVal(sintactico.crearNodoControl("asignacionFor",new ParserVal(sintactico.crearNodo("=:",identificador,constante))));
 					} else {
 						sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): la variable utilizada para el for loop ya ha sido declarada.");
@@ -738,12 +739,13 @@ factor : id  		{
                                 int existente = sintactico.getTS().existeEntrada(lexema);
 				if (existente >= 0 && existente < $1.ival) {
 					$$ = new ParserVal(sintactico.crearHoja(existente));
+					sintactico.setUsoEnIndex("cte",existente);
 					sintactico.eliminarEntrada($1.ival);
 				} else {
 					String type = sintactico.getTipoFromTS($1.ival);
 					if (type.equals("i32"))
 					     sintactico.verificarRangoEnteroLargo($1.ival);
-
+					sintactico.setUsoEnIndex("cte",$1.ival);
 					$$ = new ParserVal(sintactico.crearHoja($1.ival));
 				}
                   	}
@@ -753,9 +755,11 @@ factor : id  		{
 				int existente = sintactico.getTS().existeEntrada(lexema);
                                 if (existente >= 0  && existente < $2.ival) {
                                 	$$ = new ParserVal(sintactico.crearHoja(existente));
+                                	sintactico.setUsoEnIndex("cte neg",existente);
                                         sintactico.eliminarEntrada($2.ival);
                                 }else{
 					$$ = new ParserVal(sintactico.crearHoja($2.ival));
+					sintactico.setUsoEnIndex("cte neg",$2.ival);
 				}
                    	}
        ;

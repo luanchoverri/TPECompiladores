@@ -31,6 +31,10 @@ public class AnalizadorSintactico {
 
     private ArrayList<String> cadenas;
 
+    public HashMap<String, Nodo> getArbolesFunciones() {
+        return arbolesFunciones;
+    }
+
     public AnalizadorSintactico(AnalizadorLexico l, Parser p){
         analizadorLexico = l;
         parser = p;
@@ -165,6 +169,8 @@ public class AnalizadorSintactico {
         System.out.println("");
 
         Nodo n = (Nodo) arbolSentencias.obj;
+
+
         if (n.getLexema().equals("declarativa")){// en este caso la primera sentencia era declarativa, por lo que aun no se genero un arbol
 
             if (n.getHijoIzquierdo()!= null && (n.getHijoIzquierdo().getLexema().equals("lista_ctes") || n.getHijoIzquierdo().getLexema().equals("when"))) {
@@ -546,8 +552,8 @@ public class AnalizadorSintactico {
         this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
         if (this.erroresSintacticos.isEmpty() && this.analizadorLexico.getErroresLexicos().isEmpty()){
             GenerarCodigo g = new GenerarCodigo(analizadorLexico, this);
-            g.generarCodigoFunciones(arbolesFunciones);
-            g.generacionDeCodigo(this.raiz);
+
+            g.generacionDeCodigo(this.raiz,this);
         }else{
             System.out.println("Se encontraron errores LEXICOS o SINTACTICOS, por lo tanto no se pudo generar el assembler"+"\n");
         }

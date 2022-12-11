@@ -291,17 +291,11 @@ public class GenerarCodigo{
 
     private void returnAssembler(Nodo nodo) {
         if (nodo.getTipo().equals("i32"))
-            if (nodo.getHijoIzquierdo().getLexema().contains("@") || nodo.getHijoIzquierdo().getLexema().contains("_")){
-                this.assemblerCode.append("MOV EAX, _"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
-                this.assemblerCode.append("MOV EAX, "+ nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            }
+                this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+
         else {
-            if (nodo.getHijoIzquierdo().getLexema().contains("@")){
-                assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
-            }else {
-                assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
-            }
+            assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+
         }
         this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
         this.assemblerCode.append("ret "+"\n");
@@ -1028,7 +1022,7 @@ public class GenerarCodigo{
     private void cargarVariablesAuxiliares(int indice) {
         Token t = tablaSimbolos.getEntrada(indice);
 
-        if (!t.getLexema().startsWith("fun") && (t.getId()!=272)){
+        if (t.getLexema().contains("@aux") || (!t.getUso().equals("func") && (t.getId()!=272))){
 
             if (!(t.getId() == 258)) {
                 if (t.getLexema().contains("@aux")) {
@@ -1076,7 +1070,7 @@ public class GenerarCodigo{
 
     // -------------------- GENERACION DE CODIGO (SALIDA) -------------------- //
 
-    public void generacionDeCodigo(Nodo nodo) {
+    public void generacionDeCodigo(Nodo nodo, AnalizadorSintactico s) {
         try {
            String ruta = "salida_archivo/codigo_generado_assembler.asm";
            String contenido;
@@ -1092,6 +1086,7 @@ public class GenerarCodigo{
            code.append(";------------ CODE ------------\r\n");
             this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
             this.cargarCadenas();
+            this.generarCodigoFunciones(s.getArbolesFunciones());
             this.generarCodigoLeido(nodo); // Carga el codigo
             this.cargarTablaSimbolos();// Cargar las variables auxiliares
 

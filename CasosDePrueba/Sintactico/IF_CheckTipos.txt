@@ -4,11 +4,20 @@ program
     i32 a, b;
     a =:1;
     b=:0;
+    fun f():i32 {
+        for(i=:3 ; i >= 0 ; -i){
+                              if (i = 2) then {
+                                out('era 2');
+                              } else {
+                                out('no era 2');
+                              } end_if;
 
-    for(i=:3 ; i >= 0 ; -i){
-              out('en el for');
-         };
+                         };
+        return (a + 1);
+    }
 
+    b =: f();
+    out('todo ok');
 }
 
 

@@ -931,7 +931,7 @@ final static String yyrule[] = {
 "tipo : f32",
 };
 
-//#line 778 "gramatica.y"
+//#line 782 "gramatica.y"
 
 private AnalizadorLexico lexico;
 private AnalizadorSintactico sintactico;
@@ -1151,6 +1151,10 @@ boolean doaction;
 case 1:
 //#line 19 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodoControl("raiz", val_peek(0))); sintactico.setRaiz(yyval); }
+break;
+case 2:
+//#line 23 "gramatica.y"
+{sintactico.setUsoEnIndex("program",val_peek(0).ival);}
 break;
 case 3:
 //#line 26 "gramatica.y"
@@ -1947,6 +1951,7 @@ case 169:
 						sintactico.setUsoEnIndex("for_var", val_peek(2).ival);
 						ParserVal identificador = new ParserVal(sintactico.crearHoja(val_peek(2).ival));
 						ParserVal constante = new ParserVal(sintactico.crearHoja(val_peek(0).ival));
+						sintactico.setUsoEnIndex("cte",val_peek(0).ival);
 						yyval = new ParserVal(sintactico.crearNodoControl("asignacionFor",new ParserVal(sintactico.crearNodo("=:",identificador,constante))));
 					} else {
 						sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): la variable utilizada para el for loop ya ha sido declarada.");
@@ -1954,7 +1959,7 @@ case 169:
 				   }
 break;
 case 170:
-//#line 589 "gramatica.y"
+//#line 590 "gramatica.y"
 {
 					int existente = enAmbito(val_peek(0));
 					if (existente >= 0) {
@@ -1982,46 +1987,46 @@ case 170:
 					}
 break;
 case 179:
-//#line 624 "gramatica.y"
+//#line 625 "gramatica.y"
 { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten sentencias declarativas adentro del For"); }
 break;
 case 180:
-//#line 628 "gramatica.y"
+//#line 629 "gramatica.y"
 {	yyval = new ParserVal(sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 181:
-//#line 629 "gramatica.y"
+//#line 630 "gramatica.y"
 {
 									ParserVal modificado = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("sentencia", val_peek(0), null));
 									yyval = modificado;
 								}
 break;
 case 182:
-//#line 633 "gramatica.y"
+//#line 634 "gramatica.y"
 {sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): no se permiten cuerpos de for vacios.");}
 break;
 case 183:
-//#line 638 "gramatica.y"
+//#line 639 "gramatica.y"
 {	sintactico.addAnalisis("Se reconocio una sentencia break (Línea " + AnalizadorLexico.LINEA + ")");
 					yyval = new ParserVal(sintactico.crearNodoControl("break",null));}
 break;
 case 184:
-//#line 640 "gramatica.y"
+//#line 641 "gramatica.y"
 {	sintactico.addAnalisis("Se reconocio una sentencia break con retorno de valor (Línea " + AnalizadorLexico.LINEA + ")");
                 			yyval = new ParserVal(sintactico.crearNodoControl("breakValor", new ParserVal(sintactico.crearHoja(val_peek(1).ival))));}
 break;
 case 185:
-//#line 642 "gramatica.y"
+//#line 643 "gramatica.y"
 {	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de BREAK."); }
 break;
 case 186:
-//#line 645 "gramatica.y"
+//#line 646 "gramatica.y"
 {
 							sintactico.addAnalisis("Se reconocio una sentencia continue (Línea " + AnalizadorLexico.LINEA + ")");
 							yyval = new ParserVal(sintactico.crearNodoControl("continue",null));}
 break;
 case 187:
-//#line 648 "gramatica.y"
+//#line 649 "gramatica.y"
 { 	sintactico.addAnalisis("Se reconocio una sentencia continue con etiquetado(Línea " + AnalizadorLexico.LINEA + ")");
                    					int existente = enAmbito(val_peek(1));
 							if (existente < 0 ) {
@@ -2034,15 +2039,15 @@ case 187:
                    					}
 break;
 case 188:
-//#line 658 "gramatica.y"
+//#line 659 "gramatica.y"
 { 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'CONTINUE."); }
 break;
 case 189:
-//#line 659 "gramatica.y"
+//#line 660 "gramatica.y"
 { 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
 break;
 case 190:
-//#line 662 "gramatica.y"
+//#line 663 "gramatica.y"
 {
 								int existente = enAmbito(val_peek(4));
 								if (existente >= 0) {
@@ -2061,7 +2066,7 @@ case 190:
 							}
 break;
 case 192:
-//#line 695 "gramatica.y"
+//#line 696 "gramatica.y"
 {
 		    				yyval = new ParserVal(sintactico.crearNodoParam("paramInv", val_peek(2), val_peek(0)));
 		    				NodoHijo aux = (NodoHijo)val_peek(2).obj;
@@ -2072,7 +2077,7 @@ case 192:
 					}
 break;
 case 193:
-//#line 703 "gramatica.y"
+//#line 704 "gramatica.y"
 {	yyval = new ParserVal(sintactico.crearNodoParam("paramInv", val_peek(0), null));
 
 		    				NodoHijo aux = (NodoHijo)val_peek(0).obj;
@@ -2081,23 +2086,23 @@ case 193:
 		 			   }
 break;
 case 194:
-//#line 712 "gramatica.y"
+//#line 713 "gramatica.y"
 { yyval = new ParserVal(sintactico.crearNodo(val_peek(1).sval, val_peek(2), val_peek(0)));}
 break;
 case 195:
-//#line 716 "gramatica.y"
+//#line 717 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo(val_peek(1).sval, val_peek(2), val_peek(0))); }
 break;
 case 197:
-//#line 721 "gramatica.y"
+//#line 722 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("*",val_peek(2),val_peek(0)));}
 break;
 case 198:
-//#line 722 "gramatica.y"
+//#line 723 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("/",val_peek(2),val_peek(0)));}
 break;
 case 200:
-//#line 726 "gramatica.y"
+//#line 727 "gramatica.y"
 {
 				int existente = enAmbito(val_peek(0));
 				if (existente >= 0) {
@@ -2110,69 +2115,72 @@ case 200:
 				}
 break;
 case 201:
-//#line 736 "gramatica.y"
+//#line 737 "gramatica.y"
 {
 				String lexema = sintactico.getEntradaTablaSimb(val_peek(0).ival).getLexema();
                                 int existente = sintactico.getTS().existeEntrada(lexema);
 				if (existente >= 0 && existente < val_peek(0).ival) {
 					yyval = new ParserVal(sintactico.crearHoja(existente));
+					sintactico.setUsoEnIndex("cte",existente);
 					sintactico.eliminarEntrada(val_peek(0).ival);
 				} else {
 					String type = sintactico.getTipoFromTS(val_peek(0).ival);
 					if (type.equals("i32"))
 					     sintactico.verificarRangoEnteroLargo(val_peek(0).ival);
-
+					sintactico.setUsoEnIndex("cte",val_peek(0).ival);
 					yyval = new ParserVal(sintactico.crearHoja(val_peek(0).ival));
 				}
                   	}
 break;
 case 202:
-//#line 750 "gramatica.y"
+//#line 752 "gramatica.y"
 {
 				sintactico.setNegativoTablaSimb(val_peek(0).ival);
 				String lexema = sintactico.getEntradaTablaSimb(val_peek(0).ival).getLexema();
 				int existente = sintactico.getTS().existeEntrada(lexema);
                                 if (existente >= 0  && existente < val_peek(0).ival) {
                                 	yyval = new ParserVal(sintactico.crearHoja(existente));
+                                	sintactico.setUsoEnIndex("cte neg",existente);
                                         sintactico.eliminarEntrada(val_peek(0).ival);
                                 }else{
 					yyval = new ParserVal(sintactico.crearHoja(val_peek(0).ival));
+					sintactico.setUsoEnIndex("cte neg",val_peek(0).ival);
 				}
                    	}
 break;
 case 203:
-//#line 764 "gramatica.y"
+//#line 768 "gramatica.y"
 { yyval.sval = new String("<") ; }
 break;
 case 204:
-//#line 765 "gramatica.y"
+//#line 769 "gramatica.y"
 { yyval.sval = new String(">") ; }
 break;
 case 205:
-//#line 766 "gramatica.y"
+//#line 770 "gramatica.y"
 { yyval.sval = new String("<="); }
 break;
 case 206:
-//#line 767 "gramatica.y"
+//#line 771 "gramatica.y"
 { yyval.sval = new String(">="); }
 break;
 case 207:
-//#line 768 "gramatica.y"
+//#line 772 "gramatica.y"
 { yyval.sval = new String("=") ; }
 break;
 case 208:
-//#line 769 "gramatica.y"
+//#line 773 "gramatica.y"
 { yyval.sval = new String("=!"); }
 break;
 case 209:
-//#line 773 "gramatica.y"
+//#line 777 "gramatica.y"
 { yyval.sval = new String("i32"); }
 break;
 case 210:
-//#line 774 "gramatica.y"
+//#line 778 "gramatica.y"
 { yyval.sval = new String("f32"); }
 break;
-//#line 2099 "Parser.java"
+//#line 2107 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
