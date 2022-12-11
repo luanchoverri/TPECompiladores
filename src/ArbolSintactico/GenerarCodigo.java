@@ -30,14 +30,14 @@ public class GenerarCodigo{
     private Stack <String> pilaInvocaciones;
     private ArrayList<String> cadenas;
 
-    public GenerarCodigo(AnalizadorLexico l){
+    public GenerarCodigo(AnalizadorLexico l, AnalizadorSintactico s){
         this.assemblerCode = new StringBuilder("");
         this.inicio = new StringBuilder("");
         this.datosPrecarga = new StringBuilder("");
         this.pilaControl = new Stack<>();
         this.pilaFor = new Stack<>();
         this.pilaInvocaciones = new Stack<>();
-        this.cadenas = new ArrayList<>();
+        this.cadenas = s.getCadenas();
         tablaSimbolos = l.getTablaSimbolos();
     }
 
@@ -1029,32 +1029,37 @@ public class GenerarCodigo{
     private void cargarVariablesAuxiliares(int indice) { // En los parametros deberiamos pasarle para poder acceder a los tipos (nodo ??)
         Token t = tablaSimbolos.getEntrada(indice);
 
-        if (!t.getLexema().startsWith("fun")){
-            if (t.getUso() != null && t.getUso().equals("cadena")) {
-                this.datosPrecarga.append("out"+this.cadenas.size());
-                this.datosPrecarga.append(" db '" + t.getLexema() + "'" + ",0");
-                this.datosPrecarga.append("\n");
-                this.cadenas.add("out"+this.cadenas.size());
-            } else {
-                if (!(t.getId() == 258)) {
-                    if (t.getLexema().contains("@aux")) {
-                        this.datosPrecarga.append(t.getLexema());
-                    } else {
-                        this.datosPrecarga.append("_" + t.getLexema().replace('.', '_').replace('-', '_'));
-                    }
-                    this.datosPrecarga.append(" dd ?,?");
-                    this.datosPrecarga.append("\n");
+        if (!t.getLexema().startsWith("fun") && (t.getId()!=272)){
+
+            if (!(t.getId() == 258)) {
+                if (t.getLexema().contains("@aux")) {
+                    this.datosPrecarga.append(t.getLexema());
+                } else {
+                    this.datosPrecarga.append("_" + t.getLexema().replace('.', '_').replace('-', '_'));
                 }
-                else{
-                    if(t.getLexema().contains(".")){
-                        this.datosPrecarga.append("_"+t.getLexema().replace('.', '_').replace('-', '_').replace("+",""));
-                        this.datosPrecarga.append(" dd "+t.getLexema().replace("+","").replace("F","E").replace(".0","0.0"));
-                        this.datosPrecarga.append("\n");
-                    }
+                this.datosPrecarga.append(" dd ?,?");
+                this.datosPrecarga.append("\n");
+            }
+            else{
+                if(t.getLexema().contains(".")){
+                    this.datosPrecarga.append("_"+t.getLexema().replace('.', '_').replace('-', '_').replace("+",""));
+                    this.datosPrecarga.append(" dd "+t.getLexema().replace("+","").replace("F","E").replace(".0","0.0"));
+                    this.datosPrecarga.append("\n");
                 }
             }
         }
+
     }
+
+    private void cargarCadenas(){
+        for (int i = 0; i < cadenas.size(); i++){
+            this.datosPrecarga.append("out"+i);
+            this.datosPrecarga.append(" db '" + cadenas.get(i) + "'" + ",0");
+            this.datosPrecarga.append("\n");
+            this.cadenas.set(i,"out"+i);
+        }
+    }
+
 
     private void cargarTablaSimbolos() {
         for (int i = 0; i < tablaSimbolos.size(); i++){
@@ -1084,8 +1089,9 @@ public class GenerarCodigo{
 
            code.append(";------------ CODE ------------\r\n");
            this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
-            this.cargarTablaSimbolos();// Cargar las variables auxiliares (IMPLEMENTAR)
+            this.cargarCadenas();
             this.generarCodigoLeido(nodo); // Carga el codigo completothis.cargarTablaSimbolos();
+            this.cargarTablaSimbolos();// Cargar las variables auxiliares (IMPLEMENTAR)
 
            this.assemblerCode.append(";------------ FIN ------------\n");
            this.assemblerCode.append("invoke ExitProcess, 0\n");

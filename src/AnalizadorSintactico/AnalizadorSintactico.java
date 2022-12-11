@@ -29,17 +29,25 @@ public class AnalizadorSintactico {
 
     private HashMap<String,Nodo> arbolesFunciones;
 
+    private ArrayList<String> cadenas;
+
     public AnalizadorSintactico(AnalizadorLexico l, Parser p){
         analizadorLexico = l;
         parser = p;
         erroresSintacticos = new ArrayList<String>();
         analisisSintactico = new ArrayList<String>();
+        cadenas = new ArrayList<String>();
         tablaSimbolos = l.getTablaSimbolos();
         tipo = "";
         raiz = null;
         variables =  new ArrayList<Integer>();
         arbolesFunciones = new HashMap<>();
 
+    }
+
+    public ArrayList<String> getCadenas(){return this.cadenas;}
+    public void addCadena(int index){
+        this.cadenas.add(tablaSimbolos.getEntrada(index).getLexema());
     }
 
     public void agregarArbolFuncion(ParserVal arbol, String nombreFuncion){
@@ -539,7 +547,7 @@ public class AnalizadorSintactico {
 
         this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
         if (this.erroresSintacticos.isEmpty() && this.analizadorLexico.getErroresLexicos().isEmpty()){
-            GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+            GenerarCodigo g = new GenerarCodigo(analizadorLexico, this);
             g.generarCodigoFunciones(arbolesFunciones);
             g.generacionDeCodigo(this.raiz);
         }else{
