@@ -446,7 +446,7 @@ public class AnalizadorSintactico {
         if(!((Nodo)hijo.obj).getTipo().equals(ultimoSetFun)){
             this.addErrorSintactico("SemanticError. NO SE RECONOCE EL TIPO DE RETURN (Línea " + this.analizadorLexico.LINEA + ")" );
         }
-        clearTipo();
+
     }
 
     public void analisisParser(String programa, String estadoParser ) {

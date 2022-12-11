@@ -1,23 +1,26 @@
 program
 {
 
-    i32 a, b;
-    a =:1;
-    b=:0;
-    fun f():i32 {
-        for(i=:3 ; i >= 0 ; -i){
-                              if (i = 2) then {
-                                out('era 2');
-                              } else {
-                                out('no era 2');
-                              } end_if;
+    i32 b;
 
-                         };
-        return (a + 1);
-    }
+    fran:for (i =: 0 ; i<=3; +i){
+        if (i = 2) then{
+            out('era 2');
+            continue:fran;
+        } else {
+            out('no era 2');
+        }end_if;
 
-    b =: f();
-    out('todo ok');
+        for (j =: 0 ; j<=3; +j){
+            out('otro for');
+
+            continue:fran;
+            };
+
+        out('fin del for');
+    };
+
+    out('fuera del for');
 }
 
 

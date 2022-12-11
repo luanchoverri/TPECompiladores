@@ -254,13 +254,7 @@ public class GenerarCodigo{
 
                     // Funciones
 
-                    case ("break"):
-                        breakAssembler(nodo);
-                        break;
 
-                    case ("continue"):
-                        continueAssembler(nodo);
-                        break;
 
                     case ("continue-etiqueta"):
                         continueEtiquetaAssembler(nodo);
@@ -279,6 +273,16 @@ public class GenerarCodigo{
                         break;
                 }
                 nodo.descolgarHijos();
+            }
+        } else {
+            switch (nodo.getLexema()) {
+                case ("break"):
+                    breakAssembler(nodo);
+                    break;
+
+                case ("continue"):
+                    continueAssembler(nodo);
+                    break;
             }
         }
 
@@ -340,6 +344,9 @@ public class GenerarCodigo{
         this.assemblerCode.append("JNE "+ labelVerdadero+"\n"); // Salta a labelVerdadero si NO es Igual
         this.assemblerCode.append(labelBucle+ ":\n"); // Continua el bucle
         String condicionLabelPilaFor = this.pilaFor.pop();
+        if (!pilaFor.isEmpty() && !pilaFor.peek().contains("label")){
+            this.assemblerCode.append(this.pilaFor.pop()+ ":\n");
+        }
         this.pilaFor.push(labelFalso);
         this.pilaFor.push(labelBucle);
         this.pilaFor.push(labelVerdadero);
@@ -370,7 +377,8 @@ public class GenerarCodigo{
 
     private void etiquetaAssembler(Nodo nodo){
         String tag = "_"+nodo.getHijoIzquierdo().getLexema().split("@")[0].replace('.','_').replace('-', '_');
-        this.assemblerCode.append(tag + ":\n");
+       // this.assemblerCode.append(tag + ":\n");
+        this.pilaFor.push(tag);
     }
 
     private void forEtiquetadoAssembler(Nodo nodo){}

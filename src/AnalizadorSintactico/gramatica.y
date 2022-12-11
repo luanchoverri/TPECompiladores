@@ -175,6 +175,7 @@ asig_fun: ':' tipo	{
 cola_func: '{' cuerpo_fun '}'	{
 					sintactico.addAnalisis("Se reconoce cuerpo de funcion (Línea " + AnalizadorLexico.LINEA + ")");
 					this.ambito = borrarAmbito(this.ambito);
+					sintactico.clearTipo();
  					$$ = $2;
  				}
 	 ;
