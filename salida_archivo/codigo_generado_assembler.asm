@@ -19,20 +19,19 @@ errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para constante
 errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 
 ok db 'OK',0 
 mem2bytes dw ?
-_maxFloat dq 3.402823466E37
+_maxFloat dq 3.402823466E38
 _minFloat dq 1.175494351E-38
 _program dd ?,?
 _a@$ dd ?,?
 _b@$ dd ?,?
 _c@$ dd ?,?
 _e@$ dd ?,?
-_3_2 dd 3.2
+_3_402823466F37 dd 3.402823466E37
 _3_41 dd 3.41
-@aux0 dd ?,?
 .code
 ;------------ CODE ------------
 start:
-FLD _3_2
+FLD _3_402823466F37
 FMUL _3_41
 FCOM _maxFloat
 FSTSW mem2bytes

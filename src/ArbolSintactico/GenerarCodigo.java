@@ -74,7 +74,7 @@ public class GenerarCodigo{
             "errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n"+
             "ok db 'OK',0 \n"+
             "mem2bytes dw ?\n"+
-            "_maxFloat dq 3.402823466E37\n"+
+            "_maxFloat dq 3.402823466E38\n"+
             "_minFloat dq 1.175494351E-38\n"
             );
 
