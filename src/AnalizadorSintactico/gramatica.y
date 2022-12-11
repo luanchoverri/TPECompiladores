@@ -470,7 +470,6 @@ encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se
 
  // TODO listo
 detalles_for: asignacion_for ';' cond_op_for 	{	$$ = new ParserVal(sintactico.crearNodo("encabezado for",$1, $3));
-							sintactico.addErrorSintactico("SematicError. El ambito es "+this.ambito);
 						}
 		;
 // TODO listo
@@ -595,9 +594,8 @@ operacion_for: signo id		{
 							String [] aux = lexExistente.split("@");
                                                         String ambitoExistente = aux[1];
 							if ( ambitoExistente.equals(this.ambito)) {
-							 	// TODO FRAN HACER QUE LA OPERACION FOR TENGA UNA ASIGNACION ENTRE EL ID Y EL ID +/- 1 (+i ; -i)
 							 	ParserVal hoja = new ParserVal(sintactico.crearHoja(existente));// variableFor
-							 	Nodo n = sintactico.crearNodoControl("uno",null);
+							 	Nodo n = sintactico.crearNodoControl("1",null);
 							 	n.setTipo("i32");
 							 	ParserVal uno = new ParserVal(n);
 							 	ParserVal operacion = new ParserVal(sintactico.crearNodo($1.sval, hoja, uno));

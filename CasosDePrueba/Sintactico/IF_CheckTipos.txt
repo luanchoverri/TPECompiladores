@@ -4,11 +4,10 @@ program
     i32 a, b;
     a =:1;
     b=:0;
-    if(1 <= b) then{
-        out('entre al if');
-    } end_if;
-    out('fuera del if');
 
+    for(i=:3 ; i >= 0 ; -i){
+              out('en el for');
+         };
 
 }
 
