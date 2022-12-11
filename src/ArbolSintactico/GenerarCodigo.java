@@ -861,7 +861,7 @@ public class GenerarCodigo{
         }else{
             if (nodo.getTipo().equals("f32")){
                 this.assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
-                this.assemblerCode.append("FMUL "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                this.assemblerCode.append("FMUL "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
 
                 if(((nodo.getHijoIzquierdo().getLexema().contains("-")) && (nodo.getHijoDerecho().getLexema().contains("-"))))
                     this.assemblerCode.append("FCOM _maxFloat"+"\n");
@@ -871,7 +871,6 @@ public class GenerarCodigo{
                     else
                         this.assemblerCode.append("FCOM _maxFloat"+"\n");
 
-                this.assemblerCode.append("FSTP "+aux+"\n");
                 this.assemblerCode.append("FSTSW mem2bytes"+"\n");
                 this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
                 this.assemblerCode.append("SAHF"+"\n");
@@ -881,6 +880,7 @@ public class GenerarCodigo{
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
 
                 this.assemblerCode.append(label + ":\n");
+                this.assemblerCode.append("FSTP "+aux+"\n");
                 this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
 
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarMult");
