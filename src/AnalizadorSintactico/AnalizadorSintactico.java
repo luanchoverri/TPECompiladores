@@ -200,17 +200,29 @@ public class AnalizadorSintactico {
 
     public String tipoResultante(String id, Nodo izq, Nodo der){
 
-        if (izq.getTipo() != null && der.getTipo() != null ){
-            System.out.println("EL NODO IZQ ES " + izq.toString());
-            System.out.println("EL NODO DER ES " + der.toString());
+        if (izq.getTipo() != null && der.getTipo() != null ) {
+        //    System.out.println("EL NODO IZQ ES " + izq.toString());
+       //     System.out.println("EL NODO DER ES " + der.toString());
             if(izq.getTipo().equals(der.getTipo())){
 
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
                 return izq.getTipo();
             }
-            this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: "+ id +" (Línea " + AnalizadorLexico.LINEA + " )" );
+            this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: " + id + " (Línea " + AnalizadorLexico.LINEA + " )");
         }
         return null;
+    }
+
+    public void imprimirNodos(Nodo izq, Nodo der){
+        if (izq != null && der != null ) {
+            System.out.println("EL NODO IZQ ES " + izq.toString());
+            System.out.println("EL NODO DER ES " + der.toString());
+        }else if(izq != null ) {
+            System.out.println("EL NODO IZQ ES " + izq.toString());
+            System.out.println("EL NODO DER ES  NULL" );
+        }
+        else
+            System.out.println("--" );
     }
 
     public Nodo crearHoja(int indice){
@@ -221,12 +233,29 @@ public class AnalizadorSintactico {
         return i;
     }
 
+    public boolean tieneBreak(ParserVal hijo){
+        return (((Nodo)hijo.obj).getTieneBreak() != null);
+    }
+
+    public void checkBreaks(Nodo izq, Nodo der){
+
+        String breakDer = der.getTieneBreak();
+        String breakizq = izq.getTieneBreak();
+            if (!(breakDer.equals(breakizq))){
+                this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN -  BREAK IF/ELSE:  (Línea " + AnalizadorLexico.LINEA + " )");
+            }
+    }
+
+
     public Nodo crearNodo(String identificador, ParserVal hijoIzq, ParserVal hijoDer){
 
 
         if (hijoDer == null){
 
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
+            if (i.getTieneBreak() != null) {
+                i.setTieneBreak(i.getTieneBreak());
+            }
             return i;
         } else {
 
@@ -234,7 +263,9 @@ public class AnalizadorSintactico {
             if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
                 i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
             }
-            System.out.println("EL NODO RESULTANTE ES " + i.toString());
+
+            imprimirNodos((Nodo)hijoIzq.obj, (Nodo)hijoDer.obj);
+            System.out.println("EL NODO RESULTANTE ES " + i.toString() + " DE TIPO"+ (String)i.getTipo());
 
             return i;
 
@@ -491,7 +522,7 @@ public class AnalizadorSintactico {
     }
 
     // -- Analizador Sintactico START
-    /*public void startConsola() {
+    public void startConsola() {
         System.out.println("________________________________________________");
         parser.activarAmbito();
         parser.setLexico(this.analizadorLexico);
@@ -526,9 +557,9 @@ public class AnalizadorSintactico {
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         imprimirArbolesFuncion();
-         GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-         g.generacionDeCodigo(this.raiz);
-    }*/
+        // GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+     //    g.generacionDeCodigo(this.raiz);
+    }
 
     public void start() {
 

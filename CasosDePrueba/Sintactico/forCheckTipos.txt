@@ -2,13 +2,12 @@ program
 {
 
     i32 a, b;
-    a =: 1;
-     for(i=:1 ; i < 3 ; +i){
-          if(a = 1) then{
-             a =: b + 1;
-          } end_if;
-    };
-
+    i32 c;
+    a =: for(i=:1 ; i < 3 ; +i){
+              if (c < 3) then{
+                    break 4;
+              }end_if;
+          };else 7;
 }
 
 

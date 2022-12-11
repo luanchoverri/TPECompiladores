@@ -6,6 +6,15 @@ public abstract class Nodo {
 	protected int valor;
 	private String tipo;
 
+	private String tieneBreak = null ;
+
+	public String getTieneBreak() {
+		return tieneBreak;
+	}
+
+	public void setTieneBreak(String tieneBreak) {
+		this.tieneBreak = tieneBreak;
+	}
 
 	public int getValor(){
 		return this.valor;

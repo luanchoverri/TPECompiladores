@@ -288,7 +288,7 @@ asignacion : id op_asignacion expresion ';'	{
 
            | id op_asignacion expresion  error	{ sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la ASIG."); }
 
-           | id op_asignacion for_else_cte';'	{
+           | id op_asignacion for_else_cte ';'	{
            					int existente = enAmbito($1);
 						if (existente >= 0) {
 							ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
@@ -310,7 +310,16 @@ asignacion : id op_asignacion expresion ';'	{
            ;
 
 
-for_else_cte : expresion_For Else cte	{ $$ = new ParserVal(sintactico.crearNodo("else", $1, new ParserVal(sintactico.crearHoja($3.ival))));} //TODO Aca tambien nodo de control???
+for_else_cte : expresion_For Else cte	{ 	Nodo for_else = sintactico.crearNodo("for_else", $1, new ParserVal(sintactico.crearHoja($3.ival)));
+						String cteElse = sintactico.getTipoFromTS($3.ival);
+						if (cteElse.equals(tipoBreak)) {
+							for_else.setTipo(cteElse);
+                                                	$$ = new ParserVal(for_else);
+						}else{
+                                               		sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "):  los tipos en el BREAK/ELSE del FOR no coinciden");
+                                                }
+
+					} //TODO Aca tambien nodo de control???
 	     | expresion_For error	{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
 	     ;
 
@@ -471,6 +480,7 @@ encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se
 
  // TODO listo
 detalles_for: asignacion_for ';' cond_op_for 	{	$$ = new ParserVal(sintactico.crearNodo("encabezado for",$1, $3));
+
 						}
 		;
 // TODO listo
@@ -640,7 +650,10 @@ bloq_for_funcion : sentencias_For_funcion 			{	$$ = new ParserVal(sintactico.cre
 sentencia_BREAK : BREAK ';'	{	sintactico.addAnalisis("Se reconocio una sentencia break (Línea " + AnalizadorLexico.LINEA + ")");
 					$$ = new ParserVal(sintactico.crearNodoControl("break",null));}
                 | BREAK cte ';'	{	sintactico.addAnalisis("Se reconocio una sentencia break con retorno de valor (Línea " + AnalizadorLexico.LINEA + ")");
-                			$$ = new ParserVal(sintactico.crearNodoControl("breakValor", new ParserVal(sintactico.crearHoja($2.ival))));}
+                			$$ = new ParserVal(sintactico.crearNodoControl("breakValor", new ParserVal(sintactico.crearHoja($2.ival))));
+                			tipoBreak = sintactico.getTipoFromTS($2.ival);
+                			}
+
                 | BREAK error   {	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de BREAK."); }
                 ;
 // TODO listo
@@ -787,7 +800,7 @@ private String ambito;
 private int contadorFor;
 private int contadorIf;
 private int contadorWhen;
-
+private String tipoBreak = new String();
 
 
 public void activarAmbito(){this.ambito = "$"; this.contadorFor = 0; this.contadorIf = 0; this.contadorWhen = 0;} // $ va a simblizar el ambito global.
