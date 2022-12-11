@@ -313,7 +313,9 @@ for_else_cte : expresion_For Else cte	{ $$ = new ParserVal(sintactico.crearNodo(
 	     | expresion_For error	{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
 	     ;
 
-salida : out '(' cadena ')' ';'		{ $$ = new ParserVal(sintactico.crearNodoControl("out", new ParserVal(sintactico.crearHoja($3.ival))));}
+salida : out '(' cadena ')' ';'		{
+						sintactico.setUsoEnIndex("cadena",$3.ival);
+						$$ = new ParserVal(sintactico.crearNodoControl("out", new ParserVal(sintactico.crearHoja($3.ival))));}
        | out '(' cadena ')' error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de la impresión de cadena."); }
        | out '(' cadena error ';'	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): cierre erróneo de la lista de parámetros de out."); }
        | out cadena error ';'		{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): los parámetros de out deben estar entre paréntesis."); }
@@ -733,20 +735,29 @@ factor : id  		{
 				}
 				}
        | cte		{
+				String lexema = sintactico.getEntradaTablaSimb($1.ival).getLexema();
+                                int existente = sintactico.getTS().existeEntrada(lexema);
+				if (existente >= 0 && existente < $1.ival) {
+					$$ = new ParserVal(sintactico.crearHoja(existente));
+					sintactico.eliminarEntrada($1.ival);
+				} else {
+					String type = sintactico.getTipoFromTS($1.ival);
+					if (type.equals("i32"))
+					     sintactico.verificarRangoEnteroLargo($1.ival);
 
-				String type = sintactico.getTipoFromTS($1.ival);
-				if (type.equals("i32"))
-				     sintactico.verificarRangoEnteroLargo($1.ival);
-
-				$$ = new ParserVal(sintactico.crearHoja($1.ival));
+					$$ = new ParserVal(sintactico.crearHoja($1.ival));
+				}
                   	}
        | '-' cte	{
-
-
 				sintactico.setNegativoTablaSimb($2.ival);
-
-				$$ = new ParserVal(sintactico.crearHoja($2.ival));
-
+				String lexema = sintactico.getEntradaTablaSimb($2.ival).getLexema();
+				int existente = sintactico.getTS().existeEntrada(lexema);
+                                if (existente >= 0  && existente < $2.ival) {
+                                	$$ = new ParserVal(sintactico.crearHoja(existente));
+                                        sintactico.eliminarEntrada($2.ival);
+                                }else{
+					$$ = new ParserVal(sintactico.crearHoja($2.ival));
+				}
                    	}
        ;
 
