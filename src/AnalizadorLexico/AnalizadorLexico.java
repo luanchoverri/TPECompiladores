@@ -3,6 +3,7 @@ package AnalizadorLexico;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -128,6 +129,10 @@ public class AnalizadorLexico {
 
         };
         this.matrizAccionesSemanticas.setMatrizAccionSemantica(matrizSemantica);
+    }
+
+    public ArrayList<String> getErroresLexicos(){
+        return errores;
     }
 
     // -- Metodos --
@@ -316,6 +321,32 @@ public class AnalizadorLexico {
     public boolean isPalabraReservada(String buffer) {
        return this.tablaSimbolos.isPalabraReservada(buffer);
     }
+
+    public void imprimirErrores(BufferedWriter bw) throws IOException {
+
+            String contenido;
+
+            contenido = "|--- CODIGO FUENTE ---|" + "\n" + "\n" + "\n";
+            bw.write(contenido);
+            bw.write("\n" + "\n"+ "-----------------------------------------------------------------" + "\n");
+
+            if (this.errores.isEmpty()){
+                contenido = "\n" + "\n" + "\n" + "\n" +  "|--- Sin errores LEXICOS ---| (OK)";
+                bw.write(contenido);
+            }
+            else{
+                if (!(this.errores.isEmpty())){ // Si hay errores lexicos
+                    contenido = "\n" + "\n" + "\n" + "|--- ERRORES LÉXICOS: ---| (!)" + "\n" + "\n" + "\n";
+                    bw.write(contenido);
+                    for (int i = 0; i < this.errores.size(); i++){
+                        contenido = this.errores.get(i);
+                        bw.write(contenido);
+                    }
+                }
+            }
+
+    }
+
 
 
 }

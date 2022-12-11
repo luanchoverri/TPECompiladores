@@ -1,15 +1,22 @@
 program
 {
     f32 a, b, c, e;
-    a =: 1.0;
-    b =: 0.0;
-    e =: 6.2;
-    c =: a * b + a / e;
+    a =: -3.4 * -4.0;
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
   
- |||||||||||||||||||||||||||||||||||||||||||||| 
+ |||||||||||||||||||||||||||||||||||||||||||||| |--- CODIGO FUENTE ---|
+
+
+
+
+-----------------------------------------------------------------
+
+
+
+
+|--- Sin errores LEXICOS ---| (OK)
  
  🔎  ANALISIS SINTÁCTICO    
  
@@ -33,9 +40,8 @@ TOKEN   257        a@$     #linea 3    f32    var
 TOKEN   257        b@$     #linea 3    f32    var 
 TOKEN   257        c@$     #linea 3    f32    var 
 TOKEN   257        e@$     #linea 3    f32    var 
-TOKEN   258        1.0     #linea 4    f32   null 
-TOKEN   258        0.0     #linea 5    f32   null 
-TOKEN   258        6.2     #linea 6    f32   null  
+TOKEN   258       -3.4     #linea 4    f32   null 
+TOKEN   258       -4.0     #linea 4    f32   null  
  
  
  
@@ -44,26 +50,10 @@ TOKEN   258        6.2     #linea 6    f32   null
      └─ sentencia 
         └─ =: 
            └─ a@$ 
-           └─ 1.0 
-        └─ sentencia 
-           └─ =: 
-              └─ b@$ 
-              └─ 0.0 
-           └─ sentencia 
-              └─ =: 
-                 └─ e@$ 
-                 └─ 6.2 
-              └─ sentencia 
-                 └─ =: 
-                    └─ c@$ 
-                    └─ + 
-                       └─ * 
-                          └─ a@$ 
-                          └─ b@$ 
-                       └─ / 
-                          └─ a@$ 
-                          └─ e@$ 
+           └─ * 
+              └─ -3.4 
+              └─ -4.0 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 09 2022, 12:39:33 p. m.
+ Hora de ejecucion: dic. 10 2022, 11:49:32 p. m.

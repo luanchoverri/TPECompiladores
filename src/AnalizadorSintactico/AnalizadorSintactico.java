@@ -457,6 +457,8 @@ public class AnalizadorSintactico {
             bw.write(estadoParser);
             bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| " ) ;
 
+            this.imprimirAnalisisLexico(bw);
+            this.analizadorLexico.imprimirErrores(bw);
             this.imprimirAnalisisSintactico(bw);
             this.imprimirErroresSintacticos(bw);
             this.imprimirTablaSimbolos(bw);
@@ -522,6 +524,7 @@ public class AnalizadorSintactico {
         parser.setLexico(this.analizadorLexico);
         parser.setSintactico(this);
 
+
         String estadoParser ;
 
         if (parser.yyparse() == 0) {
@@ -535,10 +538,13 @@ public class AnalizadorSintactico {
         analizadorLexico.setBuffer("");
 
         this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
-
-        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-        g.generarCodigoFunciones(arbolesFunciones);
-        g.generacionDeCodigo(this.raiz);
+        if (this.erroresSintacticos.isEmpty() && this.analizadorLexico.getErroresLexicos().isEmpty()){
+            GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+            g.generarCodigoFunciones(arbolesFunciones);
+            g.generacionDeCodigo(this.raiz);
+        }else{
+            System.out.println("Se encontraron errores LEXICOS o SINTACTICOS, por lo tanto no se pudo generar el assembler"+"\n");
+        }
 
 
     }
