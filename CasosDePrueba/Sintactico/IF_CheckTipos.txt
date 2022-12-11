@@ -2,10 +2,12 @@ program
 {
 
     i32 a, b;
-
-    if(a < 1) then{
-        a =: b + 1;
+    a =:1;
+    b=:0;
+    if(1 <= b) then{
+        out('entre al if');
     } end_if;
+    out('fuera del if');
 
 
 }

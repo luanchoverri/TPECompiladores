@@ -197,7 +197,7 @@ public class AnalizadorSintactico {
         if (izq.getTipo() != null && der.getTipo() != null ) {
             System.out.println("EL NODO IZQ ES " + izq.toString());
             System.out.println("EL NODO DER ES " + der.toString());
-            if (izq.getTipo().equals(der.getTipo())) {
+            if(izq.getTipo().equals(der.getTipo())){
 
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
                 return izq.getTipo();
@@ -241,6 +241,7 @@ public class AnalizadorSintactico {
             return i;
         }
         Nodo i = new NodoHijo(hijo.obj, identificador);
+      //NO  i.setTipo(((Nodo)hijo.obj).getTipo());
         return i;
     }
 
@@ -442,7 +443,7 @@ public class AnalizadorSintactico {
         clearTipo();
     }
 
-    public void imprimirAnalisisParserArchivo(String programa, String estadoParser ) {
+    public void analisisParser(String programa, String estadoParser ) {
         try {
             String ruta = "salida_archivo/ejecucion_reciente.txt";
             String contenido;
@@ -484,7 +485,7 @@ public class AnalizadorSintactico {
     }
 
     // -- Analizador Sintactico START
-    public void startConsola() {
+    /*public void startConsola() {
         System.out.println("________________________________________________");
         parser.activarAmbito();
         parser.setLexico(this.analizadorLexico);
@@ -503,7 +504,7 @@ public class AnalizadorSintactico {
         else
             System.out.println(" \n \n ❌ EL PARSER NO PUDO TERMINAR \n \n ");
 
-        //analizadorLexico.imprimirErrores();
+        //   analizadorLexico.imprimirErrores();
 
         analizadorLexico.setPosArchivo(0);
         analizadorLexico.setBuffer("");
@@ -519,9 +520,9 @@ public class AnalizadorSintactico {
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         imprimirArbolesFuncion();
-       //  GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-       //  g.generacionDeCodigo(this.raiz);
-    }
+         GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+         g.generacionDeCodigo(this.raiz);
+    }*/
 
     public void start() {
 
@@ -542,10 +543,7 @@ public class AnalizadorSintactico {
         analizadorLexico.setPosArchivo(0);
         analizadorLexico.setBuffer("");
 
-
-
-        this.imprimirAnalisisParserArchivo(analizadorLexico.getArchivo(), estadoParser);
-
+        this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
         if (this.erroresSintacticos.isEmpty() && this.analizadorLexico.getErroresLexicos().isEmpty()){
             GenerarCodigo g = new GenerarCodigo(analizadorLexico, this);
             g.generarCodigoFunciones(arbolesFunciones);
