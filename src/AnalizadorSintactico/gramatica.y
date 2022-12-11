@@ -309,7 +309,10 @@ asignacion : id op_asignacion expresion ';'	{
            ;
 
 
-for_else_cte : expresion_For Else cte	{ $$ = new ParserVal(sintactico.crearNodo("else", $1, new ParserVal(sintactico.crearHoja($3.ival))));} //TODO Aca tambien nodo de control???
+for_else_cte : expresion_For Else cte	{ 	Nodo for_else = sintactico.crearNodo("for_else", $1, new ParserVal(sintactico.crearHoja($3.ival)));
+						for_else.setTipo(sintactico.getTipoFromTS($3.ival));
+						$$ = new ParserVal(for_else);
+					} //TODO Aca tambien nodo de control???
 	     | expresion_For error	{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
 	     ;
 
