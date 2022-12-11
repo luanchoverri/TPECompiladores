@@ -21,19 +21,13 @@ ok db 'OK',0
 mem2bytes dw ?
 _maxFloat dq 3.40282347E+38
 _minFloat dq -3.40282347E+38
+out0 db 'OK ENTEROS',0
 _program dd ?,?
 _a@$ dd ?,?
 _b@$ dd ?,?
 _c@$ dd ?,?
 _e@$ dd ?,?
 _f@$ dd ?,?
-_8_3 dq 8.3
-_2_3 dq 2.3
-_2_0 dq 2.0
-__8_3 dq -8.3
-_1_ dq 1.0
-_3_9 dq 3.9
-__0 dq 0.0
 @aux0 dd ?,?
 @aux1 dd ?,?
 @aux2 dd ?,?
@@ -42,69 +36,62 @@ __0 dq 0.0
 .code
 ;------------ CODE ------------
 start:
-FLD _8_3
-FSTP _b@$
-FLD _2_3
-FMUL _2_0
-FCOM _maxFloat
-FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
-JG _label0
-invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK
-invoke ExitProcess, 0
-_label0:
-FSTP @aux0
-FLD @aux0
-FSTP _c@$
-FLD __8_3
-FSTP _e@$
-FLD _c@$
-FLDZ
-FCOM
-FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
+MOV EAX,3
+MOV _b@$,EAX
+MOV EAX,3
+IMUL EAX,2
+MOV @aux0,EAX
+MOV EAX,@aux0
+MOV _c@$,EAX
+MOV EAX,-8
+MOV _e@$,EAX
+MOV EAX, _c@$
+CMP EAX, 0 
 JNE _label1
-invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
+invoke MessageBox, NULL, addr errorDivCeroEntero, addr errorDivCeroEntero, MB_OK
 invoke ExitProcess, 0
 _label1:
-FLD _e@$
-FDIV _c@$
-FST @aux1
-FLD _1_
-FLDZ
-FCOM
-FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
+MOV EAX, _e@$
+CDQ
+MOV EDX, 0
+MOV EBX, _c@$
+CDQ
+IDIV EBX
+MOV @aux1,EAX
+MOV EAX, 1
+CMP EAX, 0 
 JNE _label2
-invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
+invoke MessageBox, NULL, addr errorDivCeroEntero, addr errorDivCeroEntero, MB_OK
 invoke ExitProcess, 0
 _label2:
-FLD _b@$
-FDIV _1_
-FST @aux2
-FLD @aux1
-FADD @aux2
-FSTP @aux3
-FLD @aux3
-FSTP _f@$
-FLD __0
-FLDZ
-FCOM
-FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
+MOV EAX, _b@$
+CDQ
+MOV EDX, 0
+MOV EBX, 1
+CDQ
+IDIV EBX
+MOV @aux2,EAX
+MOV EAX,@aux1
+ADD EAX,@aux2
+MOV @aux3,EAX
+MOV EAX,@aux3
+MOV _f@$,EAX
+invoke MessageBox, NULL, addr out0, addr out0, MB_OK
+MOV EAX, 0
+CMP EAX, 0 
 JNE _label3
-invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
+invoke MessageBox, NULL, addr errorDivCeroEntero, addr errorDivCeroEntero, MB_OK
 invoke ExitProcess, 0
 _label3:
-FLD _3_9
-FDIV __0
-FST @aux4
-FLD @aux4
-FSTP _a@$
+MOV EAX, 9
+CDQ
+MOV EDX, 0
+MOV EBX, 0
+CDQ
+IDIV EBX
+MOV @aux4,EAX
+MOV EAX,@aux4
+MOV _a@$,EAX
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

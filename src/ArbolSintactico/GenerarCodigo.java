@@ -958,22 +958,22 @@ public class GenerarCodigo{
             if (!nodo.getHijoDerecho().esHoja()){
                 if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho() != null){
                     if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getTipo().equals("i32")){
-                        this.assemblerCode.append("MOV EBX, "+"_"+nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                        this.assemblerCode.append("MOV EBX, "+getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho())+"\n");
                     } else {
-                        this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                        this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho())+"\n");
                     }
                 }
                 if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getTipo().equals("i32")){
-                    this.assemblerCode.append("MOV EAX, "+"_"+nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+                    this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo())+"\n");
                 } else {
-                    this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
+                    this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo())+"\n");
                 }
             }
             //this.pilaInvocaciones.push(t.getLexema());
             this.assemblerCode.append("call _"+t.getLexema().replace('.','_').replace('-', '_')+"\n");
 
             if (nodo.getTipo().equals("i32")){
-                this.assemblerCode.append("MOV "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+","+"EAX"+"\n");
+                this.assemblerCode.append("MOV "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
             } else {
                 this.assemblerCode.append("FSTP "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
             }
@@ -983,29 +983,15 @@ public class GenerarCodigo{
         // Declaracion de constantes simples
 
         else {
-            if (nodo.getHijoIzquierdo().getTipo().equals("i32")) { // a(izq) =:(raiz) 1(der); // aca puede traer conflictos el _ en algunos aux
-                if (nodo.getHijoIzquierdo().getLexema().contains("@")){
-                    this.assemblerCode.append("MOV "+"EAX"+","+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n"); // 1
-                }else {
-                    this.assemblerCode.append("MOV "+"EAX"+","+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n"); // 1
-                }
-				this.assemblerCode.append("MOV "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+","+"EAX"+"\n"); // a =: 1
+            if (nodo.getHijoIzquierdo().getTipo().equals("i32")) { // a(izq) =:(raiz) 1(der);
+
+                this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoDerecho())+"\n");
+				this.assemblerCode.append("MOV "+getLexAssembler(nodo.getHijoIzquierdo())+","+"EAX"+"\n");
             }
             else{
                 if (nodo.getHijoIzquierdo().getTipo().equals("f32")) { // a(izq) =: (raiz) 1.5(der)
-                    if (nodo.getHijoIzquierdo().getLexema().contains("@")){
-                        if(nodo.getHijoDerecho().getLexema().contains("@"))
-                            this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
-                        else{
-                            this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
-                        }
-                    }else {
-                        if(nodo.getHijoDerecho().getLexema().contains("@"))
-                            this.assemblerCode.append("FLD "+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
-                        else
-                            this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
-                    }
-                    this.assemblerCode.append("FSTP "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+                    this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho())+"\n");
+                    this.assemblerCode.append("FSTP "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
                 }
             }
         }

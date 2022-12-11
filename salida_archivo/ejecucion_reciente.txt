@@ -1,11 +1,12 @@
 program
 {
-    f32 a, b, c, e, f;
-    b =: 8.3;
-    c =: 2.3 * 2.0;
-    e =: -8.3;
-    f =: e / c + b / 1.;
-    a =: 3.9/.0;
+    i32 a, b, c, e, f;
+    b =: 3;
+    c =: 3 * 2;
+    e =: -8;
+    f =: e / c + b / 1;
+    out('OK ENTEROS');
+    a =: 9/0;
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -25,7 +26,7 @@ program
  🔎  ANALISIS SINTÁCTICO    
  
  
- Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -40,18 +41,18 @@ program
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null program 
-TOKEN   257        a@$     #linea 3    f32    var 
-TOKEN   257        b@$     #linea 3    f32    var 
-TOKEN   257        c@$     #linea 3    f32    var 
-TOKEN   257        e@$     #linea 3    f32    var 
-TOKEN   257        f@$     #linea 3    f32    var 
-TOKEN   258        8.3     #linea 4    f32    cte 
-TOKEN   258        2.3     #linea 5    f32    cte 
-TOKEN   258        2.0     #linea 5    f32    cte 
-TOKEN   258       -8.3     #linea 6    f32 cte neg 
-TOKEN   258         1.     #linea 7    f32    cte 
-TOKEN   258        3.9     #linea 8    f32    cte 
-TOKEN   258         .0     #linea 8    f32    cte  
+TOKEN   257        a@$     #linea 3    i32    var 
+TOKEN   257        b@$     #linea 3    i32    var 
+TOKEN   257        c@$     #linea 3    i32    var 
+TOKEN   257        e@$     #linea 3    i32    var 
+TOKEN   257        f@$     #linea 3    i32    var 
+TOKEN   258          3     #linea 4    i32    cte 
+TOKEN   258          2     #linea 5    i32    cte 
+TOKEN   258         -8     #linea 6    i32 cte neg 
+TOKEN   258          1     #linea 7    i32    cte 
+TOKEN   272 OK ENTEROS     #linea 8   null cadena 
+TOKEN   258          9     #linea 9    i32    cte 
+TOKEN   258          0     #linea 9    i32    cte  
  
  
  
@@ -60,17 +61,17 @@ TOKEN   258         .0     #linea 8    f32    cte
      └─ sentencia 
         └─ =: 
            └─ b@$ 
-           └─ 8.3 
+           └─ 3 
         └─ sentencia 
            └─ =: 
               └─ c@$ 
               └─ * 
-                 └─ 2.3 
-                 └─ 2.0 
+                 └─ 3 
+                 └─ 2 
            └─ sentencia 
               └─ =: 
                  └─ e@$ 
-                 └─ -8.3 
+                 └─ -8 
               └─ sentencia 
                  └─ =: 
                     └─ f@$ 
@@ -80,14 +81,17 @@ TOKEN   258         .0     #linea 8    f32    cte
                           └─ c@$ 
                        └─ / 
                           └─ b@$ 
-                          └─ 1. 
+                          └─ 1 
                  └─ sentencia 
-                    └─ =: 
-                       └─ a@$ 
-                       └─ / 
-                          └─ 3.9 
-                          └─ .0 
+                    └─ out 
+                       └─ OK ENTEROS 
+                    └─ sentencia 
+                       └─ =: 
+                          └─ a@$ 
+                          └─ / 
+                             └─ 9 
+                             └─ 0 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 11 2022, 07:40:15 p. m.
+ Hora de ejecucion: dic. 11 2022, 08:04:25 p. m.

@@ -3,7 +3,7 @@ program
     i32 a, b, c, e, f;
     b =: 3;
     c =: 3 * 2;
-    e =: 8;
+    e =: -8;
     f =: e / c + b / 1;
     out('OK ENTEROS');
     a =: 9/0;
