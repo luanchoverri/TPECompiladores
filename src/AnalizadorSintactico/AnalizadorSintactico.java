@@ -194,7 +194,7 @@ public class AnalizadorSintactico {
 
     public String tipoResultante(String id, Nodo izq, Nodo der){
 
-        if (izq.getTipo() != null && izq.getTipo() != null )
+        if (izq.getTipo() != null && der.getTipo() != null ){
             System.out.println("EL NODO IZQ ES " + izq.toString());
             System.out.println("EL NODO DER ES " + der.toString());
             if(izq.getTipo().equals(der.getTipo())){
@@ -202,10 +202,8 @@ public class AnalizadorSintactico {
                 System.out.println("---------------- LOS TIPOS SON IGUALESS " + izq.getTipo());
                 return izq.getTipo();
             }
-
-
-        this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: "+ id +" (Línea " + AnalizadorLexico.LINEA + " )" );
-
+            this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: "+ id +" (Línea " + AnalizadorLexico.LINEA + " )" );
+        }
         return null;
     }
 

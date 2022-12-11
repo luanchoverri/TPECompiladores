@@ -75,7 +75,7 @@ public class GenerarCodigo{
             "ok db 'OK',0 \n"+
             "mem2bytes dw ?\n"+
             "_maxFloat dq 3.402823466E38\n"+
-            "_minFloat dq -3.402823466E38\n"
+            "_minFloat dq -3.402823466E-38\n"
             );
 
 }
@@ -898,13 +898,13 @@ public class GenerarCodigo{
         this.contadorAux++;
         if (nodo.getTipo().equals("i32")) {
 
-            this.assemblerCode.append("MOV "+"EAX"+","+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            this.assemblerCode.append("SUB "+"EAX"+","+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+            this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+            this.assemblerCode.append("SUB "+"EAX"+","+getLexAssembler(nodo.getHijoDerecho())+"\n");
             this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
             this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarSub");
         }else{
-            this.assemblerCode.append("FLD " + "_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
-            this.assemblerCode.append("FSUB "+ "_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+            this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+            this.assemblerCode.append("FSUB "+getLexAssembler(nodo.getHijoDerecho())+"\n");
             this.assemblerCode.append("FSTP "+aux+"\n");
             this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarSub");
         }

@@ -1,11 +1,20 @@
 program
 {
     f32 g,h,i,j,k,z;
+    i32 a,b,c,d,e,f;
+
+    a =: 11;
+    b =: 10 + 8;
+    c =: b + a;
+    d =: -3 + a;
+    e =: a + 3;
+
     j =: 11.4;
     i =: 10.2 + 1.8;
     g =: i + j;
-    k =: g + 1.2;
-    z =: 1.0 + g;
+    h =: -3.0 + j;
+    z =: j + 3.0;
+
     out('OK');
 }$ 
  
@@ -27,6 +36,7 @@ program
  
  
  Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 4)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -47,12 +57,23 @@ TOKEN   257        i@$     #linea 3    f32    var
 TOKEN   257        j@$     #linea 3    f32    var 
 TOKEN   257        k@$     #linea 3    f32    var 
 TOKEN   257        z@$     #linea 3    f32    var 
-TOKEN   258       11.4     #linea 4    f32   null 
-TOKEN   258       10.2     #linea 5    f32   null 
-TOKEN   258        1.8     #linea 5    f32   null 
-TOKEN   258        1.2     #linea 7    f32   null 
-TOKEN   258        1.0     #linea 8    f32   null 
-TOKEN   272         OK     #linea 9   null cadena  
+TOKEN   257        a@$     #linea 4    i32    var 
+TOKEN   257        b@$     #linea 4    i32    var 
+TOKEN   257        c@$     #linea 4    i32    var 
+TOKEN   257        d@$     #linea 4    i32    var 
+TOKEN   257        e@$     #linea 4    i32    var 
+TOKEN   257        f@$     #linea 4    i32    var 
+TOKEN   258         11     #linea 6    i32   null 
+TOKEN   258         10     #linea 7    i32   null 
+TOKEN   258          8     #linea 7    i32   null 
+TOKEN   258         -3     #linea 9    i32   null 
+TOKEN   258          3     #linea 10    i32   null 
+TOKEN   258       11.4     #linea 12    f32   null 
+TOKEN   258       10.2     #linea 13    f32   null 
+TOKEN   258        1.8     #linea 13    f32   null 
+TOKEN   258       -3.0     #linea 15    f32   null 
+TOKEN   258        3.0     #linea 16    f32   null 
+TOKEN   272         OK     #linea 18   null cadena  
  
  
  
@@ -60,36 +81,64 @@ TOKEN   272         OK     #linea 9   null cadena
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ j@$ 
-           └─ 11.4 
+           └─ a@$ 
+           └─ 11 
         └─ sentencia 
            └─ =: 
-              └─ i@$ 
+              └─ b@$ 
               └─ + 
-                 └─ 10.2 
-                 └─ 1.8 
+                 └─ 10 
+                 └─ 8 
            └─ sentencia 
               └─ =: 
-                 └─ g@$ 
+                 └─ c@$ 
                  └─ + 
-                    └─ i@$ 
-                    └─ j@$ 
+                    └─ b@$ 
+                    └─ a@$ 
               └─ sentencia 
                  └─ =: 
-                    └─ k@$ 
+                    └─ d@$ 
                     └─ + 
-                       └─ g@$ 
-                       └─ 1.2 
+                       └─ -3 
+                       └─ a@$ 
                  └─ sentencia 
                     └─ =: 
-                       └─ z@$ 
+                       └─ e@$ 
                        └─ + 
-                          └─ 1.0 
-                          └─ g@$ 
+                          └─ a@$ 
+                          └─ 3 
                     └─ sentencia 
-                       └─ out 
-                          └─ OK 
+                       └─ =: 
+                          └─ j@$ 
+                          └─ 11.4 
+                       └─ sentencia 
+                          └─ =: 
+                             └─ i@$ 
+                             └─ + 
+                                └─ 10.2 
+                                └─ 1.8 
+                          └─ sentencia 
+                             └─ =: 
+                                └─ g@$ 
+                                └─ + 
+                                   └─ i@$ 
+                                   └─ j@$ 
+                             └─ sentencia 
+                                └─ =: 
+                                   └─ h@$ 
+                                   └─ + 
+                                      └─ -3.0 
+                                      └─ j@$ 
+                                └─ sentencia 
+                                   └─ =: 
+                                      └─ z@$ 
+                                      └─ + 
+                                         └─ j@$ 
+                                         └─ 3.0 
+                                   └─ sentencia 
+                                      └─ out 
+                                         └─ OK 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 11 2022, 11:51:46 a. m.
+ Hora de ejecucion: dic. 11 2022, 12:24:23 p. m.
