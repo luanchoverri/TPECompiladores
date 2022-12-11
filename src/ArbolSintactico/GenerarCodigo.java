@@ -753,11 +753,7 @@ public class GenerarCodigo{
 
             // Controlamos la division por CERO
 
-            if(nodo.getHijoDerecho().getLexema().contains("@"))
-                this.assemblerCode.append("MOV EAX, "+"_"+nodo.getHijoDerecho().getLexema()+"\n");
-            else
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoDerecho().getLexema()+"\n");
-
+            this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoDerecho())+"\n");
             this.assemblerCode.append("CMP EAX, 0 \n"); // COMPARA EL VALOR DE EAX CON 0 (MENOR, MAYOR O IGUAL)
             this.assemblerCode.append("JNE " + label + "\n"); // Si no es igual, salto a la etiqueta label correspondiente
 
@@ -767,22 +763,12 @@ public class GenerarCodigo{
 
             // Si no es igual a cero, sigo la ejecucion
             this.assemblerCode.append(label + ":\n");
-            if(nodo.getHijoIzquierdo().getLexema().contains("@"))
-                this.assemblerCode.append("MOV EAX, "+"_"+nodo.getHijoIzquierdo().getLexema()+"\n");
-            else
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema()+"\n");
-
+            this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
 			this.assemblerCode.append("CDQ\n");
             this.assemblerCode.append("MOV EDX, 0"+"\n");
-
-            if(nodo.getHijoDerecho().getLexema().contains("@"))
-                this.assemblerCode.append("MOV EBX, "+"_"+nodo.getHijoDerecho().getLexema()+"\n");
-            else
-                this.assemblerCode.append("MOV EBX, "+nodo.getHijoDerecho().getLexema()+"\n");
-
+            this.assemblerCode.append("MOV EBX, "+getLexAssembler(nodo.getHijoDerecho())+"\n");
             this.assemblerCode.append("CDQ\n");
 			this.assemblerCode.append("IDIV EBX\n");
-            this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
 			this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
             this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarDiv");
         } else {
@@ -815,7 +801,6 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FST "+aux+"\n");
 
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarDiv");
-
             }
         }
         int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
