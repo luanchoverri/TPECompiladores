@@ -297,22 +297,14 @@ public class GenerarCodigo{
                 this.assemblerCode.append("MOV EAX, "+ nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
             }
         else {
-<<<<<<< HEAD
             if (nodo.getHijoIzquierdo().getLexema().contains("@")){
                 assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
             }else {
                 assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
-=======
-            if (nodo.getHijoIzquierdo().getLexema().contains("@") || nodo.getHijoIzquierdo().getLexema().contains(".")){
-                assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
-                assemblerCode.append("FLD "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
->>>>>>> rama_fran
             }
         }
         this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
         this.assemblerCode.append("ret "+"\n");
-
     }
 
     private void continueAssembler(Nodo nodo) {
@@ -1062,8 +1054,6 @@ public class GenerarCodigo{
                 }
             }
         }
-
-
     }
 
     private void cargarTablaSimbolos() {
