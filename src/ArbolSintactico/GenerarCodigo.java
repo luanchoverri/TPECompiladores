@@ -946,6 +946,8 @@ public class GenerarCodigo{
     private void asignacionAssembler(Nodo nodo) {
         int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoDerecho().getLexema());
         Token t = this.tablaSimbolos.getEntrada(idLexema);
+
+        // para cuando asigna funciones
         if ((t.getUso() != null) && t.getUso().equals("func")){
 
             // chequeamos por recursion directa
