@@ -19,37 +19,34 @@ errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para constante
 errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 
 ok db 'OK',0 
 mem2bytes dw ?
-_maxFloat dq 3.402823466E38
-_minFloat dq -3.402823466E38
-out0 db 'entre al if',0
-out1 db 'fuera del if',0
+_maxFloat dq 3.40282347E38
+_minFloat dq -3.40282347E38
 _program dd ?,?
+_g@$ dd ?,?
+_h@$ dd ?,?
+_i@$ dd ?,?
+_j@$ dd ?,?
+_k@$ dd ?,?
+_z@$ dd ?,?
 _a@$ dd ?,?
 _b@$ dd ?,?
+_c@$ dd ?,?
+_d@$ dd ?,?
+_e@$ dd ?,?
+_f@$ dd ?,?
 @aux0 dd ?,?
 .code
 ;------------ CODE ------------
 start:
 MOV EAX,1
 MOV _a@$,EAX
-MOV EAX,0
+MOV EAX,2
 MOV _b@$,EAX
-MOV EAX, 1
-CMP EAX, _b@$
-JG _label1
-MOV @aux0,1 
-JMP _label0
-_label1:
-MOV @aux0, 0 
-_label0:
-MOV EAX, @aux0
-CMP EAX,  0
-JE _label2
-invoke MessageBox, NULL, addr out0, addr out0, MB_OK
-JMP _label3
-_label2:
-_label3:
-invoke MessageBox, NULL, addr out1, addr out1, MB_OK
+MOV EAX,_a@$
+ADD EAX,_b@$
+MOV @aux0,EAX
+MOV EAX,@aux0
+MOV _c@$,EAX
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

@@ -227,12 +227,29 @@ public class AnalizadorSintactico {
         return i;
     }
 
+    public boolean tieneBreak(ParserVal hijo){
+        return (((Nodo)hijo.obj).getTieneBreak() != null);
+    }
+
+    public void checkBreaks(Nodo izq, Nodo der){
+
+        String breakDer = der.getTieneBreak();
+        String breakizq = izq.getTieneBreak();
+            if (!(breakDer.equals(breakizq))){
+                this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN -  BREAK IF/ELSE:  (Línea " + AnalizadorLexico.LINEA + " )");
+            }
+    }
+
+
     public Nodo crearNodo(String identificador, ParserVal hijoIzq, ParserVal hijoDer){
 
 
         if (hijoDer == null){
 
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
+            if (i.getTieneBreak() != null) {
+                i.setTieneBreak(i.getTieneBreak());
+            }
             return i;
         } else {
 
@@ -240,6 +257,7 @@ public class AnalizadorSintactico {
             if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
                 i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
             }
+
             imprimirNodos((Nodo)hijoIzq.obj, (Nodo)hijoDer.obj);
             System.out.println("EL NODO RESULTANTE ES " + i.toString() + " DE TIPO"+ (String)i.getTipo());
 
