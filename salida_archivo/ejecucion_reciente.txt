@@ -1,0 +1,93 @@
+program
+{
+    f32 a, b, c, e, f;
+    b =: 8.3;
+    c =: 2.3 * 2.0;
+    e =: -8.3;
+    f =: e / c + b / 1.;
+    a =: 3.9/.0;
+}$ 
+ 
+  EJECUCION DEL PARSER FINALIZADA  
+  
+ |||||||||||||||||||||||||||||||||||||||||||||| |--- CODIGO FUENTE ---|
+
+
+
+
+-----------------------------------------------------------------
+
+
+
+
+|--- Sin errores LEXICOS ---| (OK)
+ 
+ 🔎  ANALISIS SINTÁCTICO    
+ 
+ 
+ Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
+ 
+ 
+ ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
+ 
+ 
+ vacio. 
+ 
+  
+ 
+ 
+  
+              TABLA DE SIMBOLOS              
+
+TOKEN   257    program     #linea 1   null   null 
+TOKEN   257        a@$     #linea 3    f32    var 
+TOKEN   257        b@$     #linea 3    f32    var 
+TOKEN   257        c@$     #linea 3    f32    var 
+TOKEN   257        e@$     #linea 3    f32    var 
+TOKEN   257        f@$     #linea 3    f32    var 
+TOKEN   258        8.3     #linea 4    f32   null 
+TOKEN   258        2.3     #linea 5    f32   null 
+TOKEN   258        2.0     #linea 5    f32   null 
+TOKEN   258       -8.3     #linea 6    f32   null 
+TOKEN   258         1.     #linea 7    f32   null 
+TOKEN   258        3.9     #linea 8    f32   null 
+TOKEN   258         .0     #linea 8    f32   null  
+ 
+ 
+ 
+ --- ARBOL ---- 
+   └─ raiz 
+     └─ sentencia 
+        └─ =: 
+           └─ b@$ 
+           └─ 8.3 
+        └─ sentencia 
+           └─ =: 
+              └─ c@$ 
+              └─ * 
+                 └─ 2.3 
+                 └─ 2.0 
+           └─ sentencia 
+              └─ =: 
+                 └─ e@$ 
+                 └─ -8.3 
+              └─ sentencia 
+                 └─ =: 
+                    └─ f@$ 
+                    └─ + 
+                       └─ / 
+                          └─ e@$ 
+                          └─ c@$ 
+                       └─ / 
+                          └─ b@$ 
+                          └─ 1. 
+                 └─ sentencia 
+                    └─ =: 
+                       └─ a@$ 
+                       └─ / 
+                          └─ 3.9 
+                          └─ .0 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: dic. 11 2022, 02:02:17 a. m.

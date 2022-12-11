@@ -1,10 +1,15 @@
 program
 {
-    i32 i;
-    i32 a;
-    << caso correcto
-    when ( i > 3 ) then { a =: i + 1; };
+    f32 i;
+    f32 a;
+    f32 j;
 
+    i =: 1.0;
+    a =: 2.0;
+    j =: 4.0;
 
+    out('hola');
+    out('todo bien?');
+    out('que onda');
 
 }

@@ -1,6 +1,5 @@
 program
 {
-
     i32 a, b;
     f32 c, d;
 
@@ -26,8 +25,6 @@ program
    y =: fun1();
 
    fun1(2.3);
-
-
 
 
 }

@@ -29,17 +29,25 @@ public class AnalizadorSintactico {
 
     private HashMap<String,Nodo> arbolesFunciones;
 
+    private ArrayList<String> cadenas;
+
     public AnalizadorSintactico(AnalizadorLexico l, Parser p){
         analizadorLexico = l;
         parser = p;
         erroresSintacticos = new ArrayList<String>();
         analisisSintactico = new ArrayList<String>();
+        cadenas = new ArrayList<String>();
         tablaSimbolos = l.getTablaSimbolos();
         tipo = "";
         raiz = null;
         variables =  new ArrayList<Integer>();
         arbolesFunciones = new HashMap<>();
 
+    }
+
+    public ArrayList<String> getCadenas(){return this.cadenas;}
+    public void addCadena(int index){
+        this.cadenas.add(tablaSimbolos.getEntrada(index).getLexema());
     }
 
     public void agregarArbolFuncion(ParserVal arbol, String nombreFuncion){
@@ -457,6 +465,8 @@ public class AnalizadorSintactico {
             bw.write(estadoParser);
             bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| " ) ;
 
+            this.imprimirAnalisisLexico(bw);
+            this.analizadorLexico.imprimirErrores(bw);
             this.imprimirAnalisisSintactico(bw);
             this.imprimirErroresSintacticos(bw);
             this.imprimirTablaSimbolos(bw);
@@ -477,7 +487,7 @@ public class AnalizadorSintactico {
     }
 
     // -- Analizador Sintactico START
-    public void startConsola() {
+    /*public void startConsola() {
         System.out.println("________________________________________________");
         parser.activarAmbito();
         parser.setLexico(this.analizadorLexico);
@@ -512,36 +522,40 @@ public class AnalizadorSintactico {
         System.out.println("🌳 ARBOL 🌳 ");
         imprimirArbol(this.raiz,0);
         imprimirArbolesFuncion();
-   //      GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-      //   g.generacionDeCodigo(this.raiz);
-    }
+         GenerarCodigo g = new GenerarCodigo(analizadorLexico);
+         g.generacionDeCodigo(this.raiz);
+    }*/
 
-//    public void start() {
-//
-//        parser.activarAmbito();
-//        parser.setLexico(this.analizadorLexico);
-//        parser.setSintactico(this);
-//
-//        String estadoParser ;
-//
-//        if (parser.yyparse() == 0) {
-//            estadoParser = (" \n \n  EJECUCION DEL PARSER FINALIZADA  \n ") ;
-//        }
-//        else
-//            estadoParser = (" \n \n EL PARSER NO PUDO TERMINAR \n ");
-//
-//
-//        analizadorLexico.setPosArchivo(0);
-//        analizadorLexico.setBuffer("");
-//
-//        this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
-//
-//        GenerarCodigo g = new GenerarCodigo(analizadorLexico);
-//        g.generarCodigoFunciones(arbolesFunciones);
-//        g.generacionDeCodigo(this.raiz);
-//
-//
-//    }
+    public void start() {
+
+        parser.activarAmbito();
+        parser.setLexico(this.analizadorLexico);
+        parser.setSintactico(this);
+
+
+        String estadoParser ;
+
+        if (parser.yyparse() == 0) {
+            estadoParser = (" \n \n  EJECUCION DEL PARSER FINALIZADA  \n ") ;
+        }
+        else
+            estadoParser = (" \n \n EL PARSER NO PUDO TERMINAR \n ");
+
+
+        analizadorLexico.setPosArchivo(0);
+        analizadorLexico.setBuffer("");
+
+        this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
+        if (this.erroresSintacticos.isEmpty() && this.analizadorLexico.getErroresLexicos().isEmpty()){
+            GenerarCodigo g = new GenerarCodigo(analizadorLexico, this);
+            g.generarCodigoFunciones(arbolesFunciones);
+            g.generacionDeCodigo(this.raiz);
+        }else{
+            System.out.println("Se encontraron errores LEXICOS o SINTACTICOS, por lo tanto no se pudo generar el assembler"+"\n");
+        }
+
+
+    }
 
 
 }
