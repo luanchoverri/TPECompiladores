@@ -26,23 +26,25 @@ _a@$ dd ?,?
 _b@$ dd ?,?
 _c@$ dd ?,?
 _e@$ dd ?,?
-__3_4 dd -3.4
-__4_0 dd -4.0
+_3_2 dd 3.2
+_1_1 dd 1.1
 @aux0 dd ?,?
 .code
 ;------------ CODE ------------
 start:
-FLD __3_4
-FMUL __4_0
-FCOM _maxFloat
-FSTP @aux0
+FLD _1_1
+FLDZ
+FCOM
 FSTSW mem2bytes
 MOV AX, mem2bytes
 SAHF
-JB _label0
-invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK
+JNE _label0
+invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
 invoke ExitProcess, 0
 _label0:
+FLD _3_2
+FDIV _1_1
+FST @aux0
 invoke MessageBox, NULL, addr ok, addr ok, MB_OK
 FLD @aux0
 FSTP _a@$

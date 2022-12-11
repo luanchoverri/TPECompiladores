@@ -50,9 +50,6 @@ public class GenerarCodigo{
 
     }
 
-    // TODO controlar los demas errores que debe generar y controlar el assembler
-    // TODO realizar mas casos de prueba para probar los @aux
-
     private void cargarLibrerias () {
 		this.inicio.append(";------------ INCLUDES y LIBRERIAS ------------\r\n" +
                 ".386\r\n" +
@@ -811,7 +808,6 @@ public class GenerarCodigo{
 
                 // Realizo la comparacion
 
-
                 assemblerCode.append("FLD " + "_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_').replace("+","") + "\n");
                 assemblerCode.append("FLDZ\n");                    // Carga el número 0 en el tope de la pila.
                 assemblerCode.append("FCOM\n");                    // Compara el tope de ST(0) = 0 con ST(1) = b, a fin de determinar si el divisor es igual a cero.
@@ -819,19 +815,6 @@ public class GenerarCodigo{
                 assemblerCode.append("MOV AX, mem2bytes\n"); // Copio el estado de la comparación en EAX.
                 assemblerCode.append("SAHF\n");
                 assemblerCode.append("JNE "+label+"\n");
-
-
-                /*if (nodo.getHijoDerecho().getLexema().equals("0.0") || nodo.getHijoDerecho().getLexema().equals(".0") || nodo.getHijoDerecho().getLexema().equals("0.")){
-                    this.assemblerCode.append("FLDZ"+ "\n"); // Carga el número 0 en el tope de la pila.
-                }else
-                    this.assemblerCode.append("FLD1" + "\n"); // Carga el número 1 en el tope de la pila.
-
-                assemblerCode.append("FLDZ\n");                   // Carga el número 0 en el tope de la pila.
-                assemblerCode.append("FCOM\n");                  // Compara el tope de ST(0) = 0 con ST(1) = 1 o 0 segun el divisor que viene del nodo.
-                assemblerCode.append("FSTSW mem2bytes\n");      // Almacena la palabra de estado en memoria, es decir, el determinante de la comparación anterior.
-                assemblerCode.append("MOV AX, mem2bytes\n");   // Copio el estado de la comparación en EAX.
-                assemblerCode.append("SAHF\n");
-                this.assemblerCode.append("JNE " + label + "\n");*/
 
                 // Si es cero, emito mensaje de error
 
@@ -846,7 +829,6 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FST "+aux+"\n");
                 this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarDiv");
-
 
             }
         }
