@@ -75,7 +75,7 @@ public class GenerarCodigo{
             "ok db 'OK',0 \n"+
             "mem2bytes dw ?\n"+
             "_maxFloat dq 3.402823466E38\n"+
-            "_minFloat dq 1.175494351E-38\n"
+            "_minFloat dq -1.175494351E-38\n"
             );
 
 }
@@ -992,7 +992,6 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FSTP "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
             }
 
-            //this.pilaInvocaciones.pop();
         }
 
         // Declaracion de constantes simples
@@ -1043,12 +1042,18 @@ public class GenerarCodigo{
             else{
                 if(t.getLexema().contains(".")){
                     this.datosPrecarga.append("_"+t.getLexema().replace('.', '_').replace('-', '_').replace("+",""));
-                    this.datosPrecarga.append(" dd "+t.getLexema().replace("+","").replace("F","E").replace(".0","0.0"));
-                    this.datosPrecarga.append("\n");
+                    if(t.getLexema().startsWith(".")){
+                        this.datosPrecarga.append(" dq "+t.getLexema().replace(".","0.")+"\n");
+                    }else{
+                        if(t.getLexema().endsWith(".") || t.getLexema().contains(".F"))
+                            this.datosPrecarga.append(" dq "+t.getLexema().replace(".",".0")+"\n");
+                        else{
+                            this.datosPrecarga.append(" dq "+t.getLexema().replace("+","").replace("F","E")+"\n");
+                        }
+                    }
                 }
             }
         }
-
     }
 
     private void cargarCadenas(){

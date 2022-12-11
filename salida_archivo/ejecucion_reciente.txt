@@ -1,17 +1,11 @@
 program
 {
-    f32 i;
-    f32 a;
-    f32 j;
-
-    i =: 1.0;
-    a =: 2.0;
-    j =: 4.0;
-
-    out('hola');
-    out('todo bien?');
-    out('que onda');
-
+    f32 a, b, c, e, f;
+    b =: 8.3;
+    c =: 2.3 * 2.0;
+    e =: -8.3;
+    f =: e / c + b / 1.;
+    a =: 3.9/.0;
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -32,8 +26,6 @@ program
  
  
  Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
- Se reconoció declaraciónes de variable de tipo f32. (Línea 4)
- Se reconoció declaraciónes de variable de tipo f32. (Línea 5)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -48,15 +40,18 @@ program
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null   null 
-TOKEN   257        i@$     #linea 3    f32    var 
-TOKEN   257        a@$     #linea 4    f32    var 
-TOKEN   257        j@$     #linea 5    f32    var 
-TOKEN   258        1.0     #linea 7    f32   null 
-TOKEN   258        2.0     #linea 8    f32   null 
-TOKEN   258        4.0     #linea 9    f32   null 
-TOKEN   272       hola     #linea 11   null cadena 
-TOKEN   272 todo bien?     #linea 12   null cadena 
-TOKEN   272   que onda     #linea 13   null cadena  
+TOKEN   257        a@$     #linea 3    f32    var 
+TOKEN   257        b@$     #linea 3    f32    var 
+TOKEN   257        c@$     #linea 3    f32    var 
+TOKEN   257        e@$     #linea 3    f32    var 
+TOKEN   257        f@$     #linea 3    f32    var 
+TOKEN   258        8.3     #linea 4    f32   null 
+TOKEN   258        2.3     #linea 5    f32   null 
+TOKEN   258        2.0     #linea 5    f32   null 
+TOKEN   258       -8.3     #linea 6    f32   null 
+TOKEN   258         1.     #linea 7    f32   null 
+TOKEN   258        3.9     #linea 8    f32   null 
+TOKEN   258         .0     #linea 8    f32   null  
  
  
  
@@ -64,26 +59,35 @@ TOKEN   272   que onda     #linea 13   null cadena
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ i@$ 
-           └─ 1.0 
+           └─ b@$ 
+           └─ 8.3 
         └─ sentencia 
            └─ =: 
-              └─ a@$ 
-              └─ 2.0 
+              └─ c@$ 
+              └─ * 
+                 └─ 2.3 
+                 └─ 2.0 
            └─ sentencia 
               └─ =: 
-                 └─ j@$ 
-                 └─ 4.0 
+                 └─ e@$ 
+                 └─ -8.3 
               └─ sentencia 
-                 └─ out 
-                    └─ hola 
+                 └─ =: 
+                    └─ f@$ 
+                    └─ + 
+                       └─ / 
+                          └─ e@$ 
+                          └─ c@$ 
+                       └─ / 
+                          └─ b@$ 
+                          └─ 1. 
                  └─ sentencia 
-                    └─ out 
-                       └─ todo bien? 
-                    └─ sentencia 
-                       └─ out 
-                          └─ que onda 
+                    └─ =: 
+                       └─ a@$ 
+                       └─ / 
+                          └─ 3.9 
+                          └─ .0 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 11 2022, 12:41:40 a. m.
+ Hora de ejecucion: dic. 11 2022, 02:02:17 a. m.

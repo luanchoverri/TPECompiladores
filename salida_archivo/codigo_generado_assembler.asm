@@ -19,30 +19,96 @@ errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para constante
 errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 
 ok db 'OK',0 
 mem2bytes dw ?
-_maxFloat dq 3.402823466E37
+_maxFloat dq 3.402823466E38
 _minFloat dq 1.175494351E-38
-out0 db 'hola',0
-out1 db 'todo bien?',0
-out2 db 'que onda',0
 _program dd ?,?
-_i@$ dd ?,?
 _a@$ dd ?,?
-_j@$ dd ?,?
-_1_0 dd 10.0
-_2_0 dd 20.0
-_4_0 dd 40.0
+_b@$ dd ?,?
+_c@$ dd ?,?
+_e@$ dd ?,?
+_f@$ dd ?,?
+_8_3 dq 8.3
+_2_3 dq 2.3
+_2_0 dq 2.0
+__8_3 dq -8.3
+_1_ dq 1.0
+_3_9 dq 3.9
+__0 dq 0.0
+@aux0 dd ?,?
+@aux1 dd ?,?
+@aux2 dd ?,?
+@aux3 dd ?,?
+@aux4 dd ?,?
 .code
 ;------------ CODE ------------
 start:
-FLD _1_0
-FSTP _i@$
-FLD _2_0
+FLD _8_3
+FSTP _b@$
+FLD _2_3
+FMUL _2_0
+FCOM _maxFloat
+FSTSW mem2bytes
+MOV AX, mem2bytes
+SAHF
+JB _label0
+invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK
+invoke ExitProcess, 0
+_label0:
+FSTP @aux0
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+FLD @aux0
+FSTP _c@$
+FLD __8_3
+FSTP _e@$
+FLD _c@$
+FLDZ
+FCOM
+FSTSW mem2bytes
+MOV AX, mem2bytes
+SAHF
+JNE _label1
+invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
+invoke ExitProcess, 0
+_label1:
+FLD _e@$
+FDIV _c@$
+FST @aux1
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+FLD _1_
+FLDZ
+FCOM
+FSTSW mem2bytes
+MOV AX, mem2bytes
+SAHF
+JNE _label2
+invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
+invoke ExitProcess, 0
+_label2:
+FLD _b@$
+FDIV _1_
+FST @aux2
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+FLD @aux1
+FADD @aux2
+FSTP @aux3
+FLD @aux3
+FSTP _f@$
+FLD __0
+FLDZ
+FCOM
+FSTSW mem2bytes
+MOV AX, mem2bytes
+SAHF
+JNE _label3
+invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, MB_OK
+invoke ExitProcess, 0
+_label3:
+FLD _3_9
+FDIV __0
+FST @aux4
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+FLD @aux4
 FSTP _a@$
-FLD _4_0
-FSTP _j@$
-invoke MessageBox, NULL, addr out0, addr out0, MB_OK
-invoke MessageBox, NULL, addr out1, addr out1, MB_OK
-invoke MessageBox, NULL, addr out2, addr out2, MB_OK
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start
