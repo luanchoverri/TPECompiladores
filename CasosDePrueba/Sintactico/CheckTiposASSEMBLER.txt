@@ -1,11 +1,10 @@
 program
 {
     f32 g,h,i,j,k,z;
-    j =: 11.4;
-    i =: 10.2 - 1.8;
-    g =: i - j;
-    h =: -3.0 - j;
-    z =: j - 3.0;
+    i32 a,b,c,d,e,f;
 
-    out('OK');
+    out('OK ENTERO');
+
+    h =: 3.4 * 12.0;
+    out('OK FLOTANTE');
 }

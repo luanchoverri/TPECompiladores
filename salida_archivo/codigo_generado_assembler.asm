@@ -19,6 +19,7 @@ errorDivCeroFlotante db 'ERROR EN LA EJECUCION: Division por cero para constante
 errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 
 ok db 'OK',0 
 mem2bytes dw ?
+<<<<<<< Updated upstream
 _maxFloat dq 3.402823466E38
 _minFloat dq -3.402823466E-38
 out0 db 'era 2',0
@@ -112,6 +113,47 @@ invoke MessageBox, NULL, addr out3, addr out3, MB_OK
 JMP _label5
 _label3:
 invoke MessageBox, NULL, addr out4, addr out4, MB_OK
+=======
+_maxFloat dq 3.40282347E+38
+_minFloat dq -3.40282347E+38
+out0 db 'OK ENTERO',0
+out1 db 'OK FLOTANTE',0
+_program dd ?,?
+_g@$ dd ?,?
+_h@$ dd ?,?
+_i@$ dd ?,?
+_j@$ dd ?,?
+_k@$ dd ?,?
+_z@$ dd ?,?
+_a@$ dd ?,?
+_b@$ dd ?,?
+_c@$ dd ?,?
+_d@$ dd ?,?
+_e@$ dd ?,?
+_f@$ dd ?,?
+_3_4 dq 3.4E38
+_12_0 dq 12.0
+@aux0 dd ?,?
+.code
+;------------ CODE ------------
+start:
+invoke MessageBox, NULL, addr out0, addr out0, MB_OK
+FLD _3_4
+FMUL _12_0
+FCOM _maxFloat
+FSTSW mem2bytes
+MOV AX, mem2bytes
+SAHF
+JG _label0
+invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK
+invoke ExitProcess, 0
+_label0:
+FSTP @aux0
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+FLD @aux0
+FSTP _h@$
+invoke MessageBox, NULL, addr out1, addr out1, MB_OK
+>>>>>>> Stashed changes
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

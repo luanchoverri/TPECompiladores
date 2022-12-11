@@ -74,8 +74,8 @@ public class GenerarCodigo{
             "errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n"+
             "ok db 'OK',0 \n"+
             "mem2bytes dw ?\n"+
-            "_maxFloat dq 3.402823466E38\n"+
-            "_minFloat dq -3.402823466E-38\n"
+            "_maxFloat dq 3.40282347E+38\n"+
+            "_minFloat dq -3.40282347E+38\n"
             );
 
 }
@@ -794,7 +794,7 @@ public class GenerarCodigo{
 
                 // Realizo la comparacion
 
-                assemblerCode.append("FLD " + "_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_').replace("+","") + "\n");
+                assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho())+ "\n");
                 assemblerCode.append("FLDZ\n");                    // Carga el número 0 en el tope de la pila.
                 assemblerCode.append("FCOM\n");                    // Compara el tope de ST(0) = 0 con ST(1) = b, a fin de determinar si el divisor es igual a cero.
                 assemblerCode.append("FSTSW mem2bytes\n");    // Almacena la palabra de estado en memoria, es decir, el determinante de la comparación anterior.
@@ -810,8 +810,8 @@ public class GenerarCodigo{
                 // Si no es cero
 
                 this.assemblerCode.append(label + ":\n");
-                this.assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
-                this.assemblerCode.append("FDIV "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+                this.assemblerCode.append("FDIV "+getLexAssembler(nodo.getHijoDerecho())+"\n");
                 this.assemblerCode.append("FST "+aux+"\n");
 
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarDiv");
@@ -830,19 +830,18 @@ public class GenerarCodigo{
         String aux = "@aux" + contadorAux;
         this.contadorAux++;
         String label = "_label" + contadorEtiquetaLabel;
-        String labelMayor = "";
-        String labelMenor = "";
         contadorEtiquetaLabel++;
         if (nodo.getTipo().equals("i32")) {
+
             this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
             this.assemblerCode.append("IMUL "+"EAX"+","+getLexAssembler(nodo.getHijoDerecho())+"\n");
             this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
             this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarMult");
+
         }else{
             if (nodo.getTipo().equals("f32")){
                 this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
-                this.assemblerCode.append("FMUL "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
-                this.assemblerCode.append("CDQ\n");
+                this.assemblerCode.append("FMUL "+getLexAssembler(nodo.getHijoDerecho())+"\n");
 
                 if(((nodo.getHijoIzquierdo().getLexema().contains("-")) && (nodo.getHijoDerecho().getLexema().contains("-")))){
                     this.assemblerCode.append("FCOM _maxFloat"+"\n");
@@ -851,6 +850,7 @@ public class GenerarCodigo{
                     this.assemblerCode.append("SAHF"+"\n");
                     this.assemblerCode.append("JG "+label+"\n");
                 }
+
                 else
                     if(nodo.getHijoIzquierdo().getLexema().contains("-") || nodo.getHijoDerecho().getLexema().contains("-")){
                         this.assemblerCode.append("FCOM _minFloat"+"\n");
