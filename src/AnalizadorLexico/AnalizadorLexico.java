@@ -1,26 +1,17 @@
 package AnalizadorLexico;
 
-import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.filechooser.FileSystemView;
 
 import AnalizadorLexico.AccionesSemanticas.AccionSemantica;
 import AnalizadorLexico.AccionesSemanticas.AccionSemanticaCompuesta;
-import AnalizadorLexico.AccionesSemanticas.AccionSemanticaSimple;
 import AnalizadorLexico.AccionesSemanticas.AccionesSimples.*;
-import AnalizadorSintactico.AnalizadorSintactico;
 import AnalizadorLexico.AccionesSemanticas.MatrizAccionesSemanticas;
 
 public class AnalizadorLexico {
@@ -43,7 +34,7 @@ public class AnalizadorLexico {
     private int posArchivo;
     private boolean codigoLeido;
     private TablaSimbolos tablaSimbolos;
-    private ArrayList<Atributo> tokensReconocidos; // Va procesando el codigo y acá guarda los tokens reconocidos
+    private ArrayList<Token> tokensReconocidos; // Va procesando el codigo y acá guarda los tokens reconocidos
     private ArrayList<String> errores; // ArrayList para almacenar los errores encontrados junto con el numero de linea (Implementar?) !!!!!!!!!!!!!!
 
     // -- MATRICES -- //
@@ -58,7 +49,7 @@ public class AnalizadorLexico {
         this.matrizEstados = new MatrizEstados();
         this.tablaSimbolos = new TablaSimbolos();
         this.errores = new ArrayList<String>();
-        this.tokensReconocidos = new ArrayList<Atributo>();
+        this.tokensReconocidos = new ArrayList<Token>();
         this.refTablaSimbolos = -1;
         this.codigoLeido = false;
 
@@ -140,6 +131,10 @@ public class AnalizadorLexico {
         this.matrizAccionesSemanticas.setMatrizAccionSemantica(matrizSemantica);
     }
 
+    public ArrayList<String> getErroresLexicos(){
+        return errores;
+    }
+
     // -- Metodos --
     public String getBuffer() {
         return buffer;
@@ -152,13 +147,16 @@ public class AnalizadorLexico {
     public void setPosArchivo(int pos) {
         posArchivo = pos;
     }
-    public int getTokenActual() {
-        return tokenActual;
-    }
+
 
     public int getIdToken(String lexema) {
         return tablaSimbolos.getIdToken(lexema);
     }
+
+    public String getArchivo() {
+        return archivo;
+    }
+
     public void setTokenActual(int idToken) {
         this.tokenActual = idToken;
 
@@ -250,9 +248,10 @@ public class AnalizadorLexico {
         //SALE DEL WHILE Y PREGUNTA SI HAY UN TOKEN RECONOCIDO ( != -1) Y QUE NO SEA DE LEER UNA CADENA O COMENTARIO (!= 0)
         if (this.tokenActual != 0 && this.tokenActual != -1) {
             String tipo = tablaSimbolos.getTipoToken(this.tokenActual);
-            Atributo token = new Atributo(this.tokenActual, this.buffer, this.LINEA, tipo);
+            Token token = new Token(this.tokenActual, this.buffer, this.LINEA, tipo);
 
-            System.out.println(token.toString());
+            System.out.println(token);
+
 
             if (tipo == "IDENTIFICADOR" || tipo == "PALABRA RESERVADA" || tipo == "CONSTANTE"){
                 posArchivo--;
@@ -286,11 +285,6 @@ public class AnalizadorLexico {
     public void addErrorLexico(String error) {
         this.errores.add(error);
     }
-
-    public String getTipoToken(int id){
-        return tablaSimbolos.getTipoToken(id);
-    }
-
     public boolean esFinDeArchivo() {
         if (this.estadoActual == 0) { // si estoy en un estado final
             if (this.posArchivo == (this.archivo.length() - 1)) { // y si llegue al final del archivo entonces actualizo
@@ -307,32 +301,33 @@ public class AnalizadorLexico {
             return false;
     }
 
-    public ArrayList<Atributo> getListaTokens() {
+    public ArrayList<Token> getListaTokens() {
         return this.tokensReconocidos;
     }
 
 
-    public void imprimirErrores() {
-        try {
-            String ruta = "salida_archivo/ejecucion_reciente.txt";
-            String contenido;
-            File file = new File(ruta);
-
-            // Si el archivo no existe es creado
-
-            if (!file.exists()) {
-                file.createNewFile();
+    public void imprimirTablaSimbolos() {
+        System.out.println();
+        System.out.println("|--- TABLA SIMBOLOS: ---|");
+        if (this.tokensReconocidos.isEmpty())
+            System.out.println("no hay tokens");
+        else {
+            for(Token t : tokensReconocidos){
+                System.out.println(t.toString());
             }
+        }
+    }
 
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            // Leo el codigo fuente
-            String horaActual = DateTimeFormatter.ofPattern("MMM dd yyyy, hh:mm:ss a").format(LocalDateTime.now());
-            bw.write("Hora de ejecucion: " + horaActual);
-            bw.write("\n" + "\n" + "\n" + "\n" + "-----------------------------------------------------------------" + "\n" + "\n");
+    public boolean isPalabraReservada(String buffer) {
+       return this.tablaSimbolos.isPalabraReservada(buffer);
+    }
+
+    public void imprimirErrores(BufferedWriter bw) throws IOException {
+
+            String contenido;
+
             contenido = "|--- CODIGO FUENTE ---|" + "\n" + "\n" + "\n";
             bw.write(contenido);
-            bw.write(archivo);
             bw.write("\n" + "\n"+ "-----------------------------------------------------------------" + "\n");
 
             if (this.errores.isEmpty()){
@@ -349,27 +344,9 @@ public class AnalizadorLexico {
                     }
                 }
             }
-            bw.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
-    public void imprimirTablaSimbolos() {
-        System.out.println();
-        System.out.println("|--- TABLA SIMBOLOS: ---|");
-        if (this.tokensReconocidos.isEmpty())
-            System.out.println("no hay tokens");
-        else {
-            for(Atributo t : tokensReconocidos){
-                System.out.println(t.toString());
-            }
-        }
-    }
-
-    public boolean isPalabraReservada(String buffer) {
-       return this.tablaSimbolos.isPalabraReservada(buffer);
-    }
 
 
 }

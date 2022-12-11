@@ -1,21 +1,43 @@
 program
 {
+    i32 a;
+    i32 a;
+    a =: 0;
+    i32 b;
+    j=:3;
 
-    fun f (i32 a) : i32 {
-
-                if(i = 1) then{
-                     continue : etiqueta;
-                     return(a);
-                }
-                end_if;
-
-
+    fun f (i32 k): i32{
+        i32 a;
+        i32 c;
+        return (k);
+        if (b < k) then {
+                b =: k;
+            } else {
+                k =: b;
+            } end_if;
     }
 
-    if(i = 1) then{
-                         continue;
-                    }
-                    end_if;
+    if (a < c) then {
+        a =: b;
+    } else {
+        c =: a;
+    } end_if;
+
+
+    fun f (i32 p): i32{
+
+
+            return (p);
+
+        }
+
+
+    a =: f(1);
+    a =: g();
+    a =: b();
+
+
+
 
 }
 

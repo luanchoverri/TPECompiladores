@@ -1,19 +1,23 @@
 package AnalizadorLexico;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TablaSimbolos {
 
+    /** Registro Tokens carga todos los tokens que se van reconociendo. Cada Token tiene sus propios atributos, lexema-id-uso-ambito-etc y la referencia es el indice */
+    private ArrayList<Token> registroTokens;
 
-    private ArrayList<Atributo> registroTokens; // esta es la tabla de simbolos donde se guardan los pares lexema-id
+    /** ID Tokens tiene guardos el numero de identificacion que le corresponde a cada token, se usa ASCII para los caracteres y se inventan para palabras reservadas u otros */
     private HashMap<String, Integer> idTokens; // aca solo se guardan los id correspondientes
 
 
 
     public TablaSimbolos(){
 
-        this.registroTokens = new ArrayList<Atributo>();
+        this.registroTokens = new ArrayList<Token>();
         this.idTokens = new HashMap<>();
 
         //--- CARGA DE TOKENS ---//
@@ -166,17 +170,21 @@ public class TablaSimbolos {
     }
 
     public void agregarRegistro(String lexema, int id, int nroLinea){
-        Atributo registro = new Atributo(lexema, id, nroLinea);
+        Token registro = new Token(lexema, id, nroLinea);
         if (getTipoToken(id).equals("CONSTANTE")){
             if (lexema.contains(".")) {
-                registro.setTipo("FLOAT");
+                registro.setTipo("f32");
             } else {
-                registro.setTipo("LONG");
+                registro.setTipo("i32");
             }
         }
         this.registroTokens.add(registro);
     }
 
+    public void agregarRegistroAssembler(String lexema, String tipo, String uso){
+        Token registro = new Token(lexema, tipo, uso);
+        this.registroTokens.add(registro);
+    }
 
     public int size(){
        return registroTokens.size();
@@ -186,7 +194,7 @@ public class TablaSimbolos {
         return registroTokens.isEmpty();
     }
 
-    public Atributo getEntrada(int indice){
+    public Token getEntrada(int indice){
         return this.registroTokens.get(indice);
     }
 
@@ -195,10 +203,62 @@ public class TablaSimbolos {
     }
 
     public void imprimir(){
-        System.out.println("---------TABLA DE SIMBOLOS---------");
-        for(Atributo token : registroTokens){
+        System.out.println("🟡🟡🟡🟡🟡 TABLA DE SIMBOLOS 🟡🟡🟡🟡🟡");
+        for(Token token : registroTokens){
             System.out.println(token.toString());
         }
     }
 
+    public void imprimir(BufferedWriter bw) throws IOException {
+        bw.write(" \n \n \n ");
+        bw.write(" \n              TABLA DE SIMBOLOS              \n");
+        for(Token token : registroTokens){
+            bw.write("\n");
+            bw.write(token.toString());
+        }
+        bw.write(" \n \n \n ");
+    }
+
+    public int existeEntrada(String lexema){
+
+        for(int i = 0; i < registroTokens.size(); i++) {
+            if (registroTokens.get(i).getLexema().equals(lexema)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int existeEntradaContainsTag(String lexema){
+
+        for(int i = 0; i < registroTokens.size(); i++) {
+            if (registroTokens.get(i).getLexema().contains(lexema) && registroTokens.get(i).getUso().equals("tag")){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public ArrayList<Integer> getParametros(String funcion){
+        ArrayList<Integer> params = new ArrayList<>();
+        for(int i = 0; i < registroTokens.size(); i++) {
+            if (registroTokens.get(i).getUso() != null && registroTokens.get(i).getUso().contains("param@"+funcion)){
+                params.add(i);
+            }
+        }
+        return params;
+    }
+
+
+
+    public ArrayList<Token> obtenerParamPorUso(String uso) {
+        ArrayList<Token> salida = new ArrayList<Token>();
+        for (int i = 0; i < registroTokens.size(); i++) {
+            String usoActual = registroTokens.get(i).getUso();
+            if(usoActual != null && usoActual.contains(uso)){
+                salida.add(registroTokens.get(i));
+            }
+        }
+        return salida;
+    }
 }

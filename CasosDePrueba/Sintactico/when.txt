@@ -1,17 +1,15 @@
 program
 {
-    << caso correcto
-    when ( i > 3 ) then { a =: i + 1; };
+    f32 i;
+    f32 a;
+    f32 j;
 
-    << casos incorrectos
-    when ( i > 3 then  { a =: i + 1; };
+    i =: 1.0;
+    a =: 2.0;
+    j =: 4.0;
 
-    when  i > 3 ) then  { a =: i + 1; };
-
-    when ( i > 3 ) then   a =: i + 1; };
-
-    when ( i > 3 ) then  { a =: i + 1; ;
-
-    when ( i > 3 ) { a =: i + 1; };
+    out('hola');
+    out('todo bien?');
+    out('que onda');
 
 }

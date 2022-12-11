@@ -1,0 +1,26 @@
+program{
+
+    i32 b;
+
+    b =: b+1;
+    i32 a;
+
+    fun fun1 (i32 j, f32 k, i32 l): i32 {
+         return(j*2);
+         const z=:1, l=:2;
+    }
+
+
+
+    fun fun2 (i32 h, f32 i ):f32 {
+         i32 f;
+         h =: 1 + 1;
+         return(h);
+    }
+
+    fun fun3 ():i32 {
+         return(100.0);
+    }
+
+    f =: fun3();
+}

@@ -1,36 +1,27 @@
-Hora de ejecucion: nov. 02 2022, 07:25:41 p. m.
-
-
-
------------------------------------------------------------------
-
-|--- CODIGO FUENTE ---|
-
-
 program
 {
 
-    fun f (i32 a) : i32 {
+    i32 a, b;
+    a =:1;
+    b=:0;
+    if(1 <= b) then{
+        out('entre al if');
+    } end_if;
+    out('fuera del if');
 
-                if(i = 1) then{
-                     continue : etiqueta;
-                     return(a);
-                }
-                end_if;
-
-
-    }
-
-    if(i = 1) then{
-                         continue;
-                    }
-                    end_if;
 
 }
 
 
 
-$
+$ 
+ 
+  EJECUCION DEL PARSER FINALIZADA  
+  
+ |||||||||||||||||||||||||||||||||||||||||||||| |--- CODIGO FUENTE ---|
+
+
+
 
 -----------------------------------------------------------------
 
@@ -38,10 +29,60 @@ $
 
 
 |--- Sin errores LEXICOS ---| (OK)
+ 
+ 🔎  ANALISIS SINTÁCTICO    
+ 
+ 
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 4)
+ Se reconoció una sentencia If. (Línea 9)
+ 
+ 
+ ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
+ 
+ 
+ vacio. 
+ 
+  
+ 
+ 
+  
+              TABLA DE SIMBOLOS              
 
-
-|--- ERRORES SINTACTICOS: ---| (!)
-
-
-SyntaxError. If3 (Línea 8): no se permiten sentencias continue fuera de una sentencia for 
-SyntaxError. If3 (Línea 17): no se permiten sentencias continue fuera de una sentencia for 
+TOKEN   257    program     #linea 1   null   null 
+TOKEN   257        a@$     #linea 4    i32    var 
+TOKEN   257        b@$     #linea 4    i32    var 
+TOKEN   258          1     #linea 5    i32   null 
+TOKEN   258          0     #linea 6    i32   null 
+TOKEN   272 entre al if     #linea 8   null cadena 
+TOKEN   272 fuera del if     #linea 10   null cadena  
+ 
+ 
+ 
+ --- ARBOL ---- 
+   └─ raiz 
+     └─ sentencia 
+        └─ =: 
+           └─ a@$ 
+           └─ 1 
+        └─ sentencia 
+           └─ =: 
+              └─ b@$ 
+              └─ 0 
+           └─ sentencia 
+              └─ if 
+                 └─ condicionIf 
+                    └─ <= 
+                       └─ 1 
+                       └─ b@$ 
+                 └─ cuerpo-if 
+                    └─ then 
+                       └─ sentencia 
+                          └─ out 
+                             └─ entre al if 
+              └─ sentencia 
+                 └─ out 
+                    └─ fuera del if 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: dic. 11 2022, 12:43:37 p. m.

@@ -1,0 +1,10 @@
+program{
+
+    i32 b;
+
+    fun fun2 (): f32 {
+         return(2);
+    }
+
+    b =: fun2();
+}
