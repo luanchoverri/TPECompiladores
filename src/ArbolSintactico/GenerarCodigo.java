@@ -811,7 +811,7 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
                 this.assemblerCode.append("FDIV "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
                 this.assemblerCode.append("FST "+aux+"\n");
-                this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
+
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarDiv");
 
             }
@@ -828,38 +828,48 @@ public class GenerarCodigo{
         String aux = "@aux" + contadorAux;
         this.contadorAux++;
         String label = "_label" + contadorEtiquetaLabel;
+        String labelMayor = "";
+        String labelMenor = "";
         contadorEtiquetaLabel++;
         if (nodo.getTipo().equals("i32")) {
-
-            this.assemblerCode.append("MOV "+"EAX"+","+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            this.assemblerCode.append("IMUL "+"EAX"+","+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+            this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+            this.assemblerCode.append("IMUL "+"EAX"+","+getLexAssembler(nodo.getHijoDerecho())+"\n");
             this.assemblerCode.append("MOV "+aux+","+"EAX"+"\n");
             this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarMult");
-
         }else{
             if (nodo.getTipo().equals("f32")){
-                this.assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
-                this.assemblerCode.append("FMUL "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
+                this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+                this.assemblerCode.append("FMUL "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+                this.assemblerCode.append("CDQ\n");
 
-                if(((nodo.getHijoIzquierdo().getLexema().contains("-")) && (nodo.getHijoDerecho().getLexema().contains("-"))))
+                if(((nodo.getHijoIzquierdo().getLexema().contains("-")) && (nodo.getHijoDerecho().getLexema().contains("-")))){
                     this.assemblerCode.append("FCOM _maxFloat"+"\n");
+                    this.assemblerCode.append("FSTSW mem2bytes"+"\n");
+                    this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
+                    this.assemblerCode.append("SAHF"+"\n");
+                    this.assemblerCode.append("JG "+label+"\n");
+                }
                 else
-                    if(nodo.getHijoIzquierdo().getLexema().contains("-") || nodo.getHijoDerecho().getLexema().contains("-"))
+                    if(nodo.getHijoIzquierdo().getLexema().contains("-") || nodo.getHijoDerecho().getLexema().contains("-")){
                         this.assemblerCode.append("FCOM _minFloat"+"\n");
-                    else
+                        this.assemblerCode.append("FSTSW mem2bytes"+"\n");
+                        this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
+                        this.assemblerCode.append("SAHF"+"\n");
+                        this.assemblerCode.append("JL "+label+"\n");
+                    }
+                    else{
                         this.assemblerCode.append("FCOM _maxFloat"+"\n");
-
-                this.assemblerCode.append("FSTSW mem2bytes"+"\n");
-                this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
-                this.assemblerCode.append("SAHF"+"\n");
-                this.assemblerCode.append("JB "+label+"\n");
+                        this.assemblerCode.append("FSTSW mem2bytes"+"\n");
+                        this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
+                        this.assemblerCode.append("SAHF"+"\n");
+                        this.assemblerCode.append("JG "+label+"\n");
+                    }
 
                 this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
 
                 this.assemblerCode.append(label + ":\n");
                 this.assemblerCode.append("FSTP "+aux+"\n");
-                this.assemblerCode.append("invoke MessageBox, NULL, addr ok, addr ok, MB_OK\n");
 
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarMult");
             }
@@ -890,8 +900,8 @@ public class GenerarCodigo{
         Token t = this.tablaSimbolos.getEntrada(idLexema);
         nodo.setTipo(t.getTipo());
         nodo.setLexema(aux);
-
     }
+
 
     public String getLexAssembler(Nodo nodo){
         if (nodo.getLexema().startsWith("@"))
@@ -905,6 +915,7 @@ public class GenerarCodigo{
 
         return nodo.getLexema();
     }
+
 
     private void sumaAssembler(Nodo nodo) {
         String aux = "@aux" + contadorAux;
@@ -928,6 +939,7 @@ public class GenerarCodigo{
         nodo.setLexema(aux);
     }
 
+
     private void paramAssembler(Nodo nodo){
         if (nodo.getHijoDerecho() != null){
             if (nodo.getHijoDerecho().getTipo().equals("i32")){
@@ -942,6 +954,7 @@ public class GenerarCodigo{
             this.assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
         }
     }
+
 
     private void asignacionAssembler(Nodo nodo) {
         int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoDerecho().getLexema());
@@ -1011,7 +1024,8 @@ public class GenerarCodigo{
         }
     }
 
-    private void cargarVariablesAuxiliares(int indice) { // En los parametros deberiamos pasarle para poder acceder a los tipos (nodo ??)
+
+    private void cargarVariablesAuxiliares(int indice) {
         Token t = tablaSimbolos.getEntrada(indice);
 
         if (!t.getLexema().startsWith("fun") && (t.getId()!=272)){
@@ -1042,6 +1056,7 @@ public class GenerarCodigo{
         }
     }
 
+
     private void cargarCadenas(){
         for (int i = 0; i < cadenas.size(); i++){
             this.datosPrecarga.append("out"+i);
@@ -1059,10 +1074,6 @@ public class GenerarCodigo{
         this.datosPrecarga.append(".code\r\n");
     }
 
-
-
-
-
     // -------------------- GENERACION DE CODIGO (SALIDA) -------------------- //
 
     public void generacionDeCodigo(Nodo nodo) {
@@ -1079,14 +1090,14 @@ public class GenerarCodigo{
            }
 
            code.append(";------------ CODE ------------\r\n");
-           this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
+            this.cargarLibrerias(); // Carga el encabezado de assembler importando las librerias necesarias.
             this.cargarCadenas();
-            this.generarCodigoLeido(nodo); // Carga el codigo completothis.cargarTablaSimbolos();
-            this.cargarTablaSimbolos();// Cargar las variables auxiliares (IMPLEMENTAR)
+            this.generarCodigoLeido(nodo); // Carga el codigo
+            this.cargarTablaSimbolos();// Cargar las variables auxiliares
 
-           this.assemblerCode.append(";------------ FIN ------------\n");
-           this.assemblerCode.append("invoke ExitProcess, 0\n");
-			this.assemblerCode.append("end start");
+            this.assemblerCode.append(";------------ FIN ------------\n");
+            this.assemblerCode.append("invoke ExitProcess, 0\n");
+		    this.assemblerCode.append("end start");
 
            FileWriter fw = new FileWriter(file);
            BufferedWriter bw = new BufferedWriter(fw);

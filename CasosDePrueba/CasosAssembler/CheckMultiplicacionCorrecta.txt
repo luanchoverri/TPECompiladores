@@ -1,0 +1,26 @@
+program
+{
+    f32 g,h,i,j,k,z;
+    i32 a,b,c,d,e,f;
+
+    a =: 11;
+    b =: 10 * 8;
+    c =: b * a;
+    d =: -3 * a;
+    e =: a * 3;
+
+    out('OK ENTERO');
+
+    j =: 1.1;
+    out('OK J');
+    i =: 10.2 * 1.8;
+    out('OK i');
+    g =: i * j;
+    out('OK G');
+    h =: -3.0 * j;
+    out('OK H');
+    z =: j * 3.0;
+    out('OK Z');
+
+    out('OK FLOTANTE');
+}
