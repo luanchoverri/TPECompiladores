@@ -27,12 +27,12 @@ _b@$ dd ?,?
 _c@$ dd ?,?
 _e@$ dd ?,?
 _3_2 dd 3.2
-_1_1 dd 1.1
+__0 dd 0.0
 @aux0 dd ?,?
 .code
 ;------------ CODE ------------
 start:
-FLD _1_1
+FLD __0
 FLDZ
 FCOM
 FSTSW mem2bytes
@@ -43,7 +43,7 @@ invoke MessageBox, NULL, addr errorDivCeroFlotante, addr errorDivCeroFlotante, M
 invoke ExitProcess, 0
 _label0:
 FLD _3_2
-FDIV _1_1
+FDIV __0
 FST @aux0
 invoke MessageBox, NULL, addr ok, addr ok, MB_OK
 FLD @aux0

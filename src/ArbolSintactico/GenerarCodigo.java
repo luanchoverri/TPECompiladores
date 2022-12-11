@@ -1041,7 +1041,7 @@ public class GenerarCodigo{
                 else{
                     if(t.getLexema().contains(".")){
                         this.datosPrecarga.append("_"+t.getLexema().replace('.', '_').replace('-', '_').replace("+",""));
-                        this.datosPrecarga.append(" dd "+t.getLexema().replace("+","").replace("F","E"));
+                        this.datosPrecarga.append(" dd "+t.getLexema().replace("+","").replace("F","E").replace(".0","0.0"));
                         this.datosPrecarga.append("\n");
                     }
                 }

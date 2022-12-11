@@ -1,7 +1,7 @@
 program
 {
     f32 a, b, c, e;
-    a =: 3.2/1.1;
+    a =: 3.2/.0;
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -41,7 +41,7 @@ TOKEN   257        b@$     #linea 3    f32    var
 TOKEN   257        c@$     #linea 3    f32    var 
 TOKEN   257        e@$     #linea 3    f32    var 
 TOKEN   258        3.2     #linea 4    f32   null 
-TOKEN   258        1.1     #linea 4    f32   null  
+TOKEN   258         .0     #linea 4    f32   null  
  
  
  
@@ -52,8 +52,8 @@ TOKEN   258        1.1     #linea 4    f32   null
            └─ a@$ 
            └─ / 
               └─ 3.2 
-              └─ 1.1 
+              └─ .0 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 10 2022, 11:54:16 p. m.
+ Hora de ejecucion: dic. 11 2022, 12:00:04 a. m.
