@@ -23,6 +23,7 @@ public class GenerarCodigo{
     private TablaSimbolos tablaSimbolos;
     private int contadorEtiquetaLabel = 0;
     private int contadorAux = 0;
+    private boolean entroAlBreak = false;
 
     private Stack <String> pilaControl;
     private Stack <String> pilaFor;
@@ -250,6 +251,10 @@ public class GenerarCodigo{
 
                     case ("For"):
                         forAssembler(nodo);
+                        break;
+
+                    case ("breakValor"):
+                        breakValor(nodo);
                         break;
 
                     // Funciones
@@ -978,6 +983,28 @@ public class GenerarCodigo{
             }
 
         }
+        else if ((nodo.getHijoDerecho() != null) && nodo.getHijoDerecho().getLexema().equals("for_else")){
+            if (entroAlBreak){
+                if(this.tablaSimbolos.getEntrada(this.tablaSimbolos.existeEntradaContainsBreak("variableAuxiliarBreak")).getTipo().equals("i32")) {
+                    this.assemblerCode.append("MOV " + "EAX" + "," + this.tablaSimbolos.getEntrada(this.tablaSimbolos.existeEntradaContainsBreak("variableAuxiliarBreak")).getLexema() + "\n");
+                    this.assemblerCode.append("MOV " + getLexAssembler(nodo.getHijoIzquierdo())+ "," + "EAX" + "\n");
+                }
+                else{
+
+                    this.assemblerCode.append("FLD " + this.tablaSimbolos.getEntrada(this.tablaSimbolos.existeEntradaContainsBreak("variableAuxiliarBreak")).getLexema() + "\n");
+                    this.assemblerCode.append("FSTP "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+                }
+            }else{
+                if(nodo.getHijoDerecho().getHijoDerecho().getTipo().equals("i32")) {
+                    this.assemblerCode.append("MOV " + "EAX" + "," + getLexAssembler(nodo.getHijoDerecho().getHijoDerecho()) + "\n");
+                    this.assemblerCode.append("MOV " + getLexAssembler(nodo.getHijoIzquierdo())+ "," + "EAX" + "\n");
+                }
+                else{
+                    this.assemblerCode.append("FLD " + getLexAssembler(nodo.getHijoDerecho().getHijoDerecho()) + "\n");
+                    this.assemblerCode.append("FSTP "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+                }
+            }
+        }
 
         // Declaracion de constantes simples
 
@@ -994,6 +1021,27 @@ public class GenerarCodigo{
                 }
             }
         }
+    }
+
+    private void breakValor(Nodo nodo) {
+
+        entroAlBreak = true;
+
+        String aux = "@aux" + contadorAux;
+        this.contadorAux++;
+        if (nodo.getHijoIzquierdo().getTipo().equals("i32")){
+            this.assemblerCode.append("MOV EAX, "+ getLexAssembler(nodo.getHijoIzquierdo()) +"\n");
+            this.assemblerCode.append("MOV "+ aux +", EAX " +"\n");
+        }else{
+            this.assemblerCode.append("FLD "+ getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
+            this.assemblerCode.append("FSTP " + aux + " \n");
+        }
+
+        this.tablaSimbolos.agregarRegistroAssembler(aux, nodo.getHijoIzquierdo().getTipo(), "variableAuxiliarBreak");
+
+        String labelBreak = this.pilaFor.pop();
+        this.assemblerCode.append("JMP " + this.pilaFor.peek()  + "\n");
+        this.pilaFor.push(labelBreak);
     }
 
 

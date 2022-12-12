@@ -239,6 +239,15 @@ public class TablaSimbolos {
         return -1;
     }
 
+    public int existeEntradaContainsBreak(String uso){
+        for(int i = 0; i < registroTokens.size(); i++) {
+            if (registroTokens.get(i).getUso().equals(uso)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public ArrayList<Integer> getParametros(String funcion){
         ArrayList<Integer> params = new ArrayList<>();
         for(int i = 0; i < registroTokens.size(); i++) {

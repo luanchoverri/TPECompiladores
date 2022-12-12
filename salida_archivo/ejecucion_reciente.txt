@@ -1,62 +1,23 @@
-program
-{
-    fun fun2 (f32 h, f32 p ):f32 {
-                                    h =: 1. + p;
+program{
 
-                                    out('en fun2');
-                                    return(h);
-                            }
+    i32 b;
 
-    fun fun3 (i32 j, i32 k): i32 {
-                const z=:1, l=:2;
-
-                return(1);
-           }
-
-    i32 c;
-    c=: 2;
-
-
-    i32 a,b;
-    a =: 3;
-    b =: a * 2 + 5;
-
-    for (i =: 0; i < 6; +i) {
-
-        if (a < 3) then{
-            a =: b;
-            out('a era menor');
-        } else {
-            a =: 0;
-            continue;
-        } end_if;
-    };
-
-    for(i=:1 ; i < 3 ; +i){
-              if(i = 1) then{
-                break;
-              }end_if;
-              i=: i + 1;
-            };
-
-    if (b < a) then {
-        b =: a;
-    } else {
-        a =: b;
-    } end_if;
+    b =: b+1;
+    i32 a;
+    fun fun3 (i32 j, f32 k): i32 {
+            return(j);
+            const z=:1, l=:2;
+            fun fun2 (i32 h, f32 i ):f32 {
+                            h =: 1;
+                            i =: 1.0 + i;
+                            return(i);
+                    }
+       }
+    i32 f;
 
 
-    f32 r,q,m;
-    q =: .1;
-    m =: 3.;
-    r =: fun2(q,m);
-
-    out('ejecucion terminda');
-}
-
-
-
-$ 
+    f =: 4;
+}$ 
  
   EJECUCION DEL PARSER FINALIZADA  
   
@@ -75,23 +36,16 @@ $
  🔎  ANALISIS SINTÁCTICO    
  
  
- Se reconocio declaracion de funcion (Línea 3)
- Se reconoce retorno de funcion(Línea 7) 
- Se reconoce cuerpo de funcion (Línea 8)
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 6)
+ Se reconocio declaracion de funcion (Línea 7)
+ Se reconoce retorno de funcion(Línea 8) 
+ Se reconoció una declaración de CONSTANTE. (Línea 9)
  Se reconocio declaracion de funcion (Línea 10)
- Se reconoció una declaración de CONSTANTE. (Línea 11)
  Se reconoce retorno de funcion(Línea 13) 
  Se reconoce cuerpo de funcion (Línea 14)
+ Se reconoce cuerpo de funcion (Línea 15)
  Se reconoció declaraciónes de variable de tipo i32. (Línea 16)
- Se reconoció declaraciónes de variable de tipo i32. (Línea 20)
- Se reconocio una sentencia continue (Línea 31)
- Se reconoció una sentencia If. (Línea 32)
- Se reconocio sentencia FOR. (Línea 33)
- Se reconocio una sentencia break (Línea 37)
- Se reconoció una sentencia If. (Línea 38)
- Se reconocio sentencia FOR. (Línea 40)
- Se reconoció una sentencia If. (Línea 46)
- Se reconoció declaraciónes de variable de tipo f32. (Línea 49)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -106,36 +60,22 @@ $
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null program 
-TOKEN   257     fun2@$     #linea 3    f32   func 
-TOKEN   257        h@$     #linea 3    f32 param@fun2@$@0 
-TOKEN   257        p@$     #linea 3    f32 param@fun2@$@1 
-TOKEN   258         1.     #linea 4    f32    cte 
-TOKEN   272    en fun2     #linea 6   null cadena 
-TOKEN   257     fun3@$     #linea 10    i32   func 
-TOKEN   257        j@$     #linea 10    i32 param@fun3@$@0 
-TOKEN   257        k@$     #linea 10    i32 param@fun3@$@1 
-TOKEN   257   z@$_fun3     #linea 11    i32  const 
-TOKEN   258          1     #linea 11    i32    cte 
-TOKEN   257   l@$_fun3     #linea 11    i32  const 
-TOKEN   258          2     #linea 11    i32    cte 
-TOKEN   257        c@$     #linea 16    i32    var 
-TOKEN   257        a@$     #linea 20    i32    var 
-TOKEN   257        b@$     #linea 20    i32    var 
-TOKEN   258          3     #linea 21    i32    cte 
-TOKEN   258          5     #linea 22    i32    cte 
-TOKEN   257   i@$_for0     #linea 24    i32 for_var 
-TOKEN   258          0     #linea 24    i32    cte 
-TOKEN   258          6     #linea 24    i32    i32 
-TOKEN   272 a era menor     #linea 28   null cadena 
-TOKEN   257   i@$_for1     #linea 35    i32 for_var 
-TOKEN   258          1     #linea 35    i32    cte 
-TOKEN   258          3     #linea 35    i32    i32 
-TOKEN   257        r@$     #linea 49    f32    var 
-TOKEN   257        q@$     #linea 49    f32    var 
-TOKEN   257        m@$     #linea 49    f32    var 
-TOKEN   258         .1     #linea 50    f32    cte 
-TOKEN   258         3.     #linea 51    f32    cte 
-TOKEN   272 ejecucion terminda     #linea 54   null cadena  
+TOKEN   257        b@$     #linea 3    i32    var 
+TOKEN   258          1     #linea 5    i32    cte 
+TOKEN   257        a@$     #linea 6    i32    var 
+TOKEN   257     fun3@$     #linea 7    i32   func 
+TOKEN   257        j@$     #linea 7    i32 param@fun3@$@0 
+TOKEN   257        k@$     #linea 7    f32 param@fun3@$@1 
+TOKEN   257   z@$_fun3     #linea 9    i32  const 
+TOKEN   258          1     #linea 9    i32    cte 
+TOKEN   257   l@$_fun3     #linea 9    i32  const 
+TOKEN   258          2     #linea 9    i32    cte 
+TOKEN   257 fun2@$_fun3     #linea 10    f32   func 
+TOKEN   257   h@$_fun3     #linea 10    i32 param@fun2@$_fun3@0 
+TOKEN   257   i@$_fun3     #linea 10    f32 param@fun2@$_fun3@1 
+TOKEN   258        1.0     #linea 12    f32    cte 
+TOKEN   257        f@$     #linea 16    i32    var 
+TOKEN   258          4     #linea 19    i32    cte  
  
  
  
@@ -143,161 +83,37 @@ TOKEN   272 ejecucion terminda     #linea 54   null cadena
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ c@$ 
-           └─ 2 
+           └─ b@$ 
+           └─ + 
+              └─ b@$ 
+              └─ 1 
         └─ sentencia 
            └─ =: 
-              └─ a@$ 
-              └─ 3 
-           └─ sentencia 
-              └─ =: 
-                 └─ b@$ 
-                 └─ + 
-                    └─ * 
-                       └─ a@$ 
-                       └─ 2 
-                    └─ 5 
-              └─ sentencia 
-                 └─ For 
-                    └─ encabezado for 
-                       └─ asignacionFor 
-                          └─ =: 
-                             └─ i@$_for0 
-                             └─ 0 
-                       └─ condicion y operacion for 
-                          └─ condicionFor 
-                             └─ < 
-                                └─ i@$_for0 
-                                └─ 6 
-                          └─ operacionFor 
-                             └─ =: 
-                                └─ i@$_for0 
-                                └─ + 
-                                   └─ i@$_for0 
-                                   └─ 1 
-                    └─ cuerpoFor 
-                       └─ sentencia 
-                          └─ if 
-                             └─ condicionIf 
-                                └─ < 
-                                   └─ a@$ 
-                                   └─ 3 
-                             └─ cuerpo-if 
-                                └─ then 
-                                   └─ sentencia 
-                                      └─ =: 
-                                         └─ a@$ 
-                                         └─ b@$ 
-                                      └─ sentencia 
-                                         └─ out 
-                                            └─ a era menor 
-                                └─ else 
-                                   └─ sentencia 
-                                      └─ =: 
-                                         └─ a@$ 
-                                         └─ 0 
-                                      └─ sentencia 
-                                         └─ continue 
-                 └─ sentencia 
-                    └─ For 
-                       └─ encabezado for 
-                          └─ asignacionFor 
-                             └─ =: 
-                                └─ i@$_for1 
-                                └─ 1 
-                          └─ condicion y operacion for 
-                             └─ condicionFor 
-                                └─ < 
-                                   └─ i@$_for1 
-                                   └─ 3 
-                             └─ operacionFor 
-                                └─ =: 
-                                   └─ i@$_for1 
-                                   └─ + 
-                                      └─ i@$_for1 
-                                      └─ 1 
-                       └─ cuerpoFor 
-                          └─ sentencia 
-                             └─ if 
-                                └─ condicionIf 
-                                   └─ = 
-                                      └─ i@$_for1 
-                                      └─ 1 
-                                └─ cuerpo-if 
-                                   └─ then 
-                                      └─ sentencia 
-                                         └─ break 
-                             └─ sentencia 
-                                └─ =: 
-                                   └─ i@$_for1 
-                                   └─ + 
-                                      └─ i@$_for1 
-                                      └─ 1 
-                    └─ sentencia 
-                       └─ if 
-                          └─ condicionIf 
-                             └─ < 
-                                └─ b@$ 
-                                └─ a@$ 
-                          └─ cuerpo-if 
-                             └─ then 
-                                └─ sentencia 
-                                   └─ =: 
-                                      └─ b@$ 
-                                      └─ a@$ 
-                             └─ else 
-                                └─ sentencia 
-                                   └─ =: 
-                                      └─ a@$ 
-                                      └─ b@$ 
-                       └─ sentencia 
-                          └─ =: 
-                             └─ q@$ 
-                             └─ .1 
-                          └─ sentencia 
-                             └─ =: 
-                                └─ m@$ 
-                                └─ 3. 
-                             └─ sentencia 
-                                └─ =: 
-                                   └─ r@$ 
-                                   └─ fun2@$ 
-                                      └─ paramInv 
-                                         └─ q@$ 
-                                         └─ m@$ 
-                                └─ sentencia 
-                                   └─ out 
-                                      └─ ejecucion terminda 
+              └─ f@$ 
+              └─ 4 
  
-  ARBOL DE LA FUNCION fun2@$ 
-  └─ fun2@$ 
+  ARBOL DE LA FUNCION fun2@$_fun3 
+  └─ fun2@$_fun3 
      └─ sentencia 
         └─ =: 
-           └─ h@$ 
-           └─ + 
-              └─ 1. 
-              └─ p@$ 
+           └─ h@$_fun3 
+           └─ 1 
         └─ sentencia 
-           └─ out 
-              └─ en fun2 
+           └─ =: 
+              └─ i@$_fun3 
+              └─ + 
+                 └─ 1.0 
+                 └─ i@$_fun3 
            └─ sentencia 
               └─ return 
-                 └─ h@$ 
+                 └─ i@$_fun3 
  
   ARBOL DE LA FUNCION fun3@$ 
   └─ fun3@$ 
      └─ sentencia 
-        └─ =: 
-           └─ z@$_fun3 
-           └─ 1 
-        └─ sentencia 
-           └─ =: 
-              └─ l@$_fun3 
-              └─ 2 
-           └─ sentencia 
-              └─ return 
-                 └─ 1 
+        └─ return 
+           └─ j@$ 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 11 2022, 10:21:52 p. m.
+ Hora de ejecucion: dic. 11 2022, 11:18:53 p. m.
