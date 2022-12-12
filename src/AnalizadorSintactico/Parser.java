@@ -79,7 +79,7 @@ final int state_pop()
 }
 final void state_drop(int cnt)
 {
-  stateptr -= cnt;
+  stateptr -= cnt; 
 }
 final int state_peek(int relative)
 {
@@ -931,7 +931,7 @@ final static String yyrule[] = {
 "tipo : f32",
 };
 
-//#line 797 "gramatica.y"
+//#line 798 "gramatica.y"
 
 private AnalizadorLexico lexico;
 private AnalizadorSintactico sintactico;
@@ -1036,7 +1036,7 @@ boolean doaction;
   while (true) //until parsing is done, either correctly, or w/error
     {
     doaction=true;
-    if (yydebug) debug("loop");
+    if (yydebug) debug("loop"); 
     //#### NEXT ACTION (from reduction table)
     for (yyn=yydefred[yystate];yyn==0;yyn=yydefred[yystate])
       {
@@ -2026,21 +2026,22 @@ case 184:
 //#line 653 "gramatica.y"
 {	sintactico.addAnalisis("Se reconocio una sentencia break con retorno de valor (Línea " + AnalizadorLexico.LINEA + ")");
                 			yyval = new ParserVal(sintactico.crearNodoControl("breakValor", new ParserVal(sintactico.crearHoja(val_peek(1).ival))));
+                			sintactico.setUsoEnIndex("cte",val_peek(1).ival);
                 			tipoBreak = sintactico.getTipoFromTS(val_peek(1).ival);
                 			}
 break;
 case 185:
-//#line 658 "gramatica.y"
+//#line 659 "gramatica.y"
 {	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego de BREAK."); }
 break;
 case 186:
-//#line 661 "gramatica.y"
+//#line 662 "gramatica.y"
 {
 							sintactico.addAnalisis("Se reconocio una sentencia continue (Línea " + AnalizadorLexico.LINEA + ")");
 							yyval = new ParserVal(sintactico.crearNodoControl("continue",null));}
 break;
 case 187:
-//#line 664 "gramatica.y"
+//#line 665 "gramatica.y"
 { 	sintactico.addAnalisis("Se reconocio una sentencia continue con etiquetado(Línea " + AnalizadorLexico.LINEA + ")");
                    					int existente = enAmbito(val_peek(1));
 							if (existente < 0 ) {
@@ -2053,15 +2054,15 @@ case 187:
                    					}
 break;
 case 188:
-//#line 674 "gramatica.y"
+//#line 675 "gramatica.y"
 { 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'CONTINUE."); }
 break;
 case 189:
-//#line 675 "gramatica.y"
+//#line 676 "gramatica.y"
 { 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ';' luego del CONTINUE "); }
 break;
 case 190:
-//#line 678 "gramatica.y"
+//#line 679 "gramatica.y"
 {
 								int existente = enAmbito(val_peek(4));
 								if (existente >= 0) {
@@ -2080,7 +2081,7 @@ case 190:
 							}
 break;
 case 192:
-//#line 711 "gramatica.y"
+//#line 712 "gramatica.y"
 {
 		    				yyval = new ParserVal(sintactico.crearNodoParam("paramInv", val_peek(2), val_peek(0)));
 		    				NodoHijo aux = (NodoHijo)val_peek(2).obj;
@@ -2091,7 +2092,7 @@ case 192:
 					}
 break;
 case 193:
-//#line 719 "gramatica.y"
+//#line 720 "gramatica.y"
 {	yyval = new ParserVal(sintactico.crearNodoParam("paramInv", val_peek(0), null));
 
 		    				NodoHijo aux = (NodoHijo)val_peek(0).obj;
@@ -2100,23 +2101,23 @@ case 193:
 		 			   }
 break;
 case 194:
-//#line 728 "gramatica.y"
+//#line 729 "gramatica.y"
 { yyval = new ParserVal(sintactico.crearNodo(val_peek(1).sval, val_peek(2), val_peek(0)));}
 break;
 case 195:
-//#line 732 "gramatica.y"
+//#line 733 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo(val_peek(1).sval, val_peek(2), val_peek(0))); }
 break;
 case 197:
-//#line 737 "gramatica.y"
+//#line 738 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("*",val_peek(2),val_peek(0)));}
 break;
 case 198:
-//#line 738 "gramatica.y"
+//#line 739 "gramatica.y"
 {yyval = new ParserVal(sintactico.crearNodo("/",val_peek(2),val_peek(0)));}
 break;
 case 200:
-//#line 742 "gramatica.y"
+//#line 743 "gramatica.y"
 {
 				int existente = enAmbito(val_peek(0));
 				if (existente >= 0) {
@@ -2129,7 +2130,7 @@ case 200:
 				}
 break;
 case 201:
-//#line 752 "gramatica.y"
+//#line 753 "gramatica.y"
 {
 				String lexema = sintactico.getEntradaTablaSimb(val_peek(0).ival).getLexema();
                                 int existente = sintactico.getTS().existeEntrada(lexema);
@@ -2147,7 +2148,7 @@ case 201:
                   	}
 break;
 case 202:
-//#line 767 "gramatica.y"
+//#line 768 "gramatica.y"
 {
 				sintactico.setNegativoTablaSimb(val_peek(0).ival);
 				String lexema = sintactico.getEntradaTablaSimb(val_peek(0).ival).getLexema();
@@ -2163,38 +2164,38 @@ case 202:
                    	}
 break;
 case 203:
-//#line 783 "gramatica.y"
+//#line 784 "gramatica.y"
 { yyval.sval = new String("<") ; }
 break;
 case 204:
-//#line 784 "gramatica.y"
+//#line 785 "gramatica.y"
 { yyval.sval = new String(">") ; }
 break;
 case 205:
-//#line 785 "gramatica.y"
+//#line 786 "gramatica.y"
 { yyval.sval = new String("<="); }
 break;
 case 206:
-//#line 786 "gramatica.y"
+//#line 787 "gramatica.y"
 { yyval.sval = new String(">="); }
 break;
 case 207:
-//#line 787 "gramatica.y"
+//#line 788 "gramatica.y"
 { yyval.sval = new String("=") ; }
 break;
 case 208:
-//#line 788 "gramatica.y"
+//#line 789 "gramatica.y"
 { yyval.sval = new String("=!"); }
 break;
 case 209:
-//#line 792 "gramatica.y"
+//#line 793 "gramatica.y"
 { yyval.sval = new String("i32"); }
 break;
 case 210:
-//#line 793 "gramatica.y"
+//#line 794 "gramatica.y"
 { yyval.sval = new String("f32"); }
 break;
-//#line 2121 "Parser.java"
+//#line 2122 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

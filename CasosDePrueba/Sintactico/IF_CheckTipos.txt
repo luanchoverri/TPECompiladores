@@ -1,40 +1,25 @@
 program
 {
+    i32 d;
 
-    fun fun3 (i32 j, f32 k): i32 {
-                const z=:1, l=:2;
-                fun fun2 (f32 h, f32 i ):f32 {
-                                h =: 1. + i;
-                                return(h);
-                                out('en fun2');
-                        }
-                return(j);
-           }
+    fun w (i32 k): i32{
+        i32 a;
+        i32 b;
+        i32 c;
 
-    i32 c;
-    c=: 2;
+        for(i=:1 ; i < 3 ; +i){
+          if(i = 1) then{
+            break;
+          }end_if;
+          i=: i + 1;
+        };
 
-
-    i32 a,b;
-    a =: 3;
-    b =: a * 2 + 5;
-
-    for (i =: 0; i < 6; +i) {
-
-        if (a < 3) then{
-            a =: b;
-            out('a era menor');
+        if (b < k) then {
+            b =: k;
         } else {
-            a =: 0;
-            continue;
+            k =: b;
         } end_if;
-    };
 
-
-
-
-    out('ejecucion terminda');
+        return (k);
+    }
 }
-
-
-

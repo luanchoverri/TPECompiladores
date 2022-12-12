@@ -652,6 +652,7 @@ sentencia_BREAK : BREAK ';'	{	sintactico.addAnalisis("Se reconocio una sentencia
 					$$ = new ParserVal(sintactico.crearNodoControl("break",null));}
                 | BREAK cte ';'	{	sintactico.addAnalisis("Se reconocio una sentencia break con retorno de valor (Línea " + AnalizadorLexico.LINEA + ")");
                 			$$ = new ParserVal(sintactico.crearNodoControl("breakValor", new ParserVal(sintactico.crearHoja($2.ival))));
+                			sintactico.setUsoEnIndex("cte",$2.ival);
                 			tipoBreak = sintactico.getTipoFromTS($2.ival);
                 			}
 
