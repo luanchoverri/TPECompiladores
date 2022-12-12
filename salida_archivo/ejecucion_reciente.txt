@@ -1,24 +1,21 @@
 program
 {
-    f32 g,h,i,j,k,z;
-    i32 a,b,c,d,e,f;
+   f32 a,b;
+    a =: 3.2;
+    b =: a * 2.0 + 5.1;
 
-    a =: 11;
-    b =: 10 * 8;
-    c =: b * a;
-    d =: -3 * a;
-    e =: a * 3;
-
-    out('OK ENTERO');
-
-    j =: 1.1;
-    i =: 10.2 * 1.8;
-    g =: i * j;
-    h =: -3.0 * j;
-    z =: j * 3.0;
-
-
-    out('OK FLOTANTE');
+    for (i =: 0; i < 6; +i) {
+        out('for');
+        if (a < 3.9) then{
+            out('aca');
+            a =: b;
+            out('aca1');
+        } else {
+            out('aca2');
+            a =: 0.0;
+            continue;
+        } end_if;
+    };
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -39,7 +36,9 @@ program
  
  
  Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
- Se reconoció declaraciónes de variable de tipo i32. (Línea 4)
+ Se reconocio una sentencia continue (Línea 16)
+ Se reconoció una sentencia If. (Línea 17)
+ Se reconocio sentencia FOR. (Línea 18)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -54,30 +53,20 @@ program
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null program 
-TOKEN   257        g@$     #linea 3    f32    var 
-TOKEN   257        h@$     #linea 3    f32    var 
-TOKEN   257        i@$     #linea 3    f32    var 
-TOKEN   257        j@$     #linea 3    f32    var 
-TOKEN   257        k@$     #linea 3    f32    var 
-TOKEN   257        z@$     #linea 3    f32    var 
-TOKEN   257        a@$     #linea 4    i32    var 
-TOKEN   257        b@$     #linea 4    i32    var 
-TOKEN   257        c@$     #linea 4    i32    var 
-TOKEN   257        d@$     #linea 4    i32    var 
-TOKEN   257        e@$     #linea 4    i32    var 
-TOKEN   257        f@$     #linea 4    i32    var 
-TOKEN   258         11     #linea 6    i32    cte 
-TOKEN   258         10     #linea 7    i32    cte 
-TOKEN   258          8     #linea 7    i32    cte 
-TOKEN   258         -3     #linea 9    i32 cte neg 
-TOKEN   258          3     #linea 10    i32    cte 
-TOKEN   272  OK ENTERO     #linea 12   null cadena 
-TOKEN   258        1.1     #linea 14    f32    cte 
-TOKEN   258       10.2     #linea 15    f32    cte 
-TOKEN   258        1.8     #linea 15    f32    cte 
-TOKEN   258       -3.0     #linea 17    f32 cte neg 
-TOKEN   258        3.0     #linea 18    f32    cte 
-TOKEN   272 OK FLOTANTE     #linea 21   null cadena  
+TOKEN   257        a@$     #linea 3    f32    var 
+TOKEN   257        b@$     #linea 3    f32    var 
+TOKEN   258        3.2     #linea 4    f32    cte 
+TOKEN   258        2.0     #linea 5    f32    cte 
+TOKEN   258        5.1     #linea 5    f32    cte 
+TOKEN   257   i@$_for0     #linea 7    i32 for_var 
+TOKEN   258          0     #linea 7    i32    cte 
+TOKEN   258          6     #linea 7    i32    i32 
+TOKEN   272        for     #linea 8   null cadena 
+TOKEN   258        3.9     #linea 9    f32    cte 
+TOKEN   272        aca     #linea 10   null cadena 
+TOKEN   272       aca1     #linea 12   null cadena 
+TOKEN   272       aca2     #linea 14   null cadena 
+TOKEN   258        0.0     #linea 15    f32    cte  
  
  
  
@@ -86,66 +75,66 @@ TOKEN   272 OK FLOTANTE     #linea 21   null cadena
      └─ sentencia 
         └─ =: 
            └─ a@$ 
-           └─ 11 
+           └─ 3.2 
         └─ sentencia 
            └─ =: 
               └─ b@$ 
-              └─ * 
-                 └─ 10 
-                 └─ 8 
-           └─ sentencia 
-              └─ =: 
-                 └─ c@$ 
+              └─ + 
                  └─ * 
-                    └─ b@$ 
                     └─ a@$ 
-              └─ sentencia 
-                 └─ =: 
-                    └─ d@$ 
-                    └─ * 
-                       └─ -3 
-                       └─ a@$ 
-                 └─ sentencia 
-                    └─ =: 
-                       └─ e@$ 
-                       └─ * 
-                          └─ a@$ 
-                          └─ 3 
+                    └─ 2.0 
+                 └─ 5.1 
+           └─ sentencia 
+              └─ For 
+                 └─ encabezado for 
+                    └─ asignacionFor 
+                       └─ =: 
+                          └─ i@$_for0 
+                          └─ 0 
+                    └─ condicion y operacion for 
+                       └─ condicionFor 
+                          └─ < 
+                             └─ i@$_for0 
+                             └─ 6 
+                       └─ operacionFor 
+                          └─ =: 
+                             └─ i@$_for0 
+                             └─ + 
+                                └─ i@$_for0 
+                                └─ 1 
+                 └─ cuerpoFor 
                     └─ sentencia 
                        └─ out 
-                          └─ OK ENTERO 
+                          └─ for 
                        └─ sentencia 
-                          └─ =: 
-                             └─ j@$ 
-                             └─ 1.1 
-                          └─ sentencia 
-                             └─ =: 
-                                └─ i@$ 
-                                └─ * 
-                                   └─ 10.2 
-                                   └─ 1.8 
-                             └─ sentencia 
-                                └─ =: 
-                                   └─ g@$ 
-                                   └─ * 
-                                      └─ i@$ 
-                                      └─ j@$ 
-                                └─ sentencia 
-                                   └─ =: 
-                                      └─ h@$ 
-                                      └─ * 
-                                         └─ -3.0 
-                                         └─ j@$ 
+                          └─ if 
+                             └─ condicionIf 
+                                └─ < 
+                                   └─ a@$ 
+                                   └─ 3.9 
+                             └─ cuerpo-if 
+                                └─ then 
                                    └─ sentencia 
-                                      └─ =: 
-                                         └─ z@$ 
-                                         └─ * 
-                                            └─ j@$ 
-                                            └─ 3.0 
+                                      └─ out 
+                                         └─ aca 
                                       └─ sentencia 
-                                         └─ out 
-                                            └─ OK FLOTANTE 
+                                         └─ =: 
+                                            └─ a@$ 
+                                            └─ b@$ 
+                                         └─ sentencia 
+                                            └─ out 
+                                               └─ aca1 
+                                └─ else 
+                                   └─ sentencia 
+                                      └─ out 
+                                         └─ aca2 
+                                      └─ sentencia 
+                                         └─ =: 
+                                            └─ a@$ 
+                                            └─ 0.0 
+                                         └─ sentencia 
+                                            └─ continue 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 11 2022, 09:49:57 p. m.
+ Hora de ejecucion: dic. 11 2022, 09:53:22 p. m.

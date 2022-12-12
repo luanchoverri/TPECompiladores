@@ -21,115 +21,105 @@ ok db 'OK',0
 mem2bytes dw ?
 _maxFloat dq 3.40282347E+38
 _minFloat dq -3.40282347E+38
-out0 db 'OK ENTERO',0
-out1 db 'OK FLOTANTE',0
+out0 db 'for',0
+out1 db 'aca',0
+out2 db 'aca1',0
+out3 db 'aca2',0
 _program dd ?,?
-_g@$ dd ?,?
-_h@$ dd ?,?
-_i@$ dd ?,?
-_j@$ dd ?,?
-_k@$ dd ?,?
-_z@$ dd ?,?
 _a@$ dd ?,?
 _b@$ dd ?,?
-_c@$ dd ?,?
-_d@$ dd ?,?
-_e@$ dd ?,?
-_f@$ dd ?,?
-_1_1 dq 1.1
-_10_2 dq 10.2
-_1_8 dq 1.8
-__3_0 dq -3.0
-_3_0 dq 3.0
+_3_2 dq 3.2
+_2_0 dq 2.0
+_5_1 dq 5.1
+_i@$_for0 dd ?,?
+_3_9 dq 3.9
+_0_0 dq 0.0
 @aux0 dd ?,?
 @aux1 dd ?,?
 @aux2 dd ?,?
 @aux3 dd ?,?
-@aux4 dd ?,?
 @aux5 dd ?,?
+@aux4 dd ?,?
 @aux6 dd ?,?
-@aux7 dd ?,?
 .code
 ;------------ CODE ------------
 start:
-MOV EAX,11
-MOV _a@$,EAX
-MOV EAX,10
-IMUL EAX,8
-MOV @aux0,EAX
-MOV EAX,@aux0
-MOV _b@$,EAX
-MOV EAX,_b@$
-IMUL EAX,_a@$
-MOV @aux1,EAX
-MOV EAX,@aux1
-MOV _c@$,EAX
-MOV EAX,-3
-IMUL EAX,_a@$
-MOV @aux2,EAX
-MOV EAX,@aux2
-MOV _d@$,EAX
-MOV EAX,_a@$
-IMUL EAX,3
+FLD _3_2
+FSTP _a@$
+FLD _a@$
+FMUL _2_0
+FCOM _maxFloat
+FSTSW mem2bytes
+MOV AX, mem2bytes
+SAHF
+JNO _label0
+invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK
+invoke ExitProcess, 0
+_label0:
+FSTP @aux0
+FLD @aux0
+FADD _5_1
+FSTP @aux1
+FLD @aux1
+FSTP _b@$
+MOV EAX,0
+MOV _i@$_for0,EAX
+_label1:
+MOV EAX, _i@$_for0
+CMP EAX, 6
+JGE _label3
+MOV @aux2,1 
+JMP _label2
+_label3:
+MOV @aux2, 0 
+_label2:
+MOV EAX, @aux2
+CMP EAX, 0 
+JE _label4
+JNE _label5
+_label6:
+MOV EAX,_i@$_for0
+ADD EAX,1
 MOV @aux3,EAX
 MOV EAX,@aux3
-MOV _e@$,EAX
-invoke MessageBox, NULL, addr out0, addr out0, MB_OK
-FLD _1_1
-FSTP _j@$
-FLD _10_2
-FMUL _1_8
-FCOM _maxFloat
-FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
-JNO _label4
-invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK
-invoke ExitProcess, 0
-_label4:
-FSTP @aux4
-FLD @aux4
-FSTP _i@$
-FLD _i@$
-FMUL _j@$
-FCOM _maxFloat
-FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
-JNO _label5
-invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK
-invoke ExitProcess, 0
+MOV _i@$_for0,EAX
+JMP _label1
 _label5:
-FSTP @aux5
-FLD @aux5
-FSTP _g@$
-FLD __3_0
-FMUL _j@$
-FCOM _minFloat
+invoke MessageBox, NULL, addr out0, addr out0, MB_OK
+FLD _a@$
+FLD _3_9
+FCOMPP 
 FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
-JNO _label6
-invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK
-invoke ExitProcess, 0
-_label6:
-FSTP @aux6
-FLD @aux6
-FSTP _h@$
-FLD _j@$
-FMUL _3_0
-FCOM _maxFloat
-FSTSW mem2bytes
-MOV AX, mem2bytes
-SAHF
-JNO _label7
-invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK
-invoke ExitProcess, 0
+MOV EAX, mem2bytes
+SAHF 
+JAE _label8
+FLD1
+FSTP @aux4 
+JMP _label7
+_label8:
+FLDZ 
+FSTP @aux4 
 _label7:
-FSTP @aux7
-FLD @aux7
-FSTP _z@$
+FLDZ 
+FLD @aux4
+FCOMPP 
+FSTSW mem2bytes
+MOV AX, mem2bytes
+SAHF 
+JE _label9
 invoke MessageBox, NULL, addr out1, addr out1, MB_OK
+FLD _b@$
+FSTP _a@$
+invoke MessageBox, NULL, addr out2, addr out2, MB_OK
+JMP _label10
+_label9:
+invoke MessageBox, NULL, addr out3, addr out3, MB_OK
+FLD _0_0
+FSTP _a@$
+JMP _label6
+_label10:
+JMP _label6
+_label4:
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start
