@@ -48,6 +48,7 @@ decl_const : id op_asignacion cte	{
 							sintactico.setTipoEnIndex(sintactico.getTipoFromTS($3.ival), i);
 							sintactico.setUsoEnIndex("const", i);
 							sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
+							sintactico.setUsoEnIndex("cte",$3.ival);
 							$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($3.ival))));
 						} else {
 							sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
@@ -175,6 +176,7 @@ asig_fun: ':' tipo	{
 cola_func: '{' cuerpo_fun '}'	{
 					sintactico.addAnalisis("Se reconoce cuerpo de funcion (Línea " + AnalizadorLexico.LINEA + ")");
 					this.ambito = borrarAmbito(this.ambito);
+					sintactico.clearTipo();
  					$$ = $2;
  				}
 	 ;
