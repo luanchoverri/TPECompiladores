@@ -276,7 +276,6 @@ op_asignacion : opasignacion    { $$.sval = new String("=:"); }
 
 // TODO listo
 asignacion : id op_asignacion expresion ';'	{
-							System.out.println("ENNNNTRAAA");
 							int existente = enAmbito($1);
 							if (existente >= 0) {
 								ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
