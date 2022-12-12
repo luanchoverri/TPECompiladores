@@ -148,4 +148,4 @@ TOKEN   272 OK FLOTANTE     #linea 21   null cadena
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 11 2022, 08:20:53 p. m.
+ Hora de ejecucion: dic. 11 2022, 09:49:57 p. m.

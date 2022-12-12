@@ -416,8 +416,8 @@ public class GenerarCodigo{
             this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
             this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho()) + "\n");
             this.assemblerCode.append("FCOMPP "+"\n");
-            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-            this.assemblerCode.append("MOV EAX," + mem2bytes + "\n");
+            this.assemblerCode.append("FSTSW mem2bytes" + "\n");
+            this.assemblerCode.append("MOV EAX, mem2bytes" + "\n");
             this.assemblerCode.append("SAHF \n");
             this.assemblerCode.append("JE " + labelFalso + "\n");
             this.assemblerCode.append("FLD1 "+"\n");
@@ -469,8 +469,8 @@ public class GenerarCodigo{
             this.assemblerCode.append("FLD " + getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
             this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho()) + "\n");
             this.assemblerCode.append("FCOMPP "+ "\n");
-            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-            this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+            this.assemblerCode.append("FSTSW mem2bytes" + "\n");
+            this.assemblerCode.append("MOV AX, mem2bytes" + "\n");
             this.assemblerCode.append("SAHF \n");
             this.assemblerCode.append("JNE " + labelFalso + "\n");
             this.assemblerCode.append("FLD1 "+"\n");
@@ -520,8 +520,8 @@ public class GenerarCodigo{
             this.assemblerCode.append("FLD " + getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
             this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho()) + "\n");
             this.assemblerCode.append("FCOMPP \n");
-            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-            this.assemblerCode.append("MOV EAX," + mem2bytes + "\n");
+            this.assemblerCode.append("FSTSW mem2bytes" + "\n");
+            this.assemblerCode.append("MOV EAX, mem2bytes"+ "\n");
             this.assemblerCode.append("SAHF \n");
             this.assemblerCode.append("JB " + labelFalso + "\n");
             this.assemblerCode.append("FLD1 "+"\n");
@@ -572,8 +572,8 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FLD " + getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
                 this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho()) + "\n");
                 this.assemblerCode.append("FCOMPP \n");
-                this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-                this.assemblerCode.append("MOV EAX," + mem2bytes + "\n");
+                this.assemblerCode.append("FSTSW mem2bytes"+ "\n");
+                this.assemblerCode.append("MOV EAX, mem2bytes"+ "\n");
                 this.assemblerCode.append("SAHF \n");
                 this.assemblerCode.append("JA " + labelFalso + "\n");
                 this.assemblerCode.append("FLD1 "+"\n");
@@ -621,8 +621,8 @@ public class GenerarCodigo{
             this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
             this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho()) + "\n");
             this.assemblerCode.append("FCOMPP \n");
-            this.assemblerCode.append("FSTSW " + mem2bytes + "\n");
-            this.assemblerCode.append("MOV EAX," + mem2bytes + "\n");
+            this.assemblerCode.append("FSTSW mem2bytes" + "\n");
+            this.assemblerCode.append("MOV EAX, mem2bytes"+ "\n");
             this.assemblerCode.append("SAHF \n");
             this.assemblerCode.append("JAE " + labelFalso + "\n"); // Si es mayor o Igual, salta a labelFalso
             this.assemblerCode.append("FLD1\n"); // Setea un 1
@@ -673,8 +673,8 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FLD " + getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
                 this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho()) + "\n");
                 this.assemblerCode.append("FCOMPP " + "\n");
-                this.assemblerCode.append("FSTSW " + mem2bytes + "\n"); // guarda el valor de la comparacion en mem2bytes
-                this.assemblerCode.append("MOV EAX," + mem2bytes + "\n"); // Guardo el valor de mem2bytes (de la comparacion anterior) en EAX
+                this.assemblerCode.append("FSTSW mem2bytes" + "\n"); // guarda el valor de la comparacion en mem2bytes
+                this.assemblerCode.append("MOV EAX, mem2bytes"+ "\n"); // Guardo el valor de mem2bytes (de la comparacion anterior) en EAX
                 this.assemblerCode.append("SAHF \n"); // Toma de EAX el estado de la comparacion
                 this.assemblerCode.append("JBE " + labelFalso + "\n"); // Si es menor o igual, va al labelFalso
                 this.assemblerCode.append("FLD1\n"); // Carga un 1 en ST
@@ -721,8 +721,8 @@ public class GenerarCodigo{
 			this.assemblerCode.append("FLDZ "+"\n");
             this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
 			this.assemblerCode.append("FCOMPP "+"\n");
-			this.assemblerCode.append("FSTSW " + mem2bytes + "\n" );
-			this.assemblerCode.append("MOV AX," + mem2bytes + "\n");
+			this.assemblerCode.append("FSTSW mem2bytes" + "\n" );
+			this.assemblerCode.append("MOV AX, mem2bytes"+ "\n");
 			this.assemblerCode.append("SAHF "+"\n");
 		    }
         }

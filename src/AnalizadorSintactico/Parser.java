@@ -79,7 +79,7 @@ final int state_pop()
 }
 final void state_drop(int cnt)
 {
-  stateptr -= cnt; 
+  stateptr -= cnt;
 }
 final int state_peek(int relative)
 {
@@ -1036,7 +1036,7 @@ boolean doaction;
   while (true) //until parsing is done, either correctly, or w/error
     {
     doaction=true;
-    if (yydebug) debug("loop"); 
+    if (yydebug) debug("loop");
     //#### NEXT ACTION (from reduction table)
     for (yyn=yydefred[yystate];yyn==0;yyn=yydefred[yystate])
       {

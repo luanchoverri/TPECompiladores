@@ -1,10 +1,19 @@
 program
 {
-    f32 g,h,i,j,k,z;
-    i32 a,b,c,d,e,f;
+   f32 a,b;
+    a =: 3.2;
+    b =: a * 2.0 + 5.1;
 
-    out('OK ENTERO');
-
-    h =: 3.4 * 12.0;
-    out('OK FLOTANTE');
+    for (i =: 0; i < 6; +i) {
+        out('for');
+        if (a < 3.9) then{
+            out('aca');
+            a =: b;
+            out('aca1');
+        } else {
+            out('aca2');
+            a =: 0.0;
+            continue;
+        } end_if;
+    };
 }
