@@ -493,7 +493,6 @@ public class AnalizadorSintactico {
             bw.write(estadoParser);
             bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| " ) ;
 
-            this.imprimirAnalisisLexico(bw);
             this.analizadorLexico.imprimirErrores(bw);
             this.imprimirAnalisisSintactico(bw);
             this.imprimirErroresSintacticos(bw);
@@ -581,6 +580,7 @@ public class AnalizadorSintactico {
         }else{
             System.out.println("Se encontraron errores LEXICOS o SINTACTICOS, por lo tanto no se pudo generar el assembler"+"\n");
         }
+        System.out.println("Ejecucion detallada en el archivo ejecucion_reciente.txt en la carpeta salida_archivo");
 
 
     }

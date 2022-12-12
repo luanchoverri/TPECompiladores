@@ -1,6 +1,0 @@
-program{
-
-    i32 l;
-
-    const z=:1, l=:2.3, a=: .2;
-}

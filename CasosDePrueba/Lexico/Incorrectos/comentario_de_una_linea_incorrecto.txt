@@ -1,9 +1,0 @@
-program
-    fun f2 (i32 x) : i32
-    {
-	< comentario de una linea 1
-      < comentario de una linea 2
-	i32 cero_ =: 0;
-      return (cero_);
-	< comentario de una linea 3
-    }  

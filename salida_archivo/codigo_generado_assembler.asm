@@ -22,51 +22,21 @@ mem2bytes dw ?
 _maxFloat dq 3.40282347E+38
 _minFloat dq -3.40282347E+38
 _program dd ?,?
-_b@$ dd ?,?
-_a@$ dd ?,?
-_j@$ dd ?,?
+_l@$ dd ?,?
+_z@$ dd ?,?
 _k@$ dd ?,?
-_z@$_fun3 dd ?,?
-_l@$_fun3 dd ?,?
-_h@$_fun3 dd ?,?
-_i@$_fun3 dd ?,?
-_1_0 dq 1.0
-_f@$ dd ?,?
-@aux0 dd ?,?
-@aux1 dd ?,?
+_2_3 dq 2.3
+_a@$ dd ?,?
+__2 dq 0.2
 .code
 ;------------ CODE ------------
-PUBLIC _fun2@$_fun3
-_fun2@$_fun3 PROC
-MOV _h@$_fun3,EAX
-FSTP _i@$_fun3
-MOV EAX,1
-MOV _h@$_fun3,EAX
-FLD _1_0
-FADD _i@$_fun3
-FSTP @aux0
-FLD @aux0
-FSTP _i@$_fun3
-FLD _i@$_fun3
-invoke MessageBox, NULL, addr ok, addr ok, MB_OK
-ret 
-_fun2@$_fun3 ENDP
-PUBLIC _fun3@$
-_fun3@$ PROC
-MOV _j@$,EAX
-FSTP _k@$
-MOV EAX, _j@$
-invoke MessageBox, NULL, addr ok, addr ok, MB_OK
-ret 
-_fun3@$ ENDP
 start:
-MOV EAX,_b@$
-ADD EAX,1
-MOV @aux1,EAX
-MOV EAX,@aux1
-MOV _b@$,EAX
-MOV EAX,4
-MOV _f@$,EAX
+MOV EAX,1
+MOV _z@$,EAX
+FLD _2_3
+FSTP _k@$
+FLD __2
+FSTP _a@$
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

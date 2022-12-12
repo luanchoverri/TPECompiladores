@@ -1,22 +1,8 @@
 program{
 
-    i32 b;
+    i32 l;
 
-    b =: b+1;
-    i32 a;
-    fun fun3 (i32 j, f32 k): i32 {
-            return(j);
-            const z=:1, l=:2;
-            fun fun2 (i32 h, f32 i ):f32 {
-                            h =: 1;
-                            i =: 1.0 + i;
-                            return(i);
-                    }
-       }
-    i32 f;
-
-
-    f =: 4;
+    const z=:1, k=:2.3, a=: .2;
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -37,15 +23,7 @@ program{
  
  
  Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
- Se reconoció declaraciónes de variable de tipo i32. (Línea 6)
- Se reconocio declaracion de funcion (Línea 7)
- Se reconoce retorno de funcion(Línea 8) 
- Se reconoció una declaración de CONSTANTE. (Línea 9)
- Se reconocio declaracion de funcion (Línea 10)
- Se reconoce retorno de funcion(Línea 13) 
- Se reconoce cuerpo de funcion (Línea 14)
- Se reconoce cuerpo de funcion (Línea 15)
- Se reconoció declaraciónes de variable de tipo i32. (Línea 16)
+ Se reconoció una declaración de CONSTANTE. (Línea 5)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -60,60 +38,33 @@ program{
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null program 
-TOKEN   257        b@$     #linea 3    i32    var 
+TOKEN   257        l@$     #linea 3    i32    var 
+TOKEN   257        z@$     #linea 5    i32  const 
 TOKEN   258          1     #linea 5    i32    cte 
-TOKEN   257        a@$     #linea 6    i32    var 
-TOKEN   257     fun3@$     #linea 7    i32   func 
-TOKEN   257        j@$     #linea 7    i32 param@fun3@$@0 
-TOKEN   257        k@$     #linea 7    f32 param@fun3@$@1 
-TOKEN   257   z@$_fun3     #linea 9    i32  const 
-TOKEN   258          1     #linea 9    i32    cte 
-TOKEN   257   l@$_fun3     #linea 9    i32  const 
-TOKEN   258          2     #linea 9    i32    cte 
-TOKEN   257 fun2@$_fun3     #linea 10    f32   func 
-TOKEN   257   h@$_fun3     #linea 10    i32 param@fun2@$_fun3@0 
-TOKEN   257   i@$_fun3     #linea 10    f32 param@fun2@$_fun3@1 
-TOKEN   258        1.0     #linea 12    f32    cte 
-TOKEN   257        f@$     #linea 16    i32    var 
-TOKEN   258          4     #linea 19    i32    cte  
+TOKEN   257        k@$     #linea 5    f32  const 
+TOKEN   258        2.3     #linea 5    f32    cte 
+TOKEN   257        a@$     #linea 5    f32  const 
+TOKEN   258         .2     #linea 5    f32    cte  
  
  
  
  --- ARBOL ---- 
    └─ raiz 
-     └─ sentencia 
-        └─ =: 
-           └─ b@$ 
-           └─ + 
-              └─ b@$ 
-              └─ 1 
-        └─ sentencia 
-           └─ =: 
-              └─ f@$ 
-              └─ 4 
- 
-  ARBOL DE LA FUNCION fun2@$_fun3 
-  └─ fun2@$_fun3 
-     └─ sentencia 
-        └─ =: 
-           └─ h@$_fun3 
-           └─ 1 
-        └─ sentencia 
-           └─ =: 
-              └─ i@$_fun3 
-              └─ + 
-                 └─ 1.0 
-                 └─ i@$_fun3 
+     └─ declarativa 
+        └─ lista_ctes 
            └─ sentencia 
-              └─ return 
-                 └─ i@$_fun3 
- 
-  ARBOL DE LA FUNCION fun3@$ 
-  └─ fun3@$ 
-     └─ sentencia 
-        └─ return 
-           └─ j@$ 
+              └─ =: 
+                 └─ z@$ 
+                 └─ 1 
+              └─ sentencia 
+                 └─ =: 
+                    └─ k@$ 
+                    └─ 2.3 
+                 └─ sentencia 
+                    └─ =: 
+                       └─ a@$ 
+                       └─ .2 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 11 2022, 11:18:53 p. m.
+ Hora de ejecucion: dic. 12 2022, 12:04:25 a. m.

@@ -250,7 +250,6 @@ public class AnalizadorLexico {
             String tipo = tablaSimbolos.getTipoToken(this.tokenActual);
             Token token = new Token(this.tokenActual, this.buffer, this.LINEA, tipo);
 
-            System.out.println(token);
 
 
             if (tipo == "IDENTIFICADOR" || tipo == "PALABRA RESERVADA" || tipo == "CONSTANTE"){
