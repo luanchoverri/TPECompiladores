@@ -615,24 +615,22 @@ public class GenerarCodigo{
             if(nodo.getTipo().equals("f32")){
 
 
-            String mem2bytes = "@aux" + contadorAux;
-            this.contadorAux++;
-            this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCompMenor");
-            this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
-            this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho()) + "\n");
-            this.assemblerCode.append("FCOMPP \n");
-            this.assemblerCode.append("FSTSW mem2bytes" + "\n");
-            this.assemblerCode.append("MOV AX, mem2bytes"+ "\n");
-            this.assemblerCode.append("SAHF \n");
-            this.assemblerCode.append("JAE " + labelFalso + "\n"); // Si es mayor o Igual, salta a labelFalso
-            this.assemblerCode.append("FLD1\n"); // Setea un 1
-            this.assemblerCode.append("FSTP " + aux + " \n");
-            this.assemblerCode.append("JMP " + labelContinuar + "\n");
-            this.assemblerCode.append(labelFalso + ":\n");
-            this.assemblerCode.append("FLDZ \n");
-            this.assemblerCode.append("FSTP " + aux + " \n");
-            this.assemblerCode.append(labelContinuar + ":\n");
-            this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompMenor");
+                this.assemblerCode.append("FLD " + getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
+                this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho()) + "\n");
+                this.assemblerCode.append("FCOMPP " + "\n");
+                this.assemblerCode.append("FSTSW mem2bytes" + "\n"); // guarda el valor de la comparacion en mem2bytes
+                this.assemblerCode.append("MOV AX, mem2bytes"+ "\n"); // Guardo el valor de mem2bytes (de la comparacion anterior) en EAX
+                this.assemblerCode.append("SAHF \n"); // Toma de EAX el estado de la comparacion
+                this.assemblerCode.append("JBE " + labelFalso + "\n"); // Si es menor o igual, va al labelFalso
+                this.assemblerCode.append("FLD1\n"); // Carga un 1 en ST
+                this.assemblerCode.append("FSTP " + aux + " \n"); // Carga el valor de la pila en aux
+                this.assemblerCode.append("JMP " + labelContinuar + "\n"); // Continua la ejecucion
+                this.assemblerCode.append(labelFalso + ":\n");
+                this.assemblerCode.append("FLDZ " + "\n"); // Carga un 0 en ST
+                this.assemblerCode.append("FSTP " + aux + " \n"); // Carga el valor de la pila en aux
+                this.assemblerCode.append(labelContinuar + ":\n");
+                this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompMenor");
+
         }
     }
         int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
@@ -668,21 +666,20 @@ public class GenerarCodigo{
 
                 String mem2bytes = "@aux" + contadorAux;
                 this.contadorAux++;
-                this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCompMayor");
-
-                this.assemblerCode.append("FLD " + getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
+                this.tablaSimbolos.agregarRegistroAssembler(mem2bytes, "f32", "variableAuxiliarCompMenor");
+                this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
                 this.assemblerCode.append("FLD " +getLexAssembler(nodo.getHijoDerecho()) + "\n");
-                this.assemblerCode.append("FCOMPP " + "\n");
-                this.assemblerCode.append("FSTSW mem2bytes" + "\n"); // guarda el valor de la comparacion en mem2bytes
-                this.assemblerCode.append("MOV AX, mem2bytes"+ "\n"); // Guardo el valor de mem2bytes (de la comparacion anterior) en EAX
-                this.assemblerCode.append("SAHF \n"); // Toma de EAX el estado de la comparacion
-                this.assemblerCode.append("JBE " + labelFalso + "\n"); // Si es menor o igual, va al labelFalso
-                this.assemblerCode.append("FLD1\n"); // Carga un 1 en ST
-                this.assemblerCode.append("FSTP " + aux + " \n"); // Carga el valor de la pila en aux
-                this.assemblerCode.append("JMP " + labelContinuar + "\n"); // Continua la ejecucion
+                this.assemblerCode.append("FCOMPP \n");
+                this.assemblerCode.append("FSTSW mem2bytes" + "\n");
+                this.assemblerCode.append("MOV AX, mem2bytes"+ "\n");
+                this.assemblerCode.append("SAHF \n");
+                this.assemblerCode.append("JAE " + labelFalso + "\n"); // Si es mayor o Igual, salta a labelFalso
+                this.assemblerCode.append("FLD1\n"); // Setea un 1
+                this.assemblerCode.append("FSTP " + aux + " \n");
+                this.assemblerCode.append("JMP " + labelContinuar + "\n");
                 this.assemblerCode.append(labelFalso + ":\n");
-                this.assemblerCode.append("FLDZ " + "\n"); // Carga un 0 en ST
-                this.assemblerCode.append("FSTP " + aux + " \n"); // Carga el valor de la pila en aux
+                this.assemblerCode.append("FLDZ \n");
+                this.assemblerCode.append("FSTP " + aux + " \n");
                 this.assemblerCode.append(labelContinuar + ":\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompMayor");
         }

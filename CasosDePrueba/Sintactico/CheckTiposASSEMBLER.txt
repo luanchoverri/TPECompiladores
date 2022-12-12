@@ -1,13 +1,12 @@
 program
 {
    f32 a,b;
-    a =: 3.2;
+    a =: 4.0;
     b =: a * 2.0 + 5.1;
 
     for (i =: 0; i < 6; +i) {
         out('for');
         if (a < 3.9) then{
-            out('aca');
             a =: b;
             out('aca1');
         } else {
@@ -16,4 +15,5 @@ program
             continue;
         } end_if;
     };
+    out('termine');
 }

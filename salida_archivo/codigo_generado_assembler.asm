@@ -22,13 +22,13 @@ mem2bytes dw ?
 _maxFloat dq 3.40282347E+38
 _minFloat dq -3.40282347E+38
 out0 db 'for',0
-out1 db 'aca',0
-out2 db 'aca1',0
-out3 db 'aca2',0
+out1 db 'aca1',0
+out2 db 'aca2',0
+out3 db 'termine',0
 _program dd ?,?
 _a@$ dd ?,?
 _b@$ dd ?,?
-_3_2 dq 3.2
+_4_0 dq 4.0
 _2_0 dq 2.0
 _5_1 dq 5.1
 _i@$_for0 dd ?,?
@@ -38,13 +38,12 @@ _0_0 dq 0.0
 @aux1 dd ?,?
 @aux2 dd ?,?
 @aux3 dd ?,?
-@aux5 dd ?,?
 @aux4 dd ?,?
-@aux6 dd ?,?
+@aux5 dd ?,?
 .code
 ;------------ CODE ------------
 start:
-FLD _3_2
+FLD _4_0
 FSTP _a@$
 FLD _a@$
 FMUL _2_0
@@ -90,9 +89,9 @@ FLD _a@$
 FLD _3_9
 FCOMPP 
 FSTSW mem2bytes
-MOV EAX, mem2bytes
+MOV AX, mem2bytes
 SAHF 
-JAE _label8
+JBE _label8
 FLD1
 FSTP @aux4 
 JMP _label7
@@ -107,19 +106,19 @@ FSTSW mem2bytes
 MOV AX, mem2bytes
 SAHF 
 JE _label9
-invoke MessageBox, NULL, addr out1, addr out1, MB_OK
 FLD _b@$
 FSTP _a@$
-invoke MessageBox, NULL, addr out2, addr out2, MB_OK
+invoke MessageBox, NULL, addr out1, addr out1, MB_OK
 JMP _label10
 _label9:
-invoke MessageBox, NULL, addr out3, addr out3, MB_OK
+invoke MessageBox, NULL, addr out2, addr out2, MB_OK
 FLD _0_0
 FSTP _a@$
 JMP _label6
 _label10:
 JMP _label6
 _label4:
+invoke MessageBox, NULL, addr out3, addr out3, MB_OK
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

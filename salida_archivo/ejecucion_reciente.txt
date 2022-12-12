@@ -1,13 +1,12 @@
 program
 {
    f32 a,b;
-    a =: 3.2;
+    a =: 4.0;
     b =: a * 2.0 + 5.1;
 
     for (i =: 0; i < 6; +i) {
         out('for');
         if (a < 3.9) then{
-            out('aca');
             a =: b;
             out('aca1');
         } else {
@@ -16,6 +15,7 @@ program
             continue;
         } end_if;
     };
+    out('termine');
 }$ 
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -36,9 +36,9 @@ program
  
  
  Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
- Se reconocio una sentencia continue (Línea 16)
- Se reconoció una sentencia If. (Línea 17)
- Se reconocio sentencia FOR. (Línea 18)
+ Se reconocio una sentencia continue (Línea 15)
+ Se reconoció una sentencia If. (Línea 16)
+ Se reconocio sentencia FOR. (Línea 17)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -55,7 +55,7 @@ program
 TOKEN   257    program     #linea 1   null program 
 TOKEN   257        a@$     #linea 3    f32    var 
 TOKEN   257        b@$     #linea 3    f32    var 
-TOKEN   258        3.2     #linea 4    f32    cte 
+TOKEN   258        4.0     #linea 4    f32    cte 
 TOKEN   258        2.0     #linea 5    f32    cte 
 TOKEN   258        5.1     #linea 5    f32    cte 
 TOKEN   257   i@$_for0     #linea 7    i32 for_var 
@@ -63,10 +63,10 @@ TOKEN   258          0     #linea 7    i32    cte
 TOKEN   258          6     #linea 7    i32    i32 
 TOKEN   272        for     #linea 8   null cadena 
 TOKEN   258        3.9     #linea 9    f32    cte 
-TOKEN   272        aca     #linea 10   null cadena 
-TOKEN   272       aca1     #linea 12   null cadena 
-TOKEN   272       aca2     #linea 14   null cadena 
-TOKEN   258        0.0     #linea 15    f32    cte  
+TOKEN   272       aca1     #linea 11   null cadena 
+TOKEN   272       aca2     #linea 13   null cadena 
+TOKEN   258        0.0     #linea 14    f32    cte 
+TOKEN   272    termine     #linea 18   null cadena  
  
  
  
@@ -75,7 +75,7 @@ TOKEN   258        0.0     #linea 15    f32    cte
      └─ sentencia 
         └─ =: 
            └─ a@$ 
-           └─ 3.2 
+           └─ 4.0 
         └─ sentencia 
            └─ =: 
               └─ b@$ 
@@ -115,15 +115,12 @@ TOKEN   258        0.0     #linea 15    f32    cte
                              └─ cuerpo-if 
                                 └─ then 
                                    └─ sentencia 
-                                      └─ out 
-                                         └─ aca 
+                                      └─ =: 
+                                         └─ a@$ 
+                                         └─ b@$ 
                                       └─ sentencia 
-                                         └─ =: 
-                                            └─ a@$ 
-                                            └─ b@$ 
-                                         └─ sentencia 
-                                            └─ out 
-                                               └─ aca1 
+                                         └─ out 
+                                            └─ aca1 
                                 └─ else 
                                    └─ sentencia 
                                       └─ out 
@@ -134,7 +131,10 @@ TOKEN   258        0.0     #linea 15    f32    cte
                                             └─ 0.0 
                                          └─ sentencia 
                                             └─ continue 
+              └─ sentencia 
+                 └─ out 
+                    └─ termine 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 11 2022, 09:53:22 p. m.
+ Hora de ejecucion: dic. 11 2022, 09:59:48 p. m.
