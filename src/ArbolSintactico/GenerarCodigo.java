@@ -403,23 +403,11 @@ public class GenerarCodigo{
 
         if (nodo.getTipo().equals("i32")) {
 
-<<<<<<< Updated upstream
+
             this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
             this.assemblerCode.append("CMP EAX, " +getLexAssembler( nodo.getHijoDerecho()) + "\n");
             this.assemblerCode.append("JE " + labelFalso + "\n"); // Salta a labelFalso si es Igual
-=======
-            if (nodo.getHijoIzquierdo().getLexema().startsWith("@")){
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
-                this.assemblerCode.append("MOV EAX, " + "_" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            }
-            if (nodo.getHijoDerecho().getLexema().contains("@")){
-                this.assemblerCode.append("CMP EAX, " +"_"+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
-            } else {
-                this.assemblerCode.append("CMP EAX, "+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
 
-            }            this.assemblerCode.append("JE " + labelFalso + "\n"); // Salta a labelFalso si es Igual
->>>>>>> Stashed changes
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
@@ -467,23 +455,11 @@ public class GenerarCodigo{
 
 
         if (nodo.getTipo().equals("i32")) {
-<<<<<<< Updated upstream
+
             this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
             this.assemblerCode.append("CMP EAX, " +getLexAssembler( nodo.getHijoDerecho()) + "\n");
             this.assemblerCode.append("JNE " + labelFalso + "\n"); // Salta a labelFalso si no es igual
-=======
-            if (nodo.getHijoIzquierdo().getLexema().startsWith("@")){
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
-                this.assemblerCode.append("MOV EAX, " + "_" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            }
-            if (nodo.getHijoDerecho().getLexema().contains("@")){
-                this.assemblerCode.append("CMP EAX, " +"_"+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
-            } else {
-                this.assemblerCode.append("CMP EAX, "+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
 
-            }            this.assemblerCode.append("JNE " + labelFalso + "\n"); // Salta a labelFalso si no es igual
->>>>>>> Stashed changes
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
@@ -532,23 +508,11 @@ public class GenerarCodigo{
         this.contadorEtiquetaLabel++;
 
         if (nodo.getTipo().equals("i32")) {
-<<<<<<< Updated upstream
+
             this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
             this.assemblerCode.append("CMP EAX, " +getLexAssembler( nodo.getHijoDerecho()) + "\n");
             this.assemblerCode.append("JL " + labelFalso + "\n");
-=======
-            if (nodo.getHijoIzquierdo().getLexema().startsWith("@")){
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
-                this.assemblerCode.append("MOV EAX, " + "_" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            }
-            if (nodo.getHijoDerecho().getLexema().contains("@")){
-                this.assemblerCode.append("CMP EAX, " +"_"+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
-            } else {
-                this.assemblerCode.append("CMP EAX, "+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
 
-            }            this.assemblerCode.append("JL " + labelFalso + "\n");
->>>>>>> Stashed changes
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
@@ -598,23 +562,10 @@ public class GenerarCodigo{
         this.contadorEtiquetaLabel++;
 
         if (nodo.getTipo().equals("i32")) {
-<<<<<<< Updated upstream
+
             this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
             this.assemblerCode.append("CMP EAX, " +getLexAssembler( nodo.getHijoDerecho()) + "\n");
             this.assemblerCode.append("JG " + labelFalso + "\n");
-=======
-            if (nodo.getHijoIzquierdo().getLexema().startsWith("@")){
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
-                this.assemblerCode.append("MOV EAX, " + "_" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            }
-            if (nodo.getHijoDerecho().getLexema().contains("@")){
-                this.assemblerCode.append("CMP EAX, " +"_"+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
-            } else {
-                this.assemblerCode.append("CMP EAX, "+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
-
-            }            this.assemblerCode.append("JG " + labelFalso + "\n"); // Salta a labelFalso si es Mayor
->>>>>>> Stashed changes
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
             this.assemblerCode.append(labelFalso + ":\n");
@@ -663,22 +614,10 @@ public class GenerarCodigo{
         String labelFalso = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
         if (nodo.getTipo().equals("i32")) {
-<<<<<<< Updated upstream
+
             this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
             this.assemblerCode.append("CMP EAX, " +getLexAssembler( nodo.getHijoDerecho()) + "\n");
-=======
-            if (nodo.getHijoIzquierdo().getLexema().startsWith("@")){
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
-                this.assemblerCode.append("MOV EAX, " + "_" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            }
-            if (nodo.getHijoDerecho().getLexema().contains("@")){
-                this.assemblerCode.append("CMP EAX, " +"_"+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
-            } else {
-                this.assemblerCode.append("CMP EAX, "+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
 
-            }
->>>>>>> Stashed changes
             this.assemblerCode.append("JGE " + labelFalso + "\n"); // Si es Mayor o Igual, salto a labelFalso
             this.assemblerCode.append("MOV " + aux + ",1 \n"); // Guardo en aux un 1
             this.assemblerCode.append("JMP " + labelContinuar + "\n"); // Continuo la ejecucion
@@ -726,22 +665,10 @@ public class GenerarCodigo{
 
         if (nodo.getTipo().equals("i32")) {
 
-<<<<<<< Updated upstream
+
             this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
             this.assemblerCode.append("CMP EAX, " +getLexAssembler( nodo.getHijoDerecho()) + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
-=======
-            if (nodo.getHijoIzquierdo().getLexema().startsWith("@")){
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
-                this.assemblerCode.append("MOV EAX, " + "_" + nodo.getHijoIzquierdo().getLexema().replace('.', '_').replace('-', '_') + "\n");
-            }
-            if (nodo.getHijoDerecho().getLexema().contains("@")){
-                this.assemblerCode.append("CMP EAX, " +"_"+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
-            } else {
-                this.assemblerCode.append("CMP EAX, "+ nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
 
-            }
->>>>>>> Stashed changes
             this.assemblerCode.append("JLE " + labelFalso + "\n"); // Si NO ES MAYOR (CASO JLE CUANDO ES <=) (ELSE O FALSE DE FOR), salto a la etiqueta labelFalso y ejecuto las instrucciones debajo
             this.assemblerCode.append("MOV " + aux + ",1 \n");
             this.assemblerCode.append("JMP " + labelContinuar + "\n");
@@ -796,20 +723,9 @@ public class GenerarCodigo{
 		String label="_label"+contadorEtiquetaLabel;
 		contadorEtiquetaLabel++;
 		if (nodo.getHijoIzquierdo().getTipo().equals("i32")) {
-<<<<<<< Updated upstream
-            this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
-=======
-            if (nodo.getHijoIzquierdo().getLexema().startsWith("@")){
-                this.assemblerCode.append("MOV EAX, "+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
-            }else {
-                if (nodo.getHijoIzquierdo().getLexema().contains("@")){
-                    this.assemblerCode.append("CMP EAX, " +"_"+ nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
-                } else {
-                    this.assemblerCode.append("CMP EAX, "+ nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_') + "\n"); // COMPARO LA CONDICION PARA SABER SI ES MAYOR, MENOR O IGUAL
 
-                }
-            }
->>>>>>> Stashed changes
+            this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+
 			this.assemblerCode.append("CMP EAX,  0"+"\n");
 		} else {
             if (nodo.getHijoIzquierdo().getTipo().equals("f32")){
