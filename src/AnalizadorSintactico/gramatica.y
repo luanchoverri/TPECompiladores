@@ -759,10 +759,10 @@ factor : id  		{
 					sintactico.eliminarEntrada($1.ival);
 				} else {
 					String type = sintactico.getTipoFromTS($1.ival);
-					if (type.equals("i32"))
-					     sintactico.verificarRangoEnteroLargo($1.ival);
-					sintactico.setUsoEnIndex("cte",$1.ival);
-					$$ = new ParserVal(sintactico.crearHoja($1.ival));
+					if (type.equals("i32") || sintactico.verificarRangoEnteroLargo($1.ival)){
+					    sintactico.setUsoEnIndex("cte",$1.ival);
+					    $$ = new ParserVal(sintactico.crearHoja($1.ival));
+					   }
 				}
                   	}
        | '-' cte	{

@@ -2140,10 +2140,10 @@ case 201:
 					sintactico.eliminarEntrada(val_peek(0).ival);
 				} else {
 					String type = sintactico.getTipoFromTS(val_peek(0).ival);
-					if (type.equals("i32"))
-					     sintactico.verificarRangoEnteroLargo(val_peek(0).ival);
-					sintactico.setUsoEnIndex("cte",val_peek(0).ival);
-					yyval = new ParserVal(sintactico.crearHoja(val_peek(0).ival));
+					if (type.equals("i32") || sintactico.verificarRangoEnteroLargo(val_peek(0).ival)){
+					    sintactico.setUsoEnIndex("cte",val_peek(0).ival);
+					    yyval = new ParserVal(sintactico.crearHoja(val_peek(0).ival));
+					   }
 				}
                   	}
 break;
