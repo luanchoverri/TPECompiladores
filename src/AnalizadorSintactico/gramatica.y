@@ -38,6 +38,7 @@ declaracion_const : Const lista_de_asignacion_const ';'		{ sintactico.addAnalisi
 lista_de_asignacion_const : decl_const					{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));} //TODO fijarse nombre
                           | lista_de_asignacion_const ',' decl_const	{ParserVal modificado = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $3, null));
                                                                          $$ = modificado;}
+                          | lista_de_asignacion_const decl_const error  {{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): separar por coma la declaracion de constantes.");}}
                           ;
 
 // TODO listo el tipo y uso de la cte inferido en el id de la variable
