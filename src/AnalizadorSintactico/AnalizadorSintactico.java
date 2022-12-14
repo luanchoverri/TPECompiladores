@@ -436,7 +436,7 @@ public class AnalizadorSintactico {
 
 
     // -- Otros
-    public void verificarRangoEnteroLargo(int indice) {
+    public boolean verificarRangoEnteroLargo(int indice) {
 
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
         Long numero = Long.parseLong(lexema);
@@ -444,7 +444,9 @@ public class AnalizadorSintactico {
         if(numero == 2147483648L) {
             this.tablaSimbolos.eliminarEntrada(indice);    // Se elimina la entrada de la tabla de símbolos.
             this.addErrorSintactico("SyntaxError FUERA DE RANGO (Línea " + this.analizadorLexico.LINEA + "): CONST LONG");
+            return false;
         }
+        else return true;
     }
 
     public void checkParametros(String idFun){
