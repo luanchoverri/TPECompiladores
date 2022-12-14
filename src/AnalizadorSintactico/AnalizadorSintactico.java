@@ -200,10 +200,12 @@ public class AnalizadorSintactico {
 
     public String tipoResultante(String id, Nodo izq, Nodo der){
 
+
         if (izq.getTipo() != null && der.getTipo() != null ) {
             if(izq.getTipo().equals(der.getTipo())){
                 return izq.getTipo();
             }
+
             this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: " + id + " (Línea " + AnalizadorLexico.LINEA + " )");
         }
         return null;
@@ -442,7 +444,6 @@ public class AnalizadorSintactico {
         Long numero = Long.parseLong(lexema);
 
         if(numero == 2147483648L) {
-            this.tablaSimbolos.eliminarEntrada(indice);    // Se elimina la entrada de la tabla de símbolos.
             this.addErrorSintactico("SyntaxError FUERA DE RANGO (Línea " + this.analizadorLexico.LINEA + "): CONST LONG");
             return false;
         }

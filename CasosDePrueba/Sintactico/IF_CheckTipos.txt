@@ -1,0 +1,19 @@
+program
+{
+
+    i32 a, b;
+    a=:0;
+    b=:1;
+
+    if(a <= 1) then{
+
+            out('entre en el then <=');
+        } end_if;
+
+
+
+
+    out('afuera del if');
+
+
+}
