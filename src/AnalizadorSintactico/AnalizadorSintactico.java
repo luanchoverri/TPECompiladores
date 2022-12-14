@@ -442,7 +442,6 @@ public class AnalizadorSintactico {
         Long numero = Long.parseLong(lexema);
 
         if(numero == 2147483648L) {
-            this.tablaSimbolos.eliminarEntrada(indice);    // Se elimina la entrada de la tabla de símbolos.
             this.addErrorSintactico("SyntaxError FUERA DE RANGO (Línea " + this.analizadorLexico.LINEA + "): CONST LONG");
             return false;
         }

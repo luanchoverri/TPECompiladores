@@ -1,0 +1,60 @@
+program{
+
+    i32 a, b;
+    a =: 2147483648;
+    b =: -2147483648;
+
+}$ 
+ 
+  EJECUCION DEL PARSER FINALIZADA  
+  
+ |||||||||||||||||||||||||||||||||||||||||||||| |--- CODIGO FUENTE ---|
+
+
+
+
+-----------------------------------------------------------------
+
+
+
+
+|--- Sin errores LEXICOS ---| (OK)
+ 
+ 🔎  ANALISIS SINTÁCTICO    
+ 
+ 
+ Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
+ 
+ 
+ ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
+ 
+ 
+ SyntaxError FUERA DE RANGO (Línea 4): CONST LONG
+  
+ 
+ 
+  
+              TABLA DE SIMBOLOS              
+
+TOKEN   257    program     #linea 1   null program 
+TOKEN   257        a@$     #linea 3    i32    var 
+TOKEN   257        b@$     #linea 3    i32    var 
+TOKEN   258 2147483648     #linea 4    i32    cte 
+TOKEN   258 -2147483648     #linea 5    i32 cte neg  
+ 
+ 
+ 
+ --- ARBOL ---- 
+   └─ raiz 
+     └─ sentencia 
+        └─ =: 
+           └─ a@$ 
+           └─ 2147483648 
+        └─ sentencia 
+           └─ =: 
+              └─ b@$ 
+              └─ -2147483648 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: dic. 14 2022, 07:04:20 p. m.
