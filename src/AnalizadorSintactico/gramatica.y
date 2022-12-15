@@ -49,6 +49,8 @@ decl_const : id op_asignacion cte	{
 							String type = sintactico.getTipoFromTS($3.ival);
                                                         if (type.equals("i32"))
                                                         	sintactico.verificarRangoEnteroLargo($3.ival);
+														else
+															sintactico.verificarRangoFlotante($3.ival);
 							sintactico.setUsoEnIndex("const", i);
 							sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
 							sintactico.setUsoEnIndex("cte",$3.ival);
@@ -67,9 +69,11 @@ decl_const : id op_asignacion cte	{
 												String type = sintactico.getTipoFromTS($4.ival);
 																			if (type.equals("i32"))
 																				sintactico.verificarRangoEnteroLargo($4.ival);
+																			else
+																				sintactico.verificarRangoFlotante($4.ival);
 												sintactico.setUsoEnIndex("const", i);
 												sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
-												sintactico.setUsoEnIndex("cte",$4.ival);
+												sintactico.setUsoEnIndex("cte neg",$4.ival);
 												$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($4.ival))));
 											} else {
 												sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
@@ -815,6 +819,9 @@ factor : id  		{
 					String type = sintactico.getTipoFromTS($1.ival);
 					if (type.equals("i32"))
 					     sintactico.verificarRangoEnteroLargo($1.ival);
+					else
+						sintactico.verificarRangoFlotante($1.ival);
+
 					sintactico.setUsoEnIndex("cte",$1.ival);
 					Nodo n = sintactico.crearHoja($1.ival);
 					n.setTipo(type);
@@ -834,11 +841,14 @@ factor : id  		{
                                 	String type = sintactico.getTipoFromTS($2.ival);
 									if (type.equals("i32"))
 					     				sintactico.verificarRangoEnteroLargo($2.ival);
-                                        Nodo n = sintactico.crearHoja($2.ival);
-					n.setTipo(type);
-					$$ = new ParserVal(n);
-					sintactico.setUsoEnIndex("cte neg",$2.ival);
-				}
+									else
+										sintactico.verificarRangoFlotante($2.ival);
+
+									Nodo n = sintactico.crearHoja($2.ival);
+									n.setTipo(type);
+									$$ = new ParserVal(n);
+									sintactico.setUsoEnIndex("cte neg",$2.ival);
+								}
                    	}
        ;
 
