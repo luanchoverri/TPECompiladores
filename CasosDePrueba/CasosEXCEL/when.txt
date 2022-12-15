@@ -1,0 +1,26 @@
+program{
+
+    i32 i ;
+    i =: 1;
+
+    when (i < 3) then {
+        i32 a, b;
+        f32 c;
+
+        a =: 6;
+        c =: 2.0;
+        b =: 2 * a;
+
+        const z=:1, x=:1;
+
+        fun fun2 ( i32 k, f32 l ): f32 {
+            k =: 1;
+            return(l);
+        }
+
+    };
+
+
+
+
+}

@@ -68,10 +68,10 @@ bloq_sentencias_For : sentencias_For 			     	{$$ = new ParserVal(sintactico.cre
 
 
 // TODO listo
-sentencia : declarativas 		{$$ = new ParserVal(sintactico.crearNodo("declarativa", $1, null));}
-          | ejecutables  		{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
-          | sentencia declarativas	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("declarativa", $2, null));}
-          | sentencia ejecutables	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));}
+sentencia : declarativas 		{$$ = new ParserVal(sintactico.crearNodo("declarativa1", $1, null));}
+          | ejecutables  		{$$ = new ParserVal(sintactico.crearNodo("sentencia2", $1, null));}
+          | sentencia declarativas	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("declarativa3", $2, null));}
+          | sentencia ejecutables	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia4", $2, null));}
           ;
 
 
@@ -438,8 +438,8 @@ PR_end_if: end_if {this.ambito = borrarAmbito(this.ambito);}
 // TODO listo
 sentencia_when : when '(' condicion_when ')' cuerpo_when ';'	{ sintactico.addAnalisis("Se reconocio una sentencia when");
 								  $$ = new ParserVal(sintactico.crearNodo("when", $3, $5));}
-               | when condicion_when ')' cuerpo_when ';' error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta abrir paréntesis la condicion"); }
-               | when '(' condicion_when  cuerpo_when';' error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta paréntesis de cierre en la condicion."); }
+               | when 	  condicion_when ')' cuerpo_when ';' error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta abrir paréntesis la condicion"); }
+               | when '(' condicion_when ')'  cuerpo_when   error	{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-2) + "): falta punto y coma pero se reconoce sentencia when."); }
                ;
 
 condicion_when: expresion_relacional {$$ = new ParserVal(sintactico.crearNodoControl("condicionWhen",$1)); agregarAmbito("when"+this.contadorWhen); this.contadorWhen++;}

@@ -170,6 +170,7 @@ public class AnalizadorSintactico {
 
         Nodo n = (Nodo) arbolSentencias.obj;
 
+        
 
         if (n.getLexema().equals("declarativa")){// en este caso la primera sentencia era declarativa, por lo que aun no se genero un arbol
 
@@ -248,12 +249,21 @@ public class AnalizadorSintactico {
     public Nodo crearNodo(String identificador, ParserVal hijoIzq, ParserVal hijoDer){
 
 
+        System.out.println(" 🎄 \n ");
+
+
         if (hijoDer == null){
 
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
             if (i.getTieneBreak() != null) {
                 i.setTieneBreak(i.getTieneBreak());
             }
+
+
+            imprimirArbol(i,0);
+            System.out.println("\n ");
+
+
             return i;
         } else {
 
@@ -262,7 +272,11 @@ public class AnalizadorSintactico {
                 i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
             }
 
+
+            imprimirArbol(i,0);
+            System.out.println("\n ");
             return i;
+
 
         }
     }
