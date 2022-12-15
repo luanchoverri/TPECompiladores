@@ -20,7 +20,7 @@ public class RangoEntero extends AccionSemanticaSimple {
                 return true;
             }
             long intBuffer = Long.parseLong(buffer);
-            if ((Math.abs(intBuffer) >= AnalizadorLexico.MINIMO_ENTERO_LARGO))
+            if ((Math.abs(intBuffer) >= Math.abs(AnalizadorLexico.MINIMO_ENTERO_LARGO)))
                 throw new Exception("FUERA DE RANGO"); // genero la excepcion
 
         } catch (Throwable e){

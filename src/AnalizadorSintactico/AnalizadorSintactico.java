@@ -445,7 +445,7 @@ public class AnalizadorSintactico {
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
         Long numero = Long.parseLong(lexema);
 
-        if((numero >=  AnalizadorLexico.MAXIMO_ENTERO_LARGO)) {
+        if((numero >=  AnalizadorLexico.MAXIMO_ENTERO_LARGO) || (numero <= AnalizadorLexico.MINIMO_ENTERO_LARGO)) {
             this.addErrorSintactico("SyntaxError FUERA DE RANGO ENTERO LARGO (Línea " + this.analizadorLexico.LINEA + ")");
             return false;
         }
