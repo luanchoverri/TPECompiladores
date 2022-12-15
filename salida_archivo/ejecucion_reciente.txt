@@ -1,0 +1,53 @@
+program{
+
+    out('cadena /
+            multilinea');
+
+}$ 
+ 
+  EJECUCION DEL PARSER FINALIZADA  
+  
+ |||||||||||||||||||||||||||||||||||||||||||||| |--- CODIGO FUENTE ---|
+
+
+
+
+-----------------------------------------------------------------
+
+
+
+
+|--- Sin errores LEXICOS ---| (OK)
+ 
+ 🔎  ANALISIS SINTÁCTICO    
+ 
+  
+ Análisis sintáctico vacío. 
+
+ 
+ 
+ ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
+ 
+ 
+ vacio. 
+ 
+  
+ 
+ 
+  
+              TABLA DE SIMBOLOS              
+
+TOKEN   257    program     #linea 1   null program 
+TOKEN   272 cadena             multilinea     #linea 4   null cadena  
+ 
+ 
+ 
+ --- ARBOL ---- 
+   └─ raiz 
+     └─ sentencia 
+        └─ out 
+           └─ cadena             multilinea 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: dic. 15 2022, 07:17:52 p. m.

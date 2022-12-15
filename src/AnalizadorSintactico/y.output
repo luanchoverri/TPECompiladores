@@ -233,8 +233,8 @@
 
  172  asignacion_for : id op_asignacion cte
 
- 173  operacion_for : signo id
- 174                | id error
+ 173  operacion_for : signo cte
+ 174                | cte error
 
  175  sentencias_For_funcion : asignacion
  176                         | salida
@@ -3334,7 +3334,7 @@ state 283
 state 284
 	cond_op_for : condicion_for ';' . operacion_for  (147)
 
-	id  shift 336
+	cte  shift 336
 	'-'  shift 102
 	'+'  shift 104
 	.  error
@@ -3931,7 +3931,7 @@ state 335
 
 
 state 336
-	operacion_for : id . error  (174)
+	operacion_for : cte . error  (174)
 
 	error  shift 370
 	.  error
@@ -3944,9 +3944,9 @@ state 337
 
 
 state 338
-	operacion_for : signo . id  (173)
+	operacion_for : signo . cte  (173)
 
-	id  shift 371
+	cte  shift 371
 	.  error
 
 
@@ -4341,13 +4341,13 @@ state 369
 
 
 state 370
-	operacion_for : id error .  (174)
+	operacion_for : cte error .  (174)
 
 	.  reduce 174
 
 
 state 371
-	operacion_for : signo id .  (173)
+	operacion_for : signo cte .  (173)
 
 	.  reduce 173
 

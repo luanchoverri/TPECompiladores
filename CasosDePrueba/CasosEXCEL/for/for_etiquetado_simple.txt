@@ -1,0 +1,17 @@
+program{
+
+    i32 a;
+    a =: 1;
+
+    etiqueta1: for (i =: 1 ; i < 5 ; +1){
+                        out('nueva iteracion del for');
+
+                        if (i = 3) then {
+                            out('era 3');
+                            continue: etiqueta1;
+                        } end_if;
+
+                    out('no era tres y no paso por continue');
+                };
+
+}
