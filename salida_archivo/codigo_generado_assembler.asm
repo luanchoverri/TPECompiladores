@@ -21,22 +21,19 @@ ok db 'OK',0
 mem2bytes dw ?
 _maxFloat dq 3.40282347E+38
 _minFloat dq -3.40282347E+38
+out0 db ':)',0
 _program dd ?,?
-_a@$ dd ?,?
 _i@$_for0 dd ?,?
 @aux0 dd ?,?
 @aux1 dd ?,?
-@aux2 dd ?,?
 .code
 ;------------ CODE ------------
 start:
-MOV EAX,1
-MOV _a@$,EAX
-MOV EAX,1
+MOV EAX,0
 MOV _i@$_for0,EAX
 _label0:
 MOV EAX, _i@$_for0
-CMP EAX, 3
+CMP EAX, 25
 JGE _label2
 MOV @aux0,1 
 JMP _label1
@@ -49,17 +46,13 @@ JE _label3
 JNE _label4
 _label5:
 MOV EAX,_i@$_for0
-ADD EAX,1
+ADD EAX,5
 MOV @aux1,EAX
 MOV EAX,@aux1
 MOV _i@$_for0,EAX
 JMP _label0
 _label4:
-MOV EAX,_a@$
-ADD EAX,1
-MOV @aux2,EAX
-MOV EAX,@aux2
-MOV _a@$,EAX
+invoke MessageBox, NULL, addr out0, addr out0, MB_OK
 JMP _label5
 _label3:
 ;------------ FIN ------------
