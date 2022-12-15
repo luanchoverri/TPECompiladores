@@ -1,7 +1,13 @@
 program{
 
-    for (i =: 0 ; i < 25 ; +5){
-            out(':)');
-        };
+    i32 a,b;
+    a =: 0;
+    << comentario 1
+    b =: 2 + a;
+    << comentario 2
+    for (i =: 0; i < 4; +1){
+        << comentario dentro de for
+        a =: b + a;
+    };
 
 }
