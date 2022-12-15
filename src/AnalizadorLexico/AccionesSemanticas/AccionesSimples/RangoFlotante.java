@@ -6,9 +6,6 @@ import AnalizadorLexico.AnalizadorLexico;
 
 public class RangoFlotante extends AccionSemanticaSimple {
 
-    public static final float MINIMO_FLOAT = (float) (1.17549435 * Math.pow(10, -38)); // 1.17549435E-38f (Rango minimo negativo)
-    public static final float MAXIMO_FLOAT = (float) (3.40282347 * Math.pow(10, 38)); // 3.40282347E+38f (Rango maximo positivo)
-
     public RangoFlotante(AnalizadorLexico analizadorLexico){
         super(analizadorLexico);
 
@@ -37,7 +34,7 @@ public class RangoFlotante extends AccionSemanticaSimple {
 
                     floatBuffer = Float.parseFloat(buffer);
                 }
-            if (((Math.abs(floatBuffer) <= MINIMO_FLOAT) || (Math.abs(floatBuffer) >= MAXIMO_FLOAT))){ // el abs es para contemplar casos positivos y negativos
+            if (((Math.abs(floatBuffer) <= AnalizadorLexico.MINIMO_FLOAT) || (Math.abs(floatBuffer) >= AnalizadorLexico.MAXIMO_FLOAT))){ // el abs es para contemplar casos positivos y negativos
                 throw new Exception("FUERA DE RANGO"); // genero la excepcion
             }
         } catch (Throwable e){

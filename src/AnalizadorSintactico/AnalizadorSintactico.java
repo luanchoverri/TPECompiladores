@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
 
 public class AnalizadorSintactico {
 
@@ -458,10 +460,49 @@ public class AnalizadorSintactico {
         Long numero = Long.parseLong(lexema);
 
         if((numero >=  AnalizadorLexico.MAXIMO_ENTERO_LARGO)) {
-            this.addErrorSintactico("SyntaxError FUERA DE RANGO (Línea " + this.analizadorLexico.LINEA + ")");
+            this.addErrorSintactico("SyntaxError FUERA DE RANGO ENTERO LARGO (Línea " + this.analizadorLexico.LINEA + ")");
             return false;
         }
         else return true;
+    }
+
+    public float convertFloat(String lexema){
+        float floatBuffer = 0f;
+        if (lexema.contains("F")){
+            String[] parts = lexema.split("F");
+            floatBuffer =  (float) (Double.valueOf(parts[0]) * Math.pow(10, Double.valueOf(parts[1])));
+        }else{
+            if(lexema.startsWith("."))
+                lexema = lexema.replace(".", "0.");
+            else
+                if(lexema.endsWith("."))
+                    lexema = lexema.replace(".", ".0");
+
+            floatBuffer = Float.parseFloat(lexema);
+        }
+        return floatBuffer;
+    }
+
+    public boolean verificarRangoFlotante(int indice) {
+
+        String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
+        float numero = this.convertFloat(lexema);
+
+        if (lexema.startsWith("-")){
+            if((numero >=  AnalizadorLexico.MINIMO_FLOAT * -1) || (numero <= AnalizadorLexico.MAXIMO_FLOAT * -1)) {
+                this.addErrorSintactico("SyntaxError FUERA DE RANGO FLOTANTE (Línea " + this.analizadorLexico.LINEA + ")");
+                return false;
+            }
+        }else{
+            if ((numero != 0.0)){
+                if((numero <=  AnalizadorLexico.MINIMO_FLOAT) || (numero >= AnalizadorLexico.MAXIMO_FLOAT)) {
+                    this.addErrorSintactico("SyntaxError FUERA DE RANGO FLOTANTE (Línea " + this.analizadorLexico.LINEA + ")");
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public void checkParametros(String idFun){
