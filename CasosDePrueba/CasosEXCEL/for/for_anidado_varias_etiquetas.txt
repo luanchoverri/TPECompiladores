@@ -1,0 +1,24 @@
+program{
+
+    i32 a;
+    a =: 0;
+
+    etiqueta1: for (i =: 1 ; i < 5 ; +1){
+                        out('nueva iteracion del primer for');
+
+                        etiqueta2: for(j =: 1 ; j <= 3 ; +1) {
+                            out('nueva iteracion del segundo for');
+                            a =: a + 1;
+                            if (a > 3) then {
+                                out('a mas grande que 3');
+                                continue: etiqueta1;
+                            } else {
+                                out('era mas chico que 3');
+                                continue: etiqueta2;
+                            }end_if;
+                            out('no se salto con el continue');
+                        };
+
+                };
+
+}

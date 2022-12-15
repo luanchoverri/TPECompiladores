@@ -7,6 +7,8 @@ import AnalizadorLexico.Token;
 import ArbolSintactico.NodoHijo;
 import ArbolSintactico.Nodo;
 
+import java.util.Stack;
+
 
 %}
 
@@ -557,8 +559,8 @@ condicion_for :  id comparador factor	{
 				}
 	      ;
 // TODO listo
-cola_For : '{' bloq_sentencias_For '}' ';'	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
-	 |  sentencias_For  			{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
+cola_For : '{' bloq_sentencias_For '}' ';'	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2)); this.variablesFor.pop();}
+	 |  sentencias_For  			{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1)); this.variablesFor.pop();}
 	 | '{' bloq_sentencias_For '}' error { sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA) + "): Falta el ; al final del bloque del for");}
 	 ;
 
@@ -620,6 +622,7 @@ asignacion_for: id op_asignacion cte {
 						sintactico.setTipoEnIndex("i32", $3.ival);
 						sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
 						sintactico.setUsoEnIndex("for_var", $1.ival);
+						this.variablesFor.push($1.ival);
 						ParserVal identificador = new ParserVal(sintactico.crearHoja($1.ival));
 						ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
 						sintactico.setUsoEnIndex("cte",$3.ival);
@@ -633,32 +636,22 @@ asignacion_for: id op_asignacion cte {
 
 	      ;
 // TODO listo
-operacion_for: signo id		{
-					int existente = enAmbito($2);
-					if (existente >= 0) {
-						if (sintactico.getEntradaTablaSimb(existente).getUso().equals("for_var")) {
-							String lexExistente = sintactico.getEntradaTablaSimb(existente).getLexema();
-							String [] aux = lexExistente.split("@");
-                                                        String ambitoExistente = aux[1];
-							if ( ambitoExistente.equals(this.ambito)) {
-							 	ParserVal hoja = new ParserVal(sintactico.crearHoja(existente));// variableFor
-							 	Nodo n = sintactico.crearNodoControl("1",null);
-							 	n.setTipo("i32");
-							 	ParserVal uno = new ParserVal(n);
-							 	ParserVal operacion = new ParserVal(sintactico.crearNodo($1.sval, hoja, uno));
-								$$ = new ParserVal(sintactico.crearNodoControl("operacionFor",new ParserVal(sintactico.crearNodo("=:",new ParserVal(sintactico.crearHoja(existente)),operacion))));
-								sintactico.eliminarEntrada($2.ival);
-							} else {
-								sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): OP la variable utilizada no corresponde a este for loop");
-							}
+operacion_for: signo cte		{
+						String type = sintactico.getTipoFromTS($2.ival);
+						if (type.equals("i32")){
+							ParserVal id = new ParserVal(sintactico.crearHoja(this.variablesFor.peek()));
+							ParserVal cte = new ParserVal(sintactico.crearHoja($2.ival));
+							ParserVal op = new ParserVal(sintactico.crearNodo($1.sval, id, cte));
+							ParserVal asig =  new ParserVal(sintactico.crearNodo("=:",id,op));
+							sintactico.setUsoEnIndex("cte",$2.ival);
+
+							$$ = new ParserVal(sintactico.crearNodoControl("operacionFor", asig));
 						} else {
-							sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): OP la variable utilizada en la condicion debe ser la declarada en el for loop.");
+						sintactico.addErrorSintactico("SemanicError. (Línea " + (AnalizadorLexico.LINEA) + ") no se permiten flotantes en el valor de incremento/decremento");
 						}
-					} else {
-						sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): OP la variable usada no ha sido declarada.");
+
 					}
-					}
-	      | id error {sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): Falta el signo en la operacion de incremento/decremento del for.");}
+	      | cte error {sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): Falta el signo en la operacion de incremento/decremento del for.");}
 	      ;
 
 sentencias_For_funcion : asignacion
@@ -846,9 +839,10 @@ private int contadorFor;
 private int contadorIf;
 private int contadorWhen;
 private String tipoBreak = new String();
+private Stack<Integer> variablesFor;
 
 
-public void activarAmbito(){this.ambito = "$"; this.contadorFor = 0; this.contadorIf = 0; this.contadorWhen = 0;} // $ va a simblizar el ambito global.
+public void activarAmbito(){this.ambito = "$"; this.contadorFor = 0; this.contadorIf = 0; this.contadorWhen = 0; variablesFor = new Stack<Integer>();} // $ va a simblizar el ambito global.
 
 public void setLexico(AnalizadorLexico lexico) { this.lexico = lexico; }
 
