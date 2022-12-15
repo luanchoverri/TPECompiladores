@@ -58,6 +58,23 @@ decl_const : id op_asignacion cte	{
 						}
 
 					}
+		   | id op_asignacion '-'cte{
+										int existente = enAmbito($1);
+											if (existente < 0) {
+												int i = $1.ival;
+												sintactico.setTipoEnIndex(sintactico.getTipoFromTS($4.ival), i);
+												sintactico.setNegativoTablaSimb($4.ival);
+												String type = sintactico.getTipoFromTS($4.ival);
+																			if (type.equals("i32"))
+																				sintactico.verificarRangoEnteroLargo($4.ival);
+												sintactico.setUsoEnIndex("const", i);
+												sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
+												sintactico.setUsoEnIndex("cte",$4.ival);
+												$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($4.ival))));
+											} else {
+												sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
+											}
+		   }
            | id op_asignacion error  { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta constante luego de la asignacion.");}
            | id cte  error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta el operador asignacion luego del identificador.");}
            | id        error         { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta la asignacion luego del identificador.");}
@@ -815,6 +832,8 @@ factor : id  		{
                                         sintactico.eliminarEntrada($2.ival);
                                 }else{
                                 	String type = sintactico.getTipoFromTS($2.ival);
+									if (type.equals("i32"))
+					     				sintactico.verificarRangoEnteroLargo($2.ival);
                                         Nodo n = sintactico.crearHoja($2.ival);
 					n.setTipo(type);
 					$$ = new ParserVal(n);

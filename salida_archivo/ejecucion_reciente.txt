@@ -1,0 +1,89 @@
+program
+{
+	f32 g,h,i,j,k;
+
+	g =: 3.40282347F+38;
+	h =: -3.40282347F-38;
+	i =: -1.17549435F-38;
+	j =: 1.17549435F-38;
+	k =: 3.40282347F38;
+
+}$ 
+ 
+  EJECUCION DEL PARSER FINALIZADA  
+  
+ |||||||||||||||||||||||||||||||||||||||||||||| |--- CODIGO FUENTE ---|
+
+
+
+
+-----------------------------------------------------------------
+
+
+
+|--- ERRORES LÉXICOS: ---| (!)
+
+
+ERROR LÉXICO (Línea 5): la constante f32 con valor -> 3.40282347F+38 está fuera de rango.
+ERROR LÉXICO (Línea 7): la constante f32 con valor -> 1.17549435F-38 está fuera de rango.
+ERROR LÉXICO (Línea 8): la constante f32 con valor -> 1.17549435F-38 está fuera de rango.
+ERROR LÉXICO (Línea 9): la constante f32 con valor -> 3.40282347F38 está fuera de rango.
+
+ 
+ 🔎  ANALISIS SINTÁCTICO    
+ 
+ 
+ Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
+ 
+ 
+ ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
+ 
+ 
+ vacio. 
+ 
+  
+ 
+ 
+  
+              TABLA DE SIMBOLOS              
+
+TOKEN   257    program     #linea 1   null program 
+TOKEN   257        g@$     #linea 3    f32    var 
+TOKEN   257        h@$     #linea 3    f32    var 
+TOKEN   257        i@$     #linea 3    f32    var 
+TOKEN   257        j@$     #linea 3    f32    var 
+TOKEN   257        k@$     #linea 3    f32    var 
+TOKEN   258 3.40282347F+38     #linea 5    f32    cte 
+TOKEN   258 -3.40282347F-38     #linea 6    f32 cte neg 
+TOKEN   258 -1.17549435F-38     #linea 7    f32 cte neg 
+TOKEN   258 1.17549435F-38     #linea 8    f32    cte 
+TOKEN   258 3.40282347F38     #linea 9    f32    cte  
+ 
+ 
+ 
+ --- ARBOL ---- 
+   └─ raiz 
+     └─ sentencia 
+        └─ =: 
+           └─ g@$ 
+           └─ 3.40282347F+38 
+        └─ sentencia 
+           └─ =: 
+              └─ h@$ 
+              └─ -3.40282347F-38 
+           └─ sentencia 
+              └─ =: 
+                 └─ i@$ 
+                 └─ -1.17549435F-38 
+              └─ sentencia 
+                 └─ =: 
+                    └─ j@$ 
+                    └─ 1.17549435F-38 
+                 └─ sentencia 
+                    └─ =: 
+                       └─ k@$ 
+                       └─ 3.40282347F38 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: dic. 15 2022, 01:01:31 a. m.

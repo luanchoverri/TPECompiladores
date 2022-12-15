@@ -21,6 +21,8 @@ public class AnalizadorLexico {
     public static final int ESTADOS = 18;       // Cantidad de estados del autómata.
     public static final int SIMBOLOS = 23;      // Cantidad de símbolos aceptados por el compilador.
     public static int LINEA = 1;
+    public static final long MAXIMO_ENTERO_LARGO = (long) Math.pow(2, 31)-1;
+    public static final long MINIMO_ENTERO_LARGO = (long) Math.pow(2, 31);
 
     // -- VARIABLES -- //
 
