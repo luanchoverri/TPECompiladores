@@ -457,8 +457,8 @@ public class AnalizadorSintactico {
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
         Long numero = Long.parseLong(lexema);
 
-        if(numero == 2147483648L) {
-            this.addErrorSintactico("SyntaxError FUERA DE RANGO (Línea " + this.analizadorLexico.LINEA + "): CONST LONG");
+        if((numero >=  AnalizadorLexico.MAXIMO_ENTERO_LARGO)) {
+            this.addErrorSintactico("SyntaxError FUERA DE RANGO (Línea " + this.analizadorLexico.LINEA + ")");
             return false;
         }
         else return true;

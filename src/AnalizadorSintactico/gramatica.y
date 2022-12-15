@@ -47,6 +47,9 @@ decl_const : id op_asignacion cte	{
 						if (existente < 0) {
 							int i = $1.ival;
 							sintactico.setTipoEnIndex(sintactico.getTipoFromTS($3.ival), i);
+							String type = sintactico.getTipoFromTS($3.ival);
+                                                        if (type.equals("i32"))
+                                                        	sintactico.verificarRangoEnteroLargo($3.ival);
 							sintactico.setUsoEnIndex("const", i);
 							sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
 							sintactico.setUsoEnIndex("cte",$3.ival);
@@ -56,6 +59,23 @@ decl_const : id op_asignacion cte	{
 						}
 
 					}
+		   | id op_asignacion '-'cte{
+										int existente = enAmbito($1);
+											if (existente < 0) {
+												int i = $1.ival;
+												sintactico.setTipoEnIndex(sintactico.getTipoFromTS($4.ival), i);
+												sintactico.setNegativoTablaSimb($4.ival);
+												String type = sintactico.getTipoFromTS($4.ival);
+																			if (type.equals("i32"))
+																				sintactico.verificarRangoEnteroLargo($4.ival);
+												sintactico.setUsoEnIndex("const", i);
+												sintactico.setLexemaEnIndex($1.ival, "@"+this.ambito);
+												sintactico.setUsoEnIndex("cte",$4.ival);
+												$$ = new ParserVal(sintactico.crearNodo("=:", new ParserVal(sintactico.crearHoja($1.ival)), new ParserVal(sintactico.crearHoja($4.ival))));
+											} else {
+												sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
+											}
+		   }
            | id op_asignacion error  { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta constante luego de la asignacion.");}
            | id cte  error           { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta el operador asignacion luego del identificador.");}
            | id        error         { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta la asignacion luego del identificador.");}
@@ -489,7 +509,7 @@ cond_op_for : condicion_for ';' operacion_for {$$ = new ParserVal(sintactico.cre
 
 // TODO listo (lo del arbol sintactico)
 
-condicion_for :  id comparador cte	{
+condicion_for :  id comparador factor	{
 						int existente = enAmbito($1);
 						if (existente >= 0) {
 							if (sintactico.getEntradaTablaSimb(existente).getUso().equals("for_var")) {
@@ -500,11 +520,12 @@ condicion_for :  id comparador cte	{
 
 								if ( ambitoExistente.equals(this.ambito)) {
 									sintactico.setUsoEnIndex("i32",$3.ival);
-									String typeOP2 = sintactico.getTipoFromTS($3.ival);
+									Nodo op2 = (Nodo) $3.obj;
+									String typeOP2 = op2.getTipo();
                                                                         String typeOP1 = sintactico.getTipoFromTS(existente);
                                                                         if (typeOP1.equals(typeOP2)) {
 										ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
-										ParserVal constante = new ParserVal(sintactico.crearHoja($3.ival));
+										ParserVal constante = new ParserVal(op2);
 										$$ = new ParserVal(sintactico.crearNodoControl("condicionFor", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
 										sintactico.eliminarEntrada($1.ival);
 									}else{
@@ -519,8 +540,39 @@ condicion_for :  id comparador cte	{
 						} else {
 							sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable usada no ha sido declarada.");
 						}
-
 				     	} //TODO para en un futuro expandirla y coparar con expresion
+	      | id comparador '(' expresion ')'	{
+					int existente = enAmbito($1);
+					if (existente >= 0) {
+						if (sintactico.getEntradaTablaSimb(existente).getUso().equals("for_var")) {
+							String lexExistente = sintactico.getEntradaTablaSimb(existente).getLexema();
+							String [] aux = lexExistente.split("@");
+
+							String ambitoExistente = aux[1];
+
+							if ( ambitoExistente.equals(this.ambito)) {
+								//sintactico.setUsoEnIndex("i32",$3.ival);
+								Nodo op2 = (Nodo) $4.obj;
+								String typeOP2 = op2.getTipo();
+								String typeOP1 = sintactico.getTipoFromTS(existente);
+								if (typeOP1.equals(typeOP2)) {
+									ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
+									ParserVal constante = new ParserVal(op2);
+									$$ = new ParserVal(sintactico.crearNodoControl("condicionFor", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
+									sintactico.eliminarEntrada($1.ival);
+								}else{
+								sintactico.addErrorSintactico("SematicError. se reconoce FOR pero hay un problema de tipos en la condicion " + AnalizadorLexico.LINEA);
+								}
+							} else {
+								sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada no corresponde a este for loop");
+							}
+						} else {
+							sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada en la condicion debe ser la declarada en el for loop.");
+						}
+					} else {
+						sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable usada no ha sido declarada.");
+					}
+				}
 	      ;
 // TODO listo
 cola_For : '{' bloq_sentencias_For '}' ';'	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
@@ -624,6 +676,7 @@ operacion_for: signo id		{
 						sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): OP la variable usada no ha sido declarada.");
 					}
 					}
+	      | id error {sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): Falta el signo en la operacion de incremento/decremento del for.");}
 	      ;
 
 sentencias_For_funcion : asignacion
@@ -743,8 +796,10 @@ termino : termino '*' factor	{$$ = new ParserVal(sintactico.crearNodo("*",$1,$3)
 factor : id  		{
 				int existente = enAmbito($1);
 				if (existente >= 0) {
-
-					$$ = new ParserVal(sintactico.crearHoja(existente));
+					String type = sintactico.getTipoFromTS(existente);
+					Nodo n = sintactico.crearHoja(existente);
+					n.setTipo(type);
+					$$ = new ParserVal(n);
 					sintactico.eliminarEntrada($1.ival);
 				} else {
 					sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): variable no declarada.");
@@ -762,7 +817,10 @@ factor : id  		{
 					if (type.equals("i32"))
 					     sintactico.verificarRangoEnteroLargo($1.ival);
 					sintactico.setUsoEnIndex("cte",$1.ival);
-					$$ = new ParserVal(sintactico.crearHoja($1.ival));
+					Nodo n = sintactico.crearHoja($1.ival);
+					n.setTipo(type);
+					System.out.println("!!!"+n.getLexema() + " // "+ n.getTipo());
+					$$ = new ParserVal(n);
 				}
                   	}
        | '-' cte	{
@@ -774,7 +832,12 @@ factor : id  		{
                                 	sintactico.setUsoEnIndex("cte neg",existente);
                                         sintactico.eliminarEntrada($2.ival);
                                 }else{
-					$$ = new ParserVal(sintactico.crearHoja($2.ival));
+                                	String type = sintactico.getTipoFromTS($2.ival);
+									if (type.equals("i32"))
+					     				sintactico.verificarRangoEnteroLargo($2.ival);
+                                        Nodo n = sintactico.crearHoja($2.ival);
+					n.setTipo(type);
+					$$ = new ParserVal(n);
 					sintactico.setUsoEnIndex("cte neg",$2.ival);
 				}
                    	}
