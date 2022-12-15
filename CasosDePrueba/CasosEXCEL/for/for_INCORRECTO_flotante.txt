@@ -1,0 +1,20 @@
+program{
+
+    i32 a;
+    a =: 1;
+
+     for (i =: 1 ; i < (3 + 1 * 5) ; +i){
+                a =: a + 1;
+                if (a > 4) then {
+                    out('mas grande que 4');
+                    break;
+                } else {
+                    if (a < 4) then {
+                        out('mas chico que 4');
+                        continue;
+                    } end_if;
+                } end_if;
+                out('era 4');
+            };
+
+}
