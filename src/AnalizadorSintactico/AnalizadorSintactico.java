@@ -479,7 +479,8 @@ public class AnalizadorSintactico {
     public void analisisParser(String programa, String estadoParser ) {
         try {
             String ruta = "salida_archivo/ejecucion_reciente.txt";
-            String contenido;
+            String[] contenido = programa.split("\n");
+            int nroLinea = 1;
             File file = new File(ruta);
 
             // Si el archivo no existe es creado
@@ -491,8 +492,11 @@ public class AnalizadorSintactico {
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
 
-            bw.write(programa);  // Leo el codigo fuente
-
+              // Leo el codigo fuente
+            for (String linea : contenido){
+                bw.write(nroLinea+":    "+linea+"\n");
+                nroLinea++;
+            }
             bw.write(estadoParser);
             bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| " ) ;
 
