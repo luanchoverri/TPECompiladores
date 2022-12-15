@@ -22,7 +22,7 @@ public class AnalizadorLexico {
     public static final int SIMBOLOS = 23;      // Cantidad de símbolos aceptados por el compilador.
     public static int LINEA = 1;
     public static final long MAXIMO_ENTERO_LARGO = (long) Math.pow(2, 31)-1;
-    public static final long MINIMO_ENTERO_LARGO = (long) Math.pow(2, 31);
+    public static final long MINIMO_ENTERO_LARGO = (long) Math.pow(2, 31) * -1;
     public static final float MINIMO_FLOAT = (float) (1.17549435 * Math.pow(10, -38)); // 1.17549435E-38f (Rango minimo negativo)
     public static final float MAXIMO_FLOAT = (float) (3.40282347 * Math.pow(10, 38)); // 3.40282347E+38f (Rango maximo positivo)
 
