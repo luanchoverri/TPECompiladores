@@ -240,7 +240,7 @@ public class AnalizadorSintactico {
             if(!esNodoDeclarativo(papa)){ // se pudo limpiar
                 agregarNuevoNodo(papa, hijoNuevo);
 
-                imprimirArbol(Papa, 0);
+                imprimirArbol(papa, 0);
 
                 return new ParserVal(papa);
             }
@@ -280,7 +280,12 @@ public class AnalizadorSintactico {
 
         if (nodo.getLexema().equals("declarativa")){
             if (nodo.getHijoIzquierdo()!= null && (nodo.getHijoIzquierdo().getLexema().equals("lista_ctes") || nodo.getHijoIzquierdo().getLexema().equals("when"))) {
-                Nodo limpio = nodo.getHijoIzquierdo().getHijoIzquierdo(); // no se queda ni con lista de ctes ni con when, sino con los hijos de estos
+                Nodo limpio = nodo.getHijoIzquierdo(); //TODO se queda con lista-cte y con when, puede quedarse solo con hijo de lista de ctes pero sin when no xq tiene dos hijos
+                if(limpio.getLexema().equals("lista_ctes")) {
+                    limpio = limpio.getHijoIzquierdo();
+                }
+
+
                 return new ParserVal(limpio);
             }
         }
