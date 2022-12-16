@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.swing.plaf.synth.SynthSpinnerUI;
 
@@ -165,50 +166,6 @@ public class AnalizadorSintactico {
 
     // -- Creacion del ARBOL SINTACTICO
 
-    public ParserVal modificarHijo2(ParserVal arbolSentencias, Nodo hijoNuevo){
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-
-        Nodo papa = (Nodo) arbolSentencias.obj;
-        System.out.println(" el nodo a modificar es:" );
-        imprimirArbol(papa, 0);
-        System.out.println(" el hijo es:" );
-        imprimirArbol(hijoNuevo, 0);
-        System.out.println(" ---------" );
-
-        if (papa.getLexema().equals("declarativa")){// en este caso la primera sentencia era declarativa, por lo que aun no se genero un arbol
-           // System.out.println(" entrea en 1" );
-
-            if (papa.getHijoIzquierdo()!= null && (papa.getHijoIzquierdo().getLexema().equals("lista_ctes") || papa.getHijoIzquierdo().getLexema().equals("when"))) {
-
-                papa = papa.getHijoIzquierdo().getHijoIzquierdo(); // no se queda ni con lista de ctes ni con when, sino con los hijos de estos
-                agregarNuevoNodo(papa, hijoNuevo);  // agrega el nuevo nodo sin importar si el nuevo es una declarativa( debiera revisar?)
-                //imprimirArbol(papa, 0);
-                return new ParserVal(papa);
-            }
-
-            papa = hijoNuevo; // nodo sentencia declarativa se vuelve el hijo
-            return new ParserVal(papa);
-        }
-
-        if (hijoNuevo.getLexema().equals("declarativa")) {
-
-
-            if (hijoNuevo.getHijoIzquierdo()!= null && ( (hijoNuevo.getHijoIzquierdo().getLexema().equals("lista_ctes")) || (hijoNuevo.getHijoIzquierdo().getLexema().equals("when")))) {
-                hijoNuevo = hijoNuevo.getHijoIzquierdo();
-
-
-            } else {
-                return new ParserVal(papa); // las declarativas que no tienen que ver con lista-ctes no se agregan al arbol.
-            }
-
-        }
-
-        agregarNuevoNodo(papa, hijoNuevo);
-        return new ParserVal(papa);
-    }
-
     public ParserVal modificarHijo(ParserVal arbolSentencias, Nodo hijoNuevo){
         System.out.println("");
         System.out.println("");
@@ -216,14 +173,14 @@ public class AnalizadorSintactico {
 
         Nodo arbol = (Nodo) arbolSentencias.obj;
 
-        System.out.println(" el nodo a modificar es:" );
-        imprimirArbol(arbol, 0);
-        System.out.println(" el hijo es:" );
-        imprimirArbol(hijoNuevo, 0);
-        System.out.println(" ---------" );
+//        System.out.println(" el nodo a modificar es:" );
+//        imprimirArbol(arbol, 0);
+//        System.out.println(" el hijo es:" );
+//        imprimirArbol(hijoNuevo, 0);
+//        System.out.println(" ---------" );
 
         if (esNodoDeclarativo(arbol) && esNodoDeclarativo(hijoNuevo)) {
-            System.out.println(" ------- ENTRA EN 1 " );
+
             Nodo papa = (Nodo)(limpiarDeclarativasArbol(arbol)).obj;
             Nodo hijo = (Nodo)(limpiarDeclarativasArbol(hijoNuevo)).obj;
 
@@ -234,7 +191,7 @@ public class AnalizadorSintactico {
         }
 
         else if (esNodoDeclarativo(arbol)){
-            System.out.println(" ------- ENTRA EN 2 --- RESULTADO: \n" );
+
             Nodo papa = (Nodo)(limpiarDeclarativasArbol(arbol)).obj;
 
             if(!esNodoDeclarativo(papa)){ // se pudo limpiar
@@ -250,7 +207,7 @@ public class AnalizadorSintactico {
         }
 
         else if (esNodoDeclarativo(hijoNuevo)){
-            System.out.println(" ------- ENTRA EN 3 " );
+           // System.out.println(" ------- ENTRA EN 3 " );
             Nodo hijo = (Nodo)(limpiarDeclarativasArbol(hijoNuevo)).obj;
             if (!esNodoDeclarativo(hijo)) { //se pudo limpiar
                 agregarNuevoNodo(arbol, hijo);
@@ -261,7 +218,7 @@ public class AnalizadorSintactico {
 
         }
         else { // caso donde son ambos sentencias
-            System.out.println(" ------- ENTRA EN 4 " );
+          //  System.out.println(" ------- ENTRA EN 4 " );
             agregarNuevoNodo(arbol, hijoNuevo);
             return new ParserVal(arbol);
         }
@@ -341,21 +298,12 @@ public class AnalizadorSintactico {
 
     public Nodo crearNodo(String identificador, ParserVal hijoIzq, ParserVal hijoDer){
 
-
-        System.out.println(" 🎄 \n ");
-
-
         if (hijoDer == null){
 
             Nodo i = new NodoBinario(hijoIzq.obj,null,identificador);
             if (i.getTieneBreak() != null) {
                 i.setTieneBreak(i.getTieneBreak());
             }
-
-
-            imprimirArbol(i,0);
-            System.out.println("\n ");
-
 
             return i;
         } else {
@@ -365,9 +313,6 @@ public class AnalizadorSintactico {
                 i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
             }
 
-
-            imprimirArbol(i,0);
-            System.out.println("\n ");
             return i;
 
 
@@ -451,50 +396,51 @@ public class AnalizadorSintactico {
     public void imprimirTablaSimbolos() {
         System.out.println();
         if (this.tablaSimbolos.isEmpty())
-            System.out.println("|----- TABLA DE SIMBOLOS VACIA ------|");
+            System.out.println(" |  TABLA DE SIMBOLOS: VACIA  | ");
         else tablaSimbolos.imprimir();
 
     }
 
     public void imprimirErroresSintacticos(BufferedWriter bw) throws IOException {
 
-        bw.write("\n \n ---- ERRORES SINTACTICOS Y SEMANTICOS ---  \n \n ");
+
 
         if (this.erroresSintacticos.isEmpty()){
-            bw.write("\n vacio. \n ");
+            bw.write("\n \n |    ERRORES SINTACTICOS - SEMANTICOS:  NO HAY   | \n \n ");
         }else{
+            bw.write("\n \n |    ERRORES SINTACTICOS - SEMANTICOS  | \n \n ");
             for (String dato : this.erroresSintacticos){
-                bw.write("\n ");
-                bw.write(dato);
+                bw.write("*  " + dato + " \n ");
             }
         }
         bw.write("\n ");
     }
 
-    public void imprimirLista(ArrayList<String> lista) {
-
-        System.out.println(" ");
-
-        if (!this.analisisSintactico.isEmpty())
-            for (String dato : lista)
-                System.out.println(dato);
-        else
-            System.out.println("vacío.");
-        System.out.println();
-    }
+//    public void imprimirLista(ArrayList<String> lista) {
+//
+//        System.out.println(" ");
+//
+//        if (!this.analisisSintactico.isEmpty())
+//            for (String dato : lista)
+//                System.out.println(dato);
+//        else
+//            System.out.println("vacío.");
+//        System.out.println();
+//    }
 
 
     public void imprimirAnalisisSintactico(BufferedWriter bw) throws IOException {
 
-        bw.write("\n \n 🔎  ANALISIS SINTÁCTICO    \n \n ");
 
-        if (!this.analisisSintactico.isEmpty())
+
+        if (!this.analisisSintactico.isEmpty()) {
+            bw.write("\n \n |   ANALISIS SINTACTICO   |   \n \n ");
             for (String dato : this.analisisSintactico) {
-                bw.write("\n ");
-                bw.write(dato);
+                bw.write("*  " + dato + " \n ");
             }
+        }
         else
-            bw.write(" \n Análisis sintáctico vacío. \n");
+            bw.write(" \n |  ANALISIS SINTACTICO: NO HAY | \n");
 
         bw.write("\n ");
 
@@ -551,7 +497,7 @@ public class AnalizadorSintactico {
         Long numero = Long.parseLong(lexema);
 
         if((numero >=  AnalizadorLexico.MAXIMO_ENTERO_LARGO) || (numero <= AnalizadorLexico.MINIMO_ENTERO_LARGO)) {
-            this.addErrorSintactico("SyntaxError FUERA DE RANGO ENTERO LARGO (Línea " + this.analizadorLexico.LINEA + ")");
+            this.addErrorSintactico("(SyntaxError) FUERA DE RANGO: ENTERO LARGO i32 (Línea " + this.analizadorLexico.LINEA + ")");
             return false;
         }
         else return true;
@@ -565,9 +511,11 @@ public class AnalizadorSintactico {
         }else{
             if(lexema.startsWith("."))
                 lexema = lexema.replace(".", "0.");
-            else
-                if(lexema.endsWith("."))
+            else if(lexema.endsWith("."))
                     lexema = lexema.replace(".", ".0");
+            if (lexema.equals("-0.0")){
+                lexema = lexema.replace("-", "");
+            }
 
             floatBuffer = Double.parseDouble(lexema);
         }
@@ -579,15 +527,15 @@ public class AnalizadorSintactico {
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
         double numero = this.convertFloat(lexema);
 
-        if (lexema.startsWith("-")){
+        if (lexema.startsWith("-") ){
             if((numero >=  AnalizadorLexico.MINIMO_FLOAT * -1) || (numero <= AnalizadorLexico.MAXIMO_FLOAT * -1)) {
-                this.addErrorSintactico("SyntaxError FUERA DE RANGO FLOTANTE (Línea " + this.analizadorLexico.LINEA + ")");
+                this.addErrorSintactico("(SyntaxError) FUERA DE RANGO: FLOTANTE f32 (-) (Línea " + this.analizadorLexico.LINEA + ")");
                 return false;
             }
         }else{
             if ((numero != 0.0)){
                 if((numero <=  AnalizadorLexico.MINIMO_FLOAT) || (numero >= AnalizadorLexico.MAXIMO_FLOAT)) {
-                    this.addErrorSintactico("SyntaxError FUERA DE RANGO FLOTANTE (Línea " + this.analizadorLexico.LINEA + ")");
+                    this.addErrorSintactico("(SyntaxError) FUERA DE RANGO: FLOTANTE f32 (+) (Línea " + this.analizadorLexico.LINEA + ")");
                     return false;
                 }
             }
@@ -624,7 +572,15 @@ public class AnalizadorSintactico {
 
     public void analisisParser(String programa, String estadoParser ) {
         try {
-            String ruta = "salida_archivo/ejecucion_reciente.txt";
+            String filename = "ejecucion_reciente" ;
+//
+//            System.out.println("nombre archivo");
+//            Scanner scanner = new Scanner(System.in);
+//            filename = scanner.next();
+
+            filename = filename.replace(" ", "_") + ".txt";
+
+            String ruta = "salida_archivo/"+ filename;
             String[] contenido = programa.split("\n");
             int nroLinea = 1;
             File file = new File(ruta);
@@ -643,15 +599,14 @@ public class AnalizadorSintactico {
                 bw.write(nroLinea+":    "+linea+"\n");
                 nroLinea++;
             }
-            bw.write(estadoParser);
-            bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| " ) ;
+            bw.write(" \n --------------------------- " + estadoParser  ) ;
 
             this.analizadorLexico.imprimirErrores(bw);
-            this.imprimirAnalisisSintactico(bw);
             this.imprimirErroresSintacticos(bw);
+            //this.imprimirAnalisisSintactico(bw);
             this.imprimirTablaSimbolos(bw);
 
-            bw.write("\n --- ARBOL ---- \n ");
+            bw.write("\n ARBOL SINTACTICO  \n ");
 
             this.imprimirArbol(this.raiz, 0, bw);
             this.imprimirArbolesFuncion(bw);
@@ -716,10 +671,10 @@ public class AnalizadorSintactico {
         String estadoParser ;
 
         if (parser.yyparse() == 0) {
-            estadoParser = (" \n \n  EJECUCION DEL PARSER FINALIZADA  \n ") ;
+            estadoParser = ("  EJECUCION DEL PARSER FINALIZADA  \n ") ;
         }
         else
-            estadoParser = (" \n \n EL PARSER NO PUDO TERMINAR \n ");
+            estadoParser = ("  EL PARSER NO PUDO TERMINAR \n ");
 
 
         analizadorLexico.setPosArchivo(0);

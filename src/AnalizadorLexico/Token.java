@@ -72,8 +72,8 @@ public class Token {
     @Override
     public String toString() {
 
-        String s = String.format("%5s %5s %10s %10s %1s %6s %6s ",
-                                "TOKEN", id, lexema, "#linea", nroLinea, tipo, uso);
+        String s = String.format("%5s %5s %15s %5s %1s %5s %20s ",
+                                "TOKEN", id, lexema, "#ln", nroLinea, tipo, uso);
         return(s) ;
     }
 

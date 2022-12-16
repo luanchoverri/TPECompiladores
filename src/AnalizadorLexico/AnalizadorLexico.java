@@ -329,22 +329,16 @@ public class AnalizadorLexico {
 
             String contenido;
 
-            contenido = "|--- CODIGO FUENTE ---|" + "\n" + "\n" + "\n";
-            bw.write(contenido);
-            bw.write("\n" + "\n"+ "-----------------------------------------------------------------" + "\n");
-
             if (this.errores.isEmpty()){
-                contenido = "\n" + "\n" + "\n" + "\n" +  "|--- Sin errores LEXICOS ---| (OK)";
+                contenido = "\n" + "\n" + "\n" + "\n" +  "|   NO HAY ERRORES LEXICOS     |";
                 bw.write(contenido);
             }
-            else{
-                if (!(this.errores.isEmpty())){ // Si hay errores lexicos
-                    contenido = "\n" + "\n" + "\n" + "|--- ERRORES LÉXICOS: ---| (!)" + "\n" + "\n" + "\n";
+            else {
+                contenido = "\n" + "\n" + "\n" + "|    ERRORES LEXICOS     |" + "\n" + "\n" + "\n";
+                bw.write(contenido);
+                for (String errore : this.errores) {
+                    contenido = " *  " + errore;
                     bw.write(contenido);
-                    for (int i = 0; i < this.errores.size(); i++){
-                        contenido = this.errores.get(i);
-                        bw.write(contenido);
-                    }
                 }
             }
 
