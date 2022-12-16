@@ -21,12 +21,43 @@ ok db 'OK',0
 mem2bytes dw ?
 _maxFloat dq 3.40282347E+38
 _minFloat dq -3.40282347E+38
-out0 db 'cadena             multilinea',0
 _program dd ?,?
+_i@$ dd ?,?
+_a@$_when0 dd ?,?
+_b@$_when0 dd ?,?
+_c@$_when0 dd ?,?
+_2_0 dq 2.0
+_z@$_when0 dd ?,?
+_x@$_when0 dd ?,?
+_k@$_when0 dd ?,?
+_l@$_when0 dd ?,?
+@aux0 dd ?,?
 .code
 ;------------ CODE ------------
+PUBLIC _fun2@$_when0
+_fun2@$_when0 PROC
+MOV _k@$_when0,EAX
+FSTP _l@$_when0
+MOV EAX,1
+MOV _k@$_when0,EAX
+FLD _l@$_when0
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+ret 
+_fun2@$_when0 ENDP
 start:
-invoke MessageBox, NULL, addr out0, addr out0, MB_OK
+MOV EAX,1
+MOV _i@$,EAX
+MOV EAX, 1
+CMP EAX, 3
+JGE _label1
+MOV @aux0,1 
+JMP _label0
+_label1:
+MOV @aux0, 0 
+_label0:
+MOV EAX, @aux0
+CMP EAX,  0
+JE _label2
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

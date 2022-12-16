@@ -165,41 +165,127 @@ public class AnalizadorSintactico {
 
     // -- Creacion del ARBOL SINTACTICO
 
-    public ParserVal modificarHijo(ParserVal arbolSentencias, Nodo nuevo){
+    public ParserVal modificarHijo2(ParserVal arbolSentencias, Nodo hijoNuevo){
         System.out.println("");
         System.out.println("");
         System.out.println("");
 
-        Nodo n = (Nodo) arbolSentencias.obj;
+        Nodo papa = (Nodo) arbolSentencias.obj;
+        System.out.println(" el nodo a modificar es:" );
+        imprimirArbol(papa, 0);
+        System.out.println(" el hijo es:" );
+        imprimirArbol(hijoNuevo, 0);
+        System.out.println(" ---------" );
 
-        
+        if (papa.getLexema().equals("declarativa")){// en este caso la primera sentencia era declarativa, por lo que aun no se genero un arbol
+           // System.out.println(" entrea en 1" );
 
-        if (n.getLexema().equals("declarativa")){// en este caso la primera sentencia era declarativa, por lo que aun no se genero un arbol
+            if (papa.getHijoIzquierdo()!= null && (papa.getHijoIzquierdo().getLexema().equals("lista_ctes") || papa.getHijoIzquierdo().getLexema().equals("when"))) {
 
-            if (n.getHijoIzquierdo()!= null && (n.getHijoIzquierdo().getLexema().equals("lista_ctes") || n.getHijoIzquierdo().getLexema().equals("when"))) {
-
-                n = n.getHijoIzquierdo().getHijoIzquierdo();
-                agregarNuevoNodo(n, nuevo);
-                return new ParserVal(n);
+                papa = papa.getHijoIzquierdo().getHijoIzquierdo(); // no se queda ni con lista de ctes ni con when, sino con los hijos de estos
+                agregarNuevoNodo(papa, hijoNuevo);  // agrega el nuevo nodo sin importar si el nuevo es una declarativa( debiera revisar?)
+                //imprimirArbol(papa, 0);
+                return new ParserVal(papa);
             }
 
-            n = nuevo;
-            return new ParserVal(n);
+            papa = hijoNuevo; // nodo sentencia declarativa se vuelve el hijo
+            return new ParserVal(papa);
         }
 
-        if (nuevo.getLexema().equals("declarativa")) {
-            if (n.getHijoIzquierdo()!= null && (n.getHijoIzquierdo().getLexema().equals("lista_ctes") || n.getHijoIzquierdo().getLexema().equals("when"))) {
-                nuevo = nuevo.getHijoIzquierdo().getHijoIzquierdo();
+        if (hijoNuevo.getLexema().equals("declarativa")) {
+
+
+            if (hijoNuevo.getHijoIzquierdo()!= null && ( (hijoNuevo.getHijoIzquierdo().getLexema().equals("lista_ctes")) || (hijoNuevo.getHijoIzquierdo().getLexema().equals("when")))) {
+                hijoNuevo = hijoNuevo.getHijoIzquierdo();
+
+
             } else {
-                return new ParserVal(n); // las declarativas que no tienen que ver con lista-ctes no se agregan al arbol.
+                return new ParserVal(papa); // las declarativas que no tienen que ver con lista-ctes no se agregan al arbol.
             }
 
         }
 
-        agregarNuevoNodo(n, nuevo);
-        return new ParserVal(n);
+        agregarNuevoNodo(papa, hijoNuevo);
+        return new ParserVal(papa);
     }
 
+    public ParserVal modificarHijo(ParserVal arbolSentencias, Nodo hijoNuevo){
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+
+        Nodo arbol = (Nodo) arbolSentencias.obj;
+
+        System.out.println(" el nodo a modificar es:" );
+        imprimirArbol(arbol, 0);
+        System.out.println(" el hijo es:" );
+        imprimirArbol(hijoNuevo, 0);
+        System.out.println(" ---------" );
+
+        if (esNodoDeclarativo(arbol) && esNodoDeclarativo(hijoNuevo)) {
+            System.out.println(" ------- ENTRA EN 1 " );
+            Nodo papa = (Nodo)(limpiarDeclarativasArbol(arbol)).obj;
+            Nodo hijo = (Nodo)(limpiarDeclarativasArbol(hijoNuevo)).obj;
+
+            if (!(esNodoDeclarativo(papa) && esNodoDeclarativo(hijo)))
+                return modificarHijo(new ParserVal(papa), hijo);
+
+            return new ParserVal(hijo);
+        }
+
+        else if (esNodoDeclarativo(arbol)){
+            System.out.println(" ------- ENTRA EN 2 --- RESULTADO: \n" );
+            Nodo papa = (Nodo)(limpiarDeclarativasArbol(arbol)).obj;
+
+            if(!esNodoDeclarativo(papa)){ // se pudo limpiar
+                agregarNuevoNodo(papa, hijoNuevo);
+
+                imprimirArbol(Papa, 0);
+
+                return new ParserVal(papa);
+            }
+            //papa = hijoNuevo;
+            return new ParserVal(hijoNuevo);
+
+        }
+
+        else if (esNodoDeclarativo(hijoNuevo)){
+            System.out.println(" ------- ENTRA EN 3 " );
+            Nodo hijo = (Nodo)(limpiarDeclarativasArbol(hijoNuevo)).obj;
+            if (!esNodoDeclarativo(hijo)) { //se pudo limpiar
+                agregarNuevoNodo(arbol, hijo);
+                return new ParserVal(arbol);
+            }
+            return new ParserVal(arbol);
+
+
+        }
+        else { // caso donde son ambos sentencias
+            System.out.println(" ------- ENTRA EN 4 " );
+            agregarNuevoNodo(arbol, hijoNuevo);
+            return new ParserVal(arbol);
+        }
+
+
+    }
+
+    public boolean esNodoDeclarativo(Nodo n){
+        return n.getLexema().equals("declarativa");
+    }
+
+
+
+
+    public ParserVal limpiarDeclarativasArbol(Nodo nodo){
+
+        if (nodo.getLexema().equals("declarativa")){
+            if (nodo.getHijoIzquierdo()!= null && (nodo.getHijoIzquierdo().getLexema().equals("lista_ctes") || nodo.getHijoIzquierdo().getLexema().equals("when"))) {
+                Nodo limpio = nodo.getHijoIzquierdo().getHijoIzquierdo(); // no se queda ni con lista de ctes ni con when, sino con los hijos de estos
+                return new ParserVal(limpio);
+            }
+        }
+        return new ParserVal(nodo);
+    }
 
     public String tipoResultante(String id, Nodo izq, Nodo der){
 

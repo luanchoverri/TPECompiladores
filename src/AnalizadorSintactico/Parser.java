@@ -1247,19 +1247,19 @@ case 19:
 break;
 case 20:
 //#line 97 "gramatica.y"
-{yyval = new ParserVal(sintactico.crearNodo("declarativa1", val_peek(0), null));}
+{yyval = new ParserVal(sintactico.crearNodo("declarativa", val_peek(0), null));}
 break;
 case 21:
 //#line 98 "gramatica.y"
-{yyval = new ParserVal(sintactico.crearNodo("sentencia2", val_peek(0), null));}
+{yyval = new ParserVal(sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 22:
 //#line 99 "gramatica.y"
-{yyval = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("declarativa3", val_peek(0), null));}
+{yyval = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("declarativa", val_peek(0), null));}
 break;
 case 23:
 //#line 100 "gramatica.y"
-{yyval = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("sentencia4", val_peek(0), null));}
+{yyval = sintactico.modificarHijo(val_peek(1), sintactico.crearNodo("sentencia", val_peek(0), null));}
 break;
 case 24:
 //#line 104 "gramatica.y"
@@ -2193,7 +2193,7 @@ case 205:
 					sintactico.setUsoEnIndex("cte",val_peek(0).ival);
 					Nodo n = sintactico.crearHoja(val_peek(0).ival);
 					n.setTipo(type);
-					System.out.println("!!!"+n.getLexema() + " // "+ n.getTipo());
+
 					yyval = new ParserVal(n);
 				}
                   	}

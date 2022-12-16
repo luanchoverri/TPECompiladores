@@ -3,7 +3,7 @@ program{
     i32 i ;
     i =: 1;
 
-    when (i < 3) then {
+    when (1 < 3) then {
         i32 a, b;
         f32 c;
 

@@ -1,0 +1,16 @@
+program{
+
+
+    const r=:2;
+    const l=:1.9, p=:.0;
+
+
+    when (2 < 3) then {
+        i32 a, b;
+        f32 c;
+
+        const z=:1, x=:1;
+    };
+
+
+}
