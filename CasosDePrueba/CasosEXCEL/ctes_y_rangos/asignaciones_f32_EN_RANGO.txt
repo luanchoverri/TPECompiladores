@@ -1,6 +1,6 @@
 program
 {
-	f32 a,b,c,d,e,f,g,h,i,j;
+	f32 a,b,c,d,e,f,g,h,i,j,k;
 
 	a =: -1.0;
 	b =: .1;
@@ -12,5 +12,6 @@ program
 	h =: 2.F+34;
 	i =: 2.5F-1;
 	j =: 1.2F10;
+	k =: 3.40282340F+38;
 
 }

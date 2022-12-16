@@ -840,30 +840,34 @@ public class GenerarCodigo{
         }else{
             if (nodo.getTipo().equals("f32")){
                 this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
-                this.assemblerCode.append("FMUL "+getLexAssembler(nodo.getHijoDerecho())+"\n");
+                this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho())+"\n");
+                this.assemblerCode.append("FMUL "+"\n");
 
                 if(((nodo.getHijoIzquierdo().getLexema().contains("-")) && (nodo.getHijoDerecho().getLexema().contains("-")))){
-                    this.assemblerCode.append("FCOM _maxFloat"+"\n");
+                    this.assemblerCode.append("FLD _maxFloat"+"\n");
+                    this.assemblerCode.append("FCOM "+"\n");
                     this.assemblerCode.append("FSTSW mem2bytes"+"\n");
                     this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
                     this.assemblerCode.append("SAHF"+"\n");
-                    this.assemblerCode.append("JNO "+label+"\n");
+                    this.assemblerCode.append("JA "+label+"\n");
                 }
 
                 else
                     if(nodo.getHijoIzquierdo().getLexema().contains("-") || nodo.getHijoDerecho().getLexema().contains("-")){
-                        this.assemblerCode.append("FCOM _minFloat"+"\n");
+                        this.assemblerCode.append("FLD _minFloat"+"\n");
+                        this.assemblerCode.append("FCOM "+"\n");
                         this.assemblerCode.append("FSTSW mem2bytes"+"\n");
                         this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
                         this.assemblerCode.append("SAHF"+"\n");
-                        this.assemblerCode.append("JNO "+label+"\n");
+                        this.assemblerCode.append("JB "+label+"\n");
                     }
                     else{
-                        this.assemblerCode.append("FCOM _maxFloat"+"\n");
+                        this.assemblerCode.append("FLD _maxFloat"+"\n");
+                        this.assemblerCode.append("FCOM "+"\n");
                         this.assemblerCode.append("FSTSW mem2bytes"+"\n");
                         this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
                         this.assemblerCode.append("SAHF"+"\n");
-                        this.assemblerCode.append("JNO "+label+"\n");
+                        this.assemblerCode.append("JA "+label+"\n");
                     }
 
                 this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");

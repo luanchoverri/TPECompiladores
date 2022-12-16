@@ -452,11 +452,11 @@ public class AnalizadorSintactico {
         else return true;
     }
 
-    public float convertFloat(String lexema){
-        float floatBuffer = 0f;
+    public double convertFloat(String lexema){
+        double floatBuffer = 0f;
         if (lexema.contains("F")){
             String[] parts = lexema.split("F");
-            floatBuffer =  (float) (Double.valueOf(parts[0]) * Math.pow(10, Double.valueOf(parts[1])));
+            floatBuffer = (Double.valueOf(parts[0]) * Math.pow(10, Double.valueOf(parts[1])));
         }else{
             if(lexema.startsWith("."))
                 lexema = lexema.replace(".", "0.");
@@ -464,7 +464,7 @@ public class AnalizadorSintactico {
                 if(lexema.endsWith("."))
                     lexema = lexema.replace(".", ".0");
 
-            floatBuffer = Float.parseFloat(lexema);
+            floatBuffer = Double.parseDouble(lexema);
         }
         return floatBuffer;
     }
@@ -472,7 +472,7 @@ public class AnalizadorSintactico {
     public boolean verificarRangoFlotante(int indice) {
 
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
-        float numero = this.convertFloat(lexema);
+        double numero = this.convertFloat(lexema);
 
         if (lexema.startsWith("-")){
             if((numero >=  AnalizadorLexico.MINIMO_FLOAT * -1) || (numero <= AnalizadorLexico.MAXIMO_FLOAT * -1)) {

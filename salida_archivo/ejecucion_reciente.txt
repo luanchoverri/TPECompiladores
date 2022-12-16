@@ -1,15 +1,20 @@
-1:    program{
-2:    
-3:        i32 a;
-4:        a =: 1;
-5:    
-6:        for (i =: 1 ; i < (3 + 1 * 5) ; +1){
-7:                    a =: a + 1;
-8:                };
-9:    
-10:    
-11:    
-12:    }$
+1:    program
+2:    {
+3:    	f32 a,b,c,d,e,f,g,h,i,j,k;
+4:    
+5:    	a =: -1.0;
+6:    	b =: .1;
+7:    	c =: 2.;
+8:    	d =: 0.0;
+9:    	e =: 0.;
+10:    	f =: .0;
+11:    	g =: 3.F-5;
+12:    	h =: 2.F+34;
+13:    	i =: 2.5F-1;
+14:    	j =: 1.2F10;
+15:    	k =: 3.40282340F+38;
+16:    
+17:    }$
  
  
   EJECUCION DEL PARSER FINALIZADA  
@@ -29,8 +34,7 @@
  🔎  ANALISIS SINTÁCTICO    
  
  
- Se reconoció declaraciónes de variable de tipo i32. (Línea 3)
- Se reconocio sentencia FOR. (Línea 8)
+ Se reconoció declaraciónes de variable de tipo f32. (Línea 3)
  
  
  ---- ERRORES SINTACTICOS Y SEMANTICOS ---  
@@ -45,13 +49,28 @@
               TABLA DE SIMBOLOS              
 
 TOKEN   257    program     #linea 1   null program 
-TOKEN   257        a@$     #linea 3    i32    var 
-TOKEN   258          1     #linea 4    i32    cte 
-TOKEN   257   i@$_for0     #linea 6    i32 for_var 
-TOKEN   258          1     #linea 6    i32    cte 
-TOKEN   258          3     #linea 6    i32    cte 
-TOKEN   258          5     #linea 6    i32    cte 
-TOKEN   258          1     #linea 6    i32    cte  
+TOKEN   257        a@$     #linea 3    f32    var 
+TOKEN   257        b@$     #linea 3    f32    var 
+TOKEN   257        c@$     #linea 3    f32    var 
+TOKEN   257        d@$     #linea 3    f32    var 
+TOKEN   257        e@$     #linea 3    f32    var 
+TOKEN   257        f@$     #linea 3    f32    var 
+TOKEN   257        g@$     #linea 3    f32    var 
+TOKEN   257        h@$     #linea 3    f32    var 
+TOKEN   257        i@$     #linea 3    f32    var 
+TOKEN   257        j@$     #linea 3    f32    var 
+TOKEN   257        k@$     #linea 3    f32    var 
+TOKEN   258       -1.0     #linea 5    f32 cte neg 
+TOKEN   258        0.1     #linea 6    f32    cte 
+TOKEN   258        2.0     #linea 7    f32    cte 
+TOKEN   258        0.0     #linea 8    f32    cte 
+TOKEN   258         0.     #linea 9    f32    cte 
+TOKEN   258         .0     #linea 10    f32    cte 
+TOKEN   258      3.F-5     #linea 11    f32    cte 
+TOKEN   258     2.F+34     #linea 12    f32    cte 
+TOKEN   258     2.5F-1     #linea 13    f32    cte 
+TOKEN   258     1.2F10     #linea 14    f32    cte 
+TOKEN   258 3.40282340F+38     #linea 15    f32    cte  
  
  
  
@@ -60,37 +79,48 @@ TOKEN   258          1     #linea 6    i32    cte
      └─ sentencia 
         └─ =: 
            └─ a@$ 
-           └─ 1 
+           └─ -1.0 
         └─ sentencia 
-           └─ For 
-              └─ encabezado for 
-                 └─ asignacionFor 
-                    └─ =: 
-                       └─ i@$_for0 
-                       └─ 1 
-                 └─ condicion y operacion for 
-                    └─ condicionFor 
-                       └─ < 
-                          └─ i@$_for0 
-                          └─ + 
-                             └─ 3 
-                             └─ * 
-                                └─ 1 
-                                └─ 5 
-                    └─ operacionFor 
-                       └─ =: 
-                          └─ i@$_for0 
-                          └─ + 
-                             └─ i@$_for0 
-                             └─ 1 
-              └─ cuerpoFor 
+           └─ =: 
+              └─ b@$ 
+              └─ 0.1 
+           └─ sentencia 
+              └─ =: 
+                 └─ c@$ 
+                 └─ 2.0 
+              └─ sentencia 
+                 └─ =: 
+                    └─ d@$ 
+                    └─ 0.0 
                  └─ sentencia 
                     └─ =: 
-                       └─ a@$ 
-                       └─ + 
-                          └─ a@$ 
-                          └─ 1 
+                       └─ e@$ 
+                       └─ 0. 
+                    └─ sentencia 
+                       └─ =: 
+                          └─ f@$ 
+                          └─ .0 
+                       └─ sentencia 
+                          └─ =: 
+                             └─ g@$ 
+                             └─ 3.F-5 
+                          └─ sentencia 
+                             └─ =: 
+                                └─ h@$ 
+                                └─ 2.F+34 
+                             └─ sentencia 
+                                └─ =: 
+                                   └─ i@$ 
+                                   └─ 2.5F-1 
+                                └─ sentencia 
+                                   └─ =: 
+                                      └─ j@$ 
+                                      └─ 1.2F10 
+                                   └─ sentencia 
+                                      └─ =: 
+                                         └─ k@$ 
+                                         └─ 3.40282340F+38 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 15 2022, 07:46:40 p. m.
+ Hora de ejecucion: dic. 16 2022, 12:39:44 a. m.

@@ -23,53 +23,52 @@ _maxFloat dq 3.40282347E+38
 _minFloat dq -3.40282347E+38
 _program dd ?,?
 _a@$ dd ?,?
-_i@$_for0 dd ?,?
-@aux0 dd ?,?
-@aux1 dd ?,?
-@aux2 dd ?,?
-@aux3 dd ?,?
-@aux4 dd ?,?
+_b@$ dd ?,?
+_c@$ dd ?,?
+_d@$ dd ?,?
+_e@$ dd ?,?
+_f@$ dd ?,?
+_g@$ dd ?,?
+_h@$ dd ?,?
+_i@$ dd ?,?
+_j@$ dd ?,?
+_k@$ dd ?,?
+__1_0 dq -1.0
+_0_1 dq 0.1
+_2_0 dq 2.0
+_0_0 dq 0.0
+_0_ dq 0.0
+__0 dq 0.0
+_3_F_5 dq 3.0F-5
+_2_F34 dq 2.0F+34
+_2_5F_1 dq 2.5E-1
+_1_2F10 dq 1.2E10
+_3_40282340F38 dq 3.40282340E38
 .code
 ;------------ CODE ------------
 start:
-MOV EAX,1
-MOV _a@$,EAX
-MOV EAX,1
-MOV _i@$_for0,EAX
-_label0:
-MOV EAX,1
-IMUL EAX,5
-MOV @aux0,EAX
-MOV EAX,3
-ADD EAX,@aux0
-MOV @aux1,EAX
-MOV EAX, _i@$_for0
-CMP EAX, @aux1
-JGE _label3
-MOV @aux2,1 
-JMP _label2
-_label3:
-MOV @aux2, 0 
-_label2:
-MOV EAX, @aux2
-CMP EAX, 0 
-JE _label4
-JNE _label5
-_label6:
-MOV EAX,_i@$_for0
-ADD EAX,1
-MOV @aux3,EAX
-MOV EAX,@aux3
-MOV _i@$_for0,EAX
-JMP _label0
-_label5:
-MOV EAX,_a@$
-ADD EAX,1
-MOV @aux4,EAX
-MOV EAX,@aux4
-MOV _a@$,EAX
-JMP _label6
-_label4:
+FLD __1_0
+FSTP _a@$
+FLD _0_1
+FSTP _b@$
+FLD _2_0
+FSTP _c@$
+FLD _0_0
+FSTP _d@$
+FLD _0_
+FSTP _e@$
+FLD __0
+FSTP _f@$
+FLD _3_F_5
+FSTP _g@$
+FLD _2_F34
+FSTP _h@$
+FLD _2_5F_1
+FSTP _i@$
+FLD _1_2F10
+FSTP _j@$
+FLD _3_40282340F38
+FSTP _k@$
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start

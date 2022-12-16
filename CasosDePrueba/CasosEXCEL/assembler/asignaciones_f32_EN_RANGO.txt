@@ -1,0 +1,13 @@
+program
+{
+	f32 a,b,c,d,e,f,g,h,i,j;
+
+	out('empece');
+	<< a =: -3.2F10 * -12.0;
+	a =: -3.40282346F+38 * 12.0;  << se va de rango solo en assembler (overflow)
+	<< b =: -3.40282346F+38;
+	<< c =: 12.0;
+	<< d =: b * c;
+	out('termine');
+
+}
