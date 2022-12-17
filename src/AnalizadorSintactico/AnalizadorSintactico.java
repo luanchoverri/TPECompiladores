@@ -406,9 +406,9 @@ public class AnalizadorSintactico {
 
 
         if (this.erroresSintacticos.isEmpty()){
-            bw.write("\n \n |    ERRORES SINTACTICOS - SEMANTICOS:  NO HAY   | \n \n ");
+            bw.write("\n \n|    ERRORES SINTACTICOS - SEMANTICOS:  NO HAY   | \n \n ");
         }else{
-            bw.write("\n \n |    ERRORES SINTACTICOS - SEMANTICOS  | \n \n ");
+            bw.write("\n \n|    ERRORES SINTACTICOS - SEMANTICOS  | \n \n ");
             for (String dato : this.erroresSintacticos){
                 bw.write("*  " + dato + " \n ");
             }
