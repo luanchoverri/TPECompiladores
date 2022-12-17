@@ -1,14 +1,26 @@
 1:    program
 2:    {
-3:    	f32 a,b,c,d,e,f,g;
+3:    	f32 a,b,c,d,e,f,g,h,i,j,k,l,m,n;
 4:    
-5:    	a =: 1.0 * 2.2 + 5.3 /10.2;
-6:    
-7:    
-8:    
-9:    	<< debe generar en total 4 errores
-10:    
-11:    }$
+5:    	a =: -3.2F10 * -12.0;
+6:    	e =: 3.4 * 2.0;
+7:    	f =: -5.9 * -0.1;
+8:    	g =: 2.1F13 * 3.2;
+9:    	h =: 3.F-5;
+10:    	i =: 15.;
+11:    	j =: h * i;
+12:    
+13:    	l =: 3.40282346F+38 * 12.0;
+14:    	m =: -3.40282346F+38 * 12.0;
+15:    	n =: -1.17549436F-38 * 12.0;
+16:    	k =: 1.17549436F-38 * -12.0;
+17:    
+18:    
+19:    
+20:    	b =: -3.40282346F+38;
+21:    	c =: 12.0;
+22:    	d =: b * c;
+23:    }$
  
  ---------------------------   EJECUCION DEL PARSER FINALIZADA  
  
@@ -40,10 +52,28 @@ TOKEN   257             d@$   #ln 3   f32                  var
 TOKEN   257             e@$   #ln 3   f32                  var 
 TOKEN   257             f@$   #ln 3   f32                  var 
 TOKEN   257             g@$   #ln 3   f32                  var 
-TOKEN   258             1.0   #ln 5   f32                  cte 
-TOKEN   258             2.2   #ln 5   f32                  cte 
-TOKEN   258             5.3   #ln 5   f32                  cte 
-TOKEN   258            10.2   #ln 5   f32                  cte  
+TOKEN   257             h@$   #ln 3   f32                  var 
+TOKEN   257             i@$   #ln 3   f32                  var 
+TOKEN   257             j@$   #ln 3   f32                  var 
+TOKEN   257             k@$   #ln 3   f32                  var 
+TOKEN   257             l@$   #ln 3   f32                  var 
+TOKEN   257             m@$   #ln 3   f32                  var 
+TOKEN   257             n@$   #ln 3   f32                  var 
+TOKEN   258         -3.2F10   #ln 5   f32              cte neg 
+TOKEN   258           -12.0   #ln 5   f32              cte neg 
+TOKEN   258             3.4   #ln 6   f32                  cte 
+TOKEN   258             2.0   #ln 6   f32                  cte 
+TOKEN   258            -5.9   #ln 7   f32              cte neg 
+TOKEN   258            -0.1   #ln 7   f32              cte neg 
+TOKEN   258          2.1F13   #ln 8   f32                  cte 
+TOKEN   258             3.2   #ln 8   f32                  cte 
+TOKEN   258           3.F-5   #ln 9   f32                  cte 
+TOKEN   258            15.0   #ln 10   f32                  cte 
+TOKEN   258  3.40282346F+38   #ln 13   f32                  cte 
+TOKEN   258            12.0   #ln 13   f32                  cte 
+TOKEN   258 -3.40282346F+38   #ln 14   f32              cte neg 
+TOKEN   258 -1.17549436F-38   #ln 15   f32              cte neg 
+TOKEN   258  1.17549436F-38   #ln 16   f32                  cte  
  
  
  
@@ -52,19 +82,89 @@ TOKEN   258            10.2   #ln 5   f32                  cte
      └─ sentencia 
         └─ =: 
            └─ a@$ 
-           └─ + 
+           └─ * 
+              └─ -3.2F10 
+              └─ -12.0 
+        └─ sentencia 
+           └─ =: 
+              └─ e@$ 
               └─ * 
-                 └─ 1.0 
-                 └─ 2.2 
-              └─ / 
-                 └─ 5.3 
-                 └─ 10.2 
+                 └─ 3.4 
+                 └─ 2.0 
+           └─ sentencia 
+              └─ =: 
+                 └─ f@$ 
+                 └─ * 
+                    └─ -5.9 
+                    └─ -0.1 
+              └─ sentencia 
+                 └─ =: 
+                    └─ g@$ 
+                    └─ * 
+                       └─ 2.1F13 
+                       └─ 3.2 
+                 └─ sentencia 
+                    └─ =: 
+                       └─ h@$ 
+                       └─ 3.F-5 
+                    └─ sentencia 
+                       └─ =: 
+                          └─ i@$ 
+                          └─ 15.0 
+                       └─ sentencia 
+                          └─ =: 
+                             └─ j@$ 
+                             └─ * 
+                                └─ h@$ 
+                                └─ i@$ 
+                          └─ sentencia 
+                             └─ =: 
+                                └─ l@$ 
+                                └─ * 
+                                   └─ 3.40282346F+38 
+                                   └─ 12.0 
+                             └─ sentencia 
+                                └─ =: 
+                                   └─ m@$ 
+                                   └─ * 
+                                      └─ -3.40282346F+38 
+                                      └─ 12.0 
+                                └─ sentencia 
+                                   └─ =: 
+                                      └─ n@$ 
+                                      └─ * 
+                                         └─ -1.17549436F-38 
+                                         └─ 12.0 
+                                   └─ sentencia 
+                                      └─ =: 
+                                         └─ k@$ 
+                                         └─ * 
+                                            └─ 1.17549436F-38 
+                                            └─ -12.0 
+                                      └─ sentencia 
+                                         └─ =: 
+                                            └─ b@$ 
+                                            └─ -3.40282346F+38 
+                                         └─ sentencia 
+                                            └─ =: 
+                                               └─ c@$ 
+                                               └─ 12.0 
+                                            └─ sentencia 
+                                               └─ =: 
+                                                  └─ d@$ 
+                                                  └─ * 
+                                                     └─ b@$ 
+                                                     └─ c@$ 
  
  
  
- |    ERRORES EN TIEMPO DE EJECUCION :  NO HAY   | 
+ |    ERRORES EN TIEMPO DE EJECUCION  | 
  
+ *  TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32  
+ *  TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32  
+ *  TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32  
+ *  TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32  
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 17 2022, 03:41:54 p. m.
+ Hora de ejecucion: dic. 17 2022, 05:47:54 p. m.

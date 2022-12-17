@@ -178,7 +178,7 @@ public class GenerarCodigo{
                         break;
 
                     case ("*"):
-
+                        multiplicacionTiempoEjecucion(nodo);
                         multiplicacionAssembler(nodo);
                         break;
 
@@ -323,6 +323,23 @@ public class GenerarCodigo{
                 this.addErrorAssembler("TIEMPO DE EJECUCION - WARNING. DIVISION POR CERO DE TIPO i32 ");
         }
     }
+
+    // MULTIPLICACION
+    private void multiplicacionTiempoEjecucion(Nodo nodo){
+        if ((nodo.getHijoIzquierdo().getLexema().contains("."))){
+            double hijoIzq = Double.parseDouble(nodo.getHijoIzquierdo().getLexema().replace("F","E"));
+            double hijoDer = Double.parseDouble(nodo.getHijoDerecho().getLexema().replace("F","E"));
+            double resultado = hijoIzq * hijoDer;
+            System.out.println("| HIJO IZQ | -> "+hijoIzq+"\n");
+            System.out.println("| HIJO DER | -> "+hijoDer+"\n");
+            System.out.println("| RESULTADO | -> "+resultado+"\n");
+            if((resultado <=  AnalizadorLexico.MINIMO_FLOAT) || (resultado >= AnalizadorLexico.MAXIMO_FLOAT)) {
+                this.addErrorAssembler("TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32 ");
+            }
+        }
+
+    }
+    // MULTIPLICACION
 
     private void outAssembler(Nodo nodo) {
         this.assemblerCode.append("invoke MessageBox, NULL, addr "+this.cadenas.get(0)+", addr "+this.cadenas.get(0)+", MB_OK\n");
