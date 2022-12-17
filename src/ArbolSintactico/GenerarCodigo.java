@@ -330,9 +330,6 @@ public class GenerarCodigo{
             double hijoIzq = Double.parseDouble(nodo.getHijoIzquierdo().getLexema().replace("F","E"));
             double hijoDer = Double.parseDouble(nodo.getHijoDerecho().getLexema().replace("F","E"));
             double resultado = hijoIzq * hijoDer;
-            System.out.println("| HIJO IZQ | -> "+hijoIzq+"\n");
-            System.out.println("| HIJO DER | -> "+hijoDer+"\n");
-            System.out.println("| RESULTADO | -> "+resultado+"\n");
             if((resultado <=  AnalizadorLexico.MINIMO_FLOAT) || (resultado >= AnalizadorLexico.MAXIMO_FLOAT)) {
                 this.addErrorAssembler("TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32 ");
             }
