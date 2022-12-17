@@ -870,10 +870,9 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
                 this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho())+"\n");
                 this.assemblerCode.append("FMUL "+"\n");
+                this.assemblerCode.append("FABS "+"\n");
 
-                // Comparamos primero por el maximo
-
-                // HASTA ACA BIEN
+                // Comparamos por el maximo
 
                 this.assemblerCode.append("FCOM _maxFloat"+"\n");
                 this.assemblerCode.append("FSTSW mem2bytes"+"\n");
@@ -883,6 +882,8 @@ public class GenerarCodigo{
 
                 this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
+
+                // Comparamos con el minimo
 
                 this.assemblerCode.append(check_max_float_ok + ":\n");
                 this.assemblerCode.append("FCOM _minFloat"+"\n");
@@ -894,18 +895,11 @@ public class GenerarCodigo{
                 this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
 
-                // HASTA ACA BIEN
+                // Si todo fue bien, sigue la ejecucion
 
                 this.assemblerCode.append(check_min_float_ok + ":\n");
                 this.assemblerCode.append("FSTP "+aux+"\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarMult");
-
-
-
-
-
-
-
 
             }
         }

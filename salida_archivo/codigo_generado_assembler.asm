@@ -36,7 +36,7 @@ _g@$ dd ?,?
 _h@$ dd ?,?
 _i@$ dd ?,?
 _j@$ dd ?,?
-__3_40282346F38 dq 3.40282347E+38
+__3_40282346F38 dq 3.40
 _12_0 dq 12.0
 @aux0 dd ?,?
 .code
@@ -50,6 +50,7 @@ FSTP _c@$
 FLD _b@$
 FLD _c@$
 FMUL 
+FABS
 FCOM _maxFloat
 FSTSW mem2bytes
 MOV AX, mem2bytes
