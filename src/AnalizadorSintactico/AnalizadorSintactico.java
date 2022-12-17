@@ -29,6 +29,7 @@ public class AnalizadorSintactico {
     private String tipo;
     private Nodo raiz;
     private ArrayList<Integer> variables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
+    public static boolean ASSEMBLER_GENERADO = false;
 
     private HashMap<String,Nodo> arbolesFunciones;
 
@@ -505,6 +506,9 @@ public class AnalizadorSintactico {
 
     public double convertFloat(String lexema){
         double floatBuffer = 0f;
+        if (lexema.equals("-0.0") || lexema.equals("-0.") || lexema.equals("-.0")){
+            lexema = lexema.replace("-", "");
+        }
         if (lexema.contains("F")){
             String[] parts = lexema.split("F");
             floatBuffer = (Double.valueOf(parts[0]) * Math.pow(10, Double.valueOf(parts[1])));
@@ -513,12 +517,10 @@ public class AnalizadorSintactico {
                 lexema = lexema.replace(".", "0.");
             else if(lexema.endsWith("."))
                     lexema = lexema.replace(".", ".0");
-            if (lexema.equals("-0.0")){
-                lexema = lexema.replace("-", "");
-            }
 
             floatBuffer = Double.parseDouble(lexema);
         }
+
         return floatBuffer;
     }
 
@@ -526,7 +528,9 @@ public class AnalizadorSintactico {
 
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
         double numero = this.convertFloat(lexema);
-
+        if (lexema.equals("-0.0") || lexema.equals("-0.") || lexema.equals("-.0")){
+            lexema = lexema.replace("-", "");
+        }
         if (lexema.startsWith("-") ){
             if((numero >=  AnalizadorLexico.MINIMO_FLOAT * -1) || (numero <= AnalizadorLexico.MAXIMO_FLOAT * -1)) {
                 this.addErrorSintactico("(SyntaxError) FUERA DE RANGO: FLOTANTE f32 (-) (Línea " + this.analizadorLexico.LINEA + ")");
@@ -603,17 +607,13 @@ public class AnalizadorSintactico {
 
             this.analizadorLexico.imprimirErrores(bw);
             this.imprimirErroresSintacticos(bw);
-            //this.imprimirAnalisisSintactico(bw);
+            this.imprimirAnalisisSintactico(bw);
             this.imprimirTablaSimbolos(bw);
 
             bw.write("\n ARBOL SINTACTICO  \n ");
 
             this.imprimirArbol(this.raiz, 0, bw);
             this.imprimirArbolesFuncion(bw);
-
-            String horaActual = DateTimeFormatter.ofPattern("MMM dd yyyy, hh:mm:ss a").format(LocalDateTime.now());
-            bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| ") ;
-            bw.write(" \n Hora de ejecucion: " + horaActual);
             bw.close();
 
         } catch (Exception e) {
@@ -683,8 +683,27 @@ public class AnalizadorSintactico {
         this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
         if (this.erroresSintacticos.isEmpty() && this.analizadorLexico.getErroresLexicos().isEmpty()){
             GenerarCodigo g = new GenerarCodigo(analizadorLexico, this);
-
             g.generacionDeCodigo(this.raiz,this);
+
+            // Si se genero el assembler, agrego al archivo los errores del mismo, si los hubiera
+            try{
+                String filename = "ejecucion_reciente" ;
+                filename = filename.replace(" ", "_") + ".txt";
+
+                String ruta = "salida_archivo/"+ filename;
+                File file = new File(ruta);
+                FileWriter fw = new FileWriter(file,true);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                g.imprimirErroresAssembler(bw);
+                String horaActual = DateTimeFormatter.ofPattern("MMM dd yyyy, hh:mm:ss a").format(LocalDateTime.now());
+                bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| ") ;
+                bw.write(" \n Hora de ejecucion: " + horaActual);
+                bw.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }else{
             System.out.println("Se encontraron errores LEXICOS o SINTACTICOS, por lo tanto no se pudo generar el assembler"+"\n");
         }

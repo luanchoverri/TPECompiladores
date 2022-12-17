@@ -3,6 +3,7 @@ package ArbolSintactico;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,8 @@ public class GenerarCodigo{
     private int contadorEtiquetaLabel = 0;
     private int contadorAux = 0;
     private boolean entroAlBreak = false;
+    private ArrayList<String> erroresAssembler;
+    private AnalizadorLexico analizadorLexico;
 
     private Stack <String> pilaControl;
     private Stack <String> pilaFor;
@@ -40,8 +43,25 @@ public class GenerarCodigo{
         this.pilaInvocaciones = new Stack<>();
         this.cadenas = s.getCadenas();
         tablaSimbolos = l.getTablaSimbolos();
+        this.erroresAssembler = new ArrayList<>();
+        this.analizadorLexico = l;
     }
 
+    public void addErrorAssembler(String nuevo) {
+        erroresAssembler.add(nuevo);
+    }
+
+    public void imprimirErroresAssembler(BufferedWriter bw) throws IOException {
+        if (this.erroresAssembler.isEmpty()){
+            bw.write("\n \n |    ERRORES EN TIEMPO DE EJECUCION :  NO HAY   | \n \n ");
+        }else{
+            bw.write("\n \n |    ERRORES EN TIEMPO DE EJECUCION  | \n \n ");
+            for (String dato : this.erroresAssembler){
+                bw.write("*  " + dato + " \n ");
+            }
+        }
+        bw.write("\n ");
+    }
 
     public void imprimirTablaSimbolosAssembler() {
         System.out.println();
@@ -76,7 +96,7 @@ public class GenerarCodigo{
             "ok db 'OK',0 \n"+
             "mem2bytes dw ?\n"+
             "_maxFloat dq 3.40282347E+38\n"+
-            "_minFloat dq -3.40282347E+38\n"
+            "_minFloat dq 1.17549435F-38\n"
             );
 
 }
@@ -162,6 +182,7 @@ public class GenerarCodigo{
                         break;
 
                     case ("/"):
+                        divisionTiempoEjecucion(nodo);
                         divisionAssembler(nodo);
                         break;
 
@@ -292,6 +313,12 @@ public class GenerarCodigo{
         }
 
         }
+
+    private void divisionTiempoEjecucion(Nodo nodo){
+        if(nodo.getHijoDerecho().getLexema().equals("0.0") || nodo.getHijoDerecho().getLexema().equals("0.") || nodo.getHijoDerecho().getLexema().equals(".0")){
+            this.addErrorAssembler("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: " + " (Línea " + AnalizadorLexico.LINEA + " )");
+        }
+    }
 
     private void outAssembler(Nodo nodo) {
         this.assemblerCode.append("invoke MessageBox, NULL, addr "+this.cadenas.get(0)+", addr "+this.cadenas.get(0)+", MB_OK\n");
@@ -820,12 +847,10 @@ public class GenerarCodigo{
         Token t = this.tablaSimbolos.getEntrada(idLexema);
         nodo.setTipo(t.getTipo());
         nodo.setLexema(aux);
-
     }
 
 
     private void multiplicacionAssembler(Nodo nodo) {
-
         String aux = "@aux" + contadorAux;
         this.contadorAux++;
         String label = "_label" + contadorEtiquetaLabel;

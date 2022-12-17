@@ -1,0 +1,100 @@
+1:    program
+2:    {
+3:    	f32 a,b,c,d,e,f;
+4:    
+5:    	a =: 1.7/0.0; << error
+6:    	b =: 2.2/.0; << error
+7:    	c =: 3.9/0.; << error
+8:    	d =: 5.0;
+9:    	e =: 0.0;
+10:    	f =: d/e; << error
+11:    
+12:    	<< debe generar en total 4 errores
+13:    
+14:    }$
+ 
+ ---------------------------   EJECUCION DEL PARSER FINALIZADA  
+ 
+
+
+
+|   NO HAY ERRORES LEXICOS     |
+ 
+ |    ERRORES SINTACTICOS - SEMANTICOS:  NO HAY   | 
+ 
+ 
+ 
+ 
+ |   ANALISIS SINTACTICO   |   
+ 
+ *  Se reconoció declaraciónes de variable de tipo f32. (Línea 3) 
+ 
+  
+ 
+ 
+  
+              TABLA DE SIMBOLOS              
+
+TOKEN   257         program   #ln 1  null              program 
+TOKEN   257             a@$   #ln 3   f32                  var 
+TOKEN   257             b@$   #ln 3   f32                  var 
+TOKEN   257             c@$   #ln 3   f32                  var 
+TOKEN   257             d@$   #ln 3   f32                  var 
+TOKEN   257             e@$   #ln 3   f32                  var 
+TOKEN   257             f@$   #ln 3   f32                  var 
+TOKEN   258             1.7   #ln 5   f32                  cte 
+TOKEN   258             0.0   #ln 5   f32                  cte 
+TOKEN   258             2.2   #ln 6   f32                  cte 
+TOKEN   258              .0   #ln 6   f32                  cte 
+TOKEN   258             3.9   #ln 7   f32                  cte 
+TOKEN   258              0.   #ln 7   f32                  cte 
+TOKEN   258             5.0   #ln 8   f32                  cte  
+ 
+ 
+ 
+ ARBOL SINTACTICO  
+   └─ raiz 
+     └─ sentencia 
+        └─ =: 
+           └─ a@$ 
+           └─ / 
+              └─ 1.7 
+              └─ 0.0 
+        └─ sentencia 
+           └─ =: 
+              └─ b@$ 
+              └─ / 
+                 └─ 2.2 
+                 └─ .0 
+           └─ sentencia 
+              └─ =: 
+                 └─ c@$ 
+                 └─ / 
+                    └─ 3.9 
+                    └─ 0. 
+              └─ sentencia 
+                 └─ =: 
+                    └─ d@$ 
+                    └─ 5.0 
+                 └─ sentencia 
+                    └─ =: 
+                       └─ e@$ 
+                       └─ 0.0 
+                    └─ sentencia 
+                       └─ =: 
+                          └─ f@$ 
+                          └─ / 
+                             └─ d@$ 
+                             └─ e@$ 
+ 
+ 
+ 
+ |    ERRORES EN TIEMPO DE EJECUCION  | 
+ 
+ *  SemanticError. LOS TIPOS NO COINCIDEN - OPERACION:  (Línea 14 ) 
+ *  SemanticError. LOS TIPOS NO COINCIDEN - OPERACION:  (Línea 14 ) 
+ *  SemanticError. LOS TIPOS NO COINCIDEN - OPERACION:  (Línea 14 ) 
+ 
+  
+ ||||||||||||||||||||||||||||||||||||||||||||||  
+ Hora de ejecucion: dic. 17 2022, 02:29:58 a. m.
