@@ -1,17 +1,16 @@
 1:    program
 2:    {
-3:    	f32 a,b,c,d,e,f;
+3:    	f32 a,b,c,d,e,f,g,h,i,j;
 4:    
-5:    	a =: 1.7/0.0; << error
-6:    	b =: 2.2/.0; << error
-7:    	c =: 3.9/0.; << error
-8:    	d =: 5.0;
-9:    	e =: 0.0;
-10:    	f =: d/e; << error
-11:    
-12:    	<< debe generar en total 4 errores
-13:    
-14:    }$
+5:    	out('empece');
+6:    	<< a =: -3.2F10 * -12.0;
+7:    	<< a =: -3.40282346F+38 * 12.0;  << se va de rango solo en assembler (overflow)
+8:    	b =: -3.40282346F+38;
+9:    	c =: 12.0;
+10:    	d =: b * c;
+11:    	out('termine');
+12:    
+13:    }$
  
  ---------------------------   EJECUCION DEL PARSER FINALIZADA  
  
@@ -42,59 +41,45 @@ TOKEN   257             c@$   #ln 3   f32                  var
 TOKEN   257             d@$   #ln 3   f32                  var 
 TOKEN   257             e@$   #ln 3   f32                  var 
 TOKEN   257             f@$   #ln 3   f32                  var 
-TOKEN   258             1.7   #ln 5   f32                  cte 
-TOKEN   258             0.0   #ln 5   f32                  cte 
-TOKEN   258             2.2   #ln 6   f32                  cte 
-TOKEN   258              .0   #ln 6   f32                  cte 
-TOKEN   258             3.9   #ln 7   f32                  cte 
-TOKEN   258              0.   #ln 7   f32                  cte 
-TOKEN   258             5.0   #ln 8   f32                  cte  
+TOKEN   257             g@$   #ln 3   f32                  var 
+TOKEN   257             h@$   #ln 3   f32                  var 
+TOKEN   257             i@$   #ln 3   f32                  var 
+TOKEN   257             j@$   #ln 3   f32                  var 
+TOKEN   272          empece   #ln 5  null               cadena 
+TOKEN   258 -3.40282346F+38   #ln 8   f32              cte neg 
+TOKEN   258            12.0   #ln 9   f32                  cte 
+TOKEN   272         termine   #ln 11  null               cadena  
  
  
  
  ARBOL SINTACTICO  
    └─ raiz 
      └─ sentencia 
-        └─ =: 
-           └─ a@$ 
-           └─ / 
-              └─ 1.7 
-              └─ 0.0 
+        └─ out 
+           └─ empece 
         └─ sentencia 
            └─ =: 
               └─ b@$ 
-              └─ / 
-                 └─ 2.2 
-                 └─ .0 
+              └─ -3.40282346F+38 
            └─ sentencia 
               └─ =: 
                  └─ c@$ 
-                 └─ / 
-                    └─ 3.9 
-                    └─ 0. 
+                 └─ 12.0 
               └─ sentencia 
                  └─ =: 
                     └─ d@$ 
-                    └─ 5.0 
+                    └─ * 
+                       └─ b@$ 
+                       └─ c@$ 
                  └─ sentencia 
-                    └─ =: 
-                       └─ e@$ 
-                       └─ 0.0 
-                    └─ sentencia 
-                       └─ =: 
-                          └─ f@$ 
-                          └─ / 
-                             └─ d@$ 
-                             └─ e@$ 
+                    └─ out 
+                       └─ termine 
  
  
  
- |    ERRORES EN TIEMPO DE EJECUCION  | 
+ |    ERRORES EN TIEMPO DE EJECUCION :  NO HAY   | 
  
- *  SemanticError. LOS TIPOS NO COINCIDEN - OPERACION:  (Línea 14 ) 
- *  SemanticError. LOS TIPOS NO COINCIDEN - OPERACION:  (Línea 14 ) 
- *  SemanticError. LOS TIPOS NO COINCIDEN - OPERACION:  (Línea 14 ) 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 17 2022, 02:29:58 a. m.
+ Hora de ejecucion: dic. 17 2022, 01:32:12 p. m.

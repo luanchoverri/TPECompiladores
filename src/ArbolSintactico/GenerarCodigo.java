@@ -855,6 +855,9 @@ public class GenerarCodigo{
         this.contadorAux++;
         String label = "_label" + contadorEtiquetaLabel;
         contadorEtiquetaLabel++;
+        String check_max_float_ok = "_labelCheckMaxOk";
+        String check_min_float_ok = "_labelCheckMinOk";
+
         if (nodo.getTipo().equals("i32")) {
 
             this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
@@ -868,40 +871,42 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho())+"\n");
                 this.assemblerCode.append("FMUL "+"\n");
 
-                if(((nodo.getHijoIzquierdo().getLexema().contains("-")) && (nodo.getHijoDerecho().getLexema().contains("-")))){
-                    this.assemblerCode.append("FLD _maxFloat"+"\n");
-                    this.assemblerCode.append("FCOM "+"\n");
-                    this.assemblerCode.append("FSTSW mem2bytes"+"\n");
-                    this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
-                    this.assemblerCode.append("SAHF"+"\n");
-                    this.assemblerCode.append("JA "+label+"\n");
-                }
+                // Comparamos primero por el maximo
 
-                else
-                    if(nodo.getHijoIzquierdo().getLexema().contains("-") || nodo.getHijoDerecho().getLexema().contains("-")){
-                        this.assemblerCode.append("FLD _minFloat"+"\n");
-                        this.assemblerCode.append("FCOM "+"\n");
-                        this.assemblerCode.append("FSTSW mem2bytes"+"\n");
-                        this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
-                        this.assemblerCode.append("SAHF"+"\n");
-                        this.assemblerCode.append("JB "+label+"\n");
-                    }
-                    else{
-                        this.assemblerCode.append("FLD _maxFloat"+"\n");
-                        this.assemblerCode.append("FCOM "+"\n");
-                        this.assemblerCode.append("FSTSW mem2bytes"+"\n");
-                        this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
-                        this.assemblerCode.append("SAHF"+"\n");
-                        this.assemblerCode.append("JA "+label+"\n");
-                    }
+                // HASTA ACA BIEN
+
+                this.assemblerCode.append("FCOM _maxFloat"+"\n");
+                this.assemblerCode.append("FSTSW mem2bytes"+"\n");
+                this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
+                this.assemblerCode.append("SAHF"+"\n");
+                this.assemblerCode.append("JB "+check_max_float_ok+"\n");
 
                 this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
 
-                this.assemblerCode.append(label + ":\n");
-                this.assemblerCode.append("FSTP "+aux+"\n");
+                this.assemblerCode.append(check_max_float_ok + ":\n");
+                this.assemblerCode.append("FCOM _minFloat"+"\n");
+                this.assemblerCode.append("FSTSW mem2bytes"+"\n");
+                this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
+                this.assemblerCode.append("SAHF"+"\n");
+                this.assemblerCode.append("JA "+check_min_float_ok+"\n");
 
+                this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");
+                this.assemblerCode.append("invoke ExitProcess, 0\n");
+
+                // HASTA ACA BIEN
+
+                this.assemblerCode.append(check_min_float_ok + ":\n");
+                this.assemblerCode.append("FSTP "+aux+"\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarMult");
+
+
+
+
+
+
+
+
             }
         }
         int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
