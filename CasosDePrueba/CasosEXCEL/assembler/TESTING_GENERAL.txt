@@ -1,14 +1,10 @@
 program
 {
-	i32 a,b,c,d,e,f,g;
+	f32 a,b,c,d,e,f,g;
 
-	<< a =: 7/0; << error
-	<< b =: 2/0; << error
-<<	c =: 9/0; << error
-	d =: 5;
-	e =: 0;
-	f =: d/e; << error
-	g =: 1/2;
+	a =: 1.0 * 2.2 + 5.3 /10.2;
+
+
 
 	<< debe generar en total 4 errores
 

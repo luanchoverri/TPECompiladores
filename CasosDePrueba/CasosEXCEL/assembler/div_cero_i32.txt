@@ -1,13 +1,13 @@
 program
 {
-	i32 a,b,c,d,e,f,g;
+        i32 a,b,c,d,e,f,g;
 
-	d =: 5;
-	e =: 0;
-	out('ok');
-	f =: d/e; << error
-	g =: 1/2;
-
-	<< debe generar en total 4 errores
+        a =: 7/0;
+        b =: 2/0;
+        c =: 9/0;
+        d =: 5;
+        e =: 0;
+        f =: d/e;
+        g =: 1/2;
 
 }

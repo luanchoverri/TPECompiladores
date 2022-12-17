@@ -95,8 +95,8 @@ public class GenerarCodigo{
             "errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n"+
             "ok db 'OK',0 \n"+
             "mem2bytes dw ?\n"+
-            "_maxFloat dq 3.40282347E+38\n"+
-            "_minFloat dq 1.17549435F-38\n"
+            "_maxFloat dq 3.40282347E38\n"+
+            "_minFloat dq 1.17549435E-38\n"
             );
 
 }
@@ -178,6 +178,7 @@ public class GenerarCodigo{
                         break;
 
                     case ("*"):
+
                         multiplicacionAssembler(nodo);
                         break;
 
@@ -316,7 +317,10 @@ public class GenerarCodigo{
 
     private void divisionTiempoEjecucion(Nodo nodo){
         if(nodo.getHijoDerecho().getLexema().equals("0.0") || nodo.getHijoDerecho().getLexema().equals("0.") || nodo.getHijoDerecho().getLexema().equals(".0")){
-            this.addErrorAssembler("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: " + " (Línea " + AnalizadorLexico.LINEA + " )");
+            this.addErrorAssembler("TIEMPO DE EJECUCION - WARNING. DIVISION POR CERO DE TIPO F32 ");
+        }else{
+            if((nodo.getHijoDerecho().getLexema().equals("0")))
+                this.addErrorAssembler("TIEMPO DE EJECUCION - WARNING. DIVISION POR CERO DE TIPO i32 ");
         }
     }
 
@@ -855,8 +859,6 @@ public class GenerarCodigo{
         this.contadorAux++;
         String label = "_label" + contadorEtiquetaLabel;
         contadorEtiquetaLabel++;
-        String check_max_float_ok = "_labelCheckMaxOk";
-        String check_min_float_ok = "_labelCheckMinOk";
 
         if (nodo.getTipo().equals("i32")) {
 
@@ -878,26 +880,30 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FSTSW mem2bytes"+"\n");
                 this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
                 this.assemblerCode.append("SAHF"+"\n");
-                this.assemblerCode.append("JB "+check_max_float_ok+"\n");
+                this.assemblerCode.append("JB "+label+"\n");
+
 
                 this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
 
                 // Comparamos con el minimo
 
-                this.assemblerCode.append(check_max_float_ok + ":\n");
+                this.assemblerCode.append(label + ":\n");
+                label = "_label" + contadorEtiquetaLabel;
+                contadorEtiquetaLabel++;
+
                 this.assemblerCode.append("FCOM _minFloat"+"\n");
                 this.assemblerCode.append("FSTSW mem2bytes"+"\n");
                 this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
                 this.assemblerCode.append("SAHF"+"\n");
-                this.assemblerCode.append("JA "+check_min_float_ok+"\n");
+                this.assemblerCode.append("JA "+label+"\n");
 
                 this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
 
                 // Si todo fue bien, sigue la ejecucion
 
-                this.assemblerCode.append(check_min_float_ok + ":\n");
+                this.assemblerCode.append(label + ":\n");
                 this.assemblerCode.append("FSTP "+aux+"\n");
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarMult");
 
