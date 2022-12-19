@@ -658,6 +658,7 @@ public class GenerarCodigo{
         this.contadorEtiquetaLabel++;
         String labelFalso = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
+        System.out.println(nodo);
         if (nodo.getTipo().equals("i32")) {
 
             this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
@@ -970,6 +971,7 @@ public class GenerarCodigo{
     private void sumaAssembler(Nodo nodo) {
         String aux = "@aux" + contadorAux;
         this.contadorAux++;
+        System.out.println(nodo + "izq " +  nodo.getHijoIzquierdo().toString());
         if (nodo.getTipo().equals("i32")) {
             this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
             this.assemblerCode.append("ADD "+"EAX"+","+getLexAssembler(nodo.getHijoDerecho())+"\n");

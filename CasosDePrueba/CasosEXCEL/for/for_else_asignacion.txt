@@ -9,7 +9,11 @@ program
           };else 7;
 
     c =: for(i=:1 ; i < 3 ; +2){
-            out('hola');
+            if (i = 1) then{
+                out('hola');
+                break 1;
+            }end_if;
+
           };else 9;
 
 }

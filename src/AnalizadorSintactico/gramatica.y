@@ -596,9 +596,12 @@ condicion_for :  id comparador factor	{
 								String typeOP2 = op2.getTipo();
 								String typeOP1 = sintactico.getTipoFromTS(existente);
 								if (typeOP1.equals(typeOP2)) {
+
 									ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
 									ParserVal constante = new ParserVal(op2);
-									$$ = new ParserVal(sintactico.crearNodoControl("condicionFor", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
+									Nodo comparacion = sintactico.crearNodo($2.sval,identificador,constante);
+									comparacion.setTipo("i32");
+									$$ = new ParserVal(sintactico.crearNodoControl("condicionFor", new ParserVal(comparacion)));
 									sintactico.eliminarEntrada($1.ival);
 								}else{
 								sintactico.addErrorSintactico("SemanticError. se reconoce FOR pero hay un problema de tipos en la condicion " + AnalizadorLexico.LINEA);
@@ -693,8 +696,10 @@ operacion_for: signo cte		{
 						if (type.equals("i32")){
 							ParserVal id = new ParserVal(sintactico.crearHoja(this.variablesFor.peek()));
 							ParserVal cte = new ParserVal(sintactico.crearHoja($2.ival));
-							ParserVal op = new ParserVal(sintactico.crearNodo($1.sval, id, cte));
-							ParserVal asig =  new ParserVal(sintactico.crearNodo("=:",id,op));
+							Nodo op = sintactico.crearNodo($1.sval, id, cte);
+							op.setTipo("i32");
+							ParserVal ope = new ParserVal(op);
+							ParserVal asig =  new ParserVal(sintactico.crearNodo("=:",id,ope));
 							sintactico.setUsoEnIndex("cte",$2.ival);
 
 							$$ = new ParserVal(sintactico.crearNodoControl("operacionFor", asig));
