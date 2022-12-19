@@ -1,42 +1,41 @@
 1:    program
 2:    {
-3:    	f32 a,b,c,d,e,f,g,h,i,j,k,l,m,n;
-4:    
-5:    	a =: -3.2F10 * -12.0;
-6:    	e =: 3.4 * 2.0;
-7:    	f =: -5.9 * -0.1;
-8:    	g =: 2.1F13 * 3.2;
-9:    	h =: 3.F-5;
-10:    	i =: 15.;
-11:    	j =: h * i;
+3:    
+4:        i32 v;
+5:        f32 b;
+6:    
+7:        b =: for(i=:10; i > 1 ; -1){
+8:                  if (c = 1) then{
+9:                        break 5;
+10:                  }end_if;
+11:              };else 7.0;
 12:    
-13:    	l =: 3.40282346F+38 * 12.0;
-14:    	m =: -3.40282346F+38 * 12.0;
-15:    	n =: -1.17549436F-38 * 12.0;
-16:    	k =: 1.17549436F-38 * -12.0;
-17:    
+13:        v =: for(i=:1 ; i < 5 ; +1){
+14:                  if (i > 6) then{
+15:                        break 2;
+16:                  }end_if;
+17:              };
 18:    
-19:    
-20:    	b =: -3.40282346F+38;
-21:    	c =: 12.0;
-22:    	d =: b * c;
-23:    }$
+19:    }
+20:    
+21:    
+22:    
+23:    $
  
  ---------------------------   EJECUCION DEL PARSER FINALIZADA  
  
 
 
 
-|   NO HAY ERRORES LEXICOS     |
+|   ERRORES LEXICOS: NO HAY     |
  
- |    ERRORES SINTACTICOS - SEMANTICOS:  NO HAY   | 
+|    ERRORES SINTACTICOS - SEMANTICOS  | 
  
- 
- 
- 
- |   ANALISIS SINTACTICO   |   
- 
- *  Se reconoció declaraciónes de variable de tipo f32. (Línea 3) 
+ *  SemanticError. (Línea 8): variable no declarada. 
+ *  SemanticError. (Línea 8) LOS TIPOS NO COINCIDEN, OPERACION: comparacion por = 
+ *  SemanticError. (Línea 11):  los tipos en el BREAK/ELSE del FOR no coinciden 
+ *  SyntaxError. OP2(Línea 19): problema en devolver valor por defecto   
+ *  SemanticError. (Línea 19) LOS TIPOS NO COINCIDEN, OPERACION: asignacion 
  
   
  
@@ -44,36 +43,21 @@
   
               TABLA DE SIMBOLOS              
 
-TOKEN   257         program   #ln 1  null              program 
-TOKEN   257             a@$   #ln 3   f32                  var 
-TOKEN   257             b@$   #ln 3   f32                  var 
-TOKEN   257             c@$   #ln 3   f32                  var 
-TOKEN   257             d@$   #ln 3   f32                  var 
-TOKEN   257             e@$   #ln 3   f32                  var 
-TOKEN   257             f@$   #ln 3   f32                  var 
-TOKEN   257             g@$   #ln 3   f32                  var 
-TOKEN   257             h@$   #ln 3   f32                  var 
-TOKEN   257             i@$   #ln 3   f32                  var 
-TOKEN   257             j@$   #ln 3   f32                  var 
-TOKEN   257             k@$   #ln 3   f32                  var 
-TOKEN   257             l@$   #ln 3   f32                  var 
-TOKEN   257             m@$   #ln 3   f32                  var 
-TOKEN   257             n@$   #ln 3   f32                  var 
-TOKEN   258         -3.2F10   #ln 5   f32              cte neg 
-TOKEN   258           -12.0   #ln 5   f32              cte neg 
-TOKEN   258             3.4   #ln 6   f32                  cte 
-TOKEN   258             2.0   #ln 6   f32                  cte 
-TOKEN   258            -5.9   #ln 7   f32              cte neg 
-TOKEN   258            -0.1   #ln 7   f32              cte neg 
-TOKEN   258          2.1F13   #ln 8   f32                  cte 
-TOKEN   258             3.2   #ln 8   f32                  cte 
-TOKEN   258           3.F-5   #ln 9   f32                  cte 
-TOKEN   258            15.0   #ln 10   f32                  cte 
-TOKEN   258  3.40282346F+38   #ln 13   f32                  cte 
-TOKEN   258            12.0   #ln 13   f32                  cte 
-TOKEN   258 -3.40282346F+38   #ln 14   f32              cte neg 
-TOKEN   258 -1.17549436F-38   #ln 15   f32              cte neg 
-TOKEN   258  1.17549436F-38   #ln 16   f32                  cte  
+TOKEN   257         program   #ln 1  null                  i32 
+TOKEN   257             v@$   #ln 4   i32                  var 
+TOKEN   257             b@$   #ln 5   f32                  var 
+TOKEN   257        i@$_for0   #ln 7   i32              for_var 
+TOKEN   258              10   #ln 7   i32                  cte 
+TOKEN   258               1   #ln 7   i32                  cte 
+TOKEN   258               1   #ln 7   i32                  cte 
+TOKEN   257               c   #ln 8  null                 null 
+TOKEN   258               5   #ln 9   i32                  cte 
+TOKEN   258             7.0   #ln 11   f32                 null 
+TOKEN   257        i@$_for1   #ln 13   i32              for_var 
+TOKEN   258               1   #ln 13   i32                  cte 
+TOKEN   258               1   #ln 13   i32                  cte 
+TOKEN   258               6   #ln 14   i32                  cte 
+TOKEN   258               2   #ln 15   i32                  cte  
  
  
  
@@ -81,90 +65,71 @@ TOKEN   258  1.17549436F-38   #ln 16   f32                  cte
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ a@$ 
-           └─ * 
-              └─ -3.2F10 
-              └─ -12.0 
+           └─ b@$ 
+           └─ for_else 
+              └─ For 
+                 └─ encabezado for 
+                    └─ asignacionFor 
+                       └─ =: 
+                          └─ i@$_for0 
+                          └─ 10 
+                    └─ condicion y operacion for 
+                       └─ condicionFor 
+                          └─ > 
+                             └─ i@$_for0 
+                             └─ 1 
+                       └─ operacionFor 
+                          └─ =: 
+                             └─ i@$_for0 
+                             └─ - 
+                                └─ i@$_for0 
+                                └─ 1 
+                 └─ cuerpoFor 
+                    └─ sentencia 
+                       └─ if 
+                          └─ condicionIf 
+                             └─ = 
+                                └─ Error 
+                                └─ 1 
+                          └─ cuerpo-if 
+                             └─ then 
+                                └─ sentencia 
+                                   └─ breakValor 
+                                      └─ 5 
+              └─ 7.0 
         └─ sentencia 
            └─ =: 
-              └─ e@$ 
-              └─ * 
-                 └─ 3.4 
-                 └─ 2.0 
-           └─ sentencia 
-              └─ =: 
-                 └─ f@$ 
-                 └─ * 
-                    └─ -5.9 
-                    └─ -0.1 
-              └─ sentencia 
-                 └─ =: 
-                    └─ g@$ 
-                    └─ * 
-                       └─ 2.1F13 
-                       └─ 3.2 
-                 └─ sentencia 
-                    └─ =: 
-                       └─ h@$ 
-                       └─ 3.F-5 
-                    └─ sentencia 
+              └─ v@$ 
+              └─ For 
+                 └─ encabezado for 
+                    └─ asignacionFor 
                        └─ =: 
-                          └─ i@$ 
-                          └─ 15.0 
-                       └─ sentencia 
+                          └─ i@$_for1 
+                          └─ 1 
+                    └─ condicion y operacion for 
+                       └─ condicionFor 
+                          └─ < 
+                             └─ i@$_for1 
+                             └─ 5 
+                       └─ operacionFor 
                           └─ =: 
-                             └─ j@$ 
-                             └─ * 
-                                └─ h@$ 
-                                └─ i@$ 
-                          └─ sentencia 
-                             └─ =: 
-                                └─ l@$ 
-                                └─ * 
-                                   └─ 3.40282346F+38 
-                                   └─ 12.0 
-                             └─ sentencia 
-                                └─ =: 
-                                   └─ m@$ 
-                                   └─ * 
-                                      └─ -3.40282346F+38 
-                                      └─ 12.0 
+                             └─ i@$_for1 
+                             └─ + 
+                                └─ i@$_for1 
+                                └─ 1 
+                 └─ cuerpoFor 
+                    └─ sentencia 
+                       └─ if 
+                          └─ condicionIf 
+                             └─ > 
+                                └─ i@$_for1 
+                                └─ 6 
+                          └─ cuerpo-if 
+                             └─ then 
                                 └─ sentencia 
-                                   └─ =: 
-                                      └─ n@$ 
-                                      └─ * 
-                                         └─ -1.17549436F-38 
-                                         └─ 12.0 
-                                   └─ sentencia 
-                                      └─ =: 
-                                         └─ k@$ 
-                                         └─ * 
-                                            └─ 1.17549436F-38 
-                                            └─ -12.0 
-                                      └─ sentencia 
-                                         └─ =: 
-                                            └─ b@$ 
-                                            └─ -3.40282346F+38 
-                                         └─ sentencia 
-                                            └─ =: 
-                                               └─ c@$ 
-                                               └─ 12.0 
-                                            └─ sentencia 
-                                               └─ =: 
-                                                  └─ d@$ 
-                                                  └─ * 
-                                                     └─ b@$ 
-                                                     └─ c@$ 
- 
- 
- 
- |    ERRORES EN TIEMPO DE EJECUCION  | 
- 
- *  TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32  
- *  TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32  
- *  TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32  
- *  TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32  
+                                   └─ breakValor 
+                                      └─ 2 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 17 2022, 05:47:54 p. m.
+ Hora de ejecucion: dic. 19 2022, 03:58:38 p. m.

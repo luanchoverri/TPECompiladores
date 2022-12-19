@@ -330,7 +330,7 @@ public class AnalizadorLexico {
             String contenido;
 
             if (this.errores.isEmpty()){
-                contenido = "\n" + "\n" + "\n" + "\n" +  "|   NO HAY ERRORES LEXICOS     |";
+                contenido = "\n" + "\n" + "\n" + "\n" +  "|   ERRORES LEXICOS: NO HAY     |";
                 bw.write(contenido);
             }
             else {

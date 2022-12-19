@@ -178,7 +178,7 @@ public class AnalizadorSintactico {
 //        imprimirArbol(arbol, 0);
 //        System.out.println(" el hijo es:" );
 //        imprimirArbol(hijoNuevo, 0);
-//        System.out.println(" ---------" );
+
 
         if (esNodoDeclarativo(arbol) && esNodoDeclarativo(hijoNuevo)) {
 
@@ -252,7 +252,6 @@ public class AnalizadorSintactico {
 
     public String tipoResultante(String id, Nodo izq, Nodo der){
 
-
         if (izq.getTipo() != null && der.getTipo() != null ) {
             if(izq.getTipo().equals(der.getTipo())){
                 return izq.getTipo();
@@ -283,6 +282,14 @@ public class AnalizadorSintactico {
         return i;
     }
 
+//    public Nodo crearHoja(String lexema){
+//
+//        String lexema = lexema;
+//        Nodo i = new NodoHijo(null, lexema,indice);
+//        i.setTipo(this.tablaSimbolos.getEntrada(indice).getTipo());
+//        return i;
+//    }
+
     public boolean tieneBreak(ParserVal hijo){
         return (((Nodo)hijo.obj).getTieneBreak() != null);
     }
@@ -307,17 +314,17 @@ public class AnalizadorSintactico {
             }
 
             return i;
-        } else {
-
-            Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
-            if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
-                i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
-            }
-
-            return i;
-
-
         }
+
+        Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
+//            if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
+//                i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
+//            }
+
+        return i;
+
+
+
     }
 
     public Nodo crearNodoControl(String identificador, ParserVal hijo){
@@ -349,16 +356,7 @@ public class AnalizadorSintactico {
 
     }
 
-    public Nodo crearNodoFor(String identificador, ParserVal izq, ParserVal der){
-        if (der == null){
-            Nodo i = new NodoBinario(izq.obj,null, identificador);
-            return i;
-        }
-        Nodo i = new NodoBinario(izq.obj, der.obj, identificador);
-        return i;
 
-
-    }
     public void agregarNuevoNodo(Nodo n, Nodo nuevo){
         if (n.getHijoDerecho() == null){
             n.setHijoDerecho(nuevo);
@@ -407,9 +405,9 @@ public class AnalizadorSintactico {
 
 
         if (this.erroresSintacticos.isEmpty()){
-            bw.write("\n \n |    ERRORES SINTACTICOS - SEMANTICOS:  NO HAY   | \n \n ");
+            bw.write("\n \n|    ERRORES SINTACTICOS - SEMANTICOS:  NO HAY   | \n \n ");
         }else{
-            bw.write("\n \n |    ERRORES SINTACTICOS - SEMANTICOS  | \n \n ");
+            bw.write("\n \n|    ERRORES SINTACTICOS - SEMANTICOS  | \n \n ");
             for (String dato : this.erroresSintacticos){
                 bw.write("*  " + dato + " \n ");
             }
@@ -517,6 +515,9 @@ public class AnalizadorSintactico {
                 lexema = lexema.replace(".", "0.");
             else if(lexema.endsWith("."))
                     lexema = lexema.replace(".", ".0");
+            if (lexema.equals("-0.0")){
+                lexema = lexema.replace("-", "");
+            }
 
             floatBuffer = Double.parseDouble(lexema);
         }
@@ -607,7 +608,7 @@ public class AnalizadorSintactico {
 
             this.analizadorLexico.imprimirErrores(bw);
             this.imprimirErroresSintacticos(bw);
-            this.imprimirAnalisisSintactico(bw);
+            //this.imprimirAnalisisSintactico(bw);
             this.imprimirTablaSimbolos(bw);
 
             bw.write("\n ARBOL SINTACTICO  \n ");

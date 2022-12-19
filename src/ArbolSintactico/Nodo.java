@@ -1,6 +1,8 @@
 package ArbolSintactico;
 
-public abstract class Nodo {
+import AnalizadorSintactico.ParserVal;
+
+public abstract class Nodo extends ParserVal {
 
 	protected String lexema;
 	protected int valor;
