@@ -175,10 +175,10 @@ public class AnalizadorSintactico {
         Nodo arbol = (Nodo) arbolSentencias.obj;
 
 
-        System.out.println(" el nodo a modificar es:" );
-        imprimirArbol(arbol, 0);
-        System.out.println(" el hijo es:" );
-        imprimirArbol(hijoNuevo, 0);
+//        System.out.println(" el nodo a modificar es:" );
+//        imprimirArbol(arbol, 0);
+//        System.out.println(" el hijo es:" );
+//        imprimirArbol(hijoNuevo, 0);
 
 
         if (esNodoDeclarativo(arbol) && esNodoDeclarativo(hijoNuevo)) {
@@ -292,6 +292,14 @@ public class AnalizadorSintactico {
         i.setTipo(this.tablaSimbolos.getEntrada(indice).getTipo());
         return i;
     }
+
+//    public Nodo crearHoja(String lexema){
+//
+//        String lexema = lexema;
+//        Nodo i = new NodoHijo(null, lexema,indice);
+//        i.setTipo(this.tablaSimbolos.getEntrada(indice).getTipo());
+//        return i;
+//    }
 
     public boolean tieneBreak(ParserVal hijo){
         return (((Nodo)hijo.obj).getTieneBreak() != null);
@@ -695,7 +703,7 @@ public class AnalizadorSintactico {
         if (this.erroresSintacticos.isEmpty() && this.analizadorLexico.getErroresLexicos().isEmpty()){
             GenerarCodigo g = new GenerarCodigo(analizadorLexico, this);
 
-            g.generacionDeCodigo(this.raiz,this);
+         //   g.generacionDeCodigo(this.raiz,this);
         }else{
             System.out.println("Se encontraron errores LEXICOS o SINTACTICOS, por lo tanto no se pudo generar el assembler"+"\n");
         }

@@ -1,0 +1,18 @@
+program
+{
+
+    i32 a, c, v;
+    f32 b;
+
+    a =: for(i=:1 ; i < 3 ; +1){
+              break 4;
+          };else 7;
+
+    c =: for(i=:1 ; i < 3 ; +2){
+            out('hola');
+          };else 9;
+
+}
+
+
+
