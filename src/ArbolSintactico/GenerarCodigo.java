@@ -949,15 +949,15 @@ public class GenerarCodigo{
     private void paramAssembler(Nodo nodo){
         if (nodo.getHijoDerecho() != null){
             if (nodo.getHijoDerecho().getTipo().equals("i32")){
-                this.assemblerCode.append("MOV EBX, "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_')+"\n");
+                this.assemblerCode.append("MOV EBX, "+getLexAssembler(nodo.getHijoDerecho())+"\n");
             } else {
-                this.assemblerCode.append("FLD "+"_"+nodo.getHijoDerecho().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
+                this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho())+"\n");
             }
         }
         if (nodo.getHijoIzquierdo().getTipo().equals("i32")){
-            this.assemblerCode.append("MOV EAX, "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+            this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
         } else {
-            this.assemblerCode.append("FLD "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_').replace("+","")+"\n");
+            this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
         }
     }
 
