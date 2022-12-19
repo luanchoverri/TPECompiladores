@@ -171,13 +171,15 @@ public class AnalizadorSintactico {
         System.out.println("");
         System.out.println("");
 
+
         Nodo arbol = (Nodo) arbolSentencias.obj;
 
-//        System.out.println(" el nodo a modificar es:" );
-//        imprimirArbol(arbol, 0);
-//        System.out.println(" el hijo es:" );
-//        imprimirArbol(hijoNuevo, 0);
-//        System.out.println(" ---------" );
+
+        System.out.println(" el nodo a modificar es:" );
+        imprimirArbol(arbol, 0);
+        System.out.println(" el hijo es:" );
+        imprimirArbol(hijoNuevo, 0);
+
 
         if (esNodoDeclarativo(arbol) && esNodoDeclarativo(hijoNuevo)) {
 
@@ -249,18 +251,27 @@ public class AnalizadorSintactico {
         return new ParserVal(nodo);
     }
 
-    public String tipoResultante(String id, Nodo izq, Nodo der){
 
 
-        if (izq.getTipo() != null && der.getTipo() != null ) {
-            if(izq.getTipo().equals(der.getTipo())){
-                return izq.getTipo();
-            }
-
-            this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: " + id + " (Línea " + AnalizadorLexico.LINEA + " )");
-        }
-        return null;
-    }
+//    public String tipoResultante(String tipo1, String tipo2){
+//
+//        if (tipo1.equals(tipo2)){
+//            return tipo1;
+//        }
+//        return null;
+//    }
+//    public String tipoResultante2(String , Nodo izq, Nodo der){
+//
+//
+//        if (izq.getTipo() != null && der.getTipo() != null ) {
+//            if(izq.getTipo().equals(der.getTipo())){
+//                return izq.getTipo();
+//            }
+//
+//            this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: " + id + " (Línea " + AnalizadorLexico.LINEA + " )");
+//        }
+//        return null;
+//    }
 
     public void imprimirNodos(Nodo izq, Nodo der){
         if (izq != null && der != null ) {
@@ -306,17 +317,17 @@ public class AnalizadorSintactico {
             }
 
             return i;
-        } else {
-
-            Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
-            if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
-                i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
-            }
-
-            return i;
-
-
         }
+
+        Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
+//            if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
+//                i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
+//            }
+
+        return i;
+
+
+
     }
 
     public Nodo crearNodoControl(String identificador, ParserVal hijo){

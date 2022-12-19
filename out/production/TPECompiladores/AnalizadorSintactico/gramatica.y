@@ -129,7 +129,7 @@ bloque_ejecutables: bloque_ejecutables ejecutables  {
 ejecutables : asignacion
             | salida
             | sentencia_If
-            | encabezado_For
+            | expresion_For
             | invocacion_funcion
             | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
             | sentencia_CONTINUE error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
@@ -351,17 +351,17 @@ asignacion : id op_asignacion expresion ';'	{
            ;
 
 
-for_else_cte : encab_For Else cte	{ 	Nodo for_else = sintactico.crearNodo("for_else", $1, new ParserVal(sintactico.crearHoja($3.ival)));
+for_else_cte : expresion_For Else cte	{ 	Nodo for_else = sintactico.crearNodo("for_else", $1, new ParserVal(sintactico.crearHoja($3.ival)));
 						String cteElse = sintactico.getTipoFromTS($3.ival);
-						for_else.setTipo(cteElse);
-                                                $$ = new ParserVal(for_else);
-
-						if (!cteElse.equals(tipoBreak)) {
+						if (cteElse.equals(tipoBreak)) {
+							for_else.setTipo(cteElse);
+                                                	$$ = new ParserVal(for_else);
+						}else{
                                                		sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "):  los tipos en el BREAK/ELSE del FOR no coinciden");
                                                 }
 
 					} //TODO Aca tambien nodo de control???
-	     | encabezado_For error	{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
+	     | expresion_For error	{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
 	     ;
 
 salida : out '(' cadena ')' ';'		{
@@ -519,14 +519,6 @@ encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se
 								}
 		;
 
-encab_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
-							  	$$ = new ParserVal(sintactico.crearNodo("For",$3,$5));
-							  	this.ambito = borrarAmbito(this.ambito);
-							}
-	   | For     detalles_for ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	   | For     detalles_for 		cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	    ;
-
  // TODO listo
 detalles_for: asignacion_for ';' cond_op_for 	{	$$ = new ParserVal(sintactico.crearNodo("encabezado for",$1, $3));
 
@@ -615,7 +607,7 @@ signo : '+' {$$.sval = new String("+");}
 
 sentencias_For  : asignacion
 		| salida
-		| encabezado_For
+		| expresion_For
 		| sentencia_if_for
 		| invocacion_funcion
 		| sentencia_BREAK
@@ -624,7 +616,8 @@ sentencias_For  : asignacion
 		| ret_fun error		{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten retornos fuera de una funcion"); }
 		;
 
-
+expresion_For : encabezado_For
+              ;
 
 cola_For_funcion : '{' bloq_for_funcion '}' ';' {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
 		 |  sentencias_For_funcion 	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
