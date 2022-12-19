@@ -250,17 +250,6 @@ public class AnalizadorSintactico {
         return new ParserVal(nodo);
     }
 
-    public String tipoResultante(String id, Nodo izq, Nodo der){
-
-        if (izq.getTipo() != null && der.getTipo() != null ) {
-            if(izq.getTipo().equals(der.getTipo())){
-                return izq.getTipo();
-            }
-
-            this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: " + id + " (Línea " + AnalizadorLexico.LINEA + " )");
-        }
-        return null;
-    }
 
     public void imprimirNodos(Nodo izq, Nodo der){
         if (izq != null && der != null ) {

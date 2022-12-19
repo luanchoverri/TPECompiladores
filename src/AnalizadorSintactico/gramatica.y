@@ -828,7 +828,6 @@ factor : id  		{
 				} else {
 					Nodo n = new NodoHijo(null, "Error");
 					n.setTipo("");
-					System.out.println("NODO ES " + n.toString());
 					$$ = new ParserVal(n);
 					sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable no declarada.");
 				}
@@ -921,10 +920,12 @@ public void agregarAmbito(String nuevo) {
 
     public String tipoResultante(String tipo1, String tipo2, String op){
 
-        if (tipo1.equals(tipo2)){
-            return tipo1;
+        if (tipo1 != null && tipo2 != null ) {
+            if(tipo1.equals(tipo2)){
+                return tipo1;
+            }
+            sintactico.addErrorSintactico("SemanticError."+" (Línea " + AnalizadorLexico.LINEA + ")" + " LOS TIPOS NO COINCIDEN - OPERACION: " + op );
         }
-        sintactico.addErrorSintactico("SemanticError." + " (Línea " + AnalizadorLexico.LINEA + ") LOS TIPOS NO COINCIDEN, OPERACION: " + op );
         return null;
     }
 

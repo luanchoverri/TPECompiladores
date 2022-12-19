@@ -962,7 +962,7 @@ final static String yyrule[] = {
 "tipo : f32",
 };
 
-//#line 895 "gramatica.y"
+//#line 894 "gramatica.y"
 
 private AnalizadorLexico lexico;
 private AnalizadorSintactico sintactico;
@@ -992,10 +992,12 @@ public void agregarAmbito(String nuevo) {
 
     public String tipoResultante(String tipo1, String tipo2, String op){
 
-        if (tipo1.equals(tipo2)){
-            return tipo1;
+        if (tipo1 != null && tipo2 != null ) {
+            if(tipo1.equals(tipo2)){
+                return tipo1;
+            }
+            sintactico.addErrorSintactico("SemanticError."+" (Línea " + AnalizadorLexico.LINEA + ")" + " LOS TIPOS NO COINCIDEN - OPERACION: " + op );
         }
-        sintactico.addErrorSintactico("SemanticError." + " (Línea " + AnalizadorLexico.LINEA + ") LOS TIPOS NO COINCIDEN, OPERACION: " + op );
         return null;
     }
 
@@ -1035,7 +1037,7 @@ public int enAmbito(ParserVal pv){
 	}
 	return -1;
 }
-//#line 967 "Parser.java"
+//#line 969 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -2276,14 +2278,13 @@ case 206:
 				} else {
 					Nodo n = new NodoHijo(null, "Error");
 					n.setTipo("");
-					System.out.println("NODO ES " + n.toString());
 					yyval = new ParserVal(n);
 					sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable no declarada.");
 				}
 				}
 break;
 case 207:
-//#line 836 "gramatica.y"
+//#line 835 "gramatica.y"
 {
 				String lexema = sintactico.getEntradaTablaSimb(val_peek(0).ival).getLexema();
                                 int existente = sintactico.getTS().existeEntrada(lexema);
@@ -2307,7 +2308,7 @@ case 207:
                   	}
 break;
 case 208:
-//#line 857 "gramatica.y"
+//#line 856 "gramatica.y"
 {
 				sintactico.setNegativoTablaSimb(val_peek(0).ival);
 				String lexema = sintactico.getEntradaTablaSimb(val_peek(0).ival).getLexema();
@@ -2331,38 +2332,38 @@ case 208:
                    	}
 break;
 case 209:
-//#line 881 "gramatica.y"
+//#line 880 "gramatica.y"
 { yyval.sval = new String("<") ; }
 break;
 case 210:
-//#line 882 "gramatica.y"
+//#line 881 "gramatica.y"
 { yyval.sval = new String(">") ; }
 break;
 case 211:
-//#line 883 "gramatica.y"
+//#line 882 "gramatica.y"
 { yyval.sval = new String("<="); }
 break;
 case 212:
-//#line 884 "gramatica.y"
+//#line 883 "gramatica.y"
 { yyval.sval = new String(">="); }
 break;
 case 213:
-//#line 885 "gramatica.y"
+//#line 884 "gramatica.y"
 { yyval.sval = new String("=") ; }
 break;
 case 214:
-//#line 886 "gramatica.y"
+//#line 885 "gramatica.y"
 { yyval.sval = new String("=!"); }
 break;
 case 215:
-//#line 890 "gramatica.y"
+//#line 889 "gramatica.y"
 { yyval.sval = new String("i32"); }
 break;
 case 216:
-//#line 891 "gramatica.y"
+//#line 890 "gramatica.y"
 { yyval.sval = new String("f32"); }
 break;
-//#line 2289 "Parser.java"
+//#line 2290 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
