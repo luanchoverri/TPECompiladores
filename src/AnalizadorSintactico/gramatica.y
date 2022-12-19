@@ -475,10 +475,10 @@ then_if_for_fun : PR_then '{' bloq_for_funcion '}'	{$$ = new ParserVal(sintactic
 else_if_for_fun : PR_else '{' bloq_for_funcion '}'	{$$ = new ParserVal(sintactico.crearNodoControl("else", $3));}
                 | PR_else sentencias_For_funcion	{$$ = new ParserVal(sintactico.crearNodoControl("else", $2));}
                 ;
-PR_then: then {this.contadorIf++; agregarAmbito("if-then"+contadorIf);}
+PR_then: then {this.contadorIf++; agregarAmbito("ifthen"+contadorIf);}
 	;
 
-PR_else: Else {this.ambito = borrarAmbito(this.ambito); agregarAmbito("if-else"+this.contadorIf);}
+PR_else: Else {this.ambito = borrarAmbito(this.ambito); agregarAmbito("ifelse"+this.contadorIf);}
 	;
 
 PR_end_if: end_if {this.ambito = borrarAmbito(this.ambito);}
