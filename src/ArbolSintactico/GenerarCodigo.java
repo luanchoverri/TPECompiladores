@@ -43,7 +43,7 @@ public class GenerarCodigo{
         this.pilaInvocaciones = new Stack<>();
         this.cadenas = s.getCadenas();
         tablaSimbolos = l.getTablaSimbolos();
-        this.erroresAssembler = new ArrayList<>();
+        this.erroresAssembler = s.getWarnings();
         this.analizadorLexico = l;
     }
 
@@ -1040,9 +1040,9 @@ public class GenerarCodigo{
             this.assemblerCode.append("call _"+t.getLexema().replace('.','_').replace('-', '_')+"\n");
 
             if (nodo.getTipo().equals("i32")){
-                this.assemblerCode.append("MOV "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+                this.assemblerCode.append("MOV "+getLexAssembler(nodo.getHijoIzquierdo())+", EAX\n");
             } else {
-                this.assemblerCode.append("FSTP "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+                this.assemblerCode.append("FSTP "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
             }
 
         }

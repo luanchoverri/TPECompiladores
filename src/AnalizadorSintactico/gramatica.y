@@ -224,7 +224,7 @@ nombre_funcion: fun id {
 					sintactico.setUsoEnIndex("func", $2.ival);
 					agregarAmbito(lexema);
 					sintactico.setUsoParam(sintactico.getEntradaTablaSimb($2.ival).getLexema());
-					sintactico.vaciarListaVariables();
+
 					$$ = new ParserVal($2.ival);
 
 				} else {
@@ -235,6 +235,7 @@ nombre_funcion: fun id {
 
 encab_fun : nombre_funcion '('  lista_parametros  ')' asig_fun 		{
 								sintactico.addAnalisis( "Se reconocio declaracion de funcion (Línea " + AnalizadorLexico.LINEA + ")" );
+								sintactico.vaciarListaVariables();
 								$$ = $1;
 
 
@@ -341,7 +342,7 @@ asignacion : id op_asignacion expresion ';'	{
 						if (existente >= 0) {
 							ParserVal id = new ParserVal(sintactico.crearHoja(existente));
 							Nodo asignacion = sintactico.crearNodo("=:", id , $3);
-							asignacion.setTipo(tipoResultante( ((Nodo)id.obj).getTipo(), ((Nodo)$3.obj).getTipo(), "asignacion" ));
+								asignacion.setTipo(tipoResultante( asignacion.getHijoIzquierdo().getTipo(), asignacion.getHijoDerecho().getTipo(), "asignacion" ));
 							$$ = new ParserVal(asignacion);
 							sintactico.eliminarEntrada($1.ival);
 						} else {
@@ -353,7 +354,9 @@ asignacion : id op_asignacion expresion ';'	{
 	   						int existente = enAmbito($1);
 							if (existente >= 0) {
 								ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
-								$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
+								Nodo asignacion = sintactico.crearNodo("=:", identificador , $3);
+								asignacion.setTipo(tipoResultante( asignacion.getHijoIzquierdo().getTipo(), asignacion.getHijoDerecho().getTipo(), "asignacion" ));
+								$$ = new ParserVal(asignacion);
 								sintactico.eliminarEntrada($1.ival);
 							} else {
 								sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
@@ -766,6 +769,9 @@ invocacion_funcion: id '(' list_parametros_Inv ')' ';'  {
 								if (existente >= 0) {
 									Token idFuncInvocada = sintactico.getEntradaTablaSimb(existente);
 									if (idFuncInvocada.getUso().equals("func")) {
+										if (!this.declaracionFunc.isEmpty() && idFuncInvocada.getLexema().equals(sintactico.getEntradaTablaSimb(this.declaracionFunc.peek()).getLexema())) {
+											sintactico.addWarning("Warning. (Línea " + AnalizadorLexico.LINEA + "): no se permite recursion directa.");
+										}
 										sintactico.checkParametros(idFuncInvocada.getLexema());
 										$$ = new ParserVal(sintactico.crearNodoFunc(existente, $3));
 										sintactico.eliminarEntrada($1.ival);
