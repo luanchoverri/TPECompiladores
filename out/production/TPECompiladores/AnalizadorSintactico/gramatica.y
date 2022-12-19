@@ -17,13 +17,14 @@ import java.util.Stack;
 
 %%
 
-
+//TODO listo
 programa : encabezado_prog bloque_sentencias	{$$ = new ParserVal(sintactico.crearNodoControl("raiz", $2)); sintactico.setRaiz($$); }
 	 ;
 
+
 encabezado_prog : id {sintactico.setUsoEnIndex("program",$1.ival);}
                 ;
-
+//TODO listo
 bloque_sentencias : bloque_sentencias '{' sentencia '}'	{$$ = $3;}
 		  | '{' sentencia '}' 			{$$ = $2;}
 		  | '{' sentencia    			{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta cerrar el bloque.");}
@@ -42,7 +43,7 @@ lista_de_asignacion_const : decl_const					{$$ = new ParserVal(sintactico.crearN
                           | lista_de_asignacion_const decl_const error  {{ sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): separar por coma la declaracion de constantes.");}}
                           ;
 
-
+// TODO listo el tipo y uso de la cte inferido en el id de la variable
 decl_const : id op_asignacion cte	{
 						int existente = enAmbito($1);
 						if (existente < 0) {
@@ -62,7 +63,7 @@ decl_const : id op_asignacion cte	{
 						}
 
 					}
-	   | id op_asignacion '-'cte  {
+		   | id op_asignacion '-'cte{
 										int existente = enAmbito($1);
 											if (existente < 0) {
 												int i = $1.ival;
@@ -86,11 +87,13 @@ decl_const : id op_asignacion cte	{
            | id        error         { sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): Falta la asignacion luego del identificador.");}
            ;
 
-
+// TODO listo
 bloq_sentencias_For : sentencias_For 			     	{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
                     | bloq_sentencias_For sentencias_For	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("sentencia", $2, null));}
                     ;
 
+
+// TODO listo
 sentencia : declarativas 		{$$ = new ParserVal(sintactico.crearNodo("declarativa", $1, null));}
           | ejecutables  		{$$ = new ParserVal(sintactico.crearNodo("sentencia", $1, null));}
           | sentencia declarativas	{$$ = sintactico.modificarHijo($1, sintactico.crearNodo("declarativa", $2, null));}
@@ -104,7 +107,7 @@ declarativas : tipo lista_de_variables ';'        {
 						 	sintactico.addAnalisis("Se reconoció declaraciónes de variable de tipo " + type + ". (Línea " + AnalizadorLexico.LINEA + ")");
 						  }
              | lista_de_variables ';'   error     {
-             						sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el tipo de variable");
+             						sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): falta el tipo de variable");
              					  	sintactico.addAnalisis("Se reconoció declaraciónes de variable SIN TIPO. (Línea " + (AnalizadorLexico.LINEA-1) + ")");
              					   	sintactico.vaciarListaVariables();
              					  }
@@ -126,11 +129,13 @@ bloque_ejecutables: bloque_ejecutables ejecutables  {
 ejecutables : asignacion
             | salida
             | sentencia_If
-            | encabezado_For
+            | expresion_For
             | invocacion_funcion
             | sentencia_BREAK error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias break fuera de una sentencia for "); }
             | sentencia_CONTINUE error	{ sintactico.addErrorSintactico("SyntaxError. If3 (Línea " + AnalizadorLexico.LINEA + "): no se permiten sentencias continue fuera de una sentencia for "); }
 
+
+// TODO Tipo y Uso LISTO
 lista_de_variables : id lista_de_variables	{
 							sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta una ',' entre identIficadores.");
 						 	int existente = enAmbito($1);
@@ -139,7 +144,7 @@ lista_de_variables : id lista_de_variables	{
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUsoEnIndex("var", $1.ival);
 							} else {
-								sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
+								sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
 							}
 						}
                    | id ',' lista_de_variables	{
@@ -150,7 +155,7 @@ lista_de_variables : id lista_de_variables	{
 								sintactico.addListaVariables($1.ival);
 								sintactico.setUsoEnIndex("var", $1.ival);
 							} else {
-								sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
+								sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
 							}
 						  }
                    | id				{
@@ -161,7 +166,7 @@ lista_de_variables : id lista_de_variables	{
                    						sintactico.addListaVariables($1.ival);
 							    	sintactico.setUsoEnIndex("var", $1.ival);
                    					} else {
-                   						sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
+                   						sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): variable ya declarada.");
                    					}
                    				  }
                    ;
@@ -179,22 +184,23 @@ parametro : tipo id	{	this.contadorParam++;
 					sintactico.addListaVariables($2.ival);
 
 				} else {
-					sintactico.addErrorSintactico("SemanticError. ENC_FUN/PARAMS (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
+					sintactico.addErrorSintactico("SematicError. ENC_FUN/PARAMS (Línea " + AnalizadorLexico.LINEA + "): el identificador ya ha sido utilizado.");
 				}
 				if (this.contadorParam > 2) {
 					sintactico.addErrorSintactico("SemanticError. (Linea " + AnalizadorLexico.LINEA + "): no se permiten mas de dos parametros por funcion");
 				}
 			}
 
-	  | id error 	{ sintactico.addErrorSintactico("SemanticError. PARAM(Línea " + AnalizadorLexico.LINEA + "): falta TIPO en parametros."); }
+	  | id error 	{ sintactico.addErrorSintactico("SematicError. PARAM(Línea " + AnalizadorLexico.LINEA + "): falta TIPO en parametros."); }
 	  ;
+
 
 asig_fun: ':' tipo	{
 				sintactico.setTipoGlobal($2.sval);
 				sintactico.setTipoEnIndex(sintactico.getTipo(), this.declaracionFunc.peek());
 			}
 	|	 	{
-				sintactico.addErrorSintactico("SemanticError. ENCAB_FUN(Línea " + AnalizadorLexico.LINEA + "): falta tipo de funcion ");
+				sintactico.addErrorSintactico("SematicError. ENCAB_FUN(Línea " + AnalizadorLexico.LINEA + "): falta tipo de funcion ");
 	 	 		sintactico.addAnalisis("Se reconoce declaracion de funcion pero falta tipo (Línea " + AnalizadorLexico.LINEA + ")");
 			}
 	;
@@ -241,7 +247,7 @@ encab_fun : nombre_funcion '('  lista_parametros  ')' asig_fun 		{
 							}
 	  | fun    '('  lista_parametros  ')' asig_fun error	{
 	 								sintactico.addAnalisis("Se reconoce declaracion de funcion pero falta identificacion (Línea " + AnalizadorLexico.LINEA + ")");
-							   		sintactico.addErrorSintactico("SemanticError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): funcion sin identificar.");
+							   		sintactico.addErrorSintactico("SematicError. ENC_FUN (Línea " + AnalizadorLexico.LINEA + "): funcion sin identificar.");
 								}
 	  ;
 
@@ -310,44 +316,25 @@ op_asignacion : opasignacion    { $$.sval = new String("=:"); }
 // TODO listo
 asignacion : id op_asignacion expresion ';'	{
 							int existente = enAmbito($1);
-
 							if (existente >= 0) {
-								Nodo op2 = (Nodo) $3.obj;
-								String typeOP2 = op2.getTipo();
-								String typeOP1 = sintactico.getTipoFromTS(existente);
 								ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
-								Nodo asignacion = sintactico.crearNodo("=:", identificador , $3);
-
-								if (typeOP1.equals(typeOP2)) {
-									asignacion.setTipo(typeOP1);
-								}
-								else {
-									sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): no se puede realizar una asignacion de diferentes tipos.");
-								}
-								$$ = new ParserVal(asignacion);
-                                                                sintactico.eliminarEntrada($1.ival);
-
-
+								$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
+								sintactico.eliminarEntrada($1.ival);
 							} else {
-								sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
+								sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
 							}
 					  	}
 
            | id op_asignacion expresion  error	{ sintactico.addErrorSintactico("SyntaxError. OP(Línea " + (AnalizadorLexico.LINEA) + "): falta ';' luego de la ASIG."); }
 
-           | id op_asignacion for_else_cte 	{
-						tipoBreak = null;
+           | id op_asignacion for_else_cte ';'	{
            					int existente = enAmbito($1);
 						if (existente >= 0) {
-							ParserVal id = new ParserVal(sintactico.crearHoja(existente));
-							Nodo asignacion = sintactico.crearNodo("=:", id , $3);
-							asignacion.setTipo(tipoResultante( ((Nodo)id.obj).getTipo(), ((Nodo)$3.obj).getTipo(), "asignacion" ));
-							$$ = new ParserVal(asignacion);
+							ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
+							$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
 							sintactico.eliminarEntrada($1.ival);
 						} else {
-							sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
-							}
-
+							sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");}
 						}
 	   | id op_asignacion invocacion_funcion {
 	   						int existente = enAmbito($1);
@@ -356,24 +343,23 @@ asignacion : id op_asignacion expresion ';'	{
 								$$ = new ParserVal(sintactico.crearNodo("=:", identificador , $3));
 								sintactico.eliminarEntrada($1.ival);
 							} else {
-								sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
+								sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
 							}
 						 }
            ;
 
 
-for_else_cte : encab_For Else cte ';'	{
+for_else_cte : expresion_For Else cte	{ 	Nodo for_else = sintactico.crearNodo("for_else", $1, new ParserVal(sintactico.crearHoja($3.ival)));
+						String cteElse = sintactico.getTipoFromTS($3.ival);
+						if (cteElse.equals(tipoBreak)) {
+							for_else.setTipo(cteElse);
+                                                	$$ = new ParserVal(for_else);
+						}else{
+                                               		sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "):  los tipos en el BREAK/ELSE del FOR no coinciden");
+                                                }
 
-					Nodo for_else = sintactico.crearNodo("for_else", $1, new ParserVal(sintactico.crearHoja($3.ival)));
-					String cteElse = sintactico.getTipoFromTS($3.ival);
-					for_else.setTipo(cteElse);
-					$$ = new ParserVal(for_else);
-
-					if (tipoBreak != null && !cteElse.equals(tipoBreak)) {
-						sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "):  los tipos en el BREAK/ELSE del FOR no coinciden");
-					}
 					} //TODO Aca tambien nodo de control???
-	     | encab_For error	{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
+	     | expresion_For error	{ sintactico.addErrorSintactico("SyntaxError. OP2(Línea " + (AnalizadorLexico.LINEA) + "): problema en devolver valor por defecto  ");}
 	     ;
 
 salida : out '(' cadena ')' ';'		{
@@ -522,22 +508,14 @@ encabezado_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se
 											$$ = new ParserVal( sintactico.crearNodo("for-etiquetado", nodoTag , new ParserVal(sintactico.crearNodo("For",$5,$7))));
 											sintactico.eliminarEntrada($1.ival);
 										} else {
-											sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): el identificador utilizado no es una etiqueta.");
+											sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador utilizado no es una etiqueta.");
 										}
 									} else {
-										sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): etiqueta invalida");
+										sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): etiqueta invalida");
 									}
 									this.ambito = borrarAmbito(this.ambito);
 								}
 		;
-
-encab_For : For '(' detalles_for ')' cola_For 	{	sintactico.addAnalisis("Se reconocio sentencia FOR. (Línea " + AnalizadorLexico.LINEA + ")");
-							 $$ = new ParserVal(sintactico.crearNodo("For",$3,$5));
-							 this.ambito = borrarAmbito(this.ambito);
-						}
-	   | For     detalles_for ')' 	cola_For 	error  { sintactico.addErrorSintactico("SyntaxError. FOR1(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	   | For     detalles_for 	cola_For	error  { sintactico.addErrorSintactico("SyntaxError. FOR2(Línea " + AnalizadorLexico.LINEA + "): problema en la declaracion FOR"); }
-	    ;
 
  // TODO listo
 detalles_for: asignacion_for ';' cond_op_for 	{	$$ = new ParserVal(sintactico.crearNodo("encabezado for",$1, $3));
@@ -569,16 +547,16 @@ condicion_for :  id comparador factor	{
 										$$ = new ParserVal(sintactico.crearNodoControl("condicionFor", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
 										sintactico.eliminarEntrada($1.ival);
 									}else{
-									sintactico.addErrorSintactico("SemanticError. se reconoce FOR pero hay un problema de tipos en la condicion " + AnalizadorLexico.LINEA);
+									sintactico.addErrorSintactico("SematicError. se reconoce FOR pero hay un problema de tipos en la condicion " + AnalizadorLexico.LINEA);
 									}
 								} else {
-									sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada no corresponde a este for loop");
+									sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada no corresponde a este for loop");
 								}
 							} else {
-								sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada en la condicion debe ser la declarada en el for loop.");
+								sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada en la condicion debe ser la declarada en el for loop.");
 							}
 						} else {
-							sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable usada no ha sido declarada.");
+							sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable usada no ha sido declarada.");
 						}
 				     	} //TODO para en un futuro expandirla y coparar con expresion
 	      | id comparador '(' expresion ')'	{
@@ -601,16 +579,16 @@ condicion_for :  id comparador factor	{
 									$$ = new ParserVal(sintactico.crearNodoControl("condicionFor", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
 									sintactico.eliminarEntrada($1.ival);
 								}else{
-								sintactico.addErrorSintactico("SemanticError. se reconoce FOR pero hay un problema de tipos en la condicion " + AnalizadorLexico.LINEA);
+								sintactico.addErrorSintactico("SematicError. se reconoce FOR pero hay un problema de tipos en la condicion " + AnalizadorLexico.LINEA);
 								}
 							} else {
-								sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada no corresponde a este for loop");
+								sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada no corresponde a este for loop");
 							}
 						} else {
-							sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada en la condicion debe ser la declarada en el for loop.");
+							sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable utilizada en la condicion debe ser la declarada en el for loop.");
 						}
 					} else {
-						sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable usada no ha sido declarada.");
+						sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): COND la variable usada no ha sido declarada.");
 					}
 				}
 	      ;
@@ -627,7 +605,7 @@ signo : '+' {$$.sval = new String("+");}
 
 sentencias_For  : asignacion
 		| salida
-		| encabezado_For
+		| expresion_For
 		| sentencia_if_for
 		| invocacion_funcion
 		| sentencia_BREAK
@@ -636,7 +614,8 @@ sentencias_For  : asignacion
 		| ret_fun error		{ sintactico.addErrorSintactico("SyntaxError. (Línea " + (AnalizadorLexico.LINEA-1) + "): no se permiten retornos fuera de una funcion"); }
 		;
 
-
+expresion_For : encabezado_For
+              ;
 
 cola_For_funcion : '{' bloq_for_funcion '}' ';' {$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$2));}
 		 |  sentencias_For_funcion 	{$$ = new ParserVal(sintactico.crearNodoControl("cuerpoFor",$1));}
@@ -657,10 +636,10 @@ sentencia_for_funcion :  For '(' detalles_for ')' cola_For_funcion 	{	sintactico
 													$$ = new ParserVal( sintactico.crearNodo("for-etiquetado", new ParserVal(sintactico.crearHoja(existente)), new ParserVal(sintactico.crearNodo("For",$5,$7))));
 													sintactico.eliminarEntrada($1.ival);
 												} else {
-													sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): el identificador utilizado no es una etiqueta.");
+													sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador utilizado no es una etiqueta.");
 												}
 											} else {
-												sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): etiqueta invalida");
+												sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): etiqueta invalida");
 											}
 											this.ambito = borrarAmbito(this.ambito);
 										}
@@ -683,10 +662,13 @@ asignacion_for: id op_asignacion cte {
 						sintactico.setUsoEnIndex("cte",$3.ival);
 						$$ = new ParserVal(sintactico.crearNodoControl("asignacionFor",new ParserVal(sintactico.crearNodo("=:",identificador,constante))));
 					} else {
-						sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): la variable utilizada para el for loop ya ha sido declarada.");
+						sintactico.addErrorSintactico("SematicError. (Línea " + (AnalizadorLexico.LINEA) + "): la variable utilizada para el for loop ya ha sido declarada.");
 					}
 				   }
-		;
+
+
+
+	      ;
 // TODO listo
 operacion_for: signo cte		{
 						String type = sintactico.getTipoFromTS($2.ival);
@@ -749,7 +731,7 @@ sentencia_CONTINUE : CONTINUE ';'		{
 								sintactico.setUsoEnIndex("tag",$3.ival);
 								$$ = new ParserVal(sintactico.crearNodoControl("continue-etiqueta", new ParserVal(sintactico.crearHoja($3.ival))));
 							} else {
-								sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
+								sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador de la etiqueta ya ha sido utilizado.");
 							}
                    					}
                    | CONTINUE id ';' error	{ 	sintactico.addErrorSintactico("SyntaxError. (Línea " + AnalizadorLexico.LINEA + "): falta ':'CONTINUE."); }
@@ -765,10 +747,10 @@ invocacion_funcion: id '(' list_parametros_Inv ')' ';'  {
 										$$ = new ParserVal(sintactico.crearNodoFunc(existente, $3));
 										sintactico.eliminarEntrada($1.ival);
 									} else {
-										sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): el identificador no corresponde a una funcion.");
+										sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador no corresponde a una funcion.");
 									}
 								} else {
-									sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): funcion no declarada.");
+									sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): funcion no declarada.");
 								}
 
 							}
@@ -779,10 +761,10 @@ invocacion_funcion: id '(' list_parametros_Inv ')' ';'  {
 //										$$ = new ParserVal(sintactico.crearNodoFunc($1.ival, null));
 //										sintactico.eliminarEntrada($1.ival);
 //									} else {
-//										sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): el identificador no corresponde a una funcion.");
+//										sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): el identificador no corresponde a una funcion.");
 //									}
 //								} else {
-//									sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): funcion no declarada.");
+//									sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): funcion no declarada.");
 //								}
 //
 //		 					 }
@@ -806,28 +788,17 @@ list_parametros_Inv :
 		    ;
 
 // TODO listo
-expresion_relacional : expresion comparador expresion { Nodo expresion = sintactico.crearNodo($2.sval, $1, $3);
-                                                        expresion.setTipo(tipoResultante( ((Nodo)$1.obj).getTipo(),((Nodo)$3.obj).getTipo(), "comparacion por " + $2.sval ));
-                                                        $$ = new ParserVal(expresion);
-							}
+expresion_relacional : expresion comparador expresion { $$ = new ParserVal(sintactico.crearNodo($2.sval, $1, $3));}
                      ;
 
 // TODO listo
-expresion : expresion signo termino {	Nodo expresion = sintactico.crearNodo($2.sval, $1, $3);
-					expresion.setTipo(tipoResultante( ((Nodo)$1.obj).getTipo(),((Nodo)$3.obj).getTipo(), $2.sval ));
-					$$ = new ParserVal(expresion);
-					}
+expresion : expresion signo termino {$$ = new ParserVal(sintactico.crearNodo($2.sval, $1, $3)); }
           | termino
           ;
 
 // TODO listo
-termino : termino '*' factor	{	Nodo n = sintactico.crearNodo("*",$1,$3);
-					n.setTipo(tipoResultante( ((Nodo)$1.obj).getTipo(),((Nodo)$3.obj).getTipo(), "multiplicacion" ));
-					$$ = new ParserVal(n);
-				}
-        | termino '/' factor	{ Nodo n = sintactico.crearNodo("/",$1,$3);
-				  n.setTipo(tipoResultante( ((Nodo)$1.obj).getTipo(),((Nodo)$3.obj).getTipo(), " division " ));
-				  $$ = new ParserVal(n);}
+termino : termino '*' factor	{$$ = new ParserVal(sintactico.crearNodo("*",$1,$3));}
+        | termino '/' factor	{$$ = new ParserVal(sintactico.crearNodo("/",$1,$3));}
         | factor
         ;
 
@@ -840,10 +811,7 @@ factor : id  		{
 					$$ = new ParserVal(n);
 					sintactico.eliminarEntrada($1.ival);
 				} else {
-					Nodo n = new NodoHijo(null, "Error");
-					n.setTipo("");
-					$$ = new ParserVal(n);
-					sintactico.addErrorSintactico("SemanticError. (Línea " + AnalizadorLexico.LINEA + "): variable no declarada.");
+					sintactico.addErrorSintactico("SematicError. (Línea " + AnalizadorLexico.LINEA + "): variable no declarada.");
 				}
 				}
        | cte		{
@@ -933,17 +901,6 @@ public void agregarAmbito(String nuevo) {
 	this.ambito = this.ambito + "_" + nuevo;
 
 }
-
-    public String tipoResultante(String tipo1, String tipo2, String op){
-
-        if (tipo1 != null && tipo2 != null ) {
-            if(tipo1.equals(tipo2)){
-                return tipo1;
-            }
-            sintactico.addErrorSintactico("SemanticError."+" (Línea " + AnalizadorLexico.LINEA + ")" + " LOS TIPOS NO COINCIDEN - OPERACION: " + op );
-        }
-        return null;
-    }
 
 public String borrarAmbito(String ambito){
 	if (ambito.length() > 1) { // si es 1 solo tiene el ambito global

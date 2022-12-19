@@ -1,6 +1,18 @@
 program{
 
-    out('cadena /
-            multilinea');
+
+    fun g(i32 i):f32{
+        out('entre en funcion');
+        if (i = 1) then {
+            out('entre al if');
+            return (1.0);
+        } end_if;
+    }
+
+    i32 a;
+    f32 b;
+
+    a =: 1;
+    b =: g(1);
 
 }

@@ -1,0 +1,15 @@
+program
+{
+        i32 a,b;
+
+        a =: 0;
+        b =: 5;
+
+        if (a <= b) then {
+                out('a mas chico o igual que b');
+                a =: a + 5;
+        }else{
+                out ('a mas grande que b');
+        }end_if;
+        out('termine ejecucion');
+}

@@ -250,6 +250,7 @@ public class TablaSimbolos {
 
     public ArrayList<Integer> getParametros(String funcion){
         ArrayList<Integer> params = new ArrayList<>();
+        funcion = funcion.split("@")[0];
         for(int i = 0; i < registroTokens.size(); i++) {
             if (registroTokens.get(i).getUso() != null && registroTokens.get(i).getUso().contains("param@"+funcion)){
                 params.add(i);
