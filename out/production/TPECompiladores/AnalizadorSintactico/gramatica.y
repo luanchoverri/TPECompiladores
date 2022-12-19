@@ -174,7 +174,7 @@ parametro : tipo id	{	this.contadorParam++;
 					sintactico.setTipoEnIndex($1.sval, $2.ival);
 					sintactico.setLexemaEnIndex($2.ival, "@"+this.ambito);
 					String lexFuncion = sintactico.getEntradaTablaSimb(this.declaracionFunc.peek()).getLexema().split("@")[0];
-					sintactico.setUsoEnIndex("param@"+lexFuncion, $2.ival);
+					sintactico.setUsoEnIndex("param@"+this.ambito, $2.ival);
 
 					sintactico.addListaVariables($2.ival);
 
@@ -190,9 +190,10 @@ parametro : tipo id	{	this.contadorParam++;
 	  ;
 
 asig_fun: ':' tipo	{
+				if (!this.declaracionFunc.isEmpty()){
 				sintactico.setTipoGlobal($2.sval);
 				sintactico.setTipoEnIndex(sintactico.getTipo(), this.declaracionFunc.peek());
-			}
+			}}
 	|	 	{
 				sintactico.addErrorSintactico("SemanticError. ENCAB_FUN(Línea " + AnalizadorLexico.LINEA + "): falta tipo de funcion ");
 	 	 		sintactico.addAnalisis("Se reconoce declaracion de funcion pero falta tipo (Línea " + AnalizadorLexico.LINEA + ")");
@@ -256,19 +257,20 @@ declaracion_func :  encab_fun  cola_func {
 		 ;
 
 
-ret_fun :  Return '(' expresion ')'  ';'	 	{ sintactico.addAnalisis("Se reconoce retorno de funcion(Línea " + AnalizadorLexico.LINEA + ") ");
-						   	  sintactico.checkRetorno($3, sintactico.getTipo());
-						   	  Nodo nodoRetorno = sintactico.crearNodoControl("return",$3);
-						   	  Nodo n = (Nodo) $3.obj;
-						   	  nodoRetorno.setTipo(n.getTipo());
-						   	  $$ = new ParserVal(nodoRetorno);}
+ret_fun :  Return '(' expresion ')'  ';'	 	{ if (!this.declaracionFunc.isEmpty()){
+								sintactico.addAnalisis("Se reconoce retorno de funcion(Línea " + AnalizadorLexico.LINEA + ") ");
+								  sintactico.checkRetorno(val_peek(2), sintactico.getEntradaTablaSimb(this.declaracionFunc.peek()).getTipo());
+								  Nodo nodoRetorno = sintactico.crearNodoControl("return",$3);
+								  Nodo n = (Nodo) $3.obj;
+								  nodoRetorno.setTipo(n.getTipo());
+								  $$ = new ParserVal(nodoRetorno);}}
         |  Return  	 expresion ')'  ';' error	{ sintactico.addErrorSintactico("SyntaxError. RETURN_FUN1 (Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
         |  Return '(' expresion   	';' error	{ sintactico.addErrorSintactico("SyntaxError. RETURN_FUN2(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
         |  Return  	 expresion   	';' error	{ sintactico.addErrorSintactico("SyntaxError. RETURN_FUN3(Línea " + AnalizadorLexico.LINEA + "): problema en el retorno de la funcion"); }
         |  Return '(' expresion ')'  error 	 	{ sintactico.addErrorSintactico("SyntaxError. RETURN_FUN4(Línea " + AnalizadorLexico.LINEA + "): falta ; "); }
         ;
 
-cuerpo_fun: bloque_sentencias_funcion {this.declaracionFunc.pop();}
+cuerpo_fun: bloque_sentencias_funcion {if(!this.declaracionFunc.isEmpty()){this.declaracionFunc.pop();}}
 	  ;
 
 ejecutables_funcion: asignacion
@@ -355,9 +357,12 @@ asignacion : id op_asignacion expresion ';'	{
 							if (existente >= 0) {
 								ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
 								Nodo asignacion = sintactico.crearNodo("=:", identificador , $3);
-								asignacion.setTipo(tipoResultante( asignacion.getHijoIzquierdo().getTipo(), asignacion.getHijoDerecho().getTipo(), "asignacion" ));
-								$$ = new ParserVal(asignacion);
+								if (asignacion.getHijoDerecho() != null) {
+									asignacion.setTipo(tipoResultante( asignacion.getHijoIzquierdo().getTipo(), asignacion.getHijoDerecho().getTipo(), "asignacion" ));
+									$$ = new ParserVal(asignacion);
+								}
 								sintactico.eliminarEntrada($1.ival);
+
 							} else {
 								sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): variable no declarada.");
 							}

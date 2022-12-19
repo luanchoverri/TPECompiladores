@@ -552,8 +552,9 @@ public class AnalizadorSintactico {
 
     public void checkParametros(String idFun){
 
-            String nombFun = idFun.split("@")[0];
-            ArrayList<Token> parametros = tablaSimbolos.obtenerParamPorUso("param"+"@"+nombFun);
+            String[] nombreSplit= idFun.split("@");
+            idFun = nombreSplit[1] + "_" + nombreSplit[0];
+            ArrayList<Token> parametros = tablaSimbolos.obtenerParamPorUso("param"+"@"+idFun);
             if(parametros.size() != variables.size()  ){
                 this.addErrorSintactico("SemanticError. El NUMERO de parametros no corresponde con los funcion invocada (Línea " + this.analizadorLexico.LINEA + ")" );
             }else {

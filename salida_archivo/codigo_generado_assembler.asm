@@ -21,66 +21,39 @@ ok db 'OK',0
 mem2bytes dw ?
 _maxFloat dq 3.40282347E38
 _minFloat dq 1.17549435E-38
-out0 db 'entre en funcion',0
-out1 db 'entre al if',0
-out2 db 'se retorno correctamente',0
 _program dd ?,?
-_i@$_g dd ?,?
-_a@$ dd ?,?
-_b@$ dd ?,?
+_h@$_f_p dd ?,?
+_g@$_f dd ?,?
 @aux0 dd ?,?
-@aux1 dd ?,?
 .code
 ;------------ CODE ------------
-PUBLIC _g@$
-_g@$ PROC
-MOV _i@$_g,EAX
-invoke MessageBox, NULL, addr out0, addr out0, MB_OK
-MOV EAX, _i@$_g
-CMP EAX, 1
-JNE _label1
-MOV @aux0,1 
-JMP _label0
-_label1:
-MOV @aux0, 0 
-_label0:
-MOV EAX, @aux0
-CMP EAX,  0
-JE _label2
-invoke MessageBox, NULL, addr out1, addr out1, MB_OK
-JMP _label3
-_label2:
-_label3:
-MOV EAX, 1
-invoke MessageBox, NULL, addr errorRecursion, addr errorRecursion, MB_OK
-invoke ExitProcess, 0
-call _g@$
-MOV _i@$_g, EAX
-MOV EAX, 3
+PUBLIC _p@$
+_p@$ PROC
+MOV _h@$_f_p,EAX
+MOV EAX, 6
 invoke MessageBox, NULL, addr ok, addr ok, MB_OK
 ret 
-_g@$ ENDP
-start:
-MOV EAX,1
-MOV _a@$,EAX
+_p@$ ENDP
+PUBLIC _f@$
+_f@$ PROC
+MOV EAX, 3
+call _p@$_f
+MOV _g@$_f, EAX
 MOV EAX, 1
-call _g@$
-MOV _b@$, EAX
-MOV EAX, _b@$
-CMP EAX, 3
-JNE _label5
-MOV @aux1,1 
-JMP _label4
-_label5:
-MOV @aux1, 0 
-_label4:
-MOV EAX, @aux1
-CMP EAX,  0
-JE _label6
-invoke MessageBox, NULL, addr out2, addr out2, MB_OK
-JMP _label7
-_label6:
-_label7:
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+ret 
+_f@$ ENDP
+PUBLIC _p@$_f
+_p@$_f PROC
+MOV _h@$_f_p,EAX
+MOV EAX,_h@$_f_p
+ADD EAX,1
+MOV @aux0,EAX
+MOV EAX, @aux0
+invoke MessageBox, NULL, addr ok, addr ok, MB_OK
+ret 
+_p@$_f ENDP
+start:
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start
