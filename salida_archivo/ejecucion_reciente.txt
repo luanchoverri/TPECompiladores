@@ -5,7 +5,7 @@
 5:            out('entre en funcion');
 6:            if (i = 1) then {
 7:                out('entre al if');
-8:                return (1.0);
+8:                return (2.0);
 9:            } end_if;
 10:        }
 11:    
@@ -15,7 +15,11 @@
 15:        a =: 1;
 16:        b =: g(1);
 17:    
-18:    }$
+18:        if (b = 2.0) then {
+19:            out('se retorno correctamente');
+20:        } end_if;
+21:    
+22:    }$
  
  ---------------------------   EJECUCION DEL PARSER FINALIZADA  
  
@@ -39,9 +43,10 @@ TOKEN   257           i@$_g   #ln 4   i32              param@g
 TOKEN   272 entre en funcion   #ln 5  null               cadena 
 TOKEN   258               1   #ln 6   i32                  cte 
 TOKEN   272     entre al if   #ln 7  null               cadena 
-TOKEN   258             1.0   #ln 8   f32                  cte 
+TOKEN   258             2.0   #ln 8   f32                  cte 
 TOKEN   257             a@$   #ln 12   i32                  var 
-TOKEN   257             b@$   #ln 13   f32                  var  
+TOKEN   257             b@$   #ln 13   f32                  var 
+TOKEN   272 se retorno correctamente   #ln 19  null               cadena  
  
  
  
@@ -57,6 +62,17 @@ TOKEN   257             b@$   #ln 13   f32                  var
               └─ g@$ 
                  └─ paramInv 
                     └─ 1 
+           └─ sentencia 
+              └─ if 
+                 └─ condicionIf 
+                    └─ = 
+                       └─ b@$ 
+                       └─ 2.0 
+                 └─ cuerpo-if 
+                    └─ then 
+                       └─ sentencia 
+                          └─ out 
+                             └─ se retorno correctamente 
  
   ARBOL DE LA FUNCION g@$ 
   └─ g@$ 
@@ -76,8 +92,8 @@ TOKEN   257             b@$   #ln 13   f32                  var
                           └─ entre al if 
                        └─ sentencia 
                           └─ return 
-                             └─ 1.0 
+                             └─ 2.0 
  
   
  ||||||||||||||||||||||||||||||||||||||||||||||  
- Hora de ejecucion: dic. 19 2022, 04:55:36 p. m.
+ Hora de ejecucion: dic. 19 2022, 05:28:03 p. m.

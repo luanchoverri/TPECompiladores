@@ -23,12 +23,16 @@ _maxFloat dq 3.40282347E+38
 _minFloat dq -3.40282347E+38
 out0 db 'entre en funcion',0
 out1 db 'entre al if',0
+out2 db 'se retorno correctamente',0
 _program dd ?,?
 _i@$_g dd ?,?
-_1_0 dq 1.0
+_2_0 dq 2.0
 _a@$ dd ?,?
 _b@$ dd ?,?
 @aux0 dd ?,?
+@aux2 dd ?,?
+@aux1 dd ?,?
+@aux3 dd ?,?
 .code
 ;------------ CODE ------------
 PUBLIC _g@$
@@ -47,7 +51,7 @@ MOV EAX, @aux0
 CMP EAX,  0
 JE _label2
 invoke MessageBox, NULL, addr out1, addr out1, MB_OK
-FLD _1_0
+FLD _2_0
 invoke MessageBox, NULL, addr ok, addr ok, MB_OK
 ret 
 JMP _label3
@@ -57,9 +61,34 @@ _g@$ ENDP
 start:
 MOV EAX,1
 MOV _a@$,EAX
-MOV EAX, _a@$
+MOV EAX, 1
 call _g@$
 FSTP _b@$
+FLD _b@$
+FLD _2_0
+FCOMPP 
+FSTSW mem2bytes
+MOV AX, mem2bytes
+SAHF 
+JNE _label5
+FLD1 
+FSTP @aux1 
+JMP _label4
+_label5:
+FLDZ 
+FSTP @aux1 
+_label4:
+FLDZ 
+FLD @aux1
+FCOMPP 
+FSTSW mem2bytes
+MOV AX, mem2bytes
+SAHF 
+JE _label6
+invoke MessageBox, NULL, addr out2, addr out2, MB_OK
+JMP _label7
+_label6:
+_label7:
 ;------------ FIN ------------
 invoke ExitProcess, 0
 end start
