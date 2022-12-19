@@ -1,0 +1,11 @@
+program
+{
+	f32 a,b,c,d,e,f,g;
+
+	a =: 1.0 * 2.2 + 5.3 /10.2;
+
+
+
+	<< debe generar en total 4 errores
+
+}

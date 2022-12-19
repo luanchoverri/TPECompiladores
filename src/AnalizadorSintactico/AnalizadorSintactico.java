@@ -29,6 +29,7 @@ public class AnalizadorSintactico {
     private String tipo;
     private Nodo raiz;
     private ArrayList<Integer> variables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
+    public static boolean ASSEMBLER_GENERADO = false;
 
     private HashMap<String,Nodo> arbolesFunciones;
 
@@ -177,7 +178,7 @@ public class AnalizadorSintactico {
 //        imprimirArbol(arbol, 0);
 //        System.out.println(" el hijo es:" );
 //        imprimirArbol(hijoNuevo, 0);
-//        System.out.println(" ---------" );
+
 
         if (esNodoDeclarativo(arbol) && esNodoDeclarativo(hijoNuevo)) {
 
@@ -249,18 +250,6 @@ public class AnalizadorSintactico {
         return new ParserVal(nodo);
     }
 
-    public String tipoResultante(String id, Nodo izq, Nodo der){
-
-
-        if (izq.getTipo() != null && der.getTipo() != null ) {
-            if(izq.getTipo().equals(der.getTipo())){
-                return izq.getTipo();
-            }
-
-            this.addErrorSintactico("SemanticError. LOS TIPOS NO COINCIDEN - OPERACION: " + id + " (Línea " + AnalizadorLexico.LINEA + " )");
-        }
-        return null;
-    }
 
     public void imprimirNodos(Nodo izq, Nodo der){
         if (izq != null && der != null ) {
@@ -281,6 +270,14 @@ public class AnalizadorSintactico {
         i.setTipo(this.tablaSimbolos.getEntrada(indice).getTipo());
         return i;
     }
+
+//    public Nodo crearHoja(String lexema){
+//
+//        String lexema = lexema;
+//        Nodo i = new NodoHijo(null, lexema,indice);
+//        i.setTipo(this.tablaSimbolos.getEntrada(indice).getTipo());
+//        return i;
+//    }
 
     public boolean tieneBreak(ParserVal hijo){
         return (((Nodo)hijo.obj).getTieneBreak() != null);
@@ -306,17 +303,17 @@ public class AnalizadorSintactico {
             }
 
             return i;
-        } else {
-
-            Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
-            if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
-                i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
-            }
-
-            return i;
-
-
         }
+
+        Nodo i = new NodoBinario(hijoIzq.obj, hijoDer.obj, identificador);
+//            if (!i.getLexema().equals("condicion y operacion for") && !i.getLexema().equals("encabezado for") && !i.getLexema().equals("For") && !i.getLexema().equals("etiqueta") && !i.getLexema().equals("for-etiquetado")){
+//                i.setTipo( tipoResultante( identificador, (Nodo)hijoIzq.obj, (Nodo)hijoDer.obj));
+//            }
+
+        return i;
+
+
+
     }
 
     public Nodo crearNodoControl(String identificador, ParserVal hijo){
@@ -348,16 +345,7 @@ public class AnalizadorSintactico {
 
     }
 
-    public Nodo crearNodoFor(String identificador, ParserVal izq, ParserVal der){
-        if (der == null){
-            Nodo i = new NodoBinario(izq.obj,null, identificador);
-            return i;
-        }
-        Nodo i = new NodoBinario(izq.obj, der.obj, identificador);
-        return i;
 
-
-    }
     public void agregarNuevoNodo(Nodo n, Nodo nuevo){
         if (n.getHijoDerecho() == null){
             n.setHijoDerecho(nuevo);
@@ -406,9 +394,9 @@ public class AnalizadorSintactico {
 
 
         if (this.erroresSintacticos.isEmpty()){
-            bw.write("\n \n |    ERRORES SINTACTICOS - SEMANTICOS:  NO HAY   | \n \n ");
+            bw.write("\n \n|    ERRORES SINTACTICOS - SEMANTICOS:  NO HAY   | \n \n ");
         }else{
-            bw.write("\n \n |    ERRORES SINTACTICOS - SEMANTICOS  | \n \n ");
+            bw.write("\n \n|    ERRORES SINTACTICOS - SEMANTICOS  | \n \n ");
             for (String dato : this.erroresSintacticos){
                 bw.write("*  " + dato + " \n ");
             }
@@ -505,6 +493,9 @@ public class AnalizadorSintactico {
 
     public double convertFloat(String lexema){
         double floatBuffer = 0f;
+        if (lexema.equals("-0.0") || lexema.equals("-0.") || lexema.equals("-.0")){
+            lexema = lexema.replace("-", "");
+        }
         if (lexema.contains("F")){
             String[] parts = lexema.split("F");
             floatBuffer = (Double.valueOf(parts[0]) * Math.pow(10, Double.valueOf(parts[1])));
@@ -519,6 +510,7 @@ public class AnalizadorSintactico {
 
             floatBuffer = Double.parseDouble(lexema);
         }
+
         return floatBuffer;
     }
 
@@ -526,7 +518,9 @@ public class AnalizadorSintactico {
 
         String lexema = this.tablaSimbolos.getEntrada(indice).getLexema();
         double numero = this.convertFloat(lexema);
-
+        if (lexema.equals("-0.0") || lexema.equals("-0.") || lexema.equals("-.0")){
+            lexema = lexema.replace("-", "");
+        }
         if (lexema.startsWith("-") ){
             if((numero >=  AnalizadorLexico.MINIMO_FLOAT * -1) || (numero <= AnalizadorLexico.MAXIMO_FLOAT * -1)) {
                 this.addErrorSintactico("(SyntaxError) FUERA DE RANGO: FLOTANTE f32 (-) (Línea " + this.analizadorLexico.LINEA + ")");
@@ -610,10 +604,6 @@ public class AnalizadorSintactico {
 
             this.imprimirArbol(this.raiz, 0, bw);
             this.imprimirArbolesFuncion(bw);
-
-            String horaActual = DateTimeFormatter.ofPattern("MMM dd yyyy, hh:mm:ss a").format(LocalDateTime.now());
-            bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| ") ;
-            bw.write(" \n Hora de ejecucion: " + horaActual);
             bw.close();
 
         } catch (Exception e) {
@@ -683,8 +673,27 @@ public class AnalizadorSintactico {
         this.analisisParser(analizadorLexico.getArchivo(), estadoParser);
         if (this.erroresSintacticos.isEmpty() && this.analizadorLexico.getErroresLexicos().isEmpty()){
             GenerarCodigo g = new GenerarCodigo(analizadorLexico, this);
-
             g.generacionDeCodigo(this.raiz,this);
+
+            // Si se genero el assembler, agrego al archivo los errores del mismo, si los hubiera
+            try{
+                String filename = "ejecucion_reciente" ;
+                filename = filename.replace(" ", "_") + ".txt";
+
+                String ruta = "salida_archivo/"+ filename;
+                File file = new File(ruta);
+                FileWriter fw = new FileWriter(file,true);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                g.imprimirErroresAssembler(bw);
+                String horaActual = DateTimeFormatter.ofPattern("MMM dd yyyy, hh:mm:ss a").format(LocalDateTime.now());
+                bw.write(" \n |||||||||||||||||||||||||||||||||||||||||||||| ") ;
+                bw.write(" \n Hora de ejecucion: " + horaActual);
+                bw.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }else{
             System.out.println("Se encontraron errores LEXICOS o SINTACTICOS, por lo tanto no se pudo generar el assembler"+"\n");
         }

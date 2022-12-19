@@ -3,6 +3,7 @@ package ArbolSintactico;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,8 @@ public class GenerarCodigo{
     private int contadorEtiquetaLabel = 0;
     private int contadorAux = 0;
     private boolean entroAlBreak = false;
+    private ArrayList<String> erroresAssembler;
+    private AnalizadorLexico analizadorLexico;
 
     private Stack <String> pilaControl;
     private Stack <String> pilaFor;
@@ -40,8 +43,25 @@ public class GenerarCodigo{
         this.pilaInvocaciones = new Stack<>();
         this.cadenas = s.getCadenas();
         tablaSimbolos = l.getTablaSimbolos();
+        this.erroresAssembler = new ArrayList<>();
+        this.analizadorLexico = l;
     }
 
+    public void addErrorAssembler(String nuevo) {
+        erroresAssembler.add(nuevo);
+    }
+
+    public void imprimirErroresAssembler(BufferedWriter bw) throws IOException {
+        if (this.erroresAssembler.isEmpty()){
+            bw.write("\n \n |    ERRORES EN TIEMPO DE EJECUCION :  NO HAY   | \n \n ");
+        }else{
+            bw.write("\n \n |    ERRORES EN TIEMPO DE EJECUCION  | \n \n ");
+            for (String dato : this.erroresAssembler){
+                bw.write("*  " + dato + " \n ");
+            }
+        }
+        bw.write("\n ");
+    }
 
     public void imprimirTablaSimbolosAssembler() {
         System.out.println();
@@ -75,8 +95,8 @@ public class GenerarCodigo{
             "errorRecursion db 'ERROR EN LA EJECUCION: Recursión en invocaciones de funciones',0 \n"+
             "ok db 'OK',0 \n"+
             "mem2bytes dw ?\n"+
-            "_maxFloat dq 3.40282347E+38\n"+
-            "_minFloat dq -3.40282347E+38\n"
+            "_maxFloat dq 3.40282347E38\n"+
+            "_minFloat dq 1.17549435E-38\n"
             );
 
 }
@@ -158,10 +178,12 @@ public class GenerarCodigo{
                         break;
 
                     case ("*"):
+                        multiplicacionTiempoEjecucion(nodo);
                         multiplicacionAssembler(nodo);
                         break;
 
                     case ("/"):
+                        divisionTiempoEjecucion(nodo);
                         divisionAssembler(nodo);
                         break;
 
@@ -292,6 +314,29 @@ public class GenerarCodigo{
         }
 
         }
+
+    private void divisionTiempoEjecucion(Nodo nodo){
+        if(nodo.getHijoDerecho().getLexema().equals("0.0") || nodo.getHijoDerecho().getLexema().equals("0.") || nodo.getHijoDerecho().getLexema().equals(".0")){
+            this.addErrorAssembler("TIEMPO DE EJECUCION - WARNING. DIVISION POR CERO DE TIPO F32 ");
+        }else{
+            if((nodo.getHijoDerecho().getLexema().equals("0")))
+                this.addErrorAssembler("TIEMPO DE EJECUCION - WARNING. DIVISION POR CERO DE TIPO i32 ");
+        }
+    }
+
+    // MULTIPLICACION
+    private void multiplicacionTiempoEjecucion(Nodo nodo){
+        if ((nodo.getHijoIzquierdo().getLexema().contains("."))){
+            double hijoIzq = Double.parseDouble(nodo.getHijoIzquierdo().getLexema().replace("F","E"));
+            double hijoDer = Double.parseDouble(nodo.getHijoDerecho().getLexema().replace("F","E"));
+            double resultado = hijoIzq * hijoDer;
+            if((resultado <=  AnalizadorLexico.MINIMO_FLOAT) || (resultado >= AnalizadorLexico.MAXIMO_FLOAT)) {
+                this.addErrorAssembler("TIEMPO DE EJECUCION - WARNING. OVERFLOW EN MULTIPLICACION DE TIPO f32 ");
+            }
+        }
+
+    }
+    // MULTIPLICACION
 
     private void outAssembler(Nodo nodo) {
         this.assemblerCode.append("invoke MessageBox, NULL, addr "+this.cadenas.get(0)+", addr "+this.cadenas.get(0)+", MB_OK\n");
@@ -613,6 +658,7 @@ public class GenerarCodigo{
         this.contadorEtiquetaLabel++;
         String labelFalso = "_label" + this.contadorEtiquetaLabel;
         this.contadorEtiquetaLabel++;
+        System.out.println(nodo);
         if (nodo.getTipo().equals("i32")) {
 
             this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
@@ -820,16 +866,15 @@ public class GenerarCodigo{
         Token t = this.tablaSimbolos.getEntrada(idLexema);
         nodo.setTipo(t.getTipo());
         nodo.setLexema(aux);
-
     }
 
 
     private void multiplicacionAssembler(Nodo nodo) {
-
         String aux = "@aux" + contadorAux;
         this.contadorAux++;
         String label = "_label" + contadorEtiquetaLabel;
         contadorEtiquetaLabel++;
+
         if (nodo.getTipo().equals("i32")) {
 
             this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
@@ -842,41 +887,41 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
                 this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho())+"\n");
                 this.assemblerCode.append("FMUL "+"\n");
+                this.assemblerCode.append("FABS "+"\n");
 
-                if(((nodo.getHijoIzquierdo().getLexema().contains("-")) && (nodo.getHijoDerecho().getLexema().contains("-")))){
-                    this.assemblerCode.append("FLD _maxFloat"+"\n");
-                    this.assemblerCode.append("FCOM "+"\n");
-                    this.assemblerCode.append("FSTSW mem2bytes"+"\n");
-                    this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
-                    this.assemblerCode.append("SAHF"+"\n");
-                    this.assemblerCode.append("JA "+label+"\n");
-                }
+                // Comparamos por el maximo
 
-                else
-                    if(nodo.getHijoIzquierdo().getLexema().contains("-") || nodo.getHijoDerecho().getLexema().contains("-")){
-                        this.assemblerCode.append("FLD _minFloat"+"\n");
-                        this.assemblerCode.append("FCOM "+"\n");
-                        this.assemblerCode.append("FSTSW mem2bytes"+"\n");
-                        this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
-                        this.assemblerCode.append("SAHF"+"\n");
-                        this.assemblerCode.append("JB "+label+"\n");
-                    }
-                    else{
-                        this.assemblerCode.append("FLD _maxFloat"+"\n");
-                        this.assemblerCode.append("FCOM "+"\n");
-                        this.assemblerCode.append("FSTSW mem2bytes"+"\n");
-                        this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
-                        this.assemblerCode.append("SAHF"+"\n");
-                        this.assemblerCode.append("JA "+label+"\n");
-                    }
+                this.assemblerCode.append("FCOM _maxFloat"+"\n");
+                this.assemblerCode.append("FSTSW mem2bytes"+"\n");
+                this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
+                this.assemblerCode.append("SAHF"+"\n");
+                this.assemblerCode.append("JB "+label+"\n");
+
 
                 this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");
                 this.assemblerCode.append("invoke ExitProcess, 0\n");
 
+                // Comparamos con el minimo
+
+                this.assemblerCode.append(label + ":\n");
+                label = "_label" + contadorEtiquetaLabel;
+                contadorEtiquetaLabel++;
+
+                this.assemblerCode.append("FCOM _minFloat"+"\n");
+                this.assemblerCode.append("FSTSW mem2bytes"+"\n");
+                this.assemblerCode.append("MOV AX, mem2bytes"+"\n");
+                this.assemblerCode.append("SAHF"+"\n");
+                this.assemblerCode.append("JA "+label+"\n");
+
+                this.assemblerCode.append("invoke MessageBox, NULL, addr errorOverflow, addr errorOverflow, MB_OK\n");
+                this.assemblerCode.append("invoke ExitProcess, 0\n");
+
+                // Si todo fue bien, sigue la ejecucion
+
                 this.assemblerCode.append(label + ":\n");
                 this.assemblerCode.append("FSTP "+aux+"\n");
-
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarMult");
+
             }
         }
         int idLexema = this.tablaSimbolos.existeEntrada(nodo.getHijoIzquierdo().getLexema());
@@ -926,6 +971,7 @@ public class GenerarCodigo{
     private void sumaAssembler(Nodo nodo) {
         String aux = "@aux" + contadorAux;
         this.contadorAux++;
+        System.out.println(nodo + "izq " +  nodo.getHijoIzquierdo().toString());
         if (nodo.getTipo().equals("i32")) {
             this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
             this.assemblerCode.append("ADD "+"EAX"+","+getLexAssembler(nodo.getHijoDerecho())+"\n");

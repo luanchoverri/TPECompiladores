@@ -1,0 +1,7 @@
+program {
+
+    i32 a, b, c;
+
+    f32 k;
+
+}

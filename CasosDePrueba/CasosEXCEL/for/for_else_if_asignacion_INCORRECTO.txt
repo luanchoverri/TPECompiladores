@@ -1,0 +1,22 @@
+program
+{
+
+    i32 v;
+    f32 b;
+
+    b =: for(i=:10; i > 1 ; -1){
+              if (c = 1) then{
+                    break 5;
+              }end_if;
+          };else 7.0;
+
+    v =: for(i=:1 ; i < 5 ; +1){
+              if (i > 6) then{
+                    break 2;
+              }end_if;
+          };
+
+}
+
+
+

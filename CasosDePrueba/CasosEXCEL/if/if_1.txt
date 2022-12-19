@@ -1,0 +1,18 @@
+program
+{
+        i32 a,b;
+
+        a =: 7;
+        b =: 0;
+
+        if (a > 7) then {
+                out('a mas grande que b');
+                for (i =: 1 ; i < (3 + 1 * 5) ; +1){
+                        a =: a + 1;
+                };
+                out('sali del for');
+        }else{
+                out ('a menor que b');
+        }end_if;
+        out('termine ejecucion');
+}
