@@ -28,6 +28,10 @@ public class AnalizadorSintactico {
     private ArrayList<String> analisisSintactico;
     private String tipo;
     private Nodo raiz;
+
+
+
+    private ArrayList<String> warnings;
     private ArrayList<Integer> variables; // estructura que se utiliza para ir guardando en la gramatica los id's a medida que se encuentran
     public static boolean ASSEMBLER_GENERADO = false;
 
@@ -50,9 +54,17 @@ public class AnalizadorSintactico {
         raiz = null;
         variables =  new ArrayList<Integer>();
         arbolesFunciones = new HashMap<>();
+        warnings = new ArrayList<>();
 
     }
 
+    public ArrayList<String> getWarnings() {
+        return warnings;
+    }
+
+    public void addWarning(String warning){
+        this.warnings.add(warning);
+    }
     public ArrayList<String> getCadenas(){return this.cadenas;}
     public void addCadena(int index){
         this.cadenas.add(tablaSimbolos.getEntrada(index).getLexema());
@@ -540,8 +552,9 @@ public class AnalizadorSintactico {
 
     public void checkParametros(String idFun){
 
-            String nombFun = idFun.split("@")[0];
-            ArrayList<Token> parametros = tablaSimbolos.obtenerParamPorUso("param"+"@"+nombFun);
+            String[] nombreSplit= idFun.split("@");
+            idFun = nombreSplit[1] + "_" + nombreSplit[0];
+            ArrayList<Token> parametros = tablaSimbolos.obtenerParamPorUso("param"+"@"+idFun);
             if(parametros.size() != variables.size()  ){
                 this.addErrorSintactico("SemanticError. El NUMERO de parametros no corresponde con los funcion invocada (Línea " + this.analizadorLexico.LINEA + ")" );
             }else {

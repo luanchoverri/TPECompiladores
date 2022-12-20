@@ -1,0 +1,20 @@
+program{
+
+    fun g(i32 i):i32{
+        out('entre en funcion');
+        if (i = 1) then {
+            out('entre al if');
+            c =: 5;
+        } end_if;
+
+         return(3);
+    }
+
+    i32 a;
+    i32 b;
+
+    a =: 1;
+    b =: g(1);
+
+
+}

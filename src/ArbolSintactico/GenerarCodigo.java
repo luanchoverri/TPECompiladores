@@ -25,7 +25,6 @@ public class GenerarCodigo{
     private int contadorEtiquetaLabel = 0;
     private int contadorAux = 0;
     private boolean entroAlBreak = false;
-    private boolean resultado = false;
     private ArrayList<String> erroresAssembler;
     private AnalizadorLexico analizadorLexico;
 
@@ -46,7 +45,7 @@ public class GenerarCodigo{
         this.pilaInvocaciones = new Stack<>();
         this.cadenas = s.getCadenas();
         tablaSimbolos = l.getTablaSimbolos();
-        this.erroresAssembler = new ArrayList<>();
+        this.erroresAssembler = s.getWarnings();
         this.analizadorLexico = l;
         this.auxiliarNodoForElse = null;
     }
@@ -156,7 +155,6 @@ public class GenerarCodigo{
 
     public void generarCodigoLeido(Nodo nodo) {
 
-
         if (!nodo.esHoja()) {
 
             if (nodo.getLexema().equals("for_else")){
@@ -179,7 +177,6 @@ public class GenerarCodigo{
 
                     case ("=:"):
                         asignacionAssembler(nodo);
-
                         break;
 
                     // Operaciones aritmeticas
@@ -292,7 +289,6 @@ public class GenerarCodigo{
 
 
                     case ("breakValor"):
-                        resultado = true;
                         breakValor(nodo);
                         break;
 
@@ -316,10 +312,7 @@ public class GenerarCodigo{
                         paramAssembler(nodo);
                         break;
                 }
-
-
-                    nodo.descolgarHijos();
-
+                nodo.descolgarHijos();
             }
         } else {
             switch (nodo.getLexema()) {
@@ -334,8 +327,6 @@ public class GenerarCodigo{
         }
 
         }
-
-
 
     private void divisionTiempoEjecucion(Nodo nodo){
         if(nodo.getHijoDerecho().getLexema().equals("0.0") || nodo.getHijoDerecho().getLexema().equals("0.") || nodo.getHijoDerecho().getLexema().equals(".0")){
@@ -447,9 +438,6 @@ public class GenerarCodigo{
     private void cuerpoForAssembler(Nodo nodo){
         String labelBucle = this.pilaFor.pop();
         this.assemblerCode.append("JMP "+labelBucle+"\n");
-
-
-
         String labelFalso = this.pilaFor.pop();
         this.assemblerCode.append(labelFalso+ ":\n");
     }
@@ -705,10 +693,8 @@ public class GenerarCodigo{
             this.assemblerCode.append("MOV " + aux + ",1 \n"); // Guardo en aux un 1
             this.assemblerCode.append("JMP " + labelContinuar + "\n"); // Continuo la ejecucion
             this.assemblerCode.append(labelFalso + ":\n");
-
             this.assemblerCode.append("MOV " + aux + ", 0 \n"); // Al ser falso, seteo un 0 en aux
             this.assemblerCode.append(labelContinuar + ":\n");
-
             this.tablaSimbolos.agregarRegistroAssembler(aux, "i32", "variableAuxiliarCompMenor");
         } else {
             if(nodo.getTipo().equals("f32")){
@@ -779,12 +765,9 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FSTP " + aux + " \n");
                 this.assemblerCode.append("JMP " + labelContinuar + "\n");
                 this.assemblerCode.append(labelFalso + ":\n");
-
                 this.assemblerCode.append("FLDZ \n");
                 this.assemblerCode.append("FSTP " + aux + " \n");
-
                 this.assemblerCode.append(labelContinuar + ":\n");
-
                 this.tablaSimbolos.agregarRegistroAssembler(aux, "f32", "variableAuxiliarCompMayor");
         }
         }
@@ -815,7 +798,6 @@ public class GenerarCodigo{
             this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
 
 			this.assemblerCode.append("CMP EAX,  0"+"\n");
-
 		} else {
             if (nodo.getHijoIzquierdo().getTipo().equals("f32")){
 			String mem2bytes= "@aux"+contadorAux;
@@ -831,7 +813,6 @@ public class GenerarCodigo{
 		    }
         }
 		this.assemblerCode.append("JE " + label + "\n");
-        resultado = true;
 		this.pilaControl.push(label);
 	}
 
@@ -1054,7 +1035,6 @@ public class GenerarCodigo{
 
     private void asignacionAssembler(Nodo nodo) {
 
-        System.out.println("nodo asignacion , el izq es " + nodo.getHijoIzquierdo().toString() + " y der " + nodo.getHijoDerecho().toString());
 
         if(!nodo.getHijoDerecho().getLexema().equals("for_else")) {
 
@@ -1062,41 +1042,38 @@ public class GenerarCodigo{
             Token t = this.tablaSimbolos.getEntrada(idLexema);
 
             // para cuando asigna funciones
-            if ((t.getUso() != null) && t.getUso().equals("func")){
+            if ((t.getUso() != null) && t.getUso().equals("func")) {
 
                 // chequeamos por recursion directa
-                if (!this.pilaInvocaciones.isEmpty() && this.pilaInvocaciones.peek().equals(t.getLexema())){
+                if (!this.pilaInvocaciones.isEmpty() && this.pilaInvocaciones.peek().equals(t.getLexema())) {
                     this.assemblerCode.append("invoke MessageBox, NULL, addr errorRecursion, addr errorRecursion, MB_OK\n");
                     this.assemblerCode.append("invoke ExitProcess, 0\n");
                 }
 
                 // cargamos los parametros
-                if (!nodo.getHijoDerecho().esHoja()){
-                    if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho() != null){
-                        if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getTipo().equals("i32")){
-                            this.assemblerCode.append("MOV EBX, "+getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho())+"\n");
+                if (!nodo.getHijoDerecho().esHoja()) {
+                    if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho() != null) {
+                        if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho().getTipo().equals("i32")) {
+                            this.assemblerCode.append("MOV EBX, " + getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho()) + "\n");
                         } else {
-                            this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho())+"\n");
+                            this.assemblerCode.append("FLD " + getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoDerecho()) + "\n");
                         }
                     }
-                    if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getTipo().equals("i32")){
-                        this.assemblerCode.append("MOV EAX, "+getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo())+"\n");
+                    if (nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo().getTipo().equals("i32")) {
+                        this.assemblerCode.append("MOV EAX, " + getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo()) + "\n");
                     } else {
-                        this.assemblerCode.append("FLD "+getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo())+"\n");
+                        this.assemblerCode.append("FLD " + getLexAssembler(nodo.getHijoDerecho().getHijoIzquierdo().getHijoIzquierdo()) + "\n");
                     }
                 }
                 //this.pilaInvocaciones.push(t.getLexema());
-                this.assemblerCode.append("call _"+t.getLexema().replace('.','_').replace('-', '_')+"\n");
+                this.assemblerCode.append("call _" + t.getLexema().replace('.', '_').replace('-', '_') + "\n");
 
-                if (nodo.getTipo().equals("i32")){
-                    this.assemblerCode.append("MOV "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
+                if (nodo.getTipo().equals("i32")) {
+                    this.assemblerCode.append("MOV " + getLexAssembler(nodo.getHijoIzquierdo()) + ", EAX\n");
                 } else {
-                    this.assemblerCode.append("FSTP "+"_"+nodo.getHijoIzquierdo().getLexema().replace('.','_').replace('-', '_')+"\n");
+                    this.assemblerCode.append("FSTP " + getLexAssembler(nodo.getHijoIzquierdo()) + "\n");
                 }
-
-            }
-
-            else {// Declaracion de constantes simples
+            }else { // Declaracion de constantes simples
                 if (nodo.getHijoIzquierdo().getTipo().equals("i32")) { // a(izq) =:(raiz) 1(der);
 
                     this.assemblerCode.append("MOV "+"EAX"+","+getLexAssembler(nodo.getHijoDerecho())+"\n");
@@ -1120,15 +1097,9 @@ public class GenerarCodigo{
                 this.assemblerCode.append("FSTP "+getLexAssembler(nodo.getHijoIzquierdo())+"\n");
 
             }
-
-
-
-
-
+         }
         }
 
-
-    }
 
     private void breakValor(Nodo nodo) {
 
@@ -1149,7 +1120,7 @@ public class GenerarCodigo{
 
     private void cargarVariablesAuxiliares(int indice) {
         Token t = tablaSimbolos.getEntrada(indice);
-        System.out.println("el token es " + t.toString());
+
         if (t.getLexema().contains("@aux") || (!t.getUso().equals("func") && (t.getId()!=272))){
 
             if (!(t.getId() == 258)) {

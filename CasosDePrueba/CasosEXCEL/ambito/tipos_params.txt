@@ -1,0 +1,20 @@
+program{
+
+    fun f():i32 {
+        fun p(i32 h):i32{
+            return (h + 1);
+        }
+        i32 g;
+        g =: p(3);
+        return (1);
+    }
+    fun p(i32 h):i32{
+                return (h + 1);
+            }
+
+    i32 e;
+    e =: f(4);
+    e =: p(1.0);
+
+
+}

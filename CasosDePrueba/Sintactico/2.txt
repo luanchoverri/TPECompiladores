@@ -1,18 +1,13 @@
-program{
+program
+{
+
+    i32 v;
+    f32 b, k;
 
 
-    fun g(i32 i):f32{
-        out('entre en funcion');
-        if (i = 1) then {
-            out('entre al if');
-            return (1.0);
-        } end_if;
-    }
-
-    i32 a;
-    f32 b;
-
-    a =: 1;
-    b =: g(1);
-
+    b =: for(i=:10; i > 1 ; -1){
+              if (c > 11) then{
+                    break 5.0;
+              }end_if;
+          };else 7.0;
 }

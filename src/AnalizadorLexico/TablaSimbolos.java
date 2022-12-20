@@ -266,7 +266,7 @@ public class TablaSimbolos {
         ArrayList<Token> salida = new ArrayList<Token>();
         for (int i = 0; i < registroTokens.size(); i++) {
             String usoActual = registroTokens.get(i).getUso();
-            if(usoActual != null && usoActual.contains(uso)){
+            if(usoActual != null && usoActual.equals(uso)){
                 salida.add(registroTokens.get(i));
             }
         }
