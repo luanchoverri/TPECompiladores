@@ -1,16 +1,26 @@
-1:    program
-2:    {
-3:    
-4:        i32 v;
-5:        f32 b, k;
-6:    
-7:    
-8:        b =: for(i=:10; i > 1 ; -1){
-9:                  if (c > 11) then{
-10:                        break 5.0;
-11:                  }end_if;
-12:              };else 7.0;
-13:    }$
+1:    program{
+2:    
+3:        fun f():i32 {
+4:            fun p(i32 h):i32{
+5:                return (h + 1);
+6:            }
+7:            i32 g;
+8:            g =: p(3);
+9:            return (1);
+10:        }
+11:    
+12:        i32 a;
+13:        i32 b;
+14:    
+15:        a =: 1;
+16:        b =: 6;
+17:    
+18:        i32 a;
+19:        a =: 4;
+20:        b =: p(a);
+21:    
+22:    
+23:    }$
  
  ---------------------------   EJECUCION DEL PARSER FINALIZADA  
  
@@ -21,8 +31,8 @@
  
 |    ERRORES SINTACTICOS - SEMANTICOS  | 
  
- *  SemanticError. (Línea 9): variable no declarada. 
- *  SemanticError. (Línea 9) LOS TIPOS NO COINCIDEN - OPERACION: comparacion por > 
+ *  SemanticError. (Línea 18): variable ya declarada. 
+ *  SemanticError. (Línea 20): funcion no declarada. 
  
   
  
@@ -30,18 +40,19 @@
   
               TABLA DE SIMBOLOS              
 
-TOKEN   257         program   #ln 1  null                  i32 
-TOKEN   257             v@$   #ln 4   i32                  var 
-TOKEN   257             b@$   #ln 5   f32                  var 
-TOKEN   257             k@$   #ln 5   f32                  var 
-TOKEN   257        i@$_for0   #ln 8   i32              for_var 
-TOKEN   258              10   #ln 8   i32                  cte 
-TOKEN   258               1   #ln 8   i32                  cte 
-TOKEN   258               1   #ln 8   i32                  cte 
-TOKEN   257               c   #ln 9  null                 null 
-TOKEN   258              11   #ln 9   i32                  cte 
-TOKEN   258             5.0   #ln 10   f32                  cte 
-TOKEN   258             7.0   #ln 12   f32                 null  
+TOKEN   257         program   #ln 1  null              program 
+TOKEN   257             f@$   #ln 3   i32                 func 
+TOKEN   257           p@$_f   #ln 4   i32                 func 
+TOKEN   257         h@$_f_p   #ln 4   i32          param@$_f_p 
+TOKEN   258               1   #ln 5   i32                  cte 
+TOKEN   257           g@$_f   #ln 7   i32                  var 
+TOKEN   258               3   #ln 8   i32                  cte 
+TOKEN   257             a@$   #ln 12   i32                  var 
+TOKEN   257             b@$   #ln 13   i32                  var 
+TOKEN   258               6   #ln 16   i32                  cte 
+TOKEN   257               a   #ln 18  null                 null 
+TOKEN   258               4   #ln 19   i32                  cte 
+TOKEN   257               p   #ln 20  null                 null  
  
  
  
@@ -49,37 +60,36 @@ TOKEN   258             7.0   #ln 12   f32                 null
    └─ raiz 
      └─ sentencia 
         └─ =: 
-           └─ b@$ 
-           └─ for_else 
-              └─ For 
-                 └─ encabezado for 
-                    └─ asignacionFor 
-                       └─ =: 
-                          └─ i@$_for0 
-                          └─ 10 
-                    └─ condicion y operacion for 
-                       └─ condicionFor 
-                          └─ > 
-                             └─ i@$_for0 
-                             └─ 1 
-                       └─ operacionFor 
-                          └─ =: 
-                             └─ i@$_for0 
-                             └─ - 
-                                └─ i@$_for0 
-                                └─ 1 
-                 └─ cuerpoFor 
-                    └─ sentencia 
-                       └─ if 
-                          └─ condicionIf 
-                             └─ > 
-                                └─ Error 
-                                └─ 11 
-                          └─ cuerpo-if 
-                             └─ then 
-                                └─ sentencia 
-                                   └─ breakValor 
-                                      └─ 5.0 
-              └─ 7.0 
+           └─ a@$ 
+           └─ 1 
+        └─ sentencia 
+           └─ =: 
+              └─ b@$ 
+              └─ 6 
+           └─ sentencia 
+              └─ =: 
+                 └─ a@$ 
+                 └─ 4 
+              └─ sentencia 
+ 
+  ARBOL DE LA FUNCION f@$ 
+  └─ f@$ 
+     └─ sentencia 
+        └─ =: 
+           └─ g@$_f 
+           └─ p@$_f 
+              └─ paramInv 
+                 └─ 3 
+        └─ sentencia 
+           └─ return 
+              └─ 1 
+ 
+  ARBOL DE LA FUNCION p@$_f 
+  └─ p@$_f 
+     └─ sentencia 
+        └─ return 
+           └─ + 
+              └─ h@$_f_p 
+              └─ 1 
  
  
