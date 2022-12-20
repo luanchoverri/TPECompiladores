@@ -2,8 +2,6 @@ program {
 
     i32 a, b c;
 
-    f32 k;
-
-    v, q, r;
+    v, q, s;
 
 }

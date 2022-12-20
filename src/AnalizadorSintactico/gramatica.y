@@ -108,6 +108,11 @@ declarativas : tipo lista_de_variables ';'        {
              					  	sintactico.addAnalisis("Se reconoció declaraciónes de variable SIN TIPO. (Línea " + (AnalizadorLexico.LINEA-1) + ")");
              					   	sintactico.vaciarListaVariables();
              					  }
+             | tipo lista_de_variables      {
+						sintactico.addErrorSintactico("SemanticError. (Línea " + (AnalizadorLexico.LINEA) + "): falta punto y coma");
+						sintactico.addAnalisis("Se reconoció declaraciónes de variables. (Línea " + (AnalizadorLexico.LINEA-1) + ")");
+						sintactico.vaciarListaVariables();
+                           		}
              | declaracion_func
              | declaracion_const
              | sentencia_when
