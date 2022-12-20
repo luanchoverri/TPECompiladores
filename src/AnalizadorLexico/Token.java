@@ -35,7 +35,7 @@ public class Token {
         this.lexema = lexema;
         this.nroLinea = 0;
         this.tipo = tipo;
-        this.uso = null;
+        this.uso = uso;
     }
 
 

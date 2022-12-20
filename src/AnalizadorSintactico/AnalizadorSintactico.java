@@ -674,7 +674,7 @@ public class AnalizadorSintactico {
         if (this.erroresSintacticos.isEmpty() && this.analizadorLexico.getErroresLexicos().isEmpty()){
             GenerarCodigo g = new GenerarCodigo(analizadorLexico, this);
             g.generacionDeCodigo(this.raiz,this);
-
+            this.imprimirTablaSimbolos();
             // Si se genero el assembler, agrego al archivo los errores del mismo, si los hubiera
             try{
                 String filename = "ejecucion_reciente" ;

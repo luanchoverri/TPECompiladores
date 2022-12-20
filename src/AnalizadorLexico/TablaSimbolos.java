@@ -241,7 +241,8 @@ public class TablaSimbolos {
 
     public int existeEntradaContainsBreak(String uso){
         for(int i = 0; i < registroTokens.size(); i++) {
-            if (registroTokens.get(i).getUso().equals(uso)){
+            String usoTokenLeido = registroTokens.get(i).getUso();
+            if (usoTokenLeido != null &&  usoTokenLeido.equals(uso)){
                 return i;
             }
         }

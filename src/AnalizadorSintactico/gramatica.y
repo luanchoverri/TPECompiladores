@@ -366,6 +366,7 @@ for_else_cte : encab_For Else cte ';'	{
 
 					Nodo for_else = sintactico.crearNodo("for_else", $1, new ParserVal(sintactico.crearHoja($3.ival)));
 					String cteElse = sintactico.getTipoFromTS($3.ival);
+					sintactico.setUsoEnIndex("cte", $3.ival);
 					for_else.setTipo(cteElse);
 					$$ = new ParserVal(for_else);
 
@@ -566,7 +567,9 @@ condicion_for :  id comparador factor	{
                                                                         if (typeOP1.equals(typeOP2)) {
 										ParserVal identificador = new ParserVal(sintactico.crearHoja(existente));
 										ParserVal constante = new ParserVal(op2);
-										$$ = new ParserVal(sintactico.crearNodoControl("condicionFor", new ParserVal(sintactico.crearNodo($2.sval,identificador,constante))));
+										Nodo comparacion = sintactico.crearNodo($2.sval,identificador,constante);
+                                                                                comparacion.setTipo("i32");
+										$$ = new ParserVal(sintactico.crearNodoControl("condicionFor", new ParserVal(comparacion)));
 										sintactico.eliminarEntrada($1.ival);
 									}else{
 									sintactico.addErrorSintactico("SemanticError. se reconoce FOR pero hay un problema de tipos en la condicion " + AnalizadorLexico.LINEA);

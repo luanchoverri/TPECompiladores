@@ -1,20 +1,27 @@
 program
 {
 
-    i32 v;
-    f32 b;
+    out('empieza ');
+    i32 v, c;
+    i32 b, k;
 
-    b =: for(i=:10; i > 1 ; -1){
-              if (c = 1) then{
-                    break 5.0;
+    c =: 11;
+    b =: for(i=:1; i < 10 ; +1){
+              if (10 < i) then{
+                    out('entra ');
+                    break 5;
               }end_if;
-          };else 7.0;
+          };else 7;
 
-    v =: for(i=:1 ; i < 5 ; +1){
-              if (i > 6) then{
-                    break 2;
-              }end_if;
-          };else 1;
+
+    if (b = 7) then{
+        out('asignando valor 7 ');
+    }end_if;
+
+    if(b = 5) then {
+     out('asignando valor 5 ');
+    }end_if;
+
 
 }
 

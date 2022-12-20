@@ -1,0 +1,22 @@
+program
+{
+
+    out('empieza ');
+    i32 v, c;
+    f32 b, k;
+
+    c =: 11;
+    b =: for(i=:1; i < 10 ; +1){
+              if (i > 10) then{
+                    out('entra ');
+                    break 5.0;
+              }end_if;
+          };else 7.0;
+
+
+    if (b = 7.0) then{
+        out('asignando valor 7.0 ');
+    }end_if;
+
+
+}

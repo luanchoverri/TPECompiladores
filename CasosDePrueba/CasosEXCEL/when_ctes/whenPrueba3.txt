@@ -16,22 +16,20 @@ program{
         a =: 6;
         b =: 2 * a;
 
+        out('hola when');
+
         fun fun2 ( i32 k, f32 l ): f32 {
             k =: 1;
             return(l);
         }
 
         if(i < b) then {
-            out('hola');
+            out('hola if');
 
         } end_if;
 
        c =: fun2(a, 1.0);
 
-
     };
-
-
-
 
 }
